@@ -7,7 +7,6 @@ import lombok.Data;
 import lombok.Setter;
 import net.year4000.mapnodes.MapNodes;
 import net.year4000.mapnodes.configs.Messages;
-import net.year4000.mapnodes.utils.ClassException;
 import net.year4000.mapnodes.world.WorldManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Effect;
@@ -97,7 +96,7 @@ public class GamePlayer {
         if (!getTeam().getName().equals("SPECTATOR"))
             hasPlayed = true;
 
-        getPlayer().teleport(getTeam().getRandomSpawn());
+        getPlayer().teleport(getTeam().getSafeRandomSpawn());
         FunEffectsUtil.playEffect(getPlayer(), Effect.SMOKE);
         GameHelper.startMessage(this);
 

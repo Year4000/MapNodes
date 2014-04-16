@@ -28,7 +28,7 @@ public class GameListener implements Listener {
         GameManager gm = WorldManager.get().getCurrentGame();
         final GamePlayer gPlayer = gm.getPlayer(event.getPlayer());
 
-        event.setRespawnLocation(gPlayer.getTeam().getRandomSpawn());
+        event.setRespawnLocation(gPlayer.getTeam().getSafeRandomSpawn());
         gPlayer.respawn();
     }
 

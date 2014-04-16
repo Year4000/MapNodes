@@ -12,7 +12,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -82,7 +81,7 @@ public class SpectatorListener implements Listener {
             // If the damage is void reset player
             if (event.getCause() == EntityDamageEvent.DamageCause.VOID) {
                 gPlayer.respawn();
-                gPlayer.getPlayer().teleport(gPlayer.getTeam().getRandomSpawn());
+                gPlayer.getPlayer().teleport(gPlayer.getTeam().getSafeRandomSpawn());
                 return;
             }
 

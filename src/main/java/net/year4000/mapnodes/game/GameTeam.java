@@ -1,7 +1,10 @@
 package net.year4000.mapnodes.game;
 
 
-import com.ewized.utilities.bukkit.util.*;
+import com.ewized.utilities.bukkit.util.BukkitUtil;
+import com.ewized.utilities.bukkit.util.ItemUtil;
+import com.ewized.utilities.bukkit.util.LocationUtil;
+import com.ewized.utilities.bukkit.util.MessageUtil;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Setter;
@@ -92,11 +95,36 @@ public class GameTeam {
     }
 
     /** Get a random spawn. */
-    public Location getRandomSpawn() {
+    private Location getRandomSpawn() {
         Random random = new Random(System.currentTimeMillis());
         int spawn = Math.abs(random.nextInt()) % getSpawns().size();
 
         return LocationUtil.center(getSpawns().get(spawn));
+    }
+
+    /** Get a safe random spawn. */
+    public Location getSafeRandomSpawn() {
+        Location spawn = getRandomSpawn();
+
+        // If loop crashes because we cant find a slot use the next position even if its bad.
+        try {
+            // Only check if there is more than one slot
+            if (getSpawns().size() > 1) {
+                // Check floor
+                if (spawn.getBlock().getRelative(0,-1,0).isEmpty())
+                    spawn = getSafeRandomSpawn();
+                // Check head
+                else if (!spawn.getBlock().getRelative(0,1,0).isEmpty())
+                    spawn = getSafeRandomSpawn();
+                // Check feet
+                else if (!spawn.getBlock().isEmpty())
+                    spawn = getSafeRandomSpawn();
+            }
+        } catch (StackOverflowError e) {
+            spawn = getRandomSpawn();
+        }
+
+        return spawn;
     }
 
     /** Joins the team. */
