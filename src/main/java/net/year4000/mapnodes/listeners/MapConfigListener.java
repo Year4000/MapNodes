@@ -1,6 +1,7 @@
 package net.year4000.mapnodes.listeners;
 
 import net.year4000.mapnodes.MapNodes;
+import net.year4000.mapnodes.configs.Messages;
 import net.year4000.mapnodes.game.GameManager;
 import net.year4000.mapnodes.game.GameMap;
 import net.year4000.mapnodes.world.WorldManager;
@@ -121,7 +122,14 @@ public class MapConfigListener implements Listener {
 
         if (height > 0) {
             int y = event.getBlockPlaced().getY();
-            event.setCancelled(y >= height);
+
+            if (y >= height) {
+                event.getPlayer().sendMessage(String.format(
+                    Messages.get("game.height.max"),
+                    height
+                ));
+                event.setCancelled(true);
+            }
         }
     }
 
