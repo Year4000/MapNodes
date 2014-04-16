@@ -12,7 +12,6 @@ import net.year4000.mapnodes.game.GameStage;
 import net.year4000.mapnodes.game.GameTeam;
 import net.year4000.mapnodes.utils.TeamException;
 import net.year4000.mapnodes.world.WorldManager;
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -69,7 +68,7 @@ public final class JoinCommand {
         GameManager gm = WorldManager.get().getCurrentGame();
         GamePlayer gPlayer = gm.getPlayer((Player)sender);
 
-        if (gPlayer.isSpecatator() && !gPlayer.isHasPlayed())
+        if (gPlayer.isSpecatator() || !gPlayer.isHasPlayed())
             throw new CommandException(Messages.get("command.team.player"));
 
         gPlayer.leave();
