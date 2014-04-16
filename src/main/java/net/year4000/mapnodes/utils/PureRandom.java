@@ -1,15 +1,18 @@
 package net.year4000.mapnodes.utils;
 
+import lombok.Data;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+@Data
 @SuppressWarnings("unused")
 public class PureRandom {
     /** The list of raw numbers. */
-    private List<Integer> rand = new ArrayList<>();
+    private final List<Integer> rand = new ArrayList<>();
     /** Random Object */
-    private Random random = new Random(System.currentTimeMillis());
+    private final Random random = new Random(System.currentTimeMillis());
     /** The size of init */
     private int init;
 
@@ -36,6 +39,11 @@ public class PureRandom {
         }
 
         return tempRand;
+    }
+
+    /** Get the size of the current stack. */
+    public int size() {
+        return rand.size();
     }
 
 }
