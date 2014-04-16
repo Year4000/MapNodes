@@ -11,7 +11,6 @@ import net.year4000.mapnodes.configs.map.Map;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.inventory.ItemStack;
@@ -19,7 +18,6 @@ import org.bukkit.inventory.ItemStack;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Vector;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -55,6 +53,8 @@ public class GameMap {
     private boolean destructible = true;
      /** Should the map always have weather on. Un for snowy maps. */
     private boolean forceWeather = false;
+    /** The max height of the world. */
+    private int worldHeight = -1;
     /** Should tnt be activated when placed. */
     private boolean instantTNT = false;
     /** Should tnt cause block damage. */
@@ -112,6 +112,7 @@ public class GameMap {
             }
         }});
         setTimeLimit(configGame.getTimeLimit());
+        setWorldHeight(configGame.getWorldHeight());
         setDestructible(configGame.isDestructable());
         setWorldLock(configGame.getTimeLock());
         setForceWeather(configGame.isForceWeather());

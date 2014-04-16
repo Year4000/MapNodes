@@ -6,7 +6,8 @@ import net.year4000.mapnodes.game.GameMap;
 import net.year4000.mapnodes.world.WorldManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.entity.*;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -14,9 +15,6 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.*;
 import org.bukkit.inventory.ItemStack;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /** Controls how the game should behave base on the json file. */
 @SuppressWarnings("unused")
@@ -113,6 +111,17 @@ public class MapConfigListener implements Listener {
         }
         else {
             event.getDrops().clear();
+        }
+    }
+
+    /** The world height cap. */
+    @EventHandler(priority=EventPriority.HIGH)
+    public void onHeight(BlockPlaceEvent event) {
+        int height = WorldManager.get().getCurrentGame().getMap().getWorldHeight();
+
+        if (height > 0) {
+            int y = event.getBlockPlaced().getY();
+            event.setCancelled(y >= height);
         }
     }
 

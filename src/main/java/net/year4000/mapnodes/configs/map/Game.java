@@ -22,6 +22,8 @@ public class Game {
     private boolean forceWeather = false;
     /** Can the map be destoyed. */
     private boolean destructable = true;
+    /** The height of the world. */
+    private int worldHeight = -1;
     /** What damage should be ignore from the player. */
     private String[] noDamage = new String[] {};
     /** What mobs should be allowed in the map. */
