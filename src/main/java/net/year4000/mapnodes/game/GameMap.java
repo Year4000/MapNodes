@@ -55,6 +55,8 @@ public class GameMap {
     private boolean forceWeather = false;
     /** The max height of the world. */
     private int worldHeight = -1;
+    /** The resource pack url for this map. */
+    private String resourcepack = "";
     /** Should tnt be activated when placed. */
     private boolean instantTNT = false;
     /** Should tnt cause block damage. */
@@ -121,5 +123,6 @@ public class GameMap {
         setTntYield(configGame.getTnts().getDrops());
         setBowEntity(EntityType.valueOf(configGame.getBows().getEntity().toUpperCase()));
         setBowVelocity(configGame.getBows().getVelocity());
+        setResourcepack(configGame.getResourcepack());
     }
 }

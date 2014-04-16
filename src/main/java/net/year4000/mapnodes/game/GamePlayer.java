@@ -72,7 +72,7 @@ public class GamePlayer {
             player.openInventory(GameTeam.getTeamsGUI());
 
         player.setScoreboard(gm.getScoreboard().getScoreboard());
-
+        player.setResourcePack(gm.getMap().getResourcepack());
 
         // Show message of the current map, later to allow time for choosing a team.
         Bukkit.getScheduler().runTaskLater(MapNodes.getInst(), () ->

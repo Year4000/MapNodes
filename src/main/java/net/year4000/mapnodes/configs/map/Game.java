@@ -24,6 +24,8 @@ public class Game {
     private boolean destructable = true;
     /** The height of the world. */
     private int worldHeight = -1;
+    /** The resource pack url for this map. */
+    private String resourcepack = "";
     /** What damage should be ignore from the player. */
     private String[] noDamage = new String[] {};
     /** What mobs should be allowed in the map. */
