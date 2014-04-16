@@ -3,10 +3,7 @@ package net.year4000.mapnodes.configs;
 import com.ewized.utilities.bukkit.util.MessageUtil;
 import net.cubespace.Yamler.Config.Comment;
 import net.cubespace.Yamler.Config.Config;
-import net.cubespace.Yamler.Config.InvalidConfigurationException;
-import net.year4000.mapnodes.MapNodes;
 
-import java.io.File;
 import java.util.HashMap;
 
 @SuppressWarnings("unused")
@@ -111,6 +108,7 @@ public class Messages extends Config {
         put("game.end.team.score", "&7Your team score was&8: &a%s");
         put("game.end.player.score", "&7Your score was&8: &a%s");
         put("game.end.bottom", "&8-------------------------------------");
+        put("game.height.max", ERROR + "You have reached the world height of &6%s&c.");
 
         // Error checking
         put("error.null.", ERROR + "This may not be null.");
