@@ -8,6 +8,8 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import net.year4000.mapnodes.addons.SpectatorKit;
+import net.year4000.mapnodes.addons.SpectatorTeam;
 import net.year4000.mapnodes.configs.MapConfig;
 import net.year4000.mapnodes.configs.Messages;
 import net.year4000.mapnodes.configs.map.Classes;
@@ -17,15 +19,12 @@ import net.year4000.mapnodes.configs.map.Teams;
 import net.year4000.mapnodes.game.clocks.NextClock;
 import net.year4000.mapnodes.game.clocks.RestartClock;
 import net.year4000.mapnodes.game.clocks.StartClock;
-import net.year4000.mapnodes.addons.SpectatorKit;
-import net.year4000.mapnodes.addons.SpectatorTeam;
 import net.year4000.mapnodes.utils.Minify;
 import net.year4000.mapnodes.utils.MissingJsonElement;
 import net.year4000.mapnodes.world.WorldManager;
 import org.bukkit.*;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.meta.FireworkEffectMeta;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.util.CachedServerIcon;
 
@@ -75,7 +74,6 @@ public class GameManager {
         Scanner in = new Scanner(new File(worldMap.getWorldFolder(), "map.json"));
         String json = "";
         while (in.hasNext()) json += in.nextLine() + '\n';
-        final MapConfig mapConfig = gson.fromJson(Minify.minify(json), MapConfig.class);
 
         // Load the server icon.
         try {
@@ -84,6 +82,9 @@ public class GameManager {
 
         // Set up the game.
         try {
+            // If json fails to load due to invalid json catch and dont load map.
+            MapConfig mapConfig = gson.fromJson(Minify.minify(json), MapConfig.class);
+
             // Set the world must be done first.
             setWorld(worldMap);
             setStage(GameStage.WAITING);
