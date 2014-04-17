@@ -121,6 +121,7 @@ public class Messages extends Config {
         put("error.json.team.color", ERROR + "You must set the team color.");
         put("error.json.team.size", ERROR + "You must set the team max size.");
         put("error.json.team.one", ERROR + "You must have at lease one teams.");
+        put("error.json.team.kit", ERROR + "You must have a proper kit for this team.");
         put("error.json.map", ERROR + "You must define a map section.");
         put("error.json.map.name", ERROR + "The map must have a name!");
         put("error.json.map.version", ERROR + "The map must have a version!");
@@ -130,6 +131,6 @@ public class Messages extends Config {
         put("error.json.class.name", ERROR + "You must have a name for a class.");
         put("error.json.class.icon", ERROR + "You must have give the class an icon.");
         put("error.json.class.description", ERROR + "You must have a description for the class.");
-        put("error.json.class.kit", ERROR + "You must have a kit for this class.");
+        put("error.json.class.kit", ERROR + "You must have a proper kit for this class.");
     }};
 }

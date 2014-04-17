@@ -85,11 +85,13 @@ public class GameTeam {
         }
 
         // Set up the kits
-        setKit(gameManager.getKits().get(team.getKit().toUpperCase()));
+        setKit(checkNotNull(
+            gameManager.getKits().get(team.getKit().toUpperCase()),
+            Messages.get("error.json.team.kit")
+        ));
 
         // Set up the spawns.
-        checkNotNull(team.getSpawns(), Messages.get("error.json.spawn"));
-        for (Points point : team.getSpawns()) {
+        for (Points point : checkNotNull(team.getSpawns(), Messages.get("error.json.spawn"))) {
                 getSpawns().addAll(createListLocation(gameManager.getWorld(), point));
         }
     }
