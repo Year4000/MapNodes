@@ -2,22 +2,21 @@ package net.year4000.mapnodes.game;
 
 import com.ewized.utilities.bukkit.util.ItemUtil;
 import com.google.gson.Gson;
-import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import net.year4000.mapnodes.MapNodes;
 import net.year4000.mapnodes.configs.MapConfig;
 import net.year4000.mapnodes.configs.Messages;
 import net.year4000.mapnodes.configs.map.Kits;
 import net.year4000.mapnodes.world.WorldManager;
 import org.bukkit.Bukkit;
+import org.bukkit.Color;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_7_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -30,8 +29,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 @Data
 @NoArgsConstructor
-@SuppressWarnings({"unused", "deprecation"})
+@SuppressWarnings("unused")
 public class GameKit {
+    private final String DEFAULT_LEATHER = "A06540";
     /** The storage of what items the player should get. */
     private HashMap<Integer, ItemStack> itemKit = new HashMap<>();
     /** The armor storage. */
@@ -152,11 +152,28 @@ public class GameKit {
     }
 
     /** Give this kit to a player. */
-    public void giveKit(final GamePlayer gPlayer) {
+    public void giveKit(GamePlayer gPlayer) {
         Player player = gPlayer.getPlayer();
         ItemStack[] inv = new ItemStack[36];
         for (Map.Entry<Integer, ItemStack> item : getItemKit().entrySet())
             inv[item.getKey() > 36 ? 36 : item.getKey()] = item.getValue();
+
+        // Default normal leather armor to team's color
+        ItemStack[] playerArmor = new ItemStack[4];
+        for (int i = 0; i < 4; i++) {
+            if (getArmor()[i] == null) continue;
+
+            if (getArmor()[i].getItemMeta() instanceof LeatherArmorMeta) {
+                playerArmor[i] = getArmor()[i].clone();
+                LeatherArmorMeta meta = (LeatherArmorMeta)getArmor()[i].getItemMeta();
+
+                // Make sure the armor is not colored previously
+                if (meta.getColor().equals(Color.fromRGB(Integer.valueOf(DEFAULT_LEATHER, 16)))) {
+                    meta.setColor(gPlayer.getTeam().getColor());
+                    playerArmor[i].setItemMeta(meta);
+                }
+            }
+        }
 
         // Reset the player
         reset(player);
@@ -168,8 +185,8 @@ public class GameKit {
             for (PotionEffect effect : getEffectKit())
                 player.addPotionEffect(effect, true);
 
-            // Armor
-            playerInv.setArmorContents(getArmor());
+            // Armor default leather get dye to the teams color
+            playerInv.setArmorContents(playerArmor);
 
             // Items
             playerInv.setContents(inv);
@@ -185,8 +202,6 @@ public class GameKit {
 
             // Permissions
             // TODO ALLOW PLAYERS TO GET PERMISSIONS
-
-            player.updateInventory();
         }, 2L /* One tick after the tick delay to reset the player */);
     }
 
@@ -199,15 +214,13 @@ public class GameKit {
     public static void reset(Player player) {
         // Settings that must be ran a tick later
         Bukkit.getScheduler().runTask(MapNodes.getInst(), () -> {
-            // Clear items / armorqq
+            // Clear items / armor
             player.getInventory().clear();
             //player.getInventory().setArmorContents(null);
 
             // Remove effects so we can reset them.
             for (PotionEffect potion : player.getActivePotionEffects())
                 player.removePotionEffect(potion.getType());
-
-            player.updateInventory();
         });
 
         // Minecraft default settings
