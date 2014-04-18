@@ -7,7 +7,14 @@
     <groupId>net.year4000</groupId>
     <artifactId>mapnodes</artifactId>
     <name>MapNodes</name>
-    <version>1.5.11</version>
+    <version>1.5.11-SNAPSHOT</version>
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>year4000-deployment</id>
+            <url>http://repo.year4000.net/content/repositories/private/</url>
+        </snapshotRepository>
+    </distributionManagement>
 
     <build>
         <defaultGoal>clean install</defaultGoal>
@@ -79,7 +86,7 @@
     <repositories>
         <repository>
             <id>year4000-repo</id>
-            <url>http://ci.year4000.net/plugin/repository/everything/</url>
+            <url>http://repo.year4000.net/content/repositories/public/</url>
         </repository>
         <repository>
             <id>bukkit-repo</id>
@@ -114,6 +121,5 @@
             <version>LATEST</version>
         </dependency>
     </dependencies>
-
 
 </project>
