@@ -13,7 +13,7 @@ import lombok.Setter;
 public class Game {
     /** The time limit of the map. */
     @Deprecated
-    private int timeLimit = 10;
+    private int timeLimit = 60;
     /** The map's difficulty level. */
     private int difficulty = 3;
     /** The time that the map should be locked to. */

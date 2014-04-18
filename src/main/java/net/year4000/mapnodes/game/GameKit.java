@@ -53,7 +53,7 @@ public class GameKit {
         Kits kits = config.getKits().get(kit);
 
         // Load parents
-        for (String parent : kits.getInherient()) {
+        for (String parent : kits.getInherent()) {
             Kits parentKit = config.getKits().get(parent);
             GameKit temp = new GameKit(parent, config);
 

@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 /** Manage the items and effects that are given to the player. */
 public class Kits {
     /** The parent kit. */
-    private String[] inherient = new String[] {};
+    private String[] inherent = new String[] {};
     /** The items to put in the player's inventory. */
     private Items[] items = null;
     /** The potion effects to add to the player. */

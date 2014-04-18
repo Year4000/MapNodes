@@ -27,10 +27,4 @@ public class Teams {
     private Points[] spawns = null;
     /** Should this team be on the scoreboard. */
     private boolean useScoreboard = true;
-    /** The game mode the player should be in. */
-    private String gameMode = "survival";
-    /** Can this team fly. */
-    private boolean flying = false;
-    /** The max health this team can have. */
-    private double health = 20;
 }
