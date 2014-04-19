@@ -163,8 +163,8 @@ public class GameKit {
         for (int i = 0; i < 4; i++) {
             if (getArmor()[i] == null) continue;
 
+            playerArmor[i] = getArmor()[i].clone();
             if (getArmor()[i].getItemMeta() instanceof LeatherArmorMeta) {
-                playerArmor[i] = getArmor()[i].clone();
                 LeatherArmorMeta meta = (LeatherArmorMeta)getArmor()[i].getItemMeta();
 
                 // Make sure the armor is not colored previously
