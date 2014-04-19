@@ -1,5 +1,5 @@
 name: MapNodes
 author: Year4000
-version: ${pom.version}-${git.branch}-${git.commit.id.abbrev}
+version: ${pom.version}-git-${git.commit.id.abbrev}
 main: net.year4000.mapnodes.MapNodes
 depend: [Utilities]
