@@ -29,7 +29,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 @Data
 @NoArgsConstructor
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "deprecation"})
 public class GameKit {
     private final String DEFAULT_LEATHER = "A06540";
     /** The storage of what items the player should get. */
@@ -202,6 +202,9 @@ public class GameKit {
 
             // Permissions
             // TODO ALLOW PLAYERS TO GET PERMISSIONS
+
+            // Force Update Inventory
+            player.updateInventory();
         }, 2L /* One tick after the tick delay to reset the player */);
     }
 
@@ -221,6 +224,9 @@ public class GameKit {
             // Remove effects so we can reset them.
             for (PotionEffect potion : player.getActivePotionEffects())
                 player.removePotionEffect(potion.getType());
+
+            // Force Update Inventory
+            player.updateInventory();
         });
 
         // Minecraft default settings
