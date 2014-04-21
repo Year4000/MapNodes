@@ -33,7 +33,7 @@ public final class MapsCommand {
             @Override
             public String formatHeader(int page, int maxPages) {
                 return MessageUtil.replaceColors(String.format(
-                    "&7------- &a&l%s &2(page &a%s&2/&a%s&2) &7-------",
+                    "&7&m-------&a &l%s &2(page &a%s&2/&a%s&2) &7&m-------",
                     header,
                     page,
                     maxPages
