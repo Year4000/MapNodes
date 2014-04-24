@@ -5,6 +5,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @Setter(AccessLevel.PROTECTED)
@@ -38,6 +41,8 @@ public class Game {
     private Bow bows = new Bow();
     /** The area for the spawn. */
     private Points spawn = new Points();
+    /** The settings for chest items. */
+    private Chests chests = new Chests();
 
 
     @Data
@@ -60,5 +65,15 @@ public class Game {
         private boolean blockDamage = true;
         /** The percent of blocks should appear. */
         private int drops = 100;
+    }
+
+    @Data
+    @NoArgsConstructor
+    /** All settings for the random chests. */
+    public class Chests {
+        private boolean enabled = false;
+        private List<Kits.Items> items = new ArrayList<>();
+        private int amount = 10;
+        private boolean scatter = true;
     }
 }

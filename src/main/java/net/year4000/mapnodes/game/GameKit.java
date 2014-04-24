@@ -13,6 +13,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -237,6 +239,7 @@ public class GameKit {
         player.setFoodLevel(20);
         player.setFireTicks(0);
         player.setFallDistance(0);
+        player.setArrowsStuck(0);
 
         // Settings based on gamemode
         if (Bukkit.getDefaultGameMode() == GameMode.CREATIVE) {

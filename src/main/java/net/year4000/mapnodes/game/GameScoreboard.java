@@ -44,19 +44,19 @@ public class GameScoreboard {
     /** Get a score for the name. */
     public Score getNameScore(String name) {
         String formatted = MessageUtil.replaceColors(name);
-        return getName().getScore(Bukkit.getOfflinePlayer(formatted));
+        return getName().getScore(formatted);
     }
 
     /** Get a score for the list. */
     public Score getListScore(String name) {
         String formatted = MessageUtil.replaceColors(name);
-        return getList().getScore(Bukkit.getOfflinePlayer(formatted));
+        return getList().getScore(formatted);
     }
 
     /** Get a score for the sidebar. */
     public Score getSidebarScore(String name) {
         String formatted = MessageUtil.replaceColors(name);
-        return getSidebar().getScore(Bukkit.getOfflinePlayer(formatted));
+        return getSidebar().getScore(formatted);
     }
 
 }

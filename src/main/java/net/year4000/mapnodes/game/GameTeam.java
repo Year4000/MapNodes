@@ -13,6 +13,7 @@ import net.year4000.mapnodes.configs.Messages;
 import net.year4000.mapnodes.configs.map.Points;
 import net.year4000.mapnodes.configs.map.Teams;
 import net.year4000.mapnodes.game.clocks.DelayJoin;
+import net.year4000.mapnodes.utils.PlayerBadges;
 import net.year4000.mapnodes.utils.TeamException;
 import net.year4000.mapnodes.world.WorldManager;
 import org.bukkit.*;
@@ -79,9 +80,10 @@ public class GameTeam {
         sbTeam.setPrefix(getChatColor().toString());
         sbTeam.setSuffix(MessageUtil.replaceColors("&r"));
         setTeam(sbTeam);
+
         if (team.isUseScoreboard()) {
             Objective o = sbTeam.getScoreboard().getObjective(DisplaySlot.SIDEBAR);
-            o.getScore(Bukkit.getOfflinePlayer(getDisplayName())).setScore(0);
+            o.getScore(getDisplayName()).setScore(0);
         }
 
         // Set up the kits
@@ -295,12 +297,14 @@ public class GameTeam {
     /** Set the display name of the current player. */
     private void setPlayerColor(GamePlayer gamePlayer) {
         Player player = gamePlayer.getPlayer();
-
-        player.setDisplayName(MessageUtil.replaceColors(String.format(
-            "%s%s&r",
+        String colorName = MessageUtil.replaceColors(String.format(
+            "%s%s",
             getChatColor(),
             player.getName()
-         )));
+        ));
+
+        player.setPlayerListName(PlayerBadges.getBadge(player) + " " + (colorName.length() > 12 ? colorName.substring(0,11) : colorName));
+        player.setDisplayName(MessageUtil.replaceColors(colorName + "&r"));
     }
 
     /** Manage how the players see each other. */
