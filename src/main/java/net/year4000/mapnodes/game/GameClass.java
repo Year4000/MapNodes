@@ -110,18 +110,16 @@ public class GameClass {
 
     /** Get the Inventory to pick teams. */
     public static Inventory getClassesGUI() {
-        if (classesGUI == null) {
-            GameManager gm = WorldManager.get().getCurrentGame();
-            classesGUI = Bukkit.createInventory(
-                null,
-                BukkitUtil.invBase(gm.getTeamClasses().size()),
-                Messages.get("class.gui.title")
-            );
+        GameManager gm = WorldManager.get().getCurrentGame();
+        classesGUI = Bukkit.createInventory(
+            null,
+            BukkitUtil.invBase(gm.getTeamClasses().size()),
+            Messages.get("class.gui.title")
+        );
 
-            // Load all classes to inventory
-            for (GameClass classes : gm.getTeamClasses().values()) {
-                classesGUI.addItem(classes.getIcon());
-            }
+        // Load all classes to inventory
+        for (GameClass classes : gm.getTeamClasses().values()) {
+            classesGUI.addItem(classes.getIcon());
         }
 
         return classesGUI;
