@@ -13,8 +13,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -102,11 +100,11 @@ public class GameKit {
     public void loadEffects(Kits.Effects... effects) throws NullPointerException {
         if (effects == null) return;
         for (Kits.Effects effect : effects) {
-            int length = checkNotNull(effect.getDuration(), Messages.get("error.json.effect.length"));
+            int length = checkNotNull(effect.getDuration(), Messages.get("error-json-effect-length"));
             getEffectKit().add(new PotionEffect(
                 checkNotNull(
                     PotionEffectType.getByName(effect.getName().toUpperCase()),
-                    Messages.get("error.json.effect.name")
+                    Messages.get("error-json-effect-name")
                 ),
                 length < 0 ? 99999 : length * 20,
                 effect.getAmplifier(),
@@ -117,14 +115,14 @@ public class GameKit {
 
     /** Load the armor into the kits. */
     public ItemStack loadItem(Kits.Items item) {
-        checkNotNull(item, Messages.get("error.json.item.name"));
+        checkNotNull(item, Messages.get("error-json-item-name"));
 
         Gson gson = new Gson();
 
         ItemStack itemStack = new ItemStack(
             checkNotNull(
                 Material.valueOf(item.getItem().toUpperCase()),
-                Messages.get("error.json.item.name")
+                Messages.get("error-json-item-name")
             ),
             item.getAmount() == null ? 1 : item.getAmount(),
             item.getDamage() == null ? 0 : item.getDamage()

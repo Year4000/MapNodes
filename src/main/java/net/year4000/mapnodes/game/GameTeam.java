@@ -60,17 +60,17 @@ public class GameTeam {
 
     public GameTeam(Teams team, GameManager gameManager) throws NullPointerException {
         // Team name
-        setName(checkNotNull(team.getName(), Messages.get("error.json.team.name")));
+        setName(checkNotNull(team.getName(), Messages.get("error-json-team-name")));
 
         // Team color
-        String teamColor = checkNotNull(team.getColor().toUpperCase(), Messages.get("error.json.team.color"));
+        String teamColor = checkNotNull(team.getColor().toUpperCase(), Messages.get("error-json-team-color"));
         setColorName(teamColor);
         setChatColor(ChatColor.valueOf(teamColor));
         setColor(BukkitUtil.dyeColorToColor(BukkitUtil.chatColorToDyeColor(getChatColor())));
         setDisplayName(MessageUtil.replaceColors(getChatColor() + getName() + "&r"));
 
         // Team max size
-        setMaxSize(checkNotNull(team.getSize(), Messages.get("error.json.team.size")));
+        setMaxSize(checkNotNull(team.getSize(), Messages.get("error-json-team-size")));
 
         // Set up the scoreboard team for this player.
         Team sbTeam = gameManager.getScoreboard().getScoreboard().registerNewTeam(getName());
@@ -89,11 +89,11 @@ public class GameTeam {
         // Set up the kits
         setKit(checkNotNull(
             gameManager.getKits().get(team.getKit().toUpperCase()),
-            Messages.get("error.json.team.kit")
+            Messages.get("error-json-team-kit")
         ));
 
         // Set up the spawns.
-        for (Points point : checkNotNull(team.getSpawns(), Messages.get("error.json.spawn"))) {
+        for (Points point : checkNotNull(team.getSpawns(), Messages.get("error-json-spawn"))) {
                 getSpawns().addAll(createListLocation(gameManager.getWorld(), point));
         }
     }
@@ -134,20 +134,20 @@ public class GameTeam {
     /** Joins the team. */
     public void join(GamePlayer player, boolean force) throws TeamException {
         boolean sizeFit = getCurrentSize() >= getMaxSize();
-        boolean hasPerms = player.getPlayer().hasPermission(Messages.get("team.gui.perm"));
+        boolean hasPerms = player.getPlayer().hasPermission(Messages.get("team-gui-perm"));
         boolean unlimited = getMaxSize() == -1;
 
         // Prevent players from entering when the game ended!
         if (GameStage.isEndGame() && !getName().equals("SPECTATOR"))
-            throw new TeamException(Messages.get("team.join.error"));
+            throw new TeamException(Messages.get("team-join-error"));
 
         // Checks if player can join the team.
         if (!GameManager.isMapMaker(player)) {
             if (sizeFit && !hasPerms && !unlimited)
-                throw new TeamException(Messages.get("team.full"));
+                throw new TeamException(Messages.get("team-full"));
 
             if (!hasPerms && !unlimited && !force)
-                throw new TeamException(Messages.get("team.gui.perm.message"));
+                throw new TeamException(Messages.get("team-gui-perm-message"));
         }
 
         // Add the player to various sub tasks
@@ -156,13 +156,13 @@ public class GameTeam {
         // Message
         if (!getName().equals("SPECTATOR")) {
             player.getPlayer().sendMessage(MessageUtil.replaceColors(String.format(
-                Messages.get("team.join"),
+                Messages.get("team-join"),
                 getDisplayName()
             )));
 
             // If game started use delay joiner
             if (GameStage.isPlaying())
-                new DelayJoin(player, player.getPlayer().hasPermission(Messages.get("team.gui.perm")) ? 5 : 15);
+                new DelayJoin(player, player.getPlayer().hasPermission(Messages.get("team-gui-perm")) ? 5 : 15);
         }
 
         // Various team tasks
@@ -253,7 +253,7 @@ public class GameTeam {
             teamsGUI = Bukkit.createInventory(
                 null,
                 BukkitUtil.invBase(WorldManager.get().getCurrentGame().getTeams().size() + 1),
-                Messages.get("team.gui.title")
+                Messages.get("team-gui-title")
             );
             updateTeamGUI();
         }
@@ -274,7 +274,7 @@ public class GameTeam {
             gm.getGameSize() >= gm.getGameMaxSize() ? "&c" : "&a",
             gm.getGameSize(),
             gm.getGameMaxSize(),
-            Messages.get("team.gui.join.random")
+            Messages.get("team-gui-join-random")
         )));
         items[0] = rand;
         for (GameTeam team : gm.getTeams().values()) {
@@ -285,7 +285,7 @@ public class GameTeam {
                 team.getName(),
                 team.getColorName(),
                 team.getColorSize(),
-                Messages.get("team.gui.join")
+                Messages.get("team-gui-join")
             )));
             items[teams] = i;
             teams++;

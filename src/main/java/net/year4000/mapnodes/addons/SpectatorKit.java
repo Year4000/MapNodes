@@ -23,7 +23,7 @@ public class SpectatorKit extends GameKit {
         setHealth(20);
         setGamemode(GameMode.ADVENTURE);
         setFly(true);
-        getItemKit().put(0, loadItem(gson.fromJson("{\"item\": \"EYE_OF_ENDER\", \"nbt\":{display:{name:\"" + Messages.get("game.join")+"\", lore:[\"&6Open the menu to pick a\", \"&6team and join the game!\"]}}}", Kits.Items.class)));
+        getItemKit().put(0, loadItem(gson.fromJson("{\"item\": \"EYE_OF_ENDER\", \"nbt\":{display:{name:\"" + Messages.get("game-join")+"\", lore:[\"&6Open the menu to pick a\", \"&6team and join the game!\"]}}}", Kits.Items.class)));
         getItemKit().put(8, loadItem(gson.fromJson("{\"item\": \"enchanted_book\", \"nbt\":{display:{name:\"&aGame Servers\", lore:[\"&6Open a menu with\",\"&6the game servers!\"]}}}", Kits.Items.class)));
         getEffectKit().add(hide);
     }

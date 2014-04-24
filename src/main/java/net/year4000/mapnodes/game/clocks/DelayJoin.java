@@ -16,7 +16,7 @@ public class DelayJoin extends Clocker {
 
     /** Code to ran each clock tock. */
     public void runTock(int position) {
-        String msg = String.format(Messages.get("clock.delay"), position);
+        String msg = String.format(Messages.get(player.getPlayer().getLocale(), "clock-delay"), position);
 
         FunEffectsUtil.playSound(player.getPlayer(), Sound.NOTE_PLING);
 
@@ -30,7 +30,7 @@ public class DelayJoin extends Clocker {
 
     /** Code to be ran on the last clock tick. */
     public void runLast(int position) {
-        String msg = Messages.get("clock.delay.last");
+        String msg = Messages.get(player.getPlayer().getLocale(), "clock-delay-last");
 
         FunEffectsUtil.playSound(player.getPlayer(), Sound.NOTE_BASS);
 

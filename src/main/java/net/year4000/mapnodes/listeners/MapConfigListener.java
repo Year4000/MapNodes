@@ -125,7 +125,7 @@ public class MapConfigListener implements Listener {
 
             if (y >= height) {
                 event.getPlayer().sendMessage(String.format(
-                    Messages.get("game.height.max"),
+                    Messages.get(event.getPlayer().getLocale(), "game-height-max"),
                     height
                 ));
                 event.setCancelled(true);

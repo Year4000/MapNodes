@@ -2,7 +2,6 @@ package net.year4000.mapnodes.game.clocks;
 
 import com.ewized.utilities.bukkit.util.FunEffectsUtil;
 import net.year4000.mapnodes.configs.Messages;
-import net.year4000.mapnodes.game.GameKit;
 import net.year4000.mapnodes.game.GameManager;
 import net.year4000.mapnodes.game.GamePlayer;
 import net.year4000.mapnodes.game.GameStage;
@@ -20,16 +19,15 @@ public class NextClock extends Clocker {
     public void runTock(int position) {
         GameManager gm = WorldManager.get().getCurrentGame();
         String next = WorldManager.get().getNextGame().getMap().getName();
-        String msg = String.format(Messages.get("clock.next"), next, position);
 
-        Bukkit.getConsoleSender().sendMessage(msg);
+        Bukkit.getConsoleSender().sendMessage(String.format(Messages.get("clock-next"), next, position));
         for (GamePlayer player : gm.getPlayers().values()) {
             FunEffectsUtil.playSound(player.getPlayer(), Sound.NOTE_PLING);
 
             BarAPI.removeBar(player.getPlayer());
             BarAPI.setMessage(
                 player.getPlayer(),
-                msg,
+                String.format(Messages.get(player.getPlayer().getLocale(), "clock-next"), next, position),
                 (float) ((double)position / (double)getTime()) * 100
             );
         }
@@ -40,20 +38,19 @@ public class NextClock extends Clocker {
         WorldManager wm = WorldManager.get();
         GameManager gm = wm.getCurrentGame();
         wm.setCurrentIndex(wm.getCurrentIndex() + 1);
-        String msg = Messages.get("clock.next.last");
 
-        Bukkit.getConsoleSender().sendMessage(msg);
+        Bukkit.getConsoleSender().sendMessage(String.format(Messages.get("clock-next-last"), position));
         for (GamePlayer player : gm.getPlayers().values()) {
             FunEffectsUtil.playSound(player.getPlayer(), Sound.NOTE_BASS);
 
             BarAPI.removeBar(player.getPlayer());
-            BarAPI.setMessage(player.getPlayer(), msg, 1);
+            BarAPI.setMessage(player.getPlayer(), String.format(player.getPlayer().getLocale(), Messages.get("clock-next-last"), position), 1);
 
             try {
                 GamePlayer.join(player.getPlayer());
 
                 if (player.getPlayer().isDead()) {
-                    player.getPlayer().kickPlayer(Messages.get("clock.dead"));
+                    player.getPlayer().kickPlayer(Messages.get(player.getPlayer().getLocale(), "clock-dead"));
                 }
             } catch (Exception e) {/*Left Blank*/}
         }

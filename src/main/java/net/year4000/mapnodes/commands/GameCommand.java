@@ -10,8 +10,9 @@ import net.year4000.mapnodes.configs.Messages;
 import net.year4000.mapnodes.game.GameManager;
 import net.year4000.mapnodes.game.GameTeam;
 import net.year4000.mapnodes.world.WorldManager;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
-import org.joda.time.DateTime;
+import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 
@@ -30,6 +31,8 @@ public final class GameCommand {
         max = 0
     )
     public static void game(CommandContext args, CommandSender sender) throws CommandException {
+        Player player = Bukkit.getPlayer(sender.getName()).getPlayer();
+
         GameManager gm = WorldManager.get().getCurrentGame();
         ArrayList<String> messages = new ArrayList<>();
         String authors = "";
@@ -37,39 +40,39 @@ public final class GameCommand {
             authors += authors.equals("") ? "&a" + author : "&7, &a" + author;
 
         messages.add("");
-        messages.add(Messages.get("command.info.top"));
+        messages.add(Messages.get(player.getLocale(), "command-info-top"));
         messages.add(String.format(
-            Messages.get("command.info.map"),
+            Messages.get(player.getLocale(), "command-info-map"),
             gm.getMap().getName(),
             gm.getMap().getVersion()
         ));
         messages.add(String.format(
-            Messages.get("command.info.authors"),
+            Messages.get(player.getLocale(), "command-info-authors"),
             authors
         ));
         messages.add(String.format(
-            Messages.get("command.info.description"),
+            Messages.get(player.getLocale(), "command-info-description"),
             gm.getMap().getDescription()
         ));
         messages.add("");
         /* TIME MESSAGES HERE
         messages.add(String.format(
-            Messages.get("command.info.time"),
+            Messages.get(player.getLocale(), "command.info.time"),
             new DateTime(gm.getStartTime()).toString()
         ));
         messages.add("");
         */
-        messages.add(Messages.get("command.info.team.top"));
+        messages.add(Messages.get(player.getLocale(), "command-info-team-top"));
         for (GameTeam team : gm.getTeams().values()) {
             if (team.getName().equals("SPECTATOR")) continue;
             messages.add(String.format(
-                Messages.get("command.info.team"),
+                Messages.get(player.getLocale(), "command-info-team"),
                 team.getDisplayName(),
                 team.getColorSize(),
                 team.getScore()
             ));
         }
-        messages.add(Messages.get("command.info.bottom"));
+        messages.add(Messages.get(player.getLocale(), "command-info-bottom"));
         messages.add("");
 
         for (String message : messages)

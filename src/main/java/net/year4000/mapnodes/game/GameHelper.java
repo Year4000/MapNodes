@@ -19,21 +19,21 @@ public class GameHelper {
             authors += authors.equals("") ? "&a" + author : "&7, &a" + author;
 
         messages.add("");
-        messages.add(Messages.get("game.start.top"));
+        messages.add(Messages.get(player.getPlayer().getLocale(), "game-start-top"));
         messages.add(String.format(
-            Messages.get("game.start.map"),
+            Messages.get(player.getPlayer().getLocale(), "game-start-map"),
             gm.getMap().getName(),
             gm.getMap().getVersion()
         ));
         messages.add(String.format(
-            Messages.get("game.start.authors"),
+            Messages.get(player.getPlayer().getLocale(), "game-start-authors"),
             authors
         ));
         messages.add(String.format(
-            Messages.get("game.start.description"),
+            Messages.get(player.getPlayer().getLocale(), "game-start-description"),
             gm.getMap().getDescription()
         ));
-        messages.add(Messages.get("game.start.bottom"));
+        messages.add(Messages.get(player.getPlayer().getLocale(), "game-start-bottom"));
         messages.add("");
 
         for (String message : messages)
@@ -47,20 +47,20 @@ public class GameHelper {
         ArrayList<String> messages = new ArrayList<>();
 
         messages.add("");
-        messages.add(Messages.get("game.end.top"));
+        messages.add(Messages.get(player.getPlayer().getLocale(), "game-end-top"));
         messages.add(String.format(
-            Messages.get("game.end.team"),
+            Messages.get(player.getPlayer().getLocale(), "game-end-team"),
             player.getTeam().getDisplayName()
         ));
         messages.add(String.format(
-            Messages.get("game.end.player.score"),
+            Messages.get(player.getPlayer().getLocale(), "game-end-player-score"),
             player.getScore()
         ));
         messages.add(String.format(
-            Messages.get("game.end.team.score"),
+            Messages.get(player.getPlayer().getLocale(), "game-end-team-score"),
             player.getTeam().getScore()
         ));
-        messages.add(Messages.get("game.end.bottom"));
+        messages.add(Messages.get(player.getPlayer().getLocale(), "game-end-bottom"));
         messages.add("");
 
         for (String message : messages)

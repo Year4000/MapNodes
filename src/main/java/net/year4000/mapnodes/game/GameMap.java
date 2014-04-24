@@ -77,21 +77,21 @@ public class GameMap {
         final Game configGame = config.getGame();
 
         // Settings from the map json config class.
-        checkNotNull(configMap, Messages.get("error.json.map"));
-        setName(checkNotNull(configMap.getName(), Messages.get("error.json.map.name")));
-        setDescription(checkNotNull(configMap.getDescription(), Messages.get("error.json.map.description")));
-        setVersion(checkNotNull(configMap.getVersion(), Messages.get("error.json.map.version")));
+        checkNotNull(configMap, Messages.get("error-json-map"));
+        setName(checkNotNull(configMap.getName(), Messages.get("error-json-map-name")));
+        setDescription(checkNotNull(configMap.getDescription(), Messages.get("error-json-map-description")));
+        setVersion(checkNotNull(configMap.getVersion(), Messages.get("error-json-map-version")));
         setAuthors(new ArrayList() {{
             if (configMap.getAuthors() != null) {
                 for (int i = 0; i < configMap.getAuthors().length; i++) {
-                    checkArgument(configMap.getAuthors().length > 0, Messages.get("error.json.map.author"));
+                    checkArgument(configMap.getAuthors().length > 0, Messages.get("error-json-map-author"));
                     add(configMap.getAuthors()[i]);
                 }
             }
         }});
 
         // Setting from the game json config class.
-        checkNotNull(configGame, Messages.get("error.json.game"));
+        checkNotNull(configGame, Messages.get("error-json-game"));
         setSpawn(createListLocation(world, configGame.getSpawn()));
         setNoDamage(new ArrayList<EntityDamageEvent.DamageCause>() {{
             for (int i = 0; i < configGame.getNoDamage().length; i++) {
