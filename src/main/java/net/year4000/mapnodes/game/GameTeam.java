@@ -311,7 +311,7 @@ public class GameTeam {
     private void hideSpectator() {
         for (GamePlayer gPlayer : WorldManager.get().getCurrentGame().getPlayers().values()) {
             for (GamePlayer player : WorldManager.get().getCurrentGame().getPlayers().values()) {
-                if (player.isSpecatator() && !gPlayer.isSpecatator())
+                if ((player.isSpecatator() || !player.isHasPlayed()) && !gPlayer.isSpecatator())
                     gPlayer.getPlayer().hidePlayer(player.getPlayer());
                 else
                     gPlayer.getPlayer().showPlayer(player.getPlayer());
