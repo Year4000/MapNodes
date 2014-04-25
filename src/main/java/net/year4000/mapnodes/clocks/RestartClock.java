@@ -1,4 +1,4 @@
-package net.year4000.mapnodes.game.clocks;
+package net.year4000.mapnodes.clocks;
 
 import com.ewized.utilities.bukkit.util.FunEffectsUtil;
 import net.year4000.mapnodes.MapNodes;

@@ -32,10 +32,10 @@ public final class JoinCommand {
         max = 1
     )
     public static void join(CommandContext args, CommandSender sender) throws CommandException {
-        Player player = Bukkit.getPlayer(sender.getName()).getPlayer();
-
         if (!(sender instanceof Player))
             throw new CommandException(Messages.get("command-console"));
+
+        Player player = Bukkit.getPlayer(sender.getName()).getPlayer();
 
         if (GameStage.isEndGame())
             throw new CommandException(Messages.get(player.getLocale(), "team-join-error"));
@@ -65,10 +65,10 @@ public final class JoinCommand {
         max = 0
     )
     public static void spectator(CommandContext args, CommandSender sender) throws CommandException {
-        Player player = Bukkit.getPlayer(sender.getName()).getPlayer();
-
         if (!(sender instanceof Player))
             throw new CommandException(Messages.get("command-console"));
+
+        Player player = Bukkit.getPlayer(sender.getName()).getPlayer();
 
         GameManager gm = WorldManager.get().getCurrentGame();
         GamePlayer gPlayer = gm.getPlayer((Player)sender);

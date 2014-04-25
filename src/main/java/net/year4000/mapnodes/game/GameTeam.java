@@ -12,7 +12,7 @@ import net.year4000.mapnodes.MapNodes;
 import net.year4000.mapnodes.configs.Messages;
 import net.year4000.mapnodes.configs.map.Points;
 import net.year4000.mapnodes.configs.map.Teams;
-import net.year4000.mapnodes.game.clocks.DelayJoin;
+import net.year4000.mapnodes.clocks.DelayJoin;
 import net.year4000.mapnodes.utils.PlayerBadges;
 import net.year4000.mapnodes.utils.TeamException;
 import net.year4000.mapnodes.world.WorldManager;
@@ -156,7 +156,7 @@ public class GameTeam {
         // Message
         if (!getName().equals("SPECTATOR")) {
             player.getPlayer().sendMessage(MessageUtil.replaceColors(String.format(
-                Messages.get("team-join"),
+                Messages.get(player.getPlayer().getLocale(), "team-join"),
                 getDisplayName()
             )));
 
@@ -308,7 +308,7 @@ public class GameTeam {
     }
 
     /** Manage how the players see each other. */
-    private void hideSpectator() {
+    public static void hideSpectator() {
         for (GamePlayer gPlayer : WorldManager.get().getCurrentGame().getPlayers().values()) {
             for (GamePlayer player : WorldManager.get().getCurrentGame().getPlayers().values()) {
                 if ((player.isSpecatator() || !player.isHasPlayed()) && !gPlayer.isSpecatator())

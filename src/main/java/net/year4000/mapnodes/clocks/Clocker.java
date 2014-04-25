@@ -1,4 +1,4 @@
-package net.year4000.mapnodes.game.clocks;
+package net.year4000.mapnodes.clocks;
 
 import lombok.Getter;
 import net.year4000.mapnodes.MapNodes;

@@ -7,6 +7,7 @@ import net.year4000.mapnodes.configs.Messages;
 import net.year4000.mapnodes.game.GameStage;
 import net.year4000.mapnodes.world.WorldManager;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -18,13 +19,14 @@ public final class MatchCommands {
         max = 0
     )
     public static void start(CommandContext args, CommandSender sender) throws CommandException {
-        Player player = Bukkit.getPlayer(sender.getName()).getPlayer();
+        OfflinePlayer player = Bukkit.getPlayer(sender.getName());
+        String locale = player == null ? "messages" : player.getPlayer().getLocale();
 
         if (GameStage.isEndGame() || GameStage.isPlaying())
-            throw new CommandException(Messages.get(player.getLocale(), "command-match-start"));
+            throw new CommandException(Messages.get(locale, "command-match-start"));
 
         WorldManager.get().getCurrentGame().setManStart(true);
-        sender.sendMessage(Messages.get(player.getLocale(), "command-match-start-notice"));
+        sender.sendMessage(Messages.get(locale, "command-match-start-notice"));
         WorldManager.get().getCurrentGame().startMatch();
     }
 
@@ -34,12 +36,13 @@ public final class MatchCommands {
         max = 0
     )
     public static void stop(CommandContext args, CommandSender sender) throws CommandException {
-        Player player = Bukkit.getPlayer(sender.getName()).getPlayer();
+        OfflinePlayer player = Bukkit.getPlayer(sender.getName());
+        String locale = player == null ? "messages" : player.getPlayer().getLocale();
 
         if (GameStage.isPreGame() || GameStage.isEndGame())
-            throw new CommandException(Messages.get(player.getLocale(), "command-match-stop"));
+            throw new CommandException(Messages.get(locale, "command-match-stop"));
 
-        sender.sendMessage(Messages.get(player.getLocale(), "command-match-stop-notice"));
+        sender.sendMessage(Messages.get(locale, "command-match-stop-notice"));
         WorldManager.get().getCurrentGame().stopMatch();
     }
 }

@@ -50,6 +50,7 @@ public class MapNodesListener implements Listener {
             GameManager gm = WorldManager.get().getCurrentGame();
 
             event.setMaxPlayers(gm.getGameMaxSize());
+            event.setNumPlayers(gm.getGameSize());
             String motd = String.format(
                 "%s%s &7| &5&o%s",
                 GameStage.getStageColor(),
