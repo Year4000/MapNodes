@@ -16,9 +16,9 @@ import net.year4000.mapnodes.configs.map.Classes;
 import net.year4000.mapnodes.configs.map.Kits;
 import net.year4000.mapnodes.configs.map.Points;
 import net.year4000.mapnodes.configs.map.Teams;
-import net.year4000.mapnodes.game.clocks.NextClock;
-import net.year4000.mapnodes.game.clocks.RestartClock;
-import net.year4000.mapnodes.game.clocks.StartClock;
+import net.year4000.mapnodes.clocks.NextClock;
+import net.year4000.mapnodes.clocks.RestartClock;
+import net.year4000.mapnodes.clocks.StartClock;
 import net.year4000.mapnodes.utils.Minify;
 import net.year4000.mapnodes.utils.MissingJsonElement;
 import net.year4000.mapnodes.world.WorldManager;
@@ -107,7 +107,7 @@ public class GameManager {
             HashMap<String, GameTeam> teams = new HashMap<>();
             teams.put("SPECTATOR", new GameTeam(new SpectatorTeam(this), this)); // Built in team
 
-            checkArgument(mapConfig.getTeams().entrySet().size() > 1, Messages.get("error.json.team.one"));
+            checkArgument(mapConfig.getTeams().entrySet().size() > 1, Messages.get("error-json-team-one"));
             for (Map.Entry<String, Teams> team : mapConfig.getTeams().entrySet()) {
                 //String kit = team.getValue().getKit();
                 teams.put(

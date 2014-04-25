@@ -12,6 +12,7 @@ import net.year4000.mapnodes.game.GameStage;
 import net.year4000.mapnodes.game.GameTeam;
 import net.year4000.mapnodes.utils.TeamException;
 import net.year4000.mapnodes.world.WorldManager;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -32,15 +33,17 @@ public final class JoinCommand {
     )
     public static void join(CommandContext args, CommandSender sender) throws CommandException {
         if (!(sender instanceof Player))
-            throw new CommandException(Messages.get("command.console"));
+            throw new CommandException(Messages.get("command-console"));
+
+        Player player = Bukkit.getPlayer(sender.getName()).getPlayer();
 
         if (GameStage.isEndGame())
-            throw new CommandException(Messages.get("team.join.error"));
+            throw new CommandException(Messages.get(player.getLocale(), "team-join-error"));
 
         GameManager gm = WorldManager.get().getCurrentGame();
 
         if (!gm.getPlayer((Player)sender).isSpecatator())
-            throw new CommandException(Messages.get("command.team.spectator"));
+            throw new CommandException(Messages.get(player.getLocale(), "command-team-spectator"));
 
         if (args.argsLength() == 0) {
             ((Player) sender).openInventory(GameTeam.getTeamsGUI());
@@ -51,7 +54,7 @@ public final class JoinCommand {
             } catch (TeamException e) {
                 throw new CommandException(e.getRawMessage());
             } catch (NullPointerException e) {
-                throw new CommandException(Messages.get("command.team.unknown"));
+                throw new CommandException(Messages.get(player.getLocale(), "command-team-unknown"));
             }
         }
     }
@@ -63,13 +66,15 @@ public final class JoinCommand {
     )
     public static void spectator(CommandContext args, CommandSender sender) throws CommandException {
         if (!(sender instanceof Player))
-            throw new CommandException(Messages.get("command.console"));
+            throw new CommandException(Messages.get("command-console"));
+
+        Player player = Bukkit.getPlayer(sender.getName()).getPlayer();
 
         GameManager gm = WorldManager.get().getCurrentGame();
         GamePlayer gPlayer = gm.getPlayer((Player)sender);
 
         if (gPlayer.isSpecatator() || !gPlayer.isHasPlayed())
-            throw new CommandException(Messages.get("command.team.player"));
+            throw new CommandException(Messages.get(player.getLocale(), "command-team-player"));
 
         gPlayer.leave();
         GamePlayer.join((Player)sender);

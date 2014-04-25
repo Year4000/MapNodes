@@ -45,6 +45,8 @@ public class GamePlayer {
 
     /** Respawn the player. */
     public void respawn() {
+        GameTeam.hideSpectator();
+
         getTeam().getKit().giveKit(this);
 
         if (getTeamClass() != null)
@@ -77,7 +79,7 @@ public class GamePlayer {
         // Show message of the current map, later to allow time for choosing a team.
         Bukkit.getScheduler().runTaskLater(MapNodes.getInst(), () ->
             player.sendMessage(MessageUtil.replaceColors(String.format(
-                Messages.get("game.login"),
+                Messages.get(player.getLocale(), "game-login"),
                 gm.getMap().getName(),
                 gm.getMap().getVersion(),
                 gm.getMap().getAuthors().get(0)

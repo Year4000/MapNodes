@@ -15,7 +15,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerAchievementAwardedEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -51,6 +50,7 @@ public class MapNodesListener implements Listener {
             GameManager gm = WorldManager.get().getCurrentGame();
 
             event.setMaxPlayers(gm.getGameMaxSize());
+            event.setNumPlayers(gm.getGameSize());
             String motd = String.format(
                 "%s%s &7| &5&o%s",
                 GameStage.getStageColor(),
@@ -69,7 +69,7 @@ public class MapNodesListener implements Listener {
         Player player = (Player)event.getWhoClicked();
         GamePlayer gPlayer = gm.getPlayer(player);
 
-        if (event.getInventory().getName().equals(Messages.get("team.gui.title"))) {
+        if (event.getInventory().getName().equals(Messages.get("team-gui-title"))) {
             try {
                 String team = event.getCurrentItem().getItemMeta().getDisplayName().toUpperCase();
 
@@ -100,7 +100,7 @@ public class MapNodesListener implements Listener {
         GamePlayer gPlayer = gm.getPlayer(player);
 
         //MapNodes.log(event.getInventory().getName());
-        if (event.getInventory().getName().equals(Messages.get("class.gui.title"))) {
+        if (event.getInventory().getName().equals(Messages.get("class-gui-title"))) {
             try {
                 String classes = event.getCurrentItem().getItemMeta().getDisplayName().toUpperCase();
 
@@ -127,15 +127,16 @@ public class MapNodesListener implements Listener {
 
         if (rightAir || rightBlock) {
             ItemStack hand = event.getPlayer().getItemInHand();
+            Player player = event.getPlayer();
 
             if (!hand.hasItemMeta()) return;
             if (!hand.getItemMeta().hasDisplayName()) return;
 
-            if (hand.getItemMeta().getDisplayName().equals(Messages.get("game.join"))) {
+            if (hand.getItemMeta().getDisplayName().equals(Messages.get("game-join"))) {
                 if (!WorldManager.get().getCurrentGame().getPlayer(event.getPlayer()).isSpecatator())
-                    event.getPlayer().sendMessage(Messages.get("error") + Messages.get("command.team.spectator"));
+                    event.getPlayer().sendMessage(Messages.get(player.getLocale(), "error") + Messages.get(player.getLocale(), "command-team-spectator"));
                 else if (GameStage.isEndGame())
-                    event.getPlayer().sendMessage(Messages.get("error") + Messages.get("team.join.error"));
+                    event.getPlayer().sendMessage(Messages.get(player.getLocale(), "error") + Messages.get(player.getLocale(), "team-join-error"));
                 else
                     event.getPlayer().openInventory(GameTeam.getTeamsGUI());
 

@@ -1,9 +1,11 @@
-package net.year4000.mapnodes.game.clocks;
+package net.year4000.mapnodes.clocks;
 
 import com.ewized.utilities.bukkit.util.MessageUtil;
 import net.year4000.mapnodes.MapNodes;
 import net.year4000.mapnodes.configs.Messages;
-import net.year4000.mapnodes.game.*;
+import net.year4000.mapnodes.game.GameManager;
+import net.year4000.mapnodes.game.GameStage;
+import net.year4000.mapnodes.game.GameTeam;
 import net.year4000.mapnodes.world.WorldManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -58,7 +60,7 @@ public class NodeClock implements Runnable {
         }
         else if (GameStage.isEnded()) {
             for (Player player : Bukkit.getOnlinePlayers()) {
-                player.kickPlayer(Messages.get("clock.restart.kick"));
+                player.kickPlayer(Messages.get(player.getLocale(), "clock-restart-kick"));
             }
             Bukkit.shutdown();
         }

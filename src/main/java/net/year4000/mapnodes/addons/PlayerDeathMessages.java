@@ -3,13 +3,11 @@ package net.year4000.mapnodes.addons;
 import com.ewized.utilities.bukkit.util.MessageUtil;
 import net.year4000.mapnodes.MapNodes;
 import net.year4000.mapnodes.game.GameManager;
-import net.year4000.mapnodes.game.GamePlayer;
 import net.year4000.mapnodes.world.WorldManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.inventory.ItemStack;
 

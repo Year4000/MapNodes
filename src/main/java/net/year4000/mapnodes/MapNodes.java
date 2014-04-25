@@ -4,17 +4,16 @@ import com.ewized.utilities.bukkit.util.MessageUtil;
 import com.sk89q.bukkit.util.BukkitCommandsManager;
 import com.sk89q.minecraft.util.commands.*;
 import lombok.Getter;
+import net.year4000.mapnodes.addons.KillStreak;
 import net.year4000.mapnodes.addons.OpenInventories;
+import net.year4000.mapnodes.addons.PlayerDeathMessages;
 import net.year4000.mapnodes.commands.*;
 import net.year4000.mapnodes.configs.MainConfig;
 import net.year4000.mapnodes.configs.Messages;
-import net.year4000.mapnodes.game.clocks.ChunkUnloadClock;
-import net.year4000.mapnodes.game.clocks.NodeClock;
-import net.year4000.mapnodes.game.clocks.WorldClock;
+import net.year4000.mapnodes.clocks.ChunkUnloadClock;
+import net.year4000.mapnodes.clocks.NodeClock;
+import net.year4000.mapnodes.clocks.WorldClock;
 import net.year4000.mapnodes.listeners.*;
-import net.year4000.mapnodes.addons.KillStreak;
-import net.year4000.mapnodes.addons.PlayerDeathMessages;
-import net.year4000.mapnodes.utils.PureRandom;
 import net.year4000.mapnodes.world.WorldManager;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -45,7 +44,7 @@ public class MapNodes extends JavaPlugin {
 
         // If no world's can be loaded disable self
         if (WorldManager.get().getGames().size() == 0 ) {
-            MapNodes.log(MessageUtil.stripColors(Messages.get("error.games.none")));
+            MapNodes.log(MessageUtil.stripColors(Messages.get("error-games-none")));
             Bukkit.getPluginManager().disablePlugin(this);
             return;
         }

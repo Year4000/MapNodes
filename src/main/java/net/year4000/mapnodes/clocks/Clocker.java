@@ -1,4 +1,4 @@
-package net.year4000.mapnodes.game.clocks;
+package net.year4000.mapnodes.clocks;
 
 import lombok.Getter;
 import net.year4000.mapnodes.MapNodes;
@@ -33,10 +33,10 @@ public abstract class Clocker {
     }
 
     /** Code to ran each clock tock. */
-    public void runTock(int position) {}
+    public abstract void runTock(int position);
 
     /** Code to be ran on the last clock tick. */
-    public void runLast(int position) {}
+    public abstract void runLast(int position);
 
     public class Clock implements Runnable {
         private int index;

@@ -3,22 +3,16 @@ package net.year4000.mapnodes.game;
 import com.ewized.utilities.bukkit.util.BukkitUtil;
 import com.ewized.utilities.bukkit.util.ItemUtil;
 import com.ewized.utilities.bukkit.util.MessageUtil;
-import com.google.common.base.Preconditions;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Setter;
-import net.year4000.mapnodes.configs.MapConfig;
 import net.year4000.mapnodes.configs.Messages;
 import net.year4000.mapnodes.configs.map.Classes;
 import net.year4000.mapnodes.utils.ClassException;
-import net.year4000.mapnodes.utils.TeamException;
 import net.year4000.mapnodes.world.WorldManager;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-
-import java.util.Map;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -45,10 +39,10 @@ public class GameClass {
     /** Set up this class to be used in game. */
     public GameClass(Classes classes, GameManager gm) throws NullPointerException {
         // The name of the class
-        setName(checkNotNull(classes.getName(), Messages.get("error.json.class.name")));
+        setName(checkNotNull(classes.getName(), Messages.get("error-json-class-name")));
 
         // The description of the class
-        setDescription(checkNotNull(classes.getDescription(), Messages.get("error.json.class.description")));
+        setDescription(checkNotNull(classes.getDescription(), Messages.get("error-json-class-description")));
 
         // Set up the permission
         if (!classes.getPermission().equals("")) {
@@ -73,24 +67,24 @@ public class GameClass {
         message += "\"";
 
         setIcon(checkNotNull(ItemUtil.makeItem(
-                checkNotNull(classes.getIcon().toUpperCase(), Messages.get("error.json.class.icon")),
+                checkNotNull(classes.getIcon().toUpperCase(), Messages.get("error-json-class-icon")),
                 MessageUtil.replaceColors(String.format(
                         "{\"display\": {\"name\": \"%s\", \"lore\": [\"\",%s%s]}}",
                         getName(),
                         message,
                         getPermission().equals("") ? "" : ",\"\",\"&6" + getPermMessage() + "\""
                 ))
-        ), Messages.get("error.json.class.icon")));
+        ), Messages.get("error-json-class-icon")));
 
         // Set up the kit
-        setKit(checkNotNull(gm.getKits().get(classes.getKit().toUpperCase()), Messages.get("error.json.class.kit")));
+        setKit(checkNotNull(gm.getKits().get(classes.getKit().toUpperCase()), Messages.get("error-json-class-kit")));
     }
 
     /** Give this class to the player. */
     public void give(GamePlayer player) throws ClassException {
         // Prevent players from entering when the game ended!
         if (GameStage.isEndGame())
-            throw new ClassException(Messages.get("class.join.error"));
+            throw new ClassException(Messages.get(player.getPlayer().getLocale(), "class-join-error"));
 
         // Check if the player has the permission
         if (!GameManager.isMapMaker(player)) {
@@ -103,7 +97,7 @@ public class GameClass {
         player.setTeamClass(this);
 
         player.getPlayer().sendMessage(MessageUtil.replaceColors(String.format(
-            Messages.get("class.join"),
+            Messages.get(player.getPlayer().getLocale(), "class-join"),
             getName()
         )));
     }
@@ -114,7 +108,7 @@ public class GameClass {
         classesGUI = Bukkit.createInventory(
             null,
             BukkitUtil.invBase(gm.getTeamClasses().size()),
-            Messages.get("class.gui.title")
+            Messages.get("class-gui-title")
         );
 
         // Load all classes to inventory
