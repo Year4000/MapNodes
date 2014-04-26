@@ -38,7 +38,10 @@ public class GameListener implements Listener {
         if (gPlayer.getLives() == 0) {
             if (gm.getMap().isElimination()) {
                 for (GamePlayer player : gm.getPlayers().values()) {
-                    player.getPlayer().sendMessage(Messages.get(player.getPlayer().getLocale(), "game-elimination"));
+                    player.getPlayer().sendMessage(String.format(
+                        Messages.get(player.getPlayer().getLocale(), "game-elimination"),
+                        gPlayer.getPlayerColor()
+                    ));
                 }
             }
             else {
