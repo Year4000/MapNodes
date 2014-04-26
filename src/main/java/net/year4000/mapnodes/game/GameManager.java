@@ -63,7 +63,7 @@ public class GameManager {
     /** The icon for this game. */
     CachedServerIcon icon;
     /** Is stated manualy dont stop auto. */
-    @Getter(AccessLevel.PRIVATE)
+    @Getter(AccessLevel.PUBLIC)
     @Setter(AccessLevel.PUBLIC)
     private boolean manStart = false;
 
@@ -243,6 +243,26 @@ public class GameManager {
         }
 
         return false;
+    }
+
+    /** Should we end the game for the last team standing */
+    public boolean shouldEndLastTeam() {
+        // If the game was started with the command dont end the game.
+        if (manStart) return false;
+        boolean oneteam = false;
+
+        // Do the caculations.
+        for (GameTeam team : getTeams().values()) {
+            if (team.getName().equals("SPECTATOR")) continue;
+            if (team.getCurrentSize() == 0 && !oneteam)
+                oneteam = true;
+            else if (oneteam)
+                oneteam =  false;
+            else
+                oneteam = true;
+        }
+
+        return oneteam;
     }
 
     /** Is the current player a map maker to the current map. */

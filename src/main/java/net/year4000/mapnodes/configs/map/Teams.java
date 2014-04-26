@@ -16,7 +16,7 @@ public class Teams {
     /** The color of the team. */
     private String color = null;
     /** The max size of the team. */
-    private int size = 25;
+    private int size = 1;
     /** Are teammates save from each other. */
     private boolean allowFriendlyFire = false;
     /** Show each invisable teammates as ghosts. */

@@ -4,22 +4,29 @@ import net.year4000.mapnodes.MapNodes;
 import net.year4000.mapnodes.configs.Messages;
 import net.year4000.mapnodes.game.GameManager;
 import net.year4000.mapnodes.game.GameMap;
+import net.year4000.mapnodes.utils.ChestUtil;
 import net.year4000.mapnodes.world.WorldManager;
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.TNTPrimed;
+import org.bukkit.*;
+import org.bukkit.block.Chest;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.block.*;
 import org.bukkit.event.entity.*;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.Vector;
+
+import java.util.*;
 
 /** Controls how the game should behave base on the json file. */
 @SuppressWarnings("unused")
 public class MapConfigListener implements Listener {
+    private static List<Vector> chests = new ArrayList<>();
+    private static Random rand = new Random(System.currentTimeMillis());
+
     /** Register this class as an event listener. */
     public MapConfigListener() {
         Bukkit.getPluginManager().registerEvents(this, MapNodes.getInst());
@@ -129,6 +136,42 @@ public class MapConfigListener implements Listener {
                     height
                 ));
                 event.setCancelled(true);
+            }
+        }
+    }
+
+    /** Spawn random items into empty chests. */
+    @EventHandler(priority=EventPriority.HIGH)
+    public void onChest(PlayerInteractEvent event) {
+        GameManager gm =  WorldManager.get().getCurrentGame();
+        if (gm.getMap().getChestItems().size() == 0) return;
+
+        Player player = event.getPlayer();
+        boolean rightClick = event.getAction() == Action.RIGHT_CLICK_BLOCK;
+
+        if (rightClick && event.getClickedBlock().getState() instanceof Chest) {
+            Inventory chest = ((Chest)event.getClickedBlock().getState()).getInventory();
+            Vector location = event.getClickedBlock().getLocation().toVector();
+
+            //System.out.println(location);
+            // If empty add to array list and add items to chest
+            if (ChestUtil.isEmpty(chest) && !chests.contains(location)) {
+                chests.add(location);
+                ItemStack[] chestContents = new ItemStack[chest.getSize()];
+
+                for (int i = 0; i < gm.getMap().getAmount(); i++) {
+                    if (gm.getMap().isScatter()) {
+                        int itemIndex = Math.abs(rand.nextInt(gm.getMap().getChestItems().size()));
+                        int scatterIndex = Math.abs(rand.nextInt(chest.getSize()));
+                        chestContents[scatterIndex] = gm.getMap().getChestItems().get(itemIndex);
+                    }
+                    else {
+                        int itemIndex = Math.abs(rand.nextInt(gm.getMap().getChestItems().size()));
+                        chestContents[i] = gm.getMap().getChestItems().get(itemIndex);
+                    }
+                }
+
+                chest.setContents(chestContents);
             }
         }
     }

@@ -114,7 +114,7 @@ public class GameKit {
     }
 
     /** Load the armor into the kits. */
-    public ItemStack loadItem(Kits.Items item) {
+    public static ItemStack loadItem(Kits.Items item) {
         checkNotNull(item, Messages.get("error-json-item-name"));
 
         Gson gson = new Gson();

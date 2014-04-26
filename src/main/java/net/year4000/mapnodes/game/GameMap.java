@@ -73,6 +73,12 @@ public class GameMap {
     private boolean elimination = false;
     /** The lives the player should have. */
     private int lives = -1;
+    /** Should items appear scatter in the chest. */
+    private boolean scatter;
+    /** The Items for the chest. */
+    private List<ItemStack> chestItems = new ArrayList<>();
+    /** The amount of items for the chest. */
+    private int amount;
 
     protected GameMap(MapConfig config, World world) throws NullPointerException, IllegalArgumentException {
         final Map configMap = config.getMap();
@@ -115,6 +121,14 @@ public class GameMap {
                 add(new ItemStack(Material.valueOf(itemName)));
             }
         }});
+        setChestItems(new ArrayList<ItemStack>() {{
+            for (int i = 0; i < configGame.getChests().getItems().size(); i++) {
+                if (configGame.getChests().getItems().size() == 0) break;
+                add(GameKit.loadItem(configGame.getChests().getItems().get(i)));
+            }
+        }});
+        setScatter(configGame.getChests().isScatter());
+        setAmount(configGame.getChests().getAmount());
         setTimeLimit(configGame.getTimeLimit());
         setWorldHeight(configGame.getWorldHeight());
         setDestructible(configGame.isDestructable());

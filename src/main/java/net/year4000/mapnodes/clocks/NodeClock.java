@@ -54,7 +54,7 @@ public class NodeClock implements Runnable {
                 display = new DateTime(System.currentTimeMillis()).minus(gm.getStartTime());
                 color = "&a";
 
-                if (gm.getGameSize() <= 1) {
+                if (gm.getGameSize() <= 1 && !gm.isManStart()) {
                     gm.stopMatch();
                     return;
                 }
