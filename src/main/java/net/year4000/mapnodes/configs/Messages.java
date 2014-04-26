@@ -7,8 +7,7 @@ import net.cubespace.Yamler.Config.InvalidConfigurationException;
 import net.year4000.mapnodes.MapNodes;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.HashMap;
+import java.util.TreeMap;
 
 @SuppressWarnings("unused")
 public class Messages extends Config {
@@ -48,13 +47,13 @@ public class Messages extends Config {
     }
 
     @Comment("All messages that can be changed.")
-    private HashMap<String, String> messages = new HashMap<String, String>() {{
+    private TreeMap<String, String> messages = new TreeMap<String, String>() {{
         put("error", ERROR);
         put("general", "Did I do that!");
 
         // Messages for clocks
         put("clock-start", "&6Game starting in &a%s&6.");
-        put("clock-start-last", "&6&lGame started time on the clock-");
+        put("clock-start-last", "&6&lGame started time on the clock!");
         put("clock-next", "&6Loading &a%s &6in &a%s&6.");
         put("clock-next-last", "&6&lChanging Map!");
         put("clock-restart", "&6Server restarting in &a%s&6.");
@@ -118,6 +117,9 @@ public class Messages extends Config {
         put("game-end-player-score", "&7Your score was&8: &a%s");
         put("game-end-bottom", "&8&m-------------------------------------");
         put("game-height-max", ERROR + "You have reached the world height of &6%s&c.");
+        put("game-life", "&cYou died, You have &6%s&c lives left.");
+        put("game-life-dead", "&cYou ran out of lives and been set to spectator.");
+        put("game-elimination", "&a%s &chas been eliminated.");
 
         // Error checking
         put("error-null", ERROR + "This may not be null.");

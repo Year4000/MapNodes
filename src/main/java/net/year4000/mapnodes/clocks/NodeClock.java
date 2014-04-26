@@ -34,16 +34,32 @@ public class NodeClock implements Runnable {
         }
         // Clock to run during the game.
         else if (GameStage.isPlaying()) {
-            DateTime display = new DateTime(gm.getStopTime()).minus(System.currentTimeMillis());
+            DateTime display;
+            String color;
 
-            // Should we end the game.
-            boolean end = System.currentTimeMillis() - gm.getStopTime() >= 0;
-            if (end || gm.shouldEnd()) {
-                gm.stopMatch();
-                return;
+            // Normal game play
+            if (!gm.getMap().isElimination()) {
+                display = new DateTime(gm.getStopTime()).minus(System.currentTimeMillis());
+                color = getColor(Integer.valueOf(display.toString("mm")));
+
+                // Should we end the game.
+                boolean end = System.currentTimeMillis() - gm.getStopTime() >= 0;
+                if (end || gm.shouldEnd()) {
+                    gm.stopMatch();
+                    return;
+                }
+            }
+            // Elimination mode temp until objectives are in
+            else {
+                display = new DateTime(System.currentTimeMillis()).minus(gm.getStartTime());
+                color = "&a";
+
+                if (gm.getGameSize() <= 1) {
+                    gm.stopMatch();
+                    return;
+                }
             }
 
-            String color = getColor(Integer.valueOf(display.toString("mm")));
             String mapName = gm.getMap().getName();
 
             gm.getScoreboard().getSidebar().setDisplayName(MessageUtil.replaceColors(String.format(

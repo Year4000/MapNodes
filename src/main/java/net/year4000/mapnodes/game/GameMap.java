@@ -69,8 +69,8 @@ public class GameMap {
     private List<Location> spawn = new ArrayList<>();
     /** The items that can be dropped from the player. */
     private List<ItemStack> enabledPlayerDrops = new ArrayList<>();
-    /** Elemintation mode setting */
-    private boolean elemintation = false;
+    /** Elimination mode setting */
+    private boolean elimination = false;
     /** The lives the player should have. */
     private int lives = -1;
 
@@ -127,6 +127,6 @@ public class GameMap {
         setBowVelocity(configGame.getBows().getVelocity());
         setResourcepack(configGame.getResourcepack());
         setLives(configGame.getLives());
-        setElemintation(configGame.isElemintation());
+        setElimination(configGame.isElimination());
     }
 }

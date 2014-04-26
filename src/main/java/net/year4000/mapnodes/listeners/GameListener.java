@@ -10,6 +10,7 @@ import net.year4000.mapnodes.world.WorldManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Effect;
 import org.bukkit.Sound;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -35,12 +36,25 @@ public class GameListener implements Listener {
 
         // If player ran out of lives
         if (gPlayer.getLives() == 0) {
-            gPlayer.getPlayer().sendMessage(Messages.get("game-life-dead"));
+            if (gm.getMap().isElimination()) {
+                for (GamePlayer player : gm.getPlayers().values()) {
+                    player.getPlayer().sendMessage(Messages.get(player.getPlayer().getLocale(), "game-elimination"));
+                }
+            }
+            else {
+                gPlayer.getPlayer().sendMessage(Messages.get(gPlayer.getPlayer().getLocale(), "game-life-dead"));
+            }
+
+            // Run later to give time for player to respawn
+            Bukkit.getScheduler().runTask(MapNodes.getInst(), () -> {
+                gPlayer.leave();
+                GamePlayer.join(event.getPlayer());
+            });
         }
         // If player sill have lives
         else {
             if (gPlayer.getLives() > 0)
-                gPlayer.getPlayer().sendMessage(Messages.get("game-life"));
+                gPlayer.getPlayer().sendMessage(String.format(Messages.get(gPlayer.getPlayer().getLocale(), "game-life"), gPlayer.getLives()));
             event.setRespawnLocation(gPlayer.getTeam().getSafeRandomSpawn());
             gPlayer.respawn();
         }

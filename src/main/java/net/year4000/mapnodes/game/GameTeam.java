@@ -139,15 +139,20 @@ public class GameTeam {
 
         // Prevent players from entering when the game ended!
         if (GameStage.isEndGame() && !getName().equals("SPECTATOR"))
-            throw new TeamException(Messages.get("team-join-error"));
+            throw new TeamException(Messages.get(player.getPlayer().getLocale(), "team-join-error"));
+
+        // Don't allow player from entering the match if elimination mode is on
+        GameManager gm = WorldManager.get().getCurrentGame();
+        if (!GameStage.isPreGame() && gm.getMap().isElimination() && !getName().equals("SPECTATOR"))
+            throw new TeamException(Messages.get(player.getPlayer().getLocale(), "team-join-error"));
 
         // Checks if player can join the team.
         if (!GameManager.isMapMaker(player)) {
             if (sizeFit && !hasPerms && !unlimited)
-                throw new TeamException(Messages.get("team-full"));
+                throw new TeamException(Messages.get(player.getPlayer().getLocale(), "team-full"));
 
             if (!hasPerms && !unlimited && !force)
-                throw new TeamException(Messages.get("team-gui-perm-message"));
+                throw new TeamException(Messages.get(player.getPlayer().getLocale(), "team-gui-perm-message"));
         }
 
         // Add the player to various sub tasks
