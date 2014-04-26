@@ -168,6 +168,11 @@ public class GameTeam {
             // If game started use delay joiner
             if (GameStage.isPlaying())
                 new DelayJoin(player, player.getPlayer().hasPermission(Messages.get("team-gui-perm")) ? 5 : 15);
+
+            player.getPlayer().setCollidesWithEntities(true);
+        }
+        else {
+            player.getPlayer().setCollidesWithEntities(false);
         }
 
         // Various team tasks
