@@ -20,7 +20,7 @@ public class GamePlayer {
     /** The player that this represents. */
     private Player player;
     /** The number of lives this player has. */
-    @Setter(AccessLevel.PUBLIC)
+    @Setter(AccessLevel.PRIVATE)
     private int lives;
     /** The string of the team the player belongs to. */
     private GameTeam team;
@@ -60,7 +60,7 @@ public class GamePlayer {
         // Set up gamePlayer
         GamePlayer gPlayer = new GamePlayer();
         gPlayer.setPlayer(player);
-        gPlayer.setLives(gm.getMap().getMaxLives());
+        gPlayer.setLives(gm.getMap().getLives());
         gm.getPlayers().put(player.getUniqueId(), gPlayer);
 
         // Tp the player to the current map's spawn.
@@ -84,6 +84,26 @@ public class GamePlayer {
                 gm.getMap().getVersion(),
                 gm.getMap().getAuthors().get(0)
             ))), 5 * 20);
+    }
+
+    /** Add x life's */
+    public void addLife(int amount) {
+        setLives(getLives() + amount);
+    }
+
+    /** Add a one life */
+    public void addLife() {
+        addLife(1);
+    }
+
+    /** Remove x life's */
+    public void removeLife(int amount) {
+        setLives(getLives() - amount);
+    }
+
+    /** Remove a one life */
+    public void removeLife() {
+        removeLife(1);
     }
 
     /** Player leaves the current game. */

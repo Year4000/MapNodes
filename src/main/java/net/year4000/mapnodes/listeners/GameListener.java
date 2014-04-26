@@ -2,6 +2,7 @@ package net.year4000.mapnodes.listeners;
 
 import com.ewized.utilities.bukkit.util.FunEffectsUtil;
 import net.year4000.mapnodes.MapNodes;
+import net.year4000.mapnodes.configs.Messages;
 import net.year4000.mapnodes.game.GameManager;
 import net.year4000.mapnodes.game.GamePlayer;
 import net.year4000.mapnodes.game.GameStage;
@@ -28,8 +29,21 @@ public class GameListener implements Listener {
         GameManager gm = WorldManager.get().getCurrentGame();
         final GamePlayer gPlayer = gm.getPlayer(event.getPlayer());
 
-        event.setRespawnLocation(gPlayer.getTeam().getSafeRandomSpawn());
-        gPlayer.respawn();
+        // Remove live if bigger than 0
+        if (gPlayer.getLives() > 0)
+            gPlayer.removeLife();
+
+        // If player ran out of lives
+        if (gPlayer.getLives() == 0) {
+            gPlayer.getPlayer().sendMessage(Messages.get("game-life-dead"));
+        }
+        // If player sill have lives
+        else {
+            if (gPlayer.getLives() > 0)
+                gPlayer.getPlayer().sendMessage(Messages.get("game-life"));
+            event.setRespawnLocation(gPlayer.getTeam().getSafeRandomSpawn());
+            gPlayer.respawn();
+        }
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)

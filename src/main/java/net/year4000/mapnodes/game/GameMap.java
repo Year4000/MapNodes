@@ -43,8 +43,6 @@ public class GameMap {
     private List<EntityDamageEvent.DamageCause> noDamage;
     /** The list of enabled mobs to spawn in the world. */
     private List<EntityType> enabledMobs;
-    /** Get the number of lives the player can have. */
-    private int maxLives;
     /** The time the world should be locked to. */
     private long worldLock = -1;
     /** The difficulty that the map should be set to. */
@@ -71,6 +69,10 @@ public class GameMap {
     private List<Location> spawn = new ArrayList<>();
     /** The items that can be dropped from the player. */
     private List<ItemStack> enabledPlayerDrops = new ArrayList<>();
+    /** Elemintation mode setting */
+    private boolean elemintation = false;
+    /** The lives the player should have. */
+    private int lives = -1;
 
     protected GameMap(MapConfig config, World world) throws NullPointerException, IllegalArgumentException {
         final Map configMap = config.getMap();
@@ -124,5 +126,7 @@ public class GameMap {
         setBowEntity(EntityType.valueOf(configGame.getBows().getEntity().toUpperCase()));
         setBowVelocity(configGame.getBows().getVelocity());
         setResourcepack(configGame.getResourcepack());
+        setLives(configGame.getLives());
+        setElemintation(configGame.isElemintation());
     }
 }

@@ -35,6 +35,10 @@ public class Game {
     private String[] enabledMobs = new String[] {};
     /** What items should be droped from the player. */
     private String[] enabledPlayerDrops = new String[] {};
+    /** Elemintation mode setting */
+    private boolean elemintation = false;
+    /** The lives the player should have. */
+    private int lives = -1;
     /** All settings for tnt. */
     private Tnt tnts = new Tnt();
     /** All settings for bows. */
