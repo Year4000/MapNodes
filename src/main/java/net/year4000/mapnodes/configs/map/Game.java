@@ -75,7 +75,6 @@ public class Game {
     @NoArgsConstructor
     /** All settings for the random chests. */
     public class Chests {
-        private boolean enabled = false;
         private List<Kits.Items> items = new ArrayList<>();
         private int amount = 10;
         private boolean scatter = true;

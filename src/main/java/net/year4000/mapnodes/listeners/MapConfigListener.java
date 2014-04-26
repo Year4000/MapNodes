@@ -175,6 +175,16 @@ public class MapConfigListener implements Listener {
             }
         }
     }
+    /** Spawn random items into empty chests. */
+    @EventHandler(priority=EventPriority.MONITOR)
+    public void onChest(BlockPlaceEvent event) {
+        GameManager gm =  WorldManager.get().getCurrentGame();
+        if (gm.getMap().getChestItems().size() == 0) return;
+
+        if (event.getBlock().getState() instanceof Chest) {
+            chests.add(event.getBlock().getLocation().toVector());
+        }
+    }
 
     /** Controls how the bow is used. */
     // TODO: BETTER BOW LOGIC
