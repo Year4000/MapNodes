@@ -53,7 +53,7 @@ public class Game {
     @NoArgsConstructor
     /** All settings for bows. */
     public class Bow {
-        /** The entity that gets shot from the bow. */
+        /** The entity that geFts shot from the bow. */
         private String entity = "ARROW";
         /** The velocity that the entity is thrown at. */
         private double velocity;

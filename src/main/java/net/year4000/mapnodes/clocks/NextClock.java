@@ -44,7 +44,7 @@ public class NextClock extends Clocker {
             FunEffectsUtil.playSound(player.getPlayer(), Sound.NOTE_BASS);
 
             BarAPI.removeBar(player.getPlayer());
-            BarAPI.setMessage(player.getPlayer(), String.format(player.getPlayer().getLocale(), Messages.get("clock-next-last"), position), 1);
+            BarAPI.setMessage(player.getPlayer(), String.format(Messages.get(player.getPlayer().getLocale(), "clock-next-last"), position), 1);
 
             try {
                 GamePlayer.join(player.getPlayer());
