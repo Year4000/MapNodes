@@ -141,7 +141,7 @@ public class MapConfigListener implements Listener {
     }
 
     /** Spawn random items into empty chests. */
-    @EventHandler(priority=EventPriority.HIGH)
+    @EventHandler
     public void onChest(PlayerInteractEvent event) {
         GameManager gm =  WorldManager.get().getCurrentGame();
         if (gm.getMap().getChestItems().size() == 0) return;
@@ -171,7 +171,7 @@ public class MapConfigListener implements Listener {
                     }
                 }
 
-                chest.setContents(chestContents);
+                Bukkit.getScheduler().runTask(MapNodes.getInst(), () -> chest.setContents(chestContents));
             }
         }
     }

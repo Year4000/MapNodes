@@ -9,8 +9,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
+import org.bukkit.event.*;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -26,7 +25,7 @@ public class OpenInventories implements Listener {
         Bukkit.getPluginManager().registerEvents(this, MapNodes.getInst());
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void openInv(PlayerInteractEntityEvent event) {
         GameManager gm = WorldManager.get().getCurrentGame();
         GamePlayer gPlayer = gm.getPlayer(event.getPlayer());
@@ -35,12 +34,13 @@ public class OpenInventories implements Listener {
             if (event.getRightClicked() instanceof Player) {
                 Player rightClicked = (Player) event.getRightClicked();
 
-                gPlayer.getPlayer().openInventory(openPlayer(gm.getPlayer(rightClicked)));
+                if (!gm.getPlayer(rightClicked).isSpecatator())
+                    gPlayer.getPlayer().openInventory(openPlayer(gm.getPlayer(rightClicked)));
             }
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void openInv(PlayerInteractEvent event) {
         GameManager gm = WorldManager.get().getCurrentGame();
         GamePlayer gPlayer = gm.getPlayer(event.getPlayer());
@@ -49,9 +49,15 @@ public class OpenInventories implements Listener {
             Block block = event.getClickedBlock();
 
             if (block.getState() instanceof InventoryHolder) {
-                Inventory inv = ((InventoryHolder) block.getState()).getInventory();
+                Bukkit.getScheduler().runTask(MapNodes.getInst(), () -> {
+                    Inventory inv = ((InventoryHolder) block.getState()).getInventory();
 
-                gPlayer.getPlayer().openInventory(inv);
+                    // Create a fake inventory so the chest don't really open
+                    Inventory fake = Bukkit.createInventory(null, inv.getSize(), inv.getTitle());
+                    fake.setContents(inv.getContents());
+
+                    gPlayer.getPlayer().openInventory(fake);
+                });
             }
         }
     }
