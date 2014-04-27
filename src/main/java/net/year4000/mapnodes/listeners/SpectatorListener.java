@@ -80,9 +80,7 @@ public class SpectatorListener implements Listener {
         if (gPlayer.isSpecatator() || !GameStage.isPlaying() || !gPlayer.isHasPlayed()) {
             // If the damage is void reset player
             if (event.getCause() == EntityDamageEvent.DamageCause.VOID) {
-                gPlayer.respawn();
-                gPlayer.getPlayer().teleport(gPlayer.getTeam().getSafeRandomSpawn());
-                return;
+                gPlayer.getPlayer().teleport(gm.getTeam("SPECTATOR").getSafeRandomSpawn());
             }
 
             event.setCancelled(true);
