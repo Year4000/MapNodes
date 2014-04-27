@@ -13,6 +13,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.scoreboard.Score;
@@ -96,6 +97,21 @@ public class GameListener implements Listener {
                 }
             }
         }
+    }
 
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onDamage(EntityDamageEvent event) {
+        // If not a player don't check
+        if (!(event.getEntity() instanceof Player)) return;
+
+        GameManager gm = WorldManager.get().getCurrentGame();
+        GamePlayer gPlayer = gm.getPlayer((Player)event.getEntity());
+
+        if (!(gPlayer.isSpecatator() || !GameStage.isPlaying() || !gPlayer.isHasPlayed())) {
+            // If the damage is void reset player
+            if (event.getCause() == EntityDamageEvent.DamageCause.VOID) {
+                ((Player)event.getEntity()).setHealth(0);
+            }
+        }
     }
 }
