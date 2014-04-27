@@ -1,11 +1,10 @@
 package net.year4000.mapnodes.listeners;
 
 import com.ewized.utilities.bukkit.util.FunEffectsUtil;
+import com.ewized.utilities.bukkit.util.MessageUtil;
 import net.year4000.mapnodes.MapNodes;
 import net.year4000.mapnodes.configs.Messages;
-import net.year4000.mapnodes.game.GameManager;
-import net.year4000.mapnodes.game.GamePlayer;
-import net.year4000.mapnodes.game.GameStage;
+import net.year4000.mapnodes.game.*;
 import net.year4000.mapnodes.world.WorldManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Effect;
@@ -16,6 +15,8 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.scoreboard.Score;
+import sun.misc.MessageUtils;
 
 @SuppressWarnings("unused")
 /** Controls the aspects of what is going on during the game. */
@@ -30,37 +31,11 @@ public class GameListener implements Listener {
         GameManager gm = WorldManager.get().getCurrentGame();
         final GamePlayer gPlayer = gm.getPlayer(event.getPlayer());
 
-        // Remove live if bigger than 0
         if (gPlayer.getLives() > 0)
-            gPlayer.removeLife();
+            gPlayer.getPlayer().sendMessage(String.format(Messages.get(gPlayer.getPlayer().getLocale(), "game-life"), gPlayer.getLives()));
 
-        // If player ran out of lives
-        if (gPlayer.getLives() == 0) {
-            if (gm.getMap().isElimination()) {
-                for (GamePlayer player : gm.getPlayers().values()) {
-                    player.getPlayer().sendMessage(String.format(
-                        Messages.get(player.getPlayer().getLocale(), "game-elimination"),
-                        gPlayer.getPlayerColor()
-                    ));
-                }
-            }
-            else {
-                gPlayer.getPlayer().sendMessage(Messages.get(gPlayer.getPlayer().getLocale(), "game-life-dead"));
-            }
-
-            // Run later to give time for player to respawn
-            Bukkit.getScheduler().runTask(MapNodes.getInst(), () -> {
-                gPlayer.leave();
-                GamePlayer.join(event.getPlayer());
-            });
-        }
-        // If player sill have lives
-        else {
-            if (gPlayer.getLives() > 0)
-                gPlayer.getPlayer().sendMessage(String.format(Messages.get(gPlayer.getPlayer().getLocale(), "game-life"), gPlayer.getLives()));
-            event.setRespawnLocation(gPlayer.getTeam().getSafeRandomSpawn());
-            gPlayer.respawn();
-        }
+        event.setRespawnLocation(gPlayer.getTeam().getSafeRandomSpawn());
+        gPlayer.respawn();
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -70,7 +45,38 @@ public class GameListener implements Listener {
         if (gm.getStage() != GameStage.PLAYING) return;
 
         GamePlayer gPlayer = gm.getPlayer(event.getEntity());
+        String playerTeam = gPlayer.getTeam().getName();
         gPlayer.removeScore();
+        gPlayer.removeLife();
+
+        // If player ran out of lives
+        if (gPlayer.getLives() == 0) {
+            gPlayer.getPlayer().sendMessage(Messages.get(gPlayer.getPlayer().getLocale(), "game-life-dead"));
+
+            gPlayer.leave();
+            GamePlayer.join(event.getEntity());
+        }
+
+        // Elimination settings
+        if (gm.getMap().isElimination()) {
+            // Remove from sidebar and make them Eliminated
+            if (gm.getTeam(playerTeam).getCurrentSize() == 0) {
+                gm.getScoreboard().getScoreboard().resetScores(gm.getTeam(playerTeam).getDisplayName());
+                gm.getScoreboard().getSidebarScore(MessageUtil.replaceColors(
+                    "&" + gm.getTeam(playerTeam).getChatColor().getChar() +
+                    "&m" +
+                    playerTeam
+                )).setScore(-1);
+            }
+
+            // Broadcast elimination
+            for (GamePlayer player : gm.getPlayers().values()) {
+                player.getPlayer().sendMessage(String.format(
+                    Messages.get(player.getPlayer().getLocale(), "game-elimination"),
+                    gPlayer.getPlayerColor()
+                ));
+            }
+        }
 
         if (event.getEntity().getKiller() != null) {
             GamePlayer killer = gm.getPlayer(event.getEntity().getKiller());

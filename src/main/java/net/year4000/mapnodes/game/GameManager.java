@@ -249,20 +249,15 @@ public class GameManager {
     public boolean shouldEndLastTeam() {
         // If the game was started with the command dont end the game.
         if (manStart) return false;
-        boolean oneteam = false;
+        int liveTeams = 0;
 
         // Do the caculations.
         for (GameTeam team : getTeams().values()) {
             if (team.getName().equals("SPECTATOR")) continue;
-            if (team.getCurrentSize() == 0 && !oneteam)
-                oneteam = true;
-            else if (oneteam)
-                oneteam =  false;
-            else
-                oneteam = true;
+            if (team.getCurrentSize() > 0) liveTeams++;
         }
 
-        return oneteam;
+        return liveTeams <= 1;
     }
 
     /** Is the current player a map maker to the current map. */
