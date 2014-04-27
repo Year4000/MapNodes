@@ -103,17 +103,17 @@ public class MapConfigListener implements Listener {
         GameManager gm = WorldManager.get().getCurrentGame();
 
         if (!gm.getPlayer(event.getEntity()).isSpecatator()) {
+            // If not set clear all
             if (gm.getMap().getEnabledPlayerDrops().size() < 1) {
                 event.getDrops().clear();
                 return;
             }
 
+            // Enable specific drops
             for (int i = 0; i < event.getDrops().size(); i++) {
-                for (ItemStack keep : gm.getMap().getEnabledPlayerDrops()) {
-                    if (event.getDrops().get(i).getType() != keep.getType()) {
-                        event.getDrops().remove(i);
-                        event.getDrops().add(i, new ItemStack(Material.AIR));
-                    }
+                if (!gm.getMap().getEnabledPlayerDrops().contains(event.getDrops().get(i).getType())) {
+                    event.getDrops().remove(i);
+                    event.getDrops().add(i, null);
                 }
             }
         }

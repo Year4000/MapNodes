@@ -68,7 +68,7 @@ public class GameMap {
     /** The blocks that the player can spawn at. */
     private List<Location> spawn = new ArrayList<>();
     /** The items that can be dropped from the player. */
-    private List<ItemStack> enabledPlayerDrops = new ArrayList<>();
+    private List<Material> enabledPlayerDrops = new ArrayList<>();
     /** Elimination mode setting */
     private boolean elimination = false;
     /** The lives the player should have. */
@@ -114,11 +114,19 @@ public class GameMap {
                 add(entity);
             }
         }});
-        setEnabledPlayerDrops(new ArrayList<ItemStack>() {{
+        setEnabledPlayerDrops(new ArrayList<Material>() {{
             for (int i = 0; i < configGame.getEnabledPlayerDrops().length; i++) {
                 if (configGame.getEnabledPlayerDrops().length == 0) break;
-                String itemName = configGame.getEnabledPlayerDrops()[i].toUpperCase();
-                add(new ItemStack(Material.valueOf(itemName)));
+
+                if (configGame.getEnabledPlayerDrops()[0].equalsIgnoreCase("all")) {
+                    for (Material item : Material.values()) {
+                        add(item);
+                    }
+                }
+                else {
+                    String itemName = configGame.getEnabledPlayerDrops()[i].toUpperCase();
+                    add(Material.valueOf(itemName));
+                }
             }
         }});
         setChestItems(new ArrayList<ItemStack>() {{
