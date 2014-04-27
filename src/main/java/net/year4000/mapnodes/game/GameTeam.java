@@ -17,6 +17,7 @@ import net.year4000.mapnodes.utils.PlayerBadges;
 import net.year4000.mapnodes.utils.TeamException;
 import net.year4000.mapnodes.world.WorldManager;
 import org.bukkit.*;
+import org.bukkit.craftbukkit.v1_7_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -313,7 +314,7 @@ public class GameTeam {
             player.getName()
         ));
 
-        player.setPlayerListName(PlayerBadges.getBadge(player) + " " + (colorName.length() > 12 ? colorName.substring(0,11) : colorName));
+        //player.setPlayerListName(PlayerBadges.getBadge(player) + " " + (colorName.length() > 12 ? colorName.substring(0,11) : colorName));
         player.setDisplayName(MessageUtil.replaceColors(colorName + "&r"));
     }
 
