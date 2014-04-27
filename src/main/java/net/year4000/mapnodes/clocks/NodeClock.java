@@ -54,6 +54,18 @@ public class NodeClock implements Runnable {
                 display = new DateTime(System.currentTimeMillis()).minus(gm.getStartTime());
                 color = "&a";
 
+                // If the team is eliminated do scoreboard strikeout
+                for (GameTeam team : gm.getTeams().values()) {
+                    if (team.getCurrentSize() == 0) {
+                        gm.getScoreboard().getScoreboard().resetScores(team.getDisplayName());
+                        gm.getScoreboard().getSidebarScore(MessageUtil.replaceColors(
+                            "&" + team.getChatColor().getChar() +
+                            "&m" +
+                            team.getName()
+                        )).setScore(-1);
+                    }
+                }
+
                 if ((gm.shouldEndLastTeam() && !gm.isManStart()) || gm.getGameSize() == 0) {
                     gm.stopMatch();
                     return;

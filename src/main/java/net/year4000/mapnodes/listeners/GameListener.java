@@ -46,7 +46,6 @@ public class GameListener implements Listener {
         if (gm.getStage() != GameStage.PLAYING) return;
 
         GamePlayer gPlayer = gm.getPlayer(event.getEntity());
-        String playerTeam = gPlayer.getTeam().getName();
         gPlayer.removeScore();
         gPlayer.removeLife();
 
@@ -60,16 +59,6 @@ public class GameListener implements Listener {
 
         // Elimination settings
         if (gm.getMap().isElimination()) {
-            // Remove from sidebar and make them Eliminated
-            if (gm.getTeam(playerTeam).getCurrentSize() == 0) {
-                gm.getScoreboard().getScoreboard().resetScores(gm.getTeam(playerTeam).getDisplayName());
-                gm.getScoreboard().getSidebarScore(MessageUtil.replaceColors(
-                    "&" + gm.getTeam(playerTeam).getChatColor().getChar() +
-                    "&m" +
-                    playerTeam
-                )).setScore(-1);
-            }
-
             // Broadcast elimination
             for (GamePlayer player : gm.getPlayers().values()) {
                 player.getPlayer().sendMessage(String.format(
