@@ -13,9 +13,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.player.PlayerDropItemEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerPickupItemEvent;
+import org.bukkit.event.player.*;
 
 @SuppressWarnings("unused")
 /** Controls the aspects of the game that for the Spectator. */
@@ -84,6 +82,24 @@ public class SpectatorListener implements Listener {
             }
 
             event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onMove(PlayerMoveEvent event) {
+        // Check if moving to a full block
+        if (
+            event.getFrom().getBlockX() == event.getTo().getBlockX() &&
+            event.getFrom().getBlockY() == event.getTo().getBlockY() &&
+            event.getFrom().getBlockZ() == event.getTo().getBlockZ()
+        ) return;
+
+        // Set spectator fire ticks to 0
+        GameManager gm = WorldManager.get().getCurrentGame();
+        GamePlayer gPlayer = gm.getPlayer(event.getPlayer());
+
+        if (gPlayer.isSpecatator() || !GameStage.isPlaying() || !gPlayer.isHasPlayed()) {
+            event.getPlayer().setFireTicks(0);
         }
     }
 }
