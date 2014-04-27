@@ -30,7 +30,8 @@ public class GameListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onRespawn(PlayerRespawnEvent event) {
         GameManager gm = WorldManager.get().getCurrentGame();
-        final GamePlayer gPlayer = gm.getPlayer(event.getPlayer());
+
+        GamePlayer gPlayer = gm.getPlayer(event.getPlayer());
 
         if (gPlayer.getLives() > 0)
             gPlayer.getPlayer().sendMessage(String.format(Messages.get(gPlayer.getPlayer().getLocale(), "game-life"), gPlayer.getLives()));
@@ -49,14 +50,6 @@ public class GameListener implements Listener {
         gPlayer.removeScore();
         gPlayer.removeLife();
 
-        // If player ran out of lives
-        if (gPlayer.getLives() == 0) {
-            gPlayer.getPlayer().sendMessage(Messages.get(gPlayer.getPlayer().getLocale(), "game-life-dead"));
-
-            gPlayer.leave();
-            GamePlayer.join(event.getEntity());
-        }
-
         // Elimination settings
         if (gm.getMap().isElimination()) {
             // Broadcast elimination
@@ -68,6 +61,7 @@ public class GameListener implements Listener {
             }
         }
 
+        // Game scores
         if (event.getEntity().getKiller() != null) {
             GamePlayer killer = gm.getPlayer(event.getEntity().getKiller());
             FunEffectsUtil.playEffect(gPlayer.getPlayer(), Effect.SMOKE);
@@ -79,12 +73,20 @@ public class GameListener implements Listener {
                     FunEffectsUtil.playSound(killer.getPlayer(), Sound.FIREWORK_BLAST);
                 }
                 // Normal Points
-                else {
+                else if (!killer.isSpecatator()) {
                     killer.getTeam().addScore();
                     killer.addScore();
                     FunEffectsUtil.playSound(killer.getPlayer(), Sound.FIREWORK_LAUNCH);
                 }
             }
+        }
+
+        // If player ran out of lives
+        if (gPlayer.getLives() == 0) {
+            gPlayer.getPlayer().sendMessage(Messages.get(gPlayer.getPlayer().getLocale(), "game-life-dead"));
+
+            gPlayer.leave();
+            GamePlayer.join(event.getEntity());
         }
     }
 
@@ -100,6 +102,7 @@ public class GameListener implements Listener {
             // If the damage is void reset player
             if (event.getCause() == EntityDamageEvent.DamageCause.VOID) {
                 ((Player)event.getEntity()).setHealth(0);
+                event.setCancelled(true);
             }
         }
     }
