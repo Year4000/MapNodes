@@ -87,7 +87,7 @@ public class GameListener implements Listener {
             gPlayer.getPlayer().sendMessage(Messages.get(gPlayer.getPlayer().getLocale(), "game-life-dead"));
 
             gPlayer.leave();
-            GamePlayer.join(event.getEntity());
+            Bukkit.getScheduler().runTask(MapNodes.getInst(), () -> GamePlayer.join(event.getEntity()));
         }
     }
 
