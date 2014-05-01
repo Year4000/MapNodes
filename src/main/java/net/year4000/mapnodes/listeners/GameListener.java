@@ -64,7 +64,8 @@ public class GameListener implements Listener {
         // Game scores
         if (event.getEntity().getKiller() != null) {
             GamePlayer killer = gm.getPlayer(event.getEntity().getKiller());
-            FunEffectsUtil.playEffect(gPlayer.getPlayer(), Effect.SMOKE);
+            FunEffectsUtil.playEffect(gPlayer.getPlayer(), Effect.FIREWORKS_SPARK);
+            FunEffectsUtil.playEffect(gPlayer.getPlayer(), Effect.EXPLOSION);
 
             if (gPlayer.getTeam() != killer.getTeam()) {
                 // Spectator Bonus
