@@ -68,6 +68,14 @@ public class SpectatorListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
+    public void onPickUp(PlayerPickupExperienceEvent event) {
+        GameManager gm = WorldManager.get().getCurrentGame();
+        GamePlayer gPlayer = gm.getPlayer(event.getPlayer());
+
+        event.setCancelled(gPlayer.isSpecatator() || !GameStage.isPlaying() || !gPlayer.isHasPlayed());
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onDamage(EntityDamageEvent event) {
         // If not a player don't check
         if (!(event.getEntity() instanceof Player)) return;
