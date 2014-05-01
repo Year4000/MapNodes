@@ -7,7 +7,7 @@
     <groupId>net.year4000</groupId>
     <artifactId>mapnodes</artifactId>
     <name>MapNodes</name>
-    <version>1.5.11-SNAPSHOT</version>
+    <version>1.5.12-SNAPSHOT</version>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -108,11 +108,11 @@
     </repositories>
 
     <dependencies>
-        <dependency>
+        <!--<dependency>
             <groupId>com.comphenix.protocol</groupId>
             <artifactId>ProtocolLib</artifactId>
             <version>3.1.0</version>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>tc.oc</groupId>
             <artifactId>sportbukkit-api</artifactId>
