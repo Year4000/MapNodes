@@ -96,11 +96,11 @@
             <id>overcast-repo</id>
             <url>https://repo.oc.tc/content/groups/public/</url>
         </repository>
-        <repository>
+        <!--<repository>
             <id>comphenix-repo</id>
             <name>Comphenix Repository</name>
             <url>http://repo.comphenix.net/content/groups/public</url>
-        </repository>
+        </repository>-->
         <repository>
             <id>sk89q-repo</id>
             <url>http://maven.sk89q.com/repo/</url>
