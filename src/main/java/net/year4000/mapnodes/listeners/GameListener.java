@@ -91,7 +91,7 @@ public class GameListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    /*@EventHandler(priority = EventPriority.HIGHEST)
     public void onDamage(EntityDamageEvent event) {
         // If not a player don't check
         if (!(event.getEntity() instanceof Player)) return;
@@ -106,5 +106,5 @@ public class GameListener implements Listener {
                 event.setCancelled(true);
             }
         }
-    }
+    }*/
 }
