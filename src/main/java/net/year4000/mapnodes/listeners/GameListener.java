@@ -91,7 +91,7 @@ public class GameListener implements Listener {
         }
     }
 
-    /*@EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onDamage(EntityDamageEvent event) {
         // If not a player don't check
         if (!(event.getEntity() instanceof Player)) return;
@@ -102,9 +102,11 @@ public class GameListener implements Listener {
         if (!(gPlayer.isSpecatator() || !GameStage.isPlaying() || !gPlayer.isHasPlayed())) {
             // If the damage is void reset player
             if (event.getCause() == EntityDamageEvent.DamageCause.VOID) {
+                EntityDamageEvent death = new EntityDamageEvent(event.getEntity(), EntityDamageEvent.DamageCause.VOID, 0);
+                event.getEntity().setLastDamageCause(death);
                 ((Player)event.getEntity()).setHealth(0);
                 event.setCancelled(true);
             }
         }
-    }*/
+    }
 }
