@@ -52,7 +52,7 @@ public class Messages extends Config {
         put("general", "Did I do that!");
 
         // Messages for clocks
-        put("clock-start", "&a%s&6 starting in &a%s&6.");
+        put("clock-start", "&6Starting &a%s&6 in &a%s&6.");
         put("clock-start-last", "&6&lGame started time on the clock!");
         put("clock-next", "&6Loading &a%s &6in &a%s&6.");
         put("clock-next-last", "&6&lChanging Map!");
