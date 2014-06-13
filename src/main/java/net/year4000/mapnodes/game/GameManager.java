@@ -99,8 +99,10 @@ public class GameManager {
             // Set the kits must be done before teams and team classes.
             HashMap<String, GameKit> kits = new HashMap<>();
             kits.put("SPECTATOR", new SpectatorKit()); // Built in kit
-            for (Map.Entry<String, Kits> kit : mapConfig.getKits().entrySet()) {
-                kits.put(kit.getKey().toUpperCase(), new GameKit(kit.getKey(), mapConfig));
+            if (mapConfig.getKits() != null) {
+                for (Map.Entry<String, Kits> kit : mapConfig.getKits().entrySet()) {
+                    kits.put(kit.getKey().toUpperCase(), new GameKit(kit.getKey(), mapConfig));
+                }
             }
             setKits(kits);
 
