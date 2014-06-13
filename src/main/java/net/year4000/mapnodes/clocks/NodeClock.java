@@ -66,7 +66,7 @@ public class NodeClock implements Runnable {
                     }
                 }
 
-                if ((gm.shouldEndLastTeam() && !gm.isManStart()) || gm.getGameSize() == 0) {
+                if ((gm.shouldEndLastTeam() /*&& !gm.isManStart()*/) || gm.getGameSize() == 0) {
                     gm.stopMatch();
                     return;
                 }

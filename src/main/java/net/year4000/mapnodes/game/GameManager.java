@@ -234,7 +234,7 @@ public class GameManager {
     /** Should we end the game for not having the required players. */
     public boolean shouldEnd() {
         // If the game was started with the command dont end the game.
-        if (manStart) return false;
+        //if (manStart) return false;
 
         // Do the caculations.
         for (GameTeam team : getTeams().values()) {
@@ -248,7 +248,7 @@ public class GameManager {
     /** Should we end the game for the last team standing */
     public boolean shouldEndLastTeam() {
         // If the game was started with the command dont end the game.
-        if (manStart) return false;
+        //if (manStart) return false;
         int liveTeams = 0;
 
         // Do the caculations.

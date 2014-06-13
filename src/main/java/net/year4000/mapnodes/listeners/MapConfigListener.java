@@ -24,7 +24,7 @@ import java.util.*;
 /** Controls how the game should behave base on the json file. */
 @SuppressWarnings("unused")
 public class MapConfigListener implements Listener {
-    private static List<Vector> chests = new ArrayList<>();
+    private static Map<Vector, GameMap> chests = new HashMap<>();
     private static Random rand = new Random(System.currentTimeMillis());
 
     /** Register this class as an event listener. */
@@ -155,8 +155,10 @@ public class MapConfigListener implements Listener {
 
             //System.out.println(location);
             // If empty add to array list and add items to chest
-            if (ChestUtil.isEmpty(chest) && !chests.contains(location)) {
-                chests.add(location);
+            if (ChestUtil.isEmpty(chest) && !chests.containsKey(location)) {
+                if (chests.get(location) != gm.getMap()) return;
+                
+                chests.put(location, gm.getMap());
                 ItemStack[] chestContents = new ItemStack[chest.getSize()];
 
                 for (int i = 0; i < gm.getMap().getAmount(); i++) {
@@ -182,7 +184,7 @@ public class MapConfigListener implements Listener {
         if (gm.getMap().getChestItems().size() == 0) return;
 
         if (event.getBlock().getState() instanceof Chest) {
-            chests.add(event.getBlock().getLocation().toVector());
+            chests.put(event.getBlock().getLocation().toVector(), gm.getMap());
         }
     }
 
