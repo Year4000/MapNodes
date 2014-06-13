@@ -47,7 +47,8 @@ public class GamePlayer {
     public void respawn() {
         GameTeam.hideSpectator();
 
-        getTeam().getKit().giveKit(this);
+        if (getTeam().getKit() != null)
+            getTeam().getKit().giveKit(this);
 
         if (getTeamClass() != null)
             getTeamClass().getKit().giveKit(this);
