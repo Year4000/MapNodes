@@ -44,7 +44,7 @@ public class SpectatorListener implements Listener {
     @EventHandler
     public void onInteract(EntityInteractEvent event) {
         if (!(event.getEntity() instanceof Player)) return;
-        
+
         GameManager gm = WorldManager.get().getCurrentGame();
         GamePlayer gPlayer = gm.getPlayer((Player)event.getEntity());
 

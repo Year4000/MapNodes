@@ -14,7 +14,7 @@ public class WorldClock implements Runnable {
             MapNodes.getInst(),
             this,
             20,
-            MainConfig.get().getWorldLockDelay() * 20
+            MainConfig.get().getWorldLockDelay()
         );
     }
 
