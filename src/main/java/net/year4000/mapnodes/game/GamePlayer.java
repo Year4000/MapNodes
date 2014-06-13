@@ -70,9 +70,8 @@ public class GamePlayer {
         } catch (Exception e) {/*Left Blank*/}
 
 
-        if (!GameStage.isEndGame()) {
-            if (!gm.getMap().isElimination())
-                player.openInventory(GameTeam.getTeamsGUI());
+        if ((!gm.getMap().isElimination() && !GameStage.isPlaying()) || !GameStage.isEndGame()){
+            player.openInventory(GameTeam.getTeamsGUI());
         }
 
         player.setScoreboard(gm.getScoreboard().getScoreboard());
