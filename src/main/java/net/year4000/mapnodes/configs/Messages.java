@@ -17,13 +17,13 @@ public class Messages extends Config {
         // When local is not found default to messages
         locale = new File(MapNodes.getInst().getDataFolder(), locale + ".yml").exists() ? locale : "messages";
         //System.out.println(locale);
-        try {
+        /*try {
             CONFIG_HEADER = new String[] {"Messages for MapNodes"};
             CONFIG_FILE = new File(MapNodes.getInst().getDataFolder(), locale + ".yml");
             init();
         } catch(InvalidConfigurationException e) {
             e.printStackTrace();
-        }
+        }*/
     }
 
     /** Get this instance. */
@@ -52,7 +52,7 @@ public class Messages extends Config {
         put("general", "Did I do that!");
 
         // Messages for clocks
-        put("clock-start", "&6Game starting in &a%s&6.");
+        put("clock-start", "&a%s&6 starting in &a%s&6.");
         put("clock-start-last", "&6&lGame started time on the clock!");
         put("clock-next", "&6Loading &a%s &6in &a%s&6.");
         put("clock-next-last", "&6&lChanging Map!");

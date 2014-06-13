@@ -19,14 +19,14 @@ public class StartClock extends Clocker {
     public void runTock(int position) {
         GameManager gm = WorldManager.get().getCurrentGame();
 
-        Bukkit.getConsoleSender().sendMessage(String.format(Messages.get("clock-start"), position));
+        Bukkit.getConsoleSender().sendMessage(String.format(Messages.get("clock-start"), gm.getMap().getName(), position));
         for (GamePlayer player : gm.getPlayers().values()) {
             FunEffectsUtil.playSound(player.getPlayer(), Sound.NOTE_PLING);
 
             BarAPI.removeBar(player.getPlayer());
             BarAPI.setMessage(
                 player.getPlayer(),
-                String.format(Messages.get(player.getPlayer().getLocale(), "clock-start"), position),
+                String.format(Messages.get(player.getPlayer().getLocale(), "clock-start"), gm.getMap().getName(), position),
                 (float) ((double)position / (double)getTime()) * 100
             );
         }
