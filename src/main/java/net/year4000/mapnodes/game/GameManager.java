@@ -19,6 +19,7 @@ import net.year4000.mapnodes.configs.map.Teams;
 import net.year4000.mapnodes.clocks.NextClock;
 import net.year4000.mapnodes.clocks.RestartClock;
 import net.year4000.mapnodes.clocks.StartClock;
+import net.year4000.mapnodes.listeners.MapConfigListener;
 import net.year4000.mapnodes.utils.Minify;
 import net.year4000.mapnodes.utils.MissingJsonElement;
 import net.year4000.mapnodes.world.WorldManager;
@@ -280,6 +281,7 @@ public class GameManager {
     public void stopMatch() {
         setStage(GameStage.ENDING);
         setManStart(false);
+        MapConfigListener.chests.clear(); // Clear chests from list for next map
 
         for (GamePlayer player : getPlayers().values()) {
             if (!player.isSpecatator()) {
