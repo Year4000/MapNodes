@@ -1,7 +1,6 @@
 package net.year4000.mapnodes.listeners;
 
 import com.ewized.utilities.bukkit.util.FunEffectsUtil;
-import com.ewized.utilities.bukkit.util.MessageUtil;
 import net.minecraft.server.v1_7_R3.EntityPlayer;
 import net.minecraft.server.v1_7_R3.EnumClientCommand;
 import net.minecraft.server.v1_7_R3.PacketPlayInClientCommand;
@@ -20,8 +19,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
-import org.bukkit.scoreboard.Score;
-import sun.misc.MessageUtils;
 
 @SuppressWarnings("unused")
 /** Controls the aspects of what is going on during the game. */
@@ -90,11 +87,13 @@ public class GameListener implements Listener {
         if (gPlayer.getLives() == 0) {
             gPlayer.getPlayer().sendMessage(Messages.get(gPlayer.getPlayer().getLocale(), "game-life-dead"));
 
-            PacketPlayInClientCommand in = new PacketPlayInClientCommand(EnumClientCommand.PERFORM_RESPAWN); // Gets the packet class
-            EntityPlayer cPlayer = ((CraftPlayer) event.getEntity()).getHandle(); // Gets the EntityPlayer class
-            cPlayer.playerConnection.a(in); // Handles the rest of it
-            gPlayer.leave();
-            GamePlayer.join(event.getEntity());
+            Bukkit.getScheduler().runTask(MapNodes.getInst(), () -> {
+                PacketPlayInClientCommand in = new PacketPlayInClientCommand(EnumClientCommand.PERFORM_RESPAWN); // Gets the packet class
+                EntityPlayer cPlayer = ((CraftPlayer) event.getEntity()).getHandle(); // Gets the EntityPlayer class
+                cPlayer.playerConnection.a(in); // Handles the rest of it
+                gPlayer.leave();
+                GamePlayer.join(event.getEntity());
+            });
         }
     }
 

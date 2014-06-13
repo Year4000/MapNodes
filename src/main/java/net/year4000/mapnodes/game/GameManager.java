@@ -108,7 +108,7 @@ public class GameManager {
             HashMap<String, GameTeam> teams = new HashMap<>();
             teams.put("SPECTATOR", new GameTeam(new SpectatorTeam(this), this)); // Built in team
 
-            checkArgument(mapConfig.getTeams().entrySet().size() > 1, Messages.get("error-json-team-one"));
+            checkArgument(mapConfig.getTeams().entrySet().size() > 0, Messages.get("error-json-team-one"));
             for (Map.Entry<String, Teams> team : mapConfig.getTeams().entrySet()) {
                 //String kit = team.getValue().getKit();
                 teams.put(
