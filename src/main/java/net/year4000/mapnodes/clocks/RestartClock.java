@@ -22,7 +22,8 @@ public class RestartClock extends Clocker {
 
         Bukkit.getConsoleSender().sendMessage(String.format(Messages.get("clock-restart"), position));
         for (GamePlayer player : gm.getPlayers().values()) {
-            FunEffectsUtil.playSound(player.getPlayer(), Sound.NOTE_PLING);
+            if (position <= 5)
+                FunEffectsUtil.playSound(player.getPlayer(), Sound.NOTE_PLING);
 
             BarAPI.removeBar(player.getPlayer());
             BarAPI.setMessage(

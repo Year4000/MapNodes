@@ -10,6 +10,9 @@ import net.year4000.mapnodes.world.WorldManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class StartClock extends Clocker {
     public StartClock() {
         super(15); // Starts the game with 15 sec clock-
@@ -21,7 +24,8 @@ public class StartClock extends Clocker {
 
         Bukkit.getConsoleSender().sendMessage(String.format(Messages.get("clock-start"), gm.getMap().getName(), position));
         for (GamePlayer player : gm.getPlayers().values()) {
-            FunEffectsUtil.playSound(player.getPlayer(), Sound.NOTE_PLING);
+            if (position <= 5)
+                FunEffectsUtil.playSound(player.getPlayer(), Sound.NOTE_PLING);
 
             BarAPI.removeBar(player.getPlayer());
             BarAPI.setMessage(
