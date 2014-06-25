@@ -47,9 +47,9 @@ public class PlayerDeathMessages implements Listener {
         GameManager gm = WorldManager.get().getCurrentGame();
 
         return MessageUtil.replaceColors("&7&o" + String.format(
-                message,
-                gm.getPlayer(d).getPlayerColor() + "&7&o",
-                gm.getPlayer(k).getPlayerColor() + "&7&o"
+            message,
+            gm.getPlayer(d).getPlayerColor() + "&7&o",
+            gm.getPlayer(k).getPlayerColor() + "&7&o"
         ));
     }
 

@@ -305,25 +305,26 @@ public class GameTeam {
     /** Set the display name of the current player. */
     private void setPlayerColor(GamePlayer gamePlayer) {
         Player player = gamePlayer.getPlayer();
-        String colorName = MessageUtil.replaceColors(String.format(
+        String colorName = MessageUtil.message(
             "%s%s",
             getChatColor(),
             player.getName()
-        ));
+        );
 
         //player.setPlayerListName(PlayerBadges.getBadge(player) + " " + (colorName.length() > 12 ? colorName.substring(0,11) : colorName));
-        player.setDisplayName(MessageUtil.replaceColors(colorName + "&r"));
+        player.setDisplayName(MessageUtil.message(colorName + "&r"));
     }
 
     /** Manage how the players see each other. */
     public static void hideSpectator() {
-        for (GamePlayer gPlayer : WorldManager.get().getCurrentGame().getPlayers().values()) {
-            for (GamePlayer player : WorldManager.get().getCurrentGame().getPlayers().values()) {
+        GameManager gm = WorldManager.get().getCurrentGame();
+        gm.getPlayers().values().parallelStream().forEach(gPlayer -> {
+            gm.getPlayers().values().parallelStream().forEach(player -> {
                 if ((player.isSpecatator() || !player.isHasPlayed()) && !gPlayer.isSpecatator() && GameStage.isPlaying())
                     gPlayer.getPlayer().hidePlayer(player.getPlayer());
                 else
                     gPlayer.getPlayer().showPlayer(player.getPlayer());
-            }
-        }
+            });
+        });
     }
 }

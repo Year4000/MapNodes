@@ -4,6 +4,7 @@ import com.ewized.utilities.bukkit.util.MessageUtil;
 import net.year4000.mapnodes.MapNodes;
 import net.year4000.mapnodes.game.GameManager;
 import net.year4000.mapnodes.game.GamePlayer;
+import net.year4000.mapnodes.game.GameStage;
 import net.year4000.mapnodes.world.WorldManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -30,7 +31,7 @@ public class OpenInventories implements Listener {
         GameManager gm = WorldManager.get().getCurrentGame();
         GamePlayer gPlayer = gm.getPlayer(event.getPlayer());
 
-        if (gPlayer.isSpecatator()) {
+        if (gPlayer.isSpecatator() || !GameStage.isPlaying() || !gPlayer.isHasPlayed()) {
             if (event.getRightClicked() instanceof Player) {
                 Player rightClicked = (Player) event.getRightClicked();
 
@@ -45,7 +46,7 @@ public class OpenInventories implements Listener {
         GameManager gm = WorldManager.get().getCurrentGame();
         GamePlayer gPlayer = gm.getPlayer(event.getPlayer());
 
-        if (gPlayer.isSpecatator() && event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+        if ((gPlayer.isSpecatator() || !GameStage.isPlaying() || !gPlayer.isHasPlayed()) && event.getAction() == Action.RIGHT_CLICK_BLOCK) {
             Block block = event.getClickedBlock();
 
             if (block.getState() instanceof InventoryHolder) {

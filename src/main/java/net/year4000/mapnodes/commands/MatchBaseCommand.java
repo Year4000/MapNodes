@@ -8,8 +8,8 @@ import org.bukkit.command.CommandSender;
 public final class MatchBaseCommand {
     public MatchBaseCommand() {
         new CommandsManagerRegistration(
-                MapNodes.getInst(),
-                MapNodes.getInst().getCommands()
+            MapNodes.getInst(),
+            MapNodes.getInst().getCommands()
         ).register(MatchBaseCommand.class);
     }
 

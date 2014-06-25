@@ -58,9 +58,9 @@ public final class MapsCommand {
     }
 
     @Command(
-            aliases = {"map", "current"},
-            desc = "Show the next map.",
-            max = 0
+        aliases = {"map", "current"},
+        desc = "Show the next map.",
+        max = 0
     )
     public static void current(CommandContext args, CommandSender sender) throws CommandException {
         sender.sendMessage(map("&6Current Game:", WorldManager.get().getCurrentGame()));

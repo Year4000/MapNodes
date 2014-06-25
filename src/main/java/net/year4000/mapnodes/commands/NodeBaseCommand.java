@@ -14,8 +14,8 @@ public final class NodeBaseCommand {
     }
 
     @Command(
-            aliases = {"node", "mapnodes"},
-            desc = "Nodes base command to manage the maps."
+        aliases = {"node", "mapnodes"},
+        desc = "Nodes base command to manage the maps."
     )
     @CommandPermissions({"mapnodes.admin", "mapnodes.*"})
     @NestedCommand({NodeCommands.class})

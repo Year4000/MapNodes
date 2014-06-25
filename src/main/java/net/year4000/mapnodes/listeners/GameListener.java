@@ -54,12 +54,12 @@ public class GameListener implements Listener {
         // Elimination settings
         if (gm.getMap().isElimination()) {
             // Broadcast elimination
-            for (GamePlayer player : gm.getPlayers().values()) {
+            gm.getPlayers().values().parallelStream().forEach(player -> {
                 player.getPlayer().sendMessage(String.format(
                     Messages.get(player.getPlayer().getLocale(), "game-elimination"),
                     gPlayer.getPlayerColor()
                 ));
-            }
+            });
         }
 
         // Game scores

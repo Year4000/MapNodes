@@ -182,8 +182,7 @@ public class GameKit {
             PlayerInventory playerInv = player.getInventory();
 
             // Effects
-            for (PotionEffect effect : getEffectKit())
-                player.addPotionEffect(effect, true);
+            getEffectKit().forEach(effect ->player.addPotionEffect(effect, true));
 
             // Armor default leather get dye to the teams color
             playerInv.setArmorContents(playerArmor);
@@ -219,11 +218,10 @@ public class GameKit {
         Bukkit.getScheduler().runTask(MapNodes.getInst(), () -> {
             // Clear items / armor
             player.getInventory().clear();
-            //player.getInventory().setArmorContents(null);
+            player.getInventory().setArmorContents(null);
 
             // Remove effects so we can reset them.
-            for (PotionEffect potion : player.getActivePotionEffects())
-                player.removePotionEffect(potion.getType());
+            player.getActivePotionEffects().forEach(potion -> player.removePotionEffect(potion.getType()));
 
             // Force Update Inventory
             player.updateInventory();

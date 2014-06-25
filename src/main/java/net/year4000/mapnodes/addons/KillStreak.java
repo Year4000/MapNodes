@@ -15,6 +15,9 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class KillStreak implements Listener {
     public KillStreak() {
         Bukkit.getPluginManager().registerEvents(this, MapNodes.getInst());
@@ -40,21 +43,20 @@ public class KillStreak implements Listener {
                 FunEffectsUtil.playEffect(killer.getPlayer(), Effect.GHAST_SHRIEK);
             }
 
+            List<Player> online = Arrays.asList(Bukkit.getOnlinePlayers());
+
             if (getBroadcast(killer) != null) {
                 MessageUtil.broadcast(getBroadcast(killer));
-                for (Player player : Bukkit.getOnlinePlayers())
-                    FunEffectsUtil.playSound(player, Sound.FIREWORK_TWINKLE);
+                online.forEach(player -> FunEffectsUtil.playSound(player, Sound.FIREWORK_TWINKLE));
             }
 
             if (killie.getKillStreak() >= 5 && getDefeat(killer, killie) != null) {
                 MessageUtil.broadcast(getDefeat(killer, killie));
                 if (killie.getKillStreak() < 15) {
-                    for (Player player : Bukkit.getOnlinePlayers())
-                        FunEffectsUtil.playSound(player, Sound.BLAZE_DEATH);
+                    online.forEach(player -> FunEffectsUtil.playSound(player, Sound.BLAZE_DEATH));
                 }
                 else {
-                    for (Player player : Bukkit.getOnlinePlayers())
-                        FunEffectsUtil.playSound(player, Sound.ENDERDRAGON_DEATH);
+                    online.forEach(player -> FunEffectsUtil.playSound(player, Sound.ENDERDRAGON_DEATH));
                 }
             }
 
@@ -86,7 +88,7 @@ public class KillStreak implements Listener {
         else if ((killStreak >= 6) && (multipleKill))
             message = "&7-- &a&lMonster kill!!! &7--";
 
-        return message == null ? null : MessageUtil.replaceColors(message);
+        return message == null ? null : MessageUtil.message(message);
     }
 
     /** Gets the broadcast message to show to everyone. */
@@ -109,12 +111,12 @@ public class KillStreak implements Listener {
         else if (killStreak >= 25)
             message = "is on a massacre!";
 
-        return message == null ? null : MessageUtil.replaceColors(String.format(
+        return message == null ? null : MessageUtil.message(
             "%s &a&o%s %s",
             killer.getPlayerColor(),
             message,
             "&7&o(&a&o" + killStreak + " kills&7&o)"
-        ));
+        );
     }
 
     /** Gets the defeat message to show to everyone. */
@@ -137,12 +139,12 @@ public class KillStreak implements Listener {
         else if (killStreak >= 7)
             message = "killing spree";
 
-        return message == null ? null : MessageUtil.replaceColors(String.format(
+        return message == null ? null : MessageUtil.message(
             "%s&a&o's %s %s %s&a&o!",
             killie.getPlayerColor(),
             message,
             "was stopped by",
             killer.getPlayerColor()
-        ));
+        );
     }
 }

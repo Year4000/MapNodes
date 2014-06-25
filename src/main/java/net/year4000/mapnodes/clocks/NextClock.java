@@ -21,7 +21,7 @@ public class NextClock extends Clocker {
         String next = WorldManager.get().getNextGame().getMap().getName();
 
         Bukkit.getConsoleSender().sendMessage(String.format(Messages.get("clock-next"), next, position));
-        for (GamePlayer player : gm.getPlayers().values()) {
+        gm.getPlayers().values().parallelStream().forEach(player -> {
             if (position <= 5)
                 FunEffectsUtil.playSound(player.getPlayer(), Sound.NOTE_PLING);
 
@@ -31,7 +31,7 @@ public class NextClock extends Clocker {
                 String.format(Messages.get(player.getPlayer().getLocale(), "clock-next"), next, position),
                 (float) ((double)position / (double)getTime()) * 100
             );
-        }
+        });
     }
 
     /** Code to be ran on the last clock tick. */
@@ -41,7 +41,7 @@ public class NextClock extends Clocker {
         wm.nextGame();
 
         Bukkit.getConsoleSender().sendMessage(String.format(Messages.get("clock-next-last"), position));
-        for (GamePlayer player : gm.getPlayers().values()) {
+        gm.getPlayers().values().parallelStream().forEach(player -> {
             FunEffectsUtil.playSound(player.getPlayer(), Sound.NOTE_BASS);
 
             BarAPI.removeBar(player.getPlayer());
@@ -53,7 +53,7 @@ public class NextClock extends Clocker {
                 }
                 GamePlayer.join(player.getPlayer());
             } catch (Exception e) {/*Left Blank*/}
-        }
+        });
 
         gm.setStage(GameStage.WAITING);
     }

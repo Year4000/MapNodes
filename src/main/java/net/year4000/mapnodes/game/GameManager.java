@@ -285,7 +285,7 @@ public class GameManager {
         setManStart(false);
         MapConfigListener.chests.clear(); // Clear chests from list for next map
 
-        for (GamePlayer player : getPlayers().values()) {
+        getPlayers().values().parallelStream().forEach(player -> {
             if (!player.isSpecatator()) {
                 // TODO MOVE FIREWORK TO FUN EFFECT UTIL
                 Firework firework = (Firework)player.getPlayer().getWorld().spawn(player.getPlayer().getLocation(), Firework.class);
@@ -309,7 +309,7 @@ public class GameManager {
                 getTeam("SPECTATOR").join(getPlayer(player.getPlayer()));
                 getPlayer(player.getPlayer()).getTeam().getKit().giveKit(player);
             } catch (Exception e) {/*Left Blank*/}
-        }
+        });
 
         if (WorldManager.get().isNextGame())
             new NextClock(); // Load the next map.

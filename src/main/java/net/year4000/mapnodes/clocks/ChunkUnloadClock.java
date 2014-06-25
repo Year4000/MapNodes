@@ -3,8 +3,9 @@ package net.year4000.mapnodes.clocks;
 import net.year4000.mapnodes.MapNodes;
 import net.year4000.mapnodes.world.WorldManager;
 import org.bukkit.Bukkit;
-import org.bukkit.Chunk;
 import org.bukkit.World;
+
+import java.util.Arrays;
 
 public class ChunkUnloadClock implements Runnable {
     public ChunkUnloadClock() {
@@ -16,8 +17,7 @@ public class ChunkUnloadClock implements Runnable {
         for (World world : Bukkit.getWorlds()) {
             if (WorldManager.get().getCurrentGame().getWorld() == world) continue;
 
-            for (Chunk chunk : world.getLoadedChunks())
-                chunk.unload(true);
+            Arrays.asList(world.getLoadedChunks()).parallelStream().forEach(chunk -> chunk.unload(true));
         }
     }
 }

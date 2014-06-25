@@ -77,7 +77,6 @@ public final class GameCommand {
         messages.add(Messages.get(locale, "command-info-bottom"));
         messages.add("");
 
-        for (String message : messages)
-            sender.sendMessage(MessageUtil.replaceColors(message));
+        messages.forEach( message -> sender.sendMessage(MessageUtil.message(message)));
     }
 }

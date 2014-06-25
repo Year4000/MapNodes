@@ -14,10 +14,10 @@ public class SpectatorKit extends GameKit {
         Gson gson = new Gson();
         // TODO: Grab the info from the config file.
         PotionEffect hide = new PotionEffect(
-                PotionEffectType.INVISIBILITY,
-                999999,
-                1,
-                true
+            PotionEffectType.INVISIBILITY,
+            999999,
+            1,
+            true
         );
         setFood(20);
         setHealth(20);

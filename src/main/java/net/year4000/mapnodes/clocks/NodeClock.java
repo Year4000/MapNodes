@@ -11,6 +11,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.joda.time.DateTime;
 
+import java.util.Arrays;
+
 public class NodeClock implements Runnable {
 
     public NodeClock() {
@@ -55,7 +57,7 @@ public class NodeClock implements Runnable {
                 color = "&a";
 
                 // If the team is eliminated do scoreboard strikeout
-                for (GameTeam team : gm.getTeams().values()) {
+                gm.getTeams().values().parallelStream().forEach(team -> {
                     if (team.getCurrentSize() == 0) {
                         gm.getScoreboard().getScoreboard().resetScores(team.getDisplayName());
                         gm.getScoreboard().getSidebarScore(MessageUtil.replaceColors(
@@ -64,7 +66,7 @@ public class NodeClock implements Runnable {
                             team.getName()
                         )).setScore(-1);
                     }
-                }
+                });
 
                 if ((gm.shouldEndLastTeam() /*&& !gm.isManStart()*/) || gm.getGameSize() == 0) {
                     gm.stopMatch();
@@ -87,9 +89,9 @@ public class NodeClock implements Runnable {
             )));
         }
         else if (GameStage.isEnded()) {
-            for (Player player : Bukkit.getOnlinePlayers()) {
+            Arrays.asList(Bukkit.getOnlinePlayers()).parallelStream().forEach(player -> {
                 player.kickPlayer(Messages.get(player.getLocale(), "clock-restart-kick"));
-            }
+            });
             Bukkit.shutdown();
         }
     }

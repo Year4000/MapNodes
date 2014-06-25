@@ -23,7 +23,7 @@ public class StartClock extends Clocker {
         GameManager gm = WorldManager.get().getCurrentGame();
 
         Bukkit.getConsoleSender().sendMessage(String.format(Messages.get("clock-start"), gm.getMap().getName(), position));
-        for (GamePlayer player : gm.getPlayers().values()) {
+        gm.getPlayers().values().parallelStream().forEach(player -> {
             if (position <= 5)
                 FunEffectsUtil.playSound(player.getPlayer(), Sound.NOTE_PLING);
 
@@ -33,7 +33,7 @@ public class StartClock extends Clocker {
                 String.format(Messages.get(player.getPlayer().getLocale(), "clock-start"), gm.getMap().getName(), position),
                 (float) ((double)position / (double)getTime()) * 100
             );
-        }
+        });
     }
 
     /** Code to be ran on the last clock tick. */
@@ -41,7 +41,7 @@ public class StartClock extends Clocker {
         GameManager gm = WorldManager.get().getCurrentGame();
 
         Bukkit.getConsoleSender().sendMessage(Messages.get("clock-start-last"));
-        for (GamePlayer player : gm.getPlayers().values()) {
+        gm.getPlayers().values().parallelStream().forEach(player -> {
             FunEffectsUtil.playSound(player.getPlayer(), Sound.NOTE_BASS);
 
             BarAPI.removeBar(player.getPlayer());
@@ -54,7 +54,7 @@ public class StartClock extends Clocker {
             if (!player.isSpecatator()) {
                 player.start();
             }
-        }
+        });
 
         gm.setStage(GameStage.PLAYING);
         gm.setStartTime(System.currentTimeMillis());
