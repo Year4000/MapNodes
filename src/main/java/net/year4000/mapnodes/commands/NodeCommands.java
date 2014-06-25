@@ -58,8 +58,7 @@ public final class NodeCommands {
             throw new CommandException(Messages.get(locale, "command-node-out"));
 
         GameManager gm = (GameManager)WorldManager.get().getGames().toArray()[index];
-        WorldManager.get().unLoadMap(gm.getWorld());
-        WorldManager.get().getGames().remove(gm);
+        WorldManager.get().removeGame(gm);
 
         sender.sendMessage(MessageUtil.message(
             Messages.get(locale, "command-node-removed"),
@@ -94,5 +93,17 @@ public final class NodeCommands {
         } catch (NullPointerException e) {
             throw new CommandException(e.getMessage());
         }
+    }
+
+    @Command(
+        aliases = {"purge"},
+        desc = "Purge the map queue.",
+        min = 0
+    )
+    public static void purge(CommandContext args, CommandSender sender) throws CommandException {
+        WorldManager wm = WorldManager.get();
+
+        WorldManager.get().getGames().forEach(w -> WorldManager.get().removeGame(w));
+        sender.sendMessage(MessageUtil.message("&6 All the maps have been purged!"));
     }
 }

@@ -5,11 +5,15 @@ import com.ewized.utilities.bukkit.util.MessageUtil;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Setter;
+import net.minecraft.server.v1_7_R3.EntityPlayer;
+import net.minecraft.server.v1_7_R3.EnumClientCommand;
+import net.minecraft.server.v1_7_R3.PacketPlayInClientCommand;
 import net.year4000.mapnodes.MapNodes;
 import net.year4000.mapnodes.configs.Messages;
 import net.year4000.mapnodes.world.WorldManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Effect;
+import org.bukkit.craftbukkit.v1_7_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
 @Data
@@ -168,5 +172,12 @@ public class GamePlayer {
             getTeam().getChatColor(),
             player.getName()
         ));
+    }
+
+    /** Send the packet to respawn the player. */
+    public void respawnPlayer() {
+        PacketPlayInClientCommand in = new PacketPlayInClientCommand(EnumClientCommand.PERFORM_RESPAWN); // Gets the packet class
+        EntityPlayer cPlayer = ((CraftPlayer) player).getHandle(); // Gets the EntityPlayer class
+        cPlayer.playerConnection.a(in); // Handles the rest of it
     }
 }

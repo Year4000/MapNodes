@@ -1,9 +1,11 @@
 package net.year4000.mapnodes.world;
 
 import com.ewized.utilities.core.util.FileUtil;
+import com.google.common.io.Files;
 import lombok.Getter;
 import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
+import net.minecraft.util.org.apache.commons.io.FileUtils;
 import net.year4000.mapnodes.MapNodes;
 import net.year4000.mapnodes.configs.MainConfig;
 import net.year4000.mapnodes.game.GameManager;
@@ -24,13 +26,14 @@ import java.util.List;
 
 public class WorldManager {
     /** WorldManager. */
-    @Getter
     private static WorldManager inst = null;
     /** The list of games. */
     @Getter
     private Deque<GameManager> games = new ArrayDeque<>();
     /** The current game. */
     private GameManager currentGame = null;
+    /** The internal match id counter */
+    private static int match = 0;
 
     /** Add a game world to the games. */
     private WorldManager() {
@@ -84,7 +87,7 @@ public class WorldManager {
             File world = getWorld(mapName);
 
             // Load the map
-            worldName = world.getName() + "-" + System.currentTimeMillis();
+            worldName = world.getName().replaceAll(" ", "_") + "-" + worldCounter();
             FileUtil.copy(world, new File(worldsFolder + File.separator + worldName));
 
             // Unzip the file so we can use it temporaly untill new system is in place
@@ -118,7 +121,7 @@ public class WorldManager {
         try {
             long startTime = System.currentTimeMillis();
 
-            games.push(new GameManager(world));
+            games.addLast(new GameManager(world));
 
             world.setAutoSave(false);
             MapNodes.log(String.format(
@@ -141,12 +144,17 @@ public class WorldManager {
     /** Unload a world so the server have resources. */
     public void unLoadMap(World world) {
         Bukkit.unloadWorld(world, false);
+        try {
+            FileUtils.deleteDirectory(world.getWorldFolder());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /** Get the current gameManager. */
     public GameManager getCurrentGame() {
         if (currentGame == null) {
-            nextGame();
+            currentGame = games.pop();
         }
         return currentGame;
     }
@@ -158,6 +166,12 @@ public class WorldManager {
 
     /** Set the next game */
     public GameManager nextGame() {
+        // Unload the last game's world, when all players left it.
+        World lastGameWorld = currentGame.getWorld();
+        Bukkit.getScheduler().runTask(MapNodes.getInst(), () -> {
+            while (lastGameWorld.getPlayers().size() > 0);
+            unLoadMap(lastGameWorld);
+        });
         currentGame = games.pop();
         return currentGame;
     }
@@ -165,5 +179,16 @@ public class WorldManager {
     /** Should we try to load a new map */
     public boolean isNextGame() {
         return games.size() > 0;
+    }
+
+    /** Get the world counter */
+    private int worldCounter() {
+        return ++match;
+    }
+
+    /** Remove the world from the system */
+    public void removeGame(GameManager gameManager) {
+        unLoadMap(gameManager.getWorld());
+        games.remove(gameManager);
     }
 }

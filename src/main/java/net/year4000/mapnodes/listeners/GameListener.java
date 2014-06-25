@@ -88,9 +88,7 @@ public class GameListener implements Listener {
             gPlayer.getPlayer().sendMessage(Messages.get(gPlayer.getPlayer().getLocale(), "game-life-dead"));
 
             Bukkit.getScheduler().runTask(MapNodes.getInst(), () -> {
-                PacketPlayInClientCommand in = new PacketPlayInClientCommand(EnumClientCommand.PERFORM_RESPAWN); // Gets the packet class
-                EntityPlayer cPlayer = ((CraftPlayer) event.getEntity()).getHandle(); // Gets the EntityPlayer class
-                cPlayer.playerConnection.a(in); // Handles the rest of it
+                gPlayer.respawnPlayer();
                 gPlayer.leave();
                 GamePlayer.join(event.getEntity());
             });

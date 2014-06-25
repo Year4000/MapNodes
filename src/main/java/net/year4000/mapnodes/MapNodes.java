@@ -4,6 +4,7 @@ import com.ewized.utilities.bukkit.util.MessageUtil;
 import com.sk89q.bukkit.util.BukkitCommandsManager;
 import com.sk89q.minecraft.util.commands.*;
 import lombok.Getter;
+import net.minecraft.util.org.apache.commons.io.FileUtils;
 import net.year4000.mapnodes.addons.KillStreak;
 import net.year4000.mapnodes.addons.OpenInventories;
 import net.year4000.mapnodes.addons.PlayerDeathMessages;
@@ -72,6 +73,13 @@ public class MapNodes extends JavaPlugin {
         new NodeBaseCommand();
         new MatchBaseCommand();
 
+    }
+
+    @Override
+    public void onDisable() {
+        // Delete worlds created by MapNodes
+        FileUtils.deleteQuietly(WorldManager.get().getCurrentGame().getWorld().getWorldFolder());
+        WorldManager.get().getGames().forEach(w -> WorldManager.get().removeGame(w));
     }
 
     @SuppressWarnings("unchecked")

@@ -48,15 +48,13 @@ public class NextClock extends Clocker {
             BarAPI.setMessage(player.getPlayer(), String.format(Messages.get(player.getPlayer().getLocale(), "clock-next-last"), position), 1);
 
             try {
-                GamePlayer.join(player.getPlayer());
-
                 if (player.getPlayer().isDead()) {
                     player.getPlayer().kickPlayer(Messages.get(player.getPlayer().getLocale(), "clock-dead"));
                 }
+                GamePlayer.join(player.getPlayer());
             } catch (Exception e) {/*Left Blank*/}
         }
 
-        new ChunkUnloadClock();
         gm.setStage(GameStage.WAITING);
     }
 }
