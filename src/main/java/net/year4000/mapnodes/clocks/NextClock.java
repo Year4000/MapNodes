@@ -38,7 +38,7 @@ public class NextClock extends Clocker {
     public void runLast(int position) {
         WorldManager wm = WorldManager.get();
         GameManager gm = wm.getCurrentGame();
-        wm.setCurrentIndex(wm.getCurrentIndex() + 1);
+        wm.nextGame();
 
         Bukkit.getConsoleSender().sendMessage(String.format(Messages.get("clock-next-last"), position));
         for (GamePlayer player : gm.getPlayers().values()) {
@@ -58,7 +58,5 @@ public class NextClock extends Clocker {
 
         new ChunkUnloadClock();
         gm.setStage(GameStage.WAITING);
-
-        wm.unLoadMap(wm.getLastGame().getWorld());
     }
 }

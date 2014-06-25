@@ -84,11 +84,6 @@
             <id>overcast-repo</id>
             <url>https://repo.oc.tc/content/groups/public/</url>
         </repository>
-        <!--<repository>
-            <id>comphenix-repo</id>
-            <name>Comphenix Repository</name>
-            <url>http://repo.comphenix.net/content/groups/public</url>
-        </repository>-->
         <repository>
             <id>sk89q-repo</id>
             <url>http://maven.sk89q.com/repo/</url>
@@ -96,11 +91,6 @@
     </repositories>
 
     <dependencies>
-        <!--<dependency>
-            <groupId>com.comphenix.protocol</groupId>
-            <artifactId>ProtocolLib</artifactId>
-            <version>3.1.0</version>
-        </dependency>-->
         <dependency>
             <groupId>tc.oc</groupId>
             <artifactId>sportbukkit-api</artifactId>
@@ -114,7 +104,7 @@
         <dependency>
             <groupId>com.ewized.utilities</groupId>
             <artifactId>bukkit</artifactId>
-            <version>LATEST</version>
+            <version>1.2-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.sk89q</groupId>

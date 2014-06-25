@@ -1,7 +1,9 @@
 package net.year4000.mapnodes.world;
 
 import com.ewized.utilities.core.util.FileUtil;
-import lombok.Data;
+import lombok.Getter;
+import net.lingala.zip4j.core.ZipFile;
+import net.lingala.zip4j.exception.ZipException;
 import net.year4000.mapnodes.MapNodes;
 import net.year4000.mapnodes.configs.MainConfig;
 import net.year4000.mapnodes.game.GameManager;
@@ -15,17 +17,20 @@ import org.bukkit.WorldType;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.List;
 
-@Data
 public class WorldManager {
     /** WorldManager. */
+    @Getter
     private static WorldManager inst = null;
     /** The list of games. */
-    private List<GameManager> games = new ArrayList<>();
+    @Getter
+    private Deque<GameManager> games = new ArrayDeque<>();
     /** The current game. */
-    private int currentIndex = 0;
+    private GameManager currentGame = null;
 
     /** Add a game world to the games. */
     private WorldManager() {
@@ -81,7 +86,11 @@ public class WorldManager {
             // Load the map
             worldName = world.getName() + "-" + System.currentTimeMillis();
             FileUtil.copy(world, new File(worldsFolder + File.separator + worldName));
-        } catch (IOException e) {
+
+            // Unzip the file so we can use it temporaly untill new system is in place
+            ZipFile zipWorld = new ZipFile(worldsFolder + File.separator + worldName + File.separator + "world.zip");
+            zipWorld.extractAll(worldsFolder + File.separator + worldName);
+        } catch (IOException | ZipException e) {
             e.printStackTrace();
         }
 
@@ -105,14 +114,11 @@ public class WorldManager {
     }
 
     /** Load a map so we can manage it. */
-    public boolean loadMap(World world, Integer index) {
+    public boolean loadMap(World world) {
         try {
             long startTime = System.currentTimeMillis();
 
-            if (index != null)
-                games.add(index, new GameManager(world));
-            else
-                games.add(new GameManager(world));
+            games.push(new GameManager(world));
 
             world.setAutoSave(false);
             MapNodes.log(String.format(
@@ -132,11 +138,6 @@ public class WorldManager {
         return true;
     }
 
-    /** Load a map so we can manage it. */
-    public boolean loadMap(World world) {
-        return loadMap(world, null);
-    }
-
     /** Unload a world so the server have resources. */
     public void unLoadMap(World world) {
         Bukkit.unloadWorld(world, false);
@@ -144,18 +145,25 @@ public class WorldManager {
 
     /** Get the current gameManager. */
     public GameManager getCurrentGame() {
-        return games.get(currentIndex);
+        if (currentGame == null) {
+            nextGame();
+        }
+        return currentGame;
     }
 
     /** Get the current gameManager. */
     public GameManager getNextGame() {
-        int map = currentIndex + 1 == getGames().size() ? 0 : currentIndex + 1;
-        return games.get(map);
+        return games.peek();
     }
 
-    /** Get the current gameManager. */
-    public GameManager getLastGame() {
-        int map = currentIndex - 1 < 0 ? getGames().size() - 1 : currentIndex - 1;
-        return games.get(map);
+    /** Set the next game */
+    public GameManager nextGame() {
+        currentGame = games.pop();
+        return currentGame;
+    }
+
+    /** Should we try to load a new map */
+    public boolean isNextGame() {
+        return games.size() > 0;
     }
 }

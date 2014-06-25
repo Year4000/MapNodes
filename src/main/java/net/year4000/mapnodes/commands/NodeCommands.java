@@ -18,37 +18,28 @@ import org.bukkit.entity.Player;
 public final class NodeCommands {
     @Command(
         aliases = {"add"},
-        usage = "[map name] (index)",
+        usage = "[map name]",
         desc = "Add a map to the node.",
         min = 1,
-        max = 2
+        max = 1
     )
     public static void add(CommandContext args, CommandSender sender) throws CommandException {
         WorldManager wm = WorldManager.get();
         OfflinePlayer player = Bukkit.getPlayer(sender.getName());
         String locale = player == null ? "messages" : player.getPlayer().getLocale();
-        boolean hasIndex = args.argsLength() > 2;
 
         if (wm.getWorld(args.getString(0)) == null)
             throw new CommandException(Messages.get(locale, "command-node-noWorld"));
 
-        if (hasIndex && args.getInteger(1)-1 < WorldManager.get().getCurrentIndex())
-            throw new CommandException(Messages.get(locale, "command-node-future"));
-
-        if (hasIndex && args.getInteger(1)-1 > WorldManager.get().getGames().size())
-            throw new CommandException(Messages.get(locale, "command-node-out"));
-
         World map = wm.createWorld(wm.copyWorld(args.getString(0)));
 
-        Integer position = hasIndex ? args.getInteger(1) : wm.getGames().size();
-
-        if (!wm.loadMap(map, position))
+        if (!wm.loadMap(map))
             throw new CommandException(Messages.get(locale, "command-node-notLoaded"));
 
-        sender.sendMessage(MessageUtil.replaceColors(String.format(
+        sender.sendMessage(MessageUtil.message(
             Messages.get(locale, "command-node-loaded"),
-            wm.getGames().get(position).getMap().getName()
-        )));
+            wm.nextGame().getMap().getName()
+        ));
     }
 
     @Command(
@@ -60,54 +51,22 @@ public final class NodeCommands {
     )
     public static void remove(CommandContext args, CommandSender sender) throws CommandException {
         OfflinePlayer player = Bukkit.getPlayer(sender.getName());
+        int index = args.getInteger(0)-1;
         String locale = player == null ? "messages" : player.getPlayer().getLocale();
 
-        if (args.getInteger(0)-1 <= WorldManager.get().getCurrentIndex())
-            throw new CommandException(Messages.get(locale, "command-node-future"));
-
-        if (args.getInteger(0)-1 >= WorldManager.get().getGames().size())
+        if (index >= WorldManager.get().getGames().size())
             throw new CommandException(Messages.get(locale, "command-node-out"));
 
-        GameManager gm = WorldManager.get().getGames().remove(args.getInteger(0) - 1);
+        GameManager gm = (GameManager)WorldManager.get().getGames().toArray()[index];
         WorldManager.get().unLoadMap(gm.getWorld());
+        WorldManager.get().getGames().remove(gm);
 
-        sender.sendMessage(MessageUtil.replaceColors(String.format(
+        sender.sendMessage(MessageUtil.message(
             Messages.get(locale, "command-node-removed"),
             gm.getMap().getName()
-        )));
+        ));
     }
 
-    @Command(
-        aliases = {"move"},
-        usage = "[map index] [nex index]",
-        desc = "Move one map node to the other.",
-        min = 2,
-        max = 2
-    )
-    public static void move(CommandContext args, CommandSender sender) throws CommandException {
-        Player player = Bukkit.getPlayer(sender.getName()).getPlayer();
-        String locale = player == null ? "messages" : player.getLocale();
-
-        if (args.getInteger(0)-1 <= WorldManager.get().getCurrentIndex())
-            throw new CommandException(Messages.get(player.getLocale(), "command-node-future"));
-
-        if (args.getInteger(0)-1 >= WorldManager.get().getGames().size())
-            throw new CommandException(Messages.get(player.getLocale(), "command-node-out"));
-
-        if (args.getInteger(1)-1 < WorldManager.get().getCurrentIndex())
-            throw new CommandException(Messages.get(player.getLocale(), "command-node-future"));
-
-        if (args.getInteger(1)-1 >= WorldManager.get().getGames().size())
-            throw new CommandException(Messages.get(player.getLocale(), "command-node-out"));
-
-        GameManager gm = WorldManager.get().getGames().remove(args.getInteger(0) - 1);
-        WorldManager.get().getGames().add(args.getInteger(1), gm);
-
-        sender.sendMessage(MessageUtil.replaceColors(String.format(
-            Messages.get(player.getLocale(), "command-node-moved"),
-            gm.getMap().getName()
-        )));
-    }
 
     @Command(
         aliases = {"generate"},
@@ -119,11 +78,11 @@ public final class NodeCommands {
     public static void generate(CommandContext args, CommandSender sender) throws CommandException {
         int maps = args.argsLength() < 1 ? MainConfig.get().getMaxLoadMaps() : args.getInteger(0);
         WorldManager wm = WorldManager.get();
-        Player player = Bukkit.getPlayer(sender.getName()).getPlayer();
+        Player player = Bukkit.getPlayer(sender.getName());
         String locale = player == null ? "messages" : player.getLocale();
 
         try {
-            sender.sendMessage(Messages.get(player.getLocale(), "command-node-generate-start"));
+            sender.sendMessage(Messages.get(locale, "command-node-generate-start"));
             long startTime = System.currentTimeMillis();
 
             for (String map : wm.copyWorlds(maps)) {
@@ -131,7 +90,7 @@ public final class NodeCommands {
             }
 
             long time = (System.currentTimeMillis()-startTime)/100;
-            sender.sendMessage(String.format(Messages.get(player.getLocale(), "command-node-generate-end"), time));
+            sender.sendMessage(String.format(Messages.get(locale, "command-node-generate-end"), time));
         } catch (NullPointerException e) {
             throw new CommandException(e.getMessage());
         }

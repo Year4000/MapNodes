@@ -43,7 +43,7 @@ public class MapNodes extends JavaPlugin {
         WorldManager.get();
 
         // If no world's can be loaded disable self
-        if (WorldManager.get().getGames().size() == 0 ) {
+        if (!WorldManager.get().isNextGame()) {
             MapNodes.log(MessageUtil.stripColors(Messages.get("error-games-none")));
             Bukkit.getPluginManager().disablePlugin(this);
             return;

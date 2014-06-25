@@ -78,7 +78,7 @@ public class GameManager {
 
         // Load the server icon.
         try {
-            setIcon(Bukkit.loadServerIcon(new File(worldMap.getWorldFolder(), "map.png")));
+            setIcon(Bukkit.loadServerIcon(new File(worldMap.getWorldFolder(), "icon.png")));
         } catch (Exception e) {/*Left Blank*/}
 
         // Set up the game.
@@ -311,7 +311,7 @@ public class GameManager {
             } catch (Exception e) {/*Left Blank*/}
         }
 
-        if (!(WorldManager.get().getCurrentIndex() + 1 >= WorldManager.get().getGames().size()))
+        if (WorldManager.get().isNextGame())
             new NextClock(); // Load the next map.
         else
             new RestartClock(); // Restart the server.

@@ -29,7 +29,7 @@ public final class MapsCommand {
     )
     public static void maps(CommandContext args, CommandSender sender) throws CommandException {
         final int MAXPERPAGE = 8;
-        new SimplePaginatedResult<GameManager>("Loaded Maps", MAXPERPAGE) {
+        new SimplePaginatedResult<GameManager>("Queued Maps", MAXPERPAGE) {
             @Override
             public String formatHeader(int page, int maxPages) {
                 return MessageUtil.replaceColors(String.format(
@@ -42,19 +42,11 @@ public final class MapsCommand {
 
             @Override
             public String format(GameManager game, int index) {
-                String prefix = index == WorldManager.get().getCurrentIndex() ? "&3&l": "";
-
                 return MessageUtil.replaceColors(String.format(
-                    "&7%s%s &a%s%s &2%sversion &a%s%s &2%sby &a%s%s",
-                    prefix,
+                    "&7%s &a%s &2version &a%s &2by &a%s",
                     index+1,
-                    prefix,
                     game.getMap().getName(),
-                    prefix,
-                    prefix,
                     game.getMap().getVersion(),
-                    prefix,
-                    prefix,
                     game.getMap().getAuthors().get(0)
                 ));
             }
@@ -81,15 +73,6 @@ public final class MapsCommand {
     )
     public static void next(CommandContext args, CommandSender sender) throws CommandException {
         sender.sendMessage(map("&6Next Game:", WorldManager.get().getNextGame()));
-    }
-
-    @Command(
-            aliases = {"last", "lastmap"},
-            desc = "Show the last map.",
-            max = 0
-    )
-    public static void last(CommandContext args, CommandSender sender) throws CommandException {
-        sender.sendMessage(map("&6Last Game:", WorldManager.get().getLastGame()));
     }
 
     /** The string for the map */
