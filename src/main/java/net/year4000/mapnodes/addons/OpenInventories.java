@@ -1,5 +1,6 @@
 package net.year4000.mapnodes.addons;
 
+import com.ewized.utilities.bukkit.util.BukkitUtil;
 import com.ewized.utilities.bukkit.util.MessageUtil;
 import net.year4000.mapnodes.MapNodes;
 import net.year4000.mapnodes.game.GameManager;
@@ -50,15 +51,21 @@ public class OpenInventories implements Listener {
             Block block = event.getClickedBlock();
 
             if (block.getState() instanceof InventoryHolder) {
-                Bukkit.getScheduler().runTask(MapNodes.getInst(), () -> {
-                    Inventory inv = ((InventoryHolder) block.getState()).getInventory();
+                Inventory inv = ((InventoryHolder) block.getState()).getInventory();
 
-                    // Create a fake inventory so the chest don't really open
-                    Inventory fake = Bukkit.createInventory(null, inv.getSize(), inv.getTitle());
-                    fake.setContents(inv.getContents());
+                // Are we a chest
+                if (inv.getSize() % 9 == 0) {
+                    Bukkit.getScheduler().runTask(MapNodes.getInst(), () -> {
+                        // Create a fake inventory so the chest don't really open
+                        Inventory fake = Bukkit.createInventory(null, inv.getSize(), inv.getTitle());
+                        fake.setContents(inv.getContents());
 
-                    gPlayer.getPlayer().openInventory(fake);
-                });
+                        gPlayer.getPlayer().openInventory(fake);
+                    });
+                }
+                else {
+                    Bukkit.getScheduler().runTask(MapNodes.getInst(), () -> gPlayer.getPlayer().openInventory(inv));
+                }
             }
         }
     }
