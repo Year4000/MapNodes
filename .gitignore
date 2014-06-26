@@ -1,0 +1,8 @@
+# Maven
+target/
+src/main/resources/git.properties
+
+# IDE's
+.idea/
+*.iml
+*~
