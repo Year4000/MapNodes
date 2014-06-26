@@ -12,6 +12,9 @@ import net.year4000.mapnodes.game.GameManager;
 import net.year4000.mapnodes.world.WorldManager;
 import org.bukkit.command.CommandSender;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @SuppressWarnings("unused")
 public final class MapsCommand {
     public MapsCommand() {
@@ -22,37 +25,50 @@ public final class MapsCommand {
     }
 
     @Command(
-        aliases = {"maps", "cycle", "rotation"},
+        aliases = {"maps", "cycle", "rotation", "queue"},
         usage = "(page)",
         desc = "Show the maps that are loaded to the server.",
         max = 1
     )
     public static void maps(CommandContext args, CommandSender sender) throws CommandException {
         final int MAXPERPAGE = 8;
+        //Create a new list that shows current and queued maps
+        List<GameManager> maps = new ArrayList<>();
+        maps.add(WorldManager.get().getCurrentGame());
+        maps.addAll(WorldManager.get().getGames());
+
         new SimplePaginatedResult<GameManager>("Queued Maps", MAXPERPAGE) {
             @Override
             public String formatHeader(int page, int maxPages) {
-                return MessageUtil.replaceColors(String.format(
-                    "&7&m-------&a &l%s &2(page &a%s&2/&a%s&2) &7&m-------",
+                return MessageUtil.message(
+                    "&7&m**********&a &l%s &2(page &a%s&2/&a%s&2) &7&m**********",
                     header,
                     page,
                     maxPages
-                ));
+                );
             }
 
             @Override
             public String format(GameManager game, int index) {
-                return MessageUtil.replaceColors(String.format(
+                if (index == 0) {
+                    return MessageUtil.message(
+                        "&6Current&7: &a%s &2version &a%s &2by &a%s",
+                        game.getMap().getName(),
+                        game.getMap().getVersion(),
+                        game.getMap().getAuthors().get(0)
+                    );
+                }
+                return MessageUtil.message(
                     "&7%s &a%s &2version &a%s &2by &a%s",
                     index+1,
                     game.getMap().getName(),
                     game.getMap().getVersion(),
                     game.getMap().getAuthors().get(0)
-                ));
+                );
             }
         }.display(
             new BukkitWrappedCommandSender(sender),
-            WorldManager.get().getGames(),
+            maps,
             args.argsLength() == 1 ? args.getInteger(0) : 1
         );
     }
