@@ -82,14 +82,14 @@ public class Messages extends Config {
         put("command-team-unknown", "&cThere is no team by that name.");
         put("command-team-spectator", "&6You may only use this as a spectator.");
         put("command-team-player", "&6You may only use this when you are playing the game.");
-        put("command-info-top", "&8&m-------------&6&l Game Stats &8&m-----------");
+        put("command-info-top", "&8&m************&6&l Game Stats &8&m************");
         put("command-info-map", "&7Map&8: &a%s &7version &a%s");
         put("command-info-authors", "&7Author(s)&8: &a%s");
         put("command-info-description", "&7Description&8: &a%s");
         put("command-info-time", "&7Start Time&8: &a%s");
         put("command-info-team-top", "&7 - &aTeams");
         put("command-info-team", "&a%s &7(%s&7) &ascore&8: &f%s");
-        put("command-info-bottom", "&8&m-------------------------------------");
+        put("command-info-bottom", "&8&m**************************************");
         put("command-match-start", "&6You can only start a match is its has not started yet.");
         put("command-match-stop", "&6You can only stop a match if its running.");
         put("command-match-start-notice", "&6You are starting the match.");
@@ -106,16 +106,16 @@ public class Messages extends Config {
 
         // Game Messages
         put("game-login", "&aYou are currently on &2%s&a, version &2%s&a by &2%s&a.");
-        put("game-start-top", "&8&m------------&a&l Game Started &8&m----------");
+        put("game-start-top", "&8&m***********&a&l Game Started &8&m**********");
         put("game-start-map", "&7Map&8: &a%s &7version &a%s");
         put("game-start-authors", "&7Author(s)&8: &a%s");
         put("game-start-description", "&7Description&8: &a%s");
-        put("game-start-bottom", "&8&m-------------------------------------");
-        put("game-end-top", "&8&m-------------&c&l Game Ended &8&m-----------");
+        put("game-start-bottom", "&8&m***************************************");
+        put("game-end-top", "&8&m*************&c&l Game Ended &8&m***********");
         put("game-end-team", "&7Your team was&8: %s");
         put("game-end-team-score", "&7Your team score was&8: &a%s");
         put("game-end-player-score", "&7Your score was&8: &a%s");
-        put("game-end-bottom", "&8&m-------------------------------------");
+        put("game-end-bottom", "&8&m****************************************");
         put("game-height-max", ERROR + "You have reached the world height of &6%s&c.");
         put("game-life", "&cYou died, You have &6%s&c lives left.");
         put("game-life-dead", "&cYou ran out of lives and been set to spectator.");
