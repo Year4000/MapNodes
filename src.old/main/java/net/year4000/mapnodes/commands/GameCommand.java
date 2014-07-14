@@ -9,7 +9,7 @@ import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.configs.Messages;
 import net.year4000.mapnodes.game.GameManager;
 import net.year4000.mapnodes.game.GameTeam;
-import net.year4000.mapnodes.world.WorldManager;
+import net.year4000.mapnodes.game.WorldManager;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;

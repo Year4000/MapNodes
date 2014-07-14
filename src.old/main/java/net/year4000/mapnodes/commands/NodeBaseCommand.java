@@ -18,6 +18,8 @@ public final class NodeBaseCommand {
         desc = "Nodes base command to manage the maps."
     )
     @CommandPermissions({"mapnodes.admin", "mapnodes.*"})
-    @NestedCommand({NodeCommands.class})
-    public static void node(CommandContext args, CommandSender sender) throws CommandException {}
+    @NestedCommand(value = {NodeCommands.class}, executeBody = true)
+    public static void node(CommandContext args, CommandSender sender) throws CommandException {
+
+    }
 }

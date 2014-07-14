@@ -2,14 +2,13 @@ package net.year4000.mapnodes.game;
 
 import com.ewized.utilities.bukkit.util.MessageUtil;
 import net.year4000.mapnodes.configs.Messages;
-import net.year4000.mapnodes.world.WorldManager;
 
 import java.util.ArrayList;
 
 public class GameHelper {
 
     /** Start message for when players join the game.p */
-    public static void startMessage(GamePlayer player) {
+    public static void startMessage(NodePlayer player) {
         if (player.isSpecatator()) return;
 
         GameManager gm = WorldManager.get().getCurrentGame();
@@ -41,7 +40,7 @@ public class GameHelper {
     }
 
     /** End message for when players end the game. */
-    public static void endMessage(GamePlayer player) {
+    public static void endMessage(NodePlayer player) {
         if (player.isSpecatator()) return;
 
         ArrayList<String> messages = new ArrayList<>();

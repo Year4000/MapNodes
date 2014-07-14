@@ -13,7 +13,7 @@ public final class MatchBaseCommand {
         ).register(MatchBaseCommand.class);
     }
 
-    @Command(
+    @CommandTemplate(
         aliases = {"match"},
         desc = "Effect the match at hand."
     )

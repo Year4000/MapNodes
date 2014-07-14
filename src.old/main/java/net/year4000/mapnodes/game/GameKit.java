@@ -8,12 +8,10 @@ import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.configs.MapConfig;
 import net.year4000.mapnodes.configs.Messages;
 import net.year4000.mapnodes.configs.map.Kits;
-import net.year4000.mapnodes.world.WorldManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
@@ -152,8 +150,8 @@ public class GameKit {
     }
 
     /** Give this kit to a player. */
-    public void giveKit(GamePlayer gPlayer) {
-        Player player = gPlayer.getPlayer();
+    public void giveKit(NodePlayer gPlayer) {
+        org.bukkit.entity.Player player = gPlayer.getPlayer();
         ItemStack[] inv = new ItemStack[36];
         for (Map.Entry<Integer, ItemStack> item : getItemKit().entrySet())
             inv[item.getKey() > 36 ? 36 : item.getKey()] = item.getValue();
@@ -208,12 +206,12 @@ public class GameKit {
     }
 
     /** Give the kit to the player. */
-    public void giveKit(Player player) {
+    public void giveKit(org.bukkit.entity.Player player) {
         giveKit(WorldManager.get().getCurrentGame().getPlayer(player));
     }
 
     /** Reset the player */
-    public static void reset(Player player) {
+    public static void reset(org.bukkit.entity.Player player) {
         // Settings that must be ran a tick later
         Bukkit.getScheduler().runTask(MapNodesPlugin.getInst(), () -> {
             // Clear items / armor

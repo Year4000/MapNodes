@@ -2,7 +2,7 @@ package net.year4000.mapnodes.listeners;
 
 import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.game.GameStage;
-import net.year4000.mapnodes.world.WorldManager;
+import net.year4000.mapnodes.game.WorldManager;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.event.EventHandler;

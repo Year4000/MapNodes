@@ -1,14 +1,20 @@
 package net.year4000.mapnodes.map;
 
-
+import lombok.AccessLevel;
 import lombok.Data;
-import net.year4000.mapnodes.map.exceptions.InvalidMapException;
+import lombok.Setter;
+import net.year4000.mapnodes.exceptions.InvalidMapException;
 import net.year4000.mapnodes.messages.Msg;
 
+import javax.annotation.Nullable;
 import java.io.File;
 
 @Data
+@Setter(AccessLevel.MODULE)
 public class MapFolder {
+    /** The name of the folder */
+    private String name;
+
     /** The file location for map.json */
     private File map;
 
@@ -16,14 +22,16 @@ public class MapFolder {
     private File world;
 
     /** The file for the icon */
+    @Nullable
     private File icon;
 
     /** Create and check if this is a valid map folder */
     public MapFolder(File path) throws InvalidMapException {
         if (!isMapFolder(path)) {
-            throw new InvalidMapException(Msg.util("error.folder"));
+            throw new InvalidMapException(String.format(Msg.util("error.world.folder"), path.getName()));
         }
 
+        name = path.getName();
         map = new File(path, "map.json");
         world = new File(path, "world.zip");
         icon = new File(path, "icon.png");
@@ -43,7 +51,10 @@ public class MapFolder {
                 if (!(file.exists() && file.isFile() && file.canRead())) return false;
             }
         }
+        else {
+            return false;
+        }
 
-        return false;
+        return true;
     }
 }

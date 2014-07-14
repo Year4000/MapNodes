@@ -3,7 +3,7 @@ package net.year4000.mapnodes.addons;
 import com.ewized.utilities.bukkit.util.MessageUtil;
 import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.game.GameManager;
-import net.year4000.mapnodes.world.WorldManager;
+import net.year4000.mapnodes.game.WorldManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

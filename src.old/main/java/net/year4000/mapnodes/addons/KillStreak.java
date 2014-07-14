@@ -4,12 +4,11 @@ import com.ewized.utilities.bukkit.util.FunEffectsUtil;
 import com.ewized.utilities.bukkit.util.MessageUtil;
 import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.game.GameManager;
-import net.year4000.mapnodes.game.GamePlayer;
-import net.year4000.mapnodes.world.WorldManager;
+import net.year4000.mapnodes.game.NodePlayer;
+import net.year4000.mapnodes.game.WorldManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Effect;
 import org.bukkit.Sound;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -27,10 +26,10 @@ public class KillStreak implements Listener {
     @EventHandler(priority=EventPriority.HIGHEST, ignoreCancelled = true)
     public void onKill(PlayerDeathEvent event) {
         GameManager gm = WorldManager.get().getCurrentGame();
-        GamePlayer killie = gm.getPlayer(event.getEntity());
+        NodePlayer killie = gm.getPlayer(event.getEntity());
 
         if (event.getEntity().getKiller() != null) {
-            GamePlayer killer = gm.getPlayer(event.getEntity().getKiller());
+            NodePlayer killer = gm.getPlayer(event.getEntity().getKiller());
 
             boolean multipleKill = Math.abs(killer.getLastKill() - System.currentTimeMillis()) > 5000L;
             if (multipleKill) killer.setQuickKills(0);
@@ -43,7 +42,7 @@ public class KillStreak implements Listener {
                 FunEffectsUtil.playEffect(killer.getPlayer(), Effect.GHAST_SHRIEK);
             }
 
-            List<Player> online = Arrays.asList(Bukkit.getOnlinePlayers());
+            List<org.bukkit.entity.Player> online = Arrays.asList(Bukkit.getOnlinePlayers());
 
             if (getBroadcast(killer) != null) {
                 MessageUtil.broadcast(getBroadcast(killer));
@@ -68,7 +67,7 @@ public class KillStreak implements Listener {
     }
 
     /** Gets the message to show to the player. */
-    private String getMessage(GamePlayer killer) {
+    private String getMessage(NodePlayer killer) {
         int killStreak = killer.getQuickKills();
         boolean multipleKill = Math.abs(killer.getLastKill() - System.currentTimeMillis()) < 5000L;
         String message = null;
@@ -92,7 +91,7 @@ public class KillStreak implements Listener {
     }
 
     /** Gets the broadcast message to show to everyone. */
-    private String getBroadcast(GamePlayer killer) {
+    private String getBroadcast(NodePlayer killer) {
         int killStreak = killer.getKillStreak();
         String message = null;
 
@@ -120,7 +119,7 @@ public class KillStreak implements Listener {
     }
 
     /** Gets the defeat message to show to everyone. */
-    private String getDefeat(GamePlayer killer, GamePlayer killie) {
+    private String getDefeat(NodePlayer killer, NodePlayer killie) {
         int killStreak = killie.getKillStreak();
         String message = null;
 

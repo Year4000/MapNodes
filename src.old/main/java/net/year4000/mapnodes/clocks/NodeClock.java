@@ -6,7 +6,7 @@ import net.year4000.mapnodes.configs.Messages;
 import net.year4000.mapnodes.game.GameManager;
 import net.year4000.mapnodes.game.GameStage;
 import net.year4000.mapnodes.game.GameTeam;
-import net.year4000.mapnodes.world.WorldManager;
+import net.year4000.mapnodes.game.WorldManager;
 import org.bukkit.Bukkit;
 import org.joda.time.DateTime;
 

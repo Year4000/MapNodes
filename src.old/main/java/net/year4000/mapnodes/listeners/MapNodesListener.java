@@ -6,7 +6,7 @@ import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.configs.Messages;
 import net.year4000.mapnodes.utils.ClassException;
 import net.year4000.mapnodes.utils.TeamException;
-import net.year4000.mapnodes.world.WorldManager;
+import net.year4000.mapnodes.game.WorldManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;

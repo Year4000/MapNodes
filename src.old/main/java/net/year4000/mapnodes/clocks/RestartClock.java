@@ -4,10 +4,9 @@ import com.ewized.utilities.bukkit.util.FunEffectsUtil;
 import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.configs.Messages;
 import net.year4000.mapnodes.game.GameManager;
-import net.year4000.mapnodes.game.GamePlayer;
 import net.year4000.mapnodes.game.GameStage;
 import net.year4000.mapnodes.utils.BarAPI;
-import net.year4000.mapnodes.world.WorldManager;
+import net.year4000.mapnodes.game.WorldManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 

@@ -15,9 +15,6 @@ import net.year4000.mapnodes.configs.map.Teams;
 import net.year4000.mapnodes.clocks.DelayJoin;
 import net.year4000.mapnodes.utils.PlayerBadges;
 import net.year4000.mapnodes.utils.TeamException;
-import net.year4000.mapnodes.world.WorldManager;
-import org.bukkit.*;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scoreboard.DisplaySlot;
@@ -54,7 +51,7 @@ public class GameTeam {
     /** Points to where the player can spawn. */
     private List<Location> spawns = new ArrayList<>();
     /** Gets the players that are on this team. */
-    private List<GamePlayer> players = new ArrayList<>();
+    private List<Player> players = new ArrayList<>();
     /** The inventory to select teams from. */
     private static Inventory teamsGUI = null;
 
@@ -129,7 +126,7 @@ public class GameTeam {
     }
 
     /** Joins the team. */
-    public void join(GamePlayer player, boolean force) throws TeamException {
+    public void join(Player player, boolean force) throws TeamException {
         boolean sizeFit = getCurrentSize() >= getMaxSize();
         boolean hasPerms = player.getPlayer().hasPermission(Messages.get("team-gui-perm"));
         boolean unlimited = getMaxSize() == -1;
@@ -178,12 +175,12 @@ public class GameTeam {
     }
 
     /** Joins the team. */
-    public void join(GamePlayer player) throws TeamException {
+    public void join(Player player) throws TeamException {
         join(player, false);
     }
 
     /** Leaves the current team. */
-    public void leave(GamePlayer player) {
+    public void leave(Player player) {
         GameManager gm = WorldManager.get().getCurrentGame();
         getTeam().removePlayer(player.getPlayer()); // Scoreboard team
         getPlayers().remove(player); // This object team
@@ -191,7 +188,7 @@ public class GameTeam {
     }
 
     /** Add the player to this team and scoreboard. */
-    private void addPlayer(GamePlayer player) {
+    private void addPlayer(Player player) {
         getPlayers().add(player);
         getTeam().addPlayer(player.getPlayer());
         player.setTeam(this);
@@ -301,8 +298,8 @@ public class GameTeam {
     }
 
     /** Set the display name of the current player. */
-    private void setPlayerColor(GamePlayer gamePlayer) {
-        Player player = gamePlayer.getPlayer();
+    private void setPlayerColor(Player gamePlayer) {
+        org.bukkit.entity.Player player = gamePlayer.getPlayer();
         String colorName = MessageUtil.message(
             "%s%s",
             getChatColor(),

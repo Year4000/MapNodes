@@ -5,11 +5,10 @@ import com.sk89q.minecraft.util.commands.CommandContext;
 import com.sk89q.minecraft.util.commands.CommandException;
 import net.year4000.mapnodes.configs.Messages;
 import net.year4000.mapnodes.game.GameStage;
-import net.year4000.mapnodes.world.WorldManager;
+import net.year4000.mapnodes.game.WorldManager;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 @SuppressWarnings("unused")
 public final class MatchCommands {

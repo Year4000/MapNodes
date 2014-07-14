@@ -22,10 +22,8 @@ import net.year4000.mapnodes.clocks.StartClock;
 import net.year4000.mapnodes.listeners.MapConfigListener;
 import net.year4000.mapnodes.utils.Minify;
 import net.year4000.mapnodes.utils.MissingJsonElement;
-import net.year4000.mapnodes.world.WorldManager;
 import org.bukkit.*;
 import org.bukkit.entity.Firework;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.util.CachedServerIcon;
 
@@ -56,7 +54,7 @@ public class GameManager {
     private GameStage stage;
     /** The players that are in the game. */
     @Setter(AccessLevel.PUBLIC)
-    private HashMap<UUID, GamePlayer> players = new HashMap<>();
+    private HashMap<UUID, NodePlayer> players = new HashMap<>();
     /** The start time of the game. */
     private long startTime;
     /** The stop time of the game. */
@@ -142,7 +140,7 @@ public class GameManager {
     }
 
     /** Get the player by its name. */
-    public GamePlayer getPlayer(Player player) {
+    public NodePlayer getPlayer(org.bukkit.entity.Player player) {
         return getPlayers().get(player.getUniqueId());
     }
 
@@ -264,7 +262,7 @@ public class GameManager {
     }
 
     /** Is the current player a map maker to the current map. */
-    public static boolean isMapMaker(GamePlayer player) {
+    public static boolean isMapMaker(NodePlayer player) {
         for (String author : WorldManager.get().getCurrentGame().getMap().getAuthors()) {
             if (player.getPlayer().getName().equalsIgnoreCase(author))
                 return true;

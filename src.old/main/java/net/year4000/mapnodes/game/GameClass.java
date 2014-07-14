@@ -9,7 +9,6 @@ import lombok.Setter;
 import net.year4000.mapnodes.configs.Messages;
 import net.year4000.mapnodes.configs.map.Classes;
 import net.year4000.mapnodes.utils.ClassException;
-import net.year4000.mapnodes.world.WorldManager;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -81,7 +80,7 @@ public class GameClass {
     }
 
     /** Give this class to the player. */
-    public void give(GamePlayer player) throws ClassException {
+    public void give(NodePlayer player) throws ClassException {
         // Prevent players from entering when the game ended!
         if (GameStage.isEndGame())
             throw new ClassException(Messages.get(player.getPlayer().getLocale(), "class-join-error"));

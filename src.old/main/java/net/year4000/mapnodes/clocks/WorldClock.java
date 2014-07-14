@@ -3,7 +3,7 @@ package net.year4000.mapnodes.clocks;
 import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.configs.MainConfig;
 import net.year4000.mapnodes.game.GameManager;
-import net.year4000.mapnodes.world.WorldManager;
+import net.year4000.mapnodes.game.WorldManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Difficulty;
 import org.bukkit.World;

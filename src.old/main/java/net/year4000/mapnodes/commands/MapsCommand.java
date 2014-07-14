@@ -9,7 +9,7 @@ import com.sk89q.minecraft.util.commands.CommandException;
 import com.sk89q.minecraft.util.pagination.SimplePaginatedResult;
 import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.game.GameManager;
-import net.year4000.mapnodes.world.WorldManager;
+import net.year4000.mapnodes.game.WorldManager;
 import org.bukkit.command.CommandSender;
 
 import java.util.ArrayList;

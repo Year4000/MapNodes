@@ -13,7 +13,7 @@ import org.bukkit.scoreboard.*;
 public class GameScoreboard {
     /** ScoreboardManager, this allows us to have scoreboards. */
     @Getter(AccessLevel.PRIVATE)
-    private final ScoreboardManager sbm = Bukkit.getScoreboardManager();
+    private final ScoreboardFactory sbm = Bukkit.getScoreboardManager();
     /** The score board for this game. */
     @Setter(AccessLevel.PRIVATE)
     private Scoreboard scoreboard;

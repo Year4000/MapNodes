@@ -3,13 +3,12 @@ package net.year4000.mapnodes.addons;
 import com.ewized.utilities.bukkit.util.MessageUtil;
 import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.game.GameManager;
-import net.year4000.mapnodes.game.GamePlayer;
+import net.year4000.mapnodes.game.NodePlayer;
 import net.year4000.mapnodes.game.GameStage;
-import net.year4000.mapnodes.world.WorldManager;
+import net.year4000.mapnodes.game.WorldManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.entity.Player;
 import org.bukkit.event.*;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
@@ -29,11 +28,11 @@ public class OpenInventories implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void openInv(PlayerInteractEntityEvent event) {
         GameManager gm = WorldManager.get().getCurrentGame();
-        GamePlayer gPlayer = gm.getPlayer(event.getPlayer());
+        NodePlayer gPlayer = gm.getPlayer(event.getPlayer());
 
         if (gPlayer.isSpecatator() || !GameStage.isPlaying() || !gPlayer.isHasPlayed()) {
-            if (event.getRightClicked() instanceof Player) {
-                Player rightClicked = (Player) event.getRightClicked();
+            if (event.getRightClicked() instanceof org.bukkit.entity.Player) {
+                org.bukkit.entity.Player rightClicked = (org.bukkit.entity.Player) event.getRightClicked();
 
                 if (!gm.getPlayer(rightClicked).isSpecatator())
                     gPlayer.getPlayer().openInventory(openPlayer(gm.getPlayer(rightClicked)));
@@ -44,7 +43,7 @@ public class OpenInventories implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void openInv(PlayerInteractEvent event) {
         GameManager gm = WorldManager.get().getCurrentGame();
-        GamePlayer gPlayer = gm.getPlayer(event.getPlayer());
+        NodePlayer gPlayer = gm.getPlayer(event.getPlayer());
 
         if ((gPlayer.isSpecatator() || !GameStage.isPlaying() || !gPlayer.isHasPlayed()) && event.getAction() == Action.RIGHT_CLICK_BLOCK) {
             Block block = event.getClickedBlock();
@@ -70,10 +69,10 @@ public class OpenInventories implements Listener {
     }
 
     /** Create an inventory of the player stats. */
-    private Inventory openPlayer(GamePlayer gPlayer) {
+    private Inventory openPlayer(NodePlayer gPlayer) {
         final int SIZE = 45;
         ItemStack[] items = new ItemStack[SIZE];
-        Player player = gPlayer.getPlayer();
+        org.bukkit.entity.Player player = gPlayer.getPlayer();
         PlayerInventory pinv = player.getInventory();
 
         // Armor
@@ -111,7 +110,7 @@ public class OpenInventories implements Listener {
     }
 
     /** Get the heal for the player. */
-    private ItemStack getHealth(Player player) {
+    private ItemStack getHealth(org.bukkit.entity.Player player) {
         int health = (int)player.getHealth();
 
         ItemStack level =  new ItemStack(Material.SPECKLED_MELON, health);
@@ -123,7 +122,7 @@ public class OpenInventories implements Listener {
     }
 
     /** Get the hunger for the player. */
-    private ItemStack getHunger(Player player) {
+    private ItemStack getHunger(org.bukkit.entity.Player player) {
         int hunger = player.getFoodLevel();
 
         ItemStack level =  new ItemStack(Material.COOKED_BEEF, hunger);

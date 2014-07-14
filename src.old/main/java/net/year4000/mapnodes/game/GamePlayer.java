@@ -10,7 +10,6 @@ import net.minecraft.server.v1_7_R3.EnumClientCommand;
 import net.minecraft.server.v1_7_R3.PacketPlayInClientCommand;
 import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.configs.Messages;
-import net.year4000.mapnodes.world.WorldManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Effect;
 import org.bukkit.Location;

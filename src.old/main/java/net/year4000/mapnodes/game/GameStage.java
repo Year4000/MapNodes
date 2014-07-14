@@ -1,7 +1,6 @@
 package net.year4000.mapnodes.game;
 
 import com.ewized.utilities.bukkit.util.MessageUtil;
-import net.year4000.mapnodes.world.WorldManager;
 
 public enum GameStage {
     WAITING,

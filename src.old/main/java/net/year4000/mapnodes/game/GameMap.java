@@ -82,7 +82,7 @@ public class GameMap {
 
     protected GameMap(MapConfig config, World world) throws NullPointerException, IllegalArgumentException {
         final Map configMap = config.getMap();
-        final Game configGame = config.getGame();
+        final MNGame configGame = config.getGame();
 
         // Settings from the map json config class.
         checkNotNull(configMap, Messages.get("error-json-map"));

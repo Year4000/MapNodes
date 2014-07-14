@@ -2,14 +2,14 @@ package net.year4000.mapnodes.clocks;
 
 import com.ewized.utilities.bukkit.util.FunEffectsUtil;
 import net.year4000.mapnodes.configs.Messages;
-import net.year4000.mapnodes.game.GamePlayer;
+import net.year4000.mapnodes.game.NodePlayer;
 import net.year4000.mapnodes.utils.BarAPI;
 import org.bukkit.Sound;
 
 public class DelayJoin extends Clocker {
-    GamePlayer player;
+    NodePlayer player;
 
-    public DelayJoin(GamePlayer gPlayer, int time) {
+    public DelayJoin(NodePlayer gPlayer, int time) {
         super(time); // Enter the player in the game after 10 secs.
         player = gPlayer;
     }
