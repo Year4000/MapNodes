@@ -10,7 +10,7 @@ public interface GamePlayer {
 
     public GameTeam getTeam();
 
-    public boolean d G();
+    public boolean isSpectator();
 
     public boolean isPlaying();
 
