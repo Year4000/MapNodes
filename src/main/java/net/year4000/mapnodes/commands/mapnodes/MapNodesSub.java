@@ -66,7 +66,7 @@ public final class MapNodesSub {
 
             @Override
             public String format(AddonInfo addonInfo, int i) {
-                return (i + 1) + " &7- " + Msg.locale(sender, "cmd.addon.list",
+                return (i + 1) + " - " + Msg.locale(sender, "cmd.addon.list",
                     addonInfo.name(),
                     Common.formatSeparators(addonInfo.version(), ChatColor.GREEN, ChatColor.DARK_GRAY),
                     Common.shortMessage(25, addonInfo.description()));
