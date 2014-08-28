@@ -2,7 +2,6 @@ package net.year4000.mapnodes.listeners;
 
 import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.game.GamePlayer;
-import net.year4000.mapnodes.game.NodePlayer;
 import net.year4000.mapnodes.game.components.NodeKit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

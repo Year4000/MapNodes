@@ -3,6 +3,7 @@ package net.year4000.mapnodes.game;
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
 import lombok.Getter;
+import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.exceptions.InvalidJsonException;
 import net.year4000.mapnodes.game.components.NodeKit;
 import net.year4000.mapnodes.game.system.SpectatorKit;
@@ -10,7 +11,6 @@ import net.year4000.mapnodes.game.system.SpectatorTeam;
 import net.year4000.mapnodes.map.MapFolder;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.GsonUtil;
-import net.year4000.mapnodes.utils.LogUtil;
 import net.year4000.mapnodes.utils.Validator;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -44,7 +44,7 @@ public class MatchManager implements Validator {
                 icon = Bukkit.loadServerIcon(folder.getIcon());
                 iconImage = ImageIO.read(folder.getIcon());
             } catch (Exception e) {
-                LogUtil.debug(e.getMessage());
+                MapNodesPlugin.debug(e.getMessage());
             }
         }
 
@@ -57,8 +57,8 @@ public class MatchManager implements Validator {
         try {
             return new FileReader(mapFile);
         } catch (IOException e) {
-            LogUtil.debug("Should not see this, you should of ran checks before.");
-            LogUtil.debug(e.getMessage());
+            MapNodesPlugin.debug("Should not see this, you should of ran checks before.");
+            MapNodesPlugin.debug(e.getMessage());
         }
 
         return null;
@@ -66,7 +66,7 @@ public class MatchManager implements Validator {
 
     public void validate() throws InvalidJsonException {
         try {
-            LogUtil.debug(Msg.util("debug.map.validate"), name);
+            MapNodesPlugin.debug(Msg.util("debug.map.validate"), name);
 
             World world = Bukkit.getWorlds().get(0);
             GsonUtil.createGson(world).fromJson(loadMap(), NodeGame.class).validate();
@@ -98,7 +98,7 @@ public class MatchManager implements Validator {
 
 
         } catch (JsonIOException | JsonSyntaxException e) {
-            LogUtil.debug(e.getMessage());
+            MapNodesPlugin.debug(e.getMessage());
         }
     }
 }

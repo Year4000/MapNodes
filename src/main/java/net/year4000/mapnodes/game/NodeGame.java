@@ -6,7 +6,6 @@ import com.google.gson.annotations.Since;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import net.year4000.mapnodes.NodeFactory;
-import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.events.game.GameStartEvent;
 import net.year4000.mapnodes.api.events.game.GameStopEvent;
 import net.year4000.mapnodes.api.game.GameManager;

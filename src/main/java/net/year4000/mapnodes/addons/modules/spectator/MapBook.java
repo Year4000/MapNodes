@@ -1,6 +1,5 @@
 package net.year4000.mapnodes.addons.modules.spectator;
 
-import com.ewized.utilities.bukkit.util.ItemUtil;
 import net.year4000.mapnodes.NodeFactory;
 import net.year4000.mapnodes.addons.Addon;
 import net.year4000.mapnodes.addons.AddonInfo;
@@ -8,12 +7,11 @@ import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.events.game.GameStartEvent;
 import net.year4000.mapnodes.api.events.player.GamePlayerJoinSpectatorEvent;
 import net.year4000.mapnodes.api.events.player.GamePlayerJoinTeamEvent;
-import net.year4000.mapnodes.api.game.GameKit;
 import net.year4000.mapnodes.api.game.GameManager;
 import net.year4000.mapnodes.api.game.GamePlayer;
 import net.year4000.mapnodes.game.NodeGame;
 import net.year4000.mapnodes.game.components.NodeKit;
-import net.year4000.mapnodes.utils.SchedulerUtil;
+import net.year4000.utilities.bukkit.ItemUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

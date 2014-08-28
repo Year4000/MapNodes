@@ -2,10 +2,9 @@ package net.year4000.mapnodes;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import net.cubespace.Yamler.Config.Comment;
-import net.cubespace.Yamler.Config.Config;
-import net.cubespace.Yamler.Config.InvalidConfigurationException;
-import net.year4000.mapnodes.utils.LogUtil;
+import net.year4000.utilities.config.Comment;
+import net.year4000.utilities.config.Config;
+import net.year4000.utilities.config.InvalidConfigurationException;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -22,7 +21,7 @@ public class Settings extends Config {
             CONFIG_FILE = new File(MapNodesPlugin.getInst().getDataFolder(), "config.yml");
             init();
         } catch (InvalidConfigurationException e) {
-            LogUtil.debug(e.getMessage());
+            MapNodesPlugin.debug(e.getMessage());
             e.printStackTrace();
         }
     }

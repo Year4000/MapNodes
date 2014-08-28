@@ -1,6 +1,5 @@
 package net.year4000.mapnodes.game.components;
 
-import com.ewized.utilities.bukkit.util.MessageUtil;
 import com.google.gson.annotations.Since;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,6 +8,7 @@ import net.year4000.mapnodes.exceptions.InvalidJsonException;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.Common;
 import net.year4000.mapnodes.utils.Validator;
+import net.year4000.utilities.bukkit.MessageUtil;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;

@@ -1,8 +1,8 @@
 package net.year4000.mapnodes.game;
 
-import com.ewized.utilities.bukkit.util.MessageUtil;
 import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.game.GameStage;
+import net.year4000.utilities.bukkit.MessageUtil;
 
 public enum NodeStage implements GameStage {
     WAITING,

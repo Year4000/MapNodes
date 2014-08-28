@@ -1,7 +1,6 @@
 package net.year4000.mapnodes.clocks;
 
-import com.ewized.utilities.bukkit.util.FunEffectsUtil;
-import com.ewized.utilities.bukkit.util.MessageUtil;
+import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.NodeFactory;
 import net.year4000.mapnodes.Settings;
 import net.year4000.mapnodes.api.MapNodes;
@@ -9,6 +8,9 @@ import net.year4000.mapnodes.api.game.GameMap;
 import net.year4000.mapnodes.game.Node;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.*;
+import net.year4000.utilities.bukkit.FunEffectsUtil;
+import net.year4000.utilities.bukkit.MessageUtil;
+import net.year4000.utilities.bukkit.bossbar.BossBar;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
@@ -39,7 +41,7 @@ public class NextNode extends Clocker {
     public void runFirst(int position) {
         GameMap map = NodeFactory.get().peekNextQueued().getMatch().getGame().getMap();
 
-        LogUtil.log(MessageUtil.message(Msg.util("clocks.next.first"), map.getName(), sec(position) - 1));
+        MapNodesPlugin.log(MessageUtil.message(Msg.util("clocks.next.first"), map.getName(), sec(position) - 1));
 
         MapNodes.getCurrentGame().getPlayers().parallel().forEach(player -> FunEffectsUtil.playSound(
             player.getPlayer(),
@@ -58,7 +60,7 @@ public class NextNode extends Clocker {
                 FunEffectsUtil.playSound(player.getPlayer(), Sound.NOTE_PLING);
             }
 
-            BarAPI.setMessage(
+            BossBar.setMessage(
                 player.getPlayer(),
                 MessageUtil.message(
                     Msg.locale(player, "clocks.next.tock"),
@@ -73,13 +75,13 @@ public class NextNode extends Clocker {
     public void runLast(int position) {
         GameMap map = NodeFactory.get().peekNextQueued().getMatch().getGame().getMap();
 
-        LogUtil.log(MessageUtil.message(Msg.locale(Msg.DEFAULT_LOCALE, "clocks.next.last"), map.getName()));
+        MapNodesPlugin.log(MessageUtil.message(Msg.locale(Msg.DEFAULT_LOCALE, "clocks.next.last"), map.getName()));
 
         Deque<Player> move = new ArrayDeque<>();
 
         MapNodes.getCurrentGame().getPlayers().parallel().forEach(player -> {
             FunEffectsUtil.playSound(player.getPlayer(), Sound.NOTE_BASS);
-            BarAPI.setMessage(
+            BossBar.setMessage(
                 player.getPlayer(),
                 MessageUtil.message(Msg.locale(player, "clocks.next.last"), map.getName()),
                 1

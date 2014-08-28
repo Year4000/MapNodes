@@ -1,12 +1,12 @@
 package net.year4000.mapnodes.addons.modules.misc;
 
-import com.ewized.utilities.bukkit.util.MessageUtil;
 import net.year4000.mapnodes.addons.Addon;
 import net.year4000.mapnodes.addons.AddonInfo;
 import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.game.GameManager;
 import net.year4000.mapnodes.api.game.GamePlayer;
 import net.year4000.mapnodes.messages.Msg;
+import net.year4000.utilities.bukkit.MessageUtil;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;

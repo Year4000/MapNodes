@@ -1,7 +1,5 @@
 package net.year4000.mapnodes.clocks;
 
-import com.ewized.utilities.bukkit.util.FunEffectsUtil;
-import com.ewized.utilities.bukkit.util.MessageUtil;
 import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.Settings;
 import net.year4000.mapnodes.api.MapNodes;
@@ -9,6 +7,9 @@ import net.year4000.mapnodes.game.NodeGame;
 import net.year4000.mapnodes.game.NodeStage;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.*;
+import net.year4000.utilities.bukkit.FunEffectsUtil;
+import net.year4000.utilities.bukkit.MessageUtil;
+import net.year4000.utilities.bukkit.bossbar.BossBar;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 
@@ -34,7 +35,7 @@ public class RestartServer extends Clocker {
         super(MathUtil.ticks(Settings.get().isDebug() ? 10 : time));
     }
     public void runFirst(int position) {
-        LogUtil.log(MessageUtil.message(Msg.util("clocks.restart.first"), sec(position) - 1));
+        MapNodesPlugin.log(MessageUtil.message(Msg.util("clocks.restart.first"), sec(position) - 1));
         MapNodes.getCurrentGame().getPlayers().parallel().forEach(player -> FunEffectsUtil.playSound(
             player.getPlayer(),
             Sound.ORB_PICKUP
@@ -47,7 +48,7 @@ public class RestartServer extends Clocker {
                 FunEffectsUtil.playSound(player.getPlayer(), Sound.NOTE_PLING);
             }
 
-            BarAPI.setMessage(
+            BossBar.setMessage(
                 player.getPlayer(),
                 MessageUtil.message(
                     Msg.locale(player, "clocks.restart.tock"),
@@ -59,11 +60,11 @@ public class RestartServer extends Clocker {
     }
 
     public void runLast(int position) {
-        LogUtil.log(MessageUtil.message(Msg.locale(Msg.DEFAULT_LOCALE, "clocks.restart.last")));
+        MapNodesPlugin.log(MessageUtil.message(Msg.locale(Msg.DEFAULT_LOCALE, "clocks.restart.last")));
 
         MapNodes.getCurrentGame().getPlayers().parallel().forEach(player -> {
             FunEffectsUtil.playSound(player.getPlayer(), Sound.NOTE_BASS);
-            BarAPI.setMessage(player.getPlayer(), MessageUtil.message(Msg.locale(player, "clocks.restart.last")), 1);
+            BossBar.setMessage(player.getPlayer(), MessageUtil.message(Msg.locale(player, "clocks.restart.last")), 1);
         });
 
         ((NodeGame)MapNodes.getCurrentGame()).setStage(NodeStage.ENDED);

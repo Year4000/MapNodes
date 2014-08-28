@@ -1,6 +1,6 @@
 package net.year4000.mapnodes.commands.node;
 
-import com.sk89q.minecraft.util.commands.*;
+import net.year4000.utilities.bukkit.commands.*;
 import org.bukkit.command.CommandSender;
 
 public final class NodeBase {

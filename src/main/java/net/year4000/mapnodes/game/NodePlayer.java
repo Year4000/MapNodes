@@ -1,7 +1,5 @@
 package net.year4000.mapnodes.game;
 
-import com.ewized.utilities.bukkit.util.FunEffectsUtil;
-import com.ewized.utilities.bukkit.util.MessageUtil;
 import lombok.Data;
 import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.events.player.GamePlayerJoinEvent;
@@ -15,10 +13,12 @@ import net.year4000.mapnodes.clocks.Clocker;
 import net.year4000.mapnodes.game.components.NodeKit;
 import net.year4000.mapnodes.game.components.NodeTeam;
 import net.year4000.mapnodes.messages.Msg;
-import net.year4000.mapnodes.utils.BarAPI;
 import net.year4000.mapnodes.utils.MathUtil;
 import net.year4000.mapnodes.utils.Common;
 import net.year4000.mapnodes.utils.SchedulerUtil;
+import net.year4000.utilities.bukkit.FunEffectsUtil;
+import net.year4000.utilities.bukkit.MessageUtil;
+import net.year4000.utilities.bukkit.bossbar.BossBar;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
@@ -54,6 +54,7 @@ public final class NodePlayer implements GamePlayer {
         // scoreboard init
         scoreboard = ScoreboardFactory.manager.getNewScoreboard();
 
+        // TODO Better scoreboards
         playerTasks.add(SchedulerUtil.runAsync(() -> {
             MapNodes.getCurrentGame().getTeams().values().parallelStream().forEach(team -> {
                 Team sbTeam = scoreboard.registerNewTeam(team.getName());
@@ -134,7 +135,7 @@ public final class NodePlayer implements GamePlayer {
 
         // Cancel tasks
         playerTasks.stream().forEach(BukkitTask::cancel);
-        BarAPI.removeBar(player);
+        BossBar.removeBar(player);
         //NodeKit.reset(player);
     }
 
@@ -203,7 +204,7 @@ public final class NodePlayer implements GamePlayer {
                             FunEffectsUtil.playSound(player, Sound.NOTE_PLING);
                         }
 
-                        BarAPI.setMessage(
+                        BossBar.setMessage(
                             player,
                             MessageUtil.message(
                                 Msg.locale(player, "clocks.join.tock"),
@@ -216,7 +217,7 @@ public final class NodePlayer implements GamePlayer {
 
                     public void runLast(int position) {
                         FunEffectsUtil.playSound(player, Sound.NOTE_BASS);
-                        BarAPI.setMessage(player, MessageUtil.message(Msg.locale(player, "clocks.join.last")), 1);
+                        BossBar.setMessage(player, MessageUtil.message(Msg.locale(player, "clocks.join.last")), 1);
                         ((NodePlayer) gamePlayer).start();
                     }
                 };

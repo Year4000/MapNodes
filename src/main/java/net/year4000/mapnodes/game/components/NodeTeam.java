@@ -1,11 +1,10 @@
 package net.year4000.mapnodes.game.components;
 
-import com.ewized.utilities.bukkit.util.BukkitUtil;
-import com.ewized.utilities.bukkit.util.MessageUtil;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.annotations.Since;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.game.GameKit;
 import net.year4000.mapnodes.api.game.GamePlayer;
@@ -13,9 +12,10 @@ import net.year4000.mapnodes.api.game.GameTeam;
 import net.year4000.mapnodes.exceptions.InvalidJsonException;
 import net.year4000.mapnodes.game.ScoreboardFactory;
 import net.year4000.mapnodes.messages.Msg;
-import net.year4000.mapnodes.utils.LogUtil;
 import net.year4000.mapnodes.utils.Common;
 import net.year4000.mapnodes.utils.Validator;
+import net.year4000.utilities.bukkit.BukkitUtil;
+import net.year4000.utilities.bukkit.MessageUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.entity.Player;
@@ -90,7 +90,7 @@ public class NodeTeam implements GameTeam, Validator {
                 player.sendMessage(Msg.locale(player, "team.join"), getDisplayName());
             }
 
-            LogUtil.debug(player.getPlayer().getName() + " join " + name);
+            MapNodesPlugin.debug(player.getPlayer().getName() + " join " + name);
         }
         else {
             queue.add(player);
@@ -99,7 +99,7 @@ public class NodeTeam implements GameTeam, Validator {
                 player.sendMessage(Msg.locale(player, "team.queue"), getDisplayName());
             }
 
-            LogUtil.debug(player.getPlayer().getName() + " queue " + name);
+            MapNodesPlugin.debug(player.getPlayer().getName() + " queue " + name);
         }
     }
 
@@ -109,7 +109,7 @@ public class NodeTeam implements GameTeam, Validator {
 
         // leave team
         if (players.remove(player) || queue.remove(player)) {
-            LogUtil.debug(player.getPlayer().getName() + " left " + name);
+            MapNodesPlugin.debug(player.getPlayer().getName() + " left " + name);
         }
 
         // add queue players to team

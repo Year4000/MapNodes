@@ -1,9 +1,8 @@
 package net.year4000.mapnodes.game.system;
 
-import com.ewized.utilities.bukkit.util.ItemUtil;
 import net.year4000.mapnodes.game.components.NodeKit;
 import net.year4000.mapnodes.utils.typewrappers.PlayerInventoryList;
-import net.year4000.mapnodes.utils.typewrappers.PotionEffectList;
+import net.year4000.utilities.bukkit.ItemUtil;
 import org.bukkit.GameMode;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;

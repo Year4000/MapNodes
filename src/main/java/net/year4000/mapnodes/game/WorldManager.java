@@ -4,12 +4,12 @@ import lombok.Getter;
 import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
 import net.minecraft.util.org.apache.commons.io.FileUtils;
+import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.Settings;
 import net.year4000.mapnodes.api.game.GameConfig;
 import net.year4000.mapnodes.exceptions.WorldLoadException;
 import net.year4000.mapnodes.map.MapFolder;
 import net.year4000.mapnodes.messages.Msg;
-import net.year4000.mapnodes.utils.LogUtil;
 import net.year4000.mapnodes.utils.NullGenerator;
 import org.bukkit.*;
 import org.bukkit.block.Block;
@@ -36,7 +36,7 @@ public class WorldManager {
         try {
             worldFile = new ZipFile(folder.getWorld());
         } catch (ZipException e) {
-            LogUtil.log(e.getMessage());
+            MapNodesPlugin.log(e.getMessage());
         }
     }
 
@@ -50,7 +50,7 @@ public class WorldManager {
 
         try {
             worldFile.extractAll(location.getPath());
-            LogUtil.debug(Msg.util("debug.world.unzip"), worldName);
+            MapNodesPlugin.debug(Msg.util("debug.world.unzip"), worldName);
         } catch (ZipException e) {
             throw new WorldLoadException(e.getMessage());
         }
@@ -100,7 +100,7 @@ public class WorldManager {
         }
 
         this.world = world;
-        LogUtil.debug(Msg.util("debug.world.loaded"), worldName);
+        MapNodesPlugin.debug(Msg.util("debug.world.loaded"), worldName);
     }
 
     /** Unload the world from the system */
@@ -109,7 +109,7 @@ public class WorldManager {
 
         Bukkit.unloadWorld(world, false);
 
-        LogUtil.debug(Msg.util("debug.world.unloaded"), worldName);
+        MapNodesPlugin.debug(Msg.util("debug.world.unloaded"), worldName);
     }
 
     /** Delete the world from the system */
@@ -120,9 +120,9 @@ public class WorldManager {
 
         try {
             FileUtils.deleteDirectory(location);
-            LogUtil.debug(Msg.util("debug.world.deleted"), worldName);
+            MapNodesPlugin.debug(Msg.util("debug.world.deleted"), worldName);
         } catch (IOException e) {
-            LogUtil.debug(e.getMessage());
+            MapNodesPlugin.debug(e.getMessage());
         }
     }
 

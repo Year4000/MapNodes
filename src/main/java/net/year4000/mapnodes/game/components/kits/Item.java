@@ -1,13 +1,13 @@
 package net.year4000.mapnodes.game.components.kits;
 
-import com.ewized.utilities.bukkit.util.ItemUtil;
-import com.ewized.utilities.bukkit.util.items.NBT;
 import com.google.gson.Gson;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import net.year4000.mapnodes.exceptions.InvalidJsonException;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.Validator;
+import net.year4000.utilities.bukkit.ItemUtil;
+import net.year4000.utilities.bukkit.items.NBT;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 

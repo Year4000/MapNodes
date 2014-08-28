@@ -7,7 +7,6 @@ import net.year4000.mapnodes.game.Node;
 import net.year4000.mapnodes.map.MapFactory;
 import net.year4000.mapnodes.map.MapFolder;
 import net.year4000.mapnodes.messages.Msg;
-import net.year4000.mapnodes.utils.LogUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +31,7 @@ public class NodeFactory {
             try {
                 addMap(world);
             } catch (InvalidJsonException | WorldLoadException e) {
-                LogUtil.log(Msg.util("error.world.none"));
+                MapNodesPlugin.log(Msg.util("error.world.none"));
             }
         });
     }
@@ -61,7 +60,7 @@ public class NodeFactory {
                 add(getCurrentGame());
                 addAll(queueNodes);
             } catch (NullPointerException e) {
-                LogUtil.debug(e, true);
+                MapNodesPlugin.debug(e, true);
             }
         }};
     }

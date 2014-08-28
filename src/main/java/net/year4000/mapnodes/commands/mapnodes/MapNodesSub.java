@@ -1,22 +1,18 @@
 package net.year4000.mapnodes.commands.mapnodes;
 
-import com.ewized.utilities.bukkit.util.MessageUtil;
-import com.ewized.utilities.core.util.ChatColor;
-import com.sk89q.bukkit.util.BukkitWrappedCommandSender;
-import com.sk89q.minecraft.util.commands.Command;
-import com.sk89q.minecraft.util.commands.CommandContext;
-import com.sk89q.minecraft.util.commands.CommandException;
-import com.sk89q.minecraft.util.commands.CommandPermissions;
-import com.sk89q.minecraft.util.pagination.SimplePaginatedResult;
 import net.year4000.mapnodes.MapNodesPlugin;
-import net.year4000.mapnodes.NodeFactory;
 import net.year4000.mapnodes.Settings;
 import net.year4000.mapnodes.addons.AddonInfo;
-import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.messages.MessageManager;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.Common;
+import net.year4000.utilities.ChatColor;
+import net.year4000.utilities.bukkit.MessageUtil;
+import net.year4000.utilities.bukkit.commands.*;
+import net.year4000.utilities.bukkit.pagination.SimplePaginatedResult;
 import org.bukkit.command.CommandSender;
+
+import java.util.Locale;
 
 public final class MapNodesSub {
     @Command(
@@ -66,6 +62,7 @@ public final class MapNodesSub {
         if (sender.hasPermission("mapnodes.admin") || sender.hasPermission("mapnodes.*")) {
             sender.sendMessage(MessageUtil.message(Msg.locale(sender, "cmd.mapnodes.locale.locales")));
             MessageManager.get().getLocales().keySet().stream()
+                .map(Locale::toString)
                 .filter(locale -> locale.contains("_"))
                 .forEach(sender::sendMessage);
         }
@@ -89,7 +86,7 @@ public final class MapNodesSub {
                 return (i + 1) + MessageUtil.message(
                     " &7- " + Msg.locale(sender, "cmd.addon.list"),
                     addonInfo.name(),
-                    Common.formatSeperators(addonInfo.version(), ChatColor.GREEN, ChatColor.DARK_GRAY),
+                    Common.formatSeparators(addonInfo.version(), ChatColor.GREEN, ChatColor.DARK_GRAY),
                     Common.shortMessage(25, addonInfo.description())
                 );
             }

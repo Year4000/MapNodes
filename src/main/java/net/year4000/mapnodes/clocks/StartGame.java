@@ -1,17 +1,17 @@
 package net.year4000.mapnodes.clocks;
 
-import com.ewized.utilities.bukkit.util.FunEffectsUtil;
-import com.ewized.utilities.bukkit.util.MessageUtil;
+import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.Settings;
 import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.game.GameMap;
 import net.year4000.mapnodes.game.NodeGame;
 import net.year4000.mapnodes.game.NodeStage;
 import net.year4000.mapnodes.messages.Msg;
-import net.year4000.mapnodes.utils.BarAPI;
-import net.year4000.mapnodes.utils.LogUtil;
 import net.year4000.mapnodes.utils.MathUtil;
 import net.year4000.mapnodes.utils.Common;
+import net.year4000.utilities.bukkit.FunEffectsUtil;
+import net.year4000.utilities.bukkit.MessageUtil;
+import net.year4000.utilities.bukkit.bossbar.BossBar;
 import org.bukkit.Sound;
 
 import java.util.Arrays;
@@ -40,7 +40,7 @@ public class StartGame extends Clocker {
         ((NodeGame)MapNodes.getCurrentGame()).setStage(NodeStage.STARTING);
         GameMap map = MapNodes.getCurrentGame().getMap();
 
-        LogUtil.log(MessageUtil.message(Msg.util("clocks.start.first"), map.getName(), sec(position) - 1));
+        MapNodesPlugin.log(MessageUtil.message(Msg.util("clocks.start.first"), map.getName(), sec(position) - 1));
         MapNodes.getCurrentGame().getPlayers().parallel().forEach(player -> FunEffectsUtil.playSound(
             player.getPlayer(),
             Sound.ORB_PICKUP
@@ -55,7 +55,7 @@ public class StartGame extends Clocker {
                 FunEffectsUtil.playSound(player.getPlayer(), Sound.NOTE_PLING);
             }
 
-            BarAPI.setMessage(
+            BossBar.setMessage(
                 player.getPlayer(),
                 MessageUtil.message(
                     Msg.locale(player, "clocks.start.tock"),
@@ -68,11 +68,11 @@ public class StartGame extends Clocker {
     }
 
     public void runLast(int position) {
-        LogUtil.log(MessageUtil.message(Msg.locale(Msg.DEFAULT_LOCALE, "clocks.start.last")));
+        MapNodesPlugin.log(MessageUtil.message(Msg.locale(Msg.DEFAULT_LOCALE, "clocks.start.last")));
 
         MapNodes.getCurrentGame().getPlayers().parallel().forEach(player -> {
             FunEffectsUtil.playSound(player.getPlayer(), Sound.NOTE_BASS);
-            BarAPI.setMessage(player.getPlayer(), MessageUtil.message(Msg.locale(player, "clocks.start.last")), 1);
+            BossBar.setMessage(player.getPlayer(), MessageUtil.message(Msg.locale(player, "clocks.start.last")), 1);
         });
 
         ((NodeGame)MapNodes.getCurrentGame()).start();

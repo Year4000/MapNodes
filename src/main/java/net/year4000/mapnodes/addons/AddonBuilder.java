@@ -1,9 +1,9 @@
 package net.year4000.mapnodes.addons;
 
 import lombok.Getter;
+import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.listeners.ListenerBuilder;
 import net.year4000.mapnodes.messages.Msg;
-import net.year4000.mapnodes.utils.LogUtil;
 
 
 import java.util.*;
@@ -41,11 +41,11 @@ public class AddonBuilder {
                 listeners.put(addon, builder);
                 infos.add(info);
 
-                LogUtil.debug(Msg.util("addon.start"), info.name(), info.version());
+                MapNodesPlugin.debug(Msg.util("addon.start"), info.name(), info.version());
             } catch (InstantiationException | IllegalAccessException e) {
-                LogUtil.debug(e, true);
+                MapNodesPlugin.debug(e, true);
             } catch (NullPointerException e) {
-                LogUtil.debug(Msg.util("addon.invalid"), clazz.getSimpleName());
+                MapNodesPlugin.debug(Msg.util("addon.invalid"), clazz.getSimpleName());
             }
         });
     }
@@ -59,7 +59,7 @@ public class AddonBuilder {
             builder.unregister();
 
             AddonInfo current = info.next();
-            LogUtil.debug(Msg.util("addon.stop"), current.name(), current.version());
+            MapNodesPlugin.debug(Msg.util("addon.stop"), current.name(), current.version());
         });
     }
 }

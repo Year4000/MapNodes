@@ -2,10 +2,10 @@ package net.year4000.mapnodes.map;
 
 
 import lombok.Getter;
+import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.Settings;
 import net.year4000.mapnodes.exceptions.InvalidMapException;
 import net.year4000.mapnodes.messages.Msg;
-import net.year4000.mapnodes.utils.LogUtil;
 
 import javax.annotation.Nullable;
 import java.io.File;
@@ -28,15 +28,15 @@ public class MapFactory {
                 if (maps.isDirectory()) {
                     for (File world : checkNotNull(maps.listFiles())) {
                         try {
-                            LogUtil.debug(Msg.util("debug.map.loaded"), world.getName());
+                            MapNodesPlugin.debug(Msg.util("debug.map.loaded"), world.getName());
                             folders.put(world.getName(), new MapFolder(world));
                         } catch (InvalidMapException e) {
-                            LogUtil.debug(e.getMessage());
+                            MapNodesPlugin.debug(e.getMessage());
                         }
                     }
                 }
             } catch (SecurityException e) {
-                LogUtil.debug(e.getMessage());
+                MapNodesPlugin.debug(e.getMessage());
             }
         });
 

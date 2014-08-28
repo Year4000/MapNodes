@@ -1,9 +1,9 @@
 package net.year4000.mapnodes.commands.mapnodes;
 
-import com.sk89q.minecraft.util.commands.Command;
-import com.sk89q.minecraft.util.commands.CommandContext;
-import com.sk89q.minecraft.util.commands.CommandException;
-import com.sk89q.minecraft.util.commands.NestedCommand;
+import net.year4000.utilities.bukkit.commands.Command;
+import net.year4000.utilities.bukkit.commands.CommandContext;
+import net.year4000.utilities.bukkit.commands.CommandException;
+import net.year4000.utilities.bukkit.commands.NestedCommand;
 import org.bukkit.command.CommandSender;
 
 public final class MapNodesBase {

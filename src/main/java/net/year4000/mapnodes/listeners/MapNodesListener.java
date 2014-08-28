@@ -1,9 +1,5 @@
 package net.year4000.mapnodes.listeners;
 
-import com.ewized.utilities.bukkit.util.FunEffectsUtil;
-import com.ewized.utilities.bukkit.util.MessageUtil;
-import com.ewized.utilities.core.util.*;
-import com.ewized.utilities.core.util.ChatColor;
 import net.year4000.mapnodes.NodeFactory;
 import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.game.GameManager;
@@ -13,7 +9,12 @@ import net.year4000.mapnodes.game.NodeGame;
 import net.year4000.mapnodes.game.components.NodeMap;
 import net.year4000.mapnodes.utils.Common;
 import net.year4000.mapnodes.utils.SchedulerUtil;
-import org.bukkit.*;
+import net.year4000.utilities.ChatColor;
+import net.year4000.utilities.bukkit.FunEffectsUtil;
+import net.year4000.utilities.bukkit.MessageUtil;
+import org.bukkit.Effect;
+import org.bukkit.Location;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -82,7 +83,7 @@ public final class MapNodesListener implements Listener {
             gm.getStage().getStageColor(),
             gm.getStage(),
             gm.getMap().getName(),
-            Common.formatSeperators(gm.getMap().getVersion(), ChatColor.GRAY, ChatColor.DARK_GRAY),
+            Common.formatSeparators(gm.getMap().getVersion(), ChatColor.GRAY, ChatColor.DARK_GRAY),
             ((NodeMap) gm.getMap()).getShortDescription(45)
         ));
 

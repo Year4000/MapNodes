@@ -1,12 +1,5 @@
 package net.year4000.mapnodes.commands.maps;
 
-import com.ewized.utilities.bukkit.util.MessageUtil;
-import com.ewized.utilities.core.util.ChatColor;
-import com.sk89q.bukkit.util.BukkitWrappedCommandSender;
-import com.sk89q.minecraft.util.commands.Command;
-import com.sk89q.minecraft.util.commands.CommandContext;
-import com.sk89q.minecraft.util.commands.CommandException;
-import com.sk89q.minecraft.util.pagination.SimplePaginatedResult;
 import net.year4000.mapnodes.NodeFactory;
 import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.game.GameManager;
@@ -14,6 +7,13 @@ import net.year4000.mapnodes.api.game.GameMap;
 import net.year4000.mapnodes.game.Node;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.Common;
+import net.year4000.utilities.ChatColor;
+import net.year4000.utilities.bukkit.MessageUtil;
+import net.year4000.utilities.bukkit.commands.BukkitWrappedCommandSender;
+import net.year4000.utilities.bukkit.commands.Command;
+import net.year4000.utilities.bukkit.commands.CommandContext;
+import net.year4000.utilities.bukkit.commands.CommandException;
+import net.year4000.utilities.bukkit.pagination.SimplePaginatedResult;
 import org.bukkit.command.CommandSender;
 
 public class MapCommands {
@@ -40,7 +40,7 @@ public class MapCommands {
                     return MessageUtil.message(
                         Msg.locale(sender, "cmd.maps.current"),
                         game.getMap().getName(),
-                        Common.formatSeperators(game.getMap().getVersion(), ChatColor.GREEN, ChatColor.DARK_GRAY),
+                        Common.formatSeparators(game.getMap().getVersion(), ChatColor.GREEN, ChatColor.DARK_GRAY),
                         author(sender, game.getMap())
                     );
                 }
@@ -48,7 +48,7 @@ public class MapCommands {
                     Msg.locale(sender, "cmd.maps.queued"),
                     index,
                     game.getMap().getName(),
-                    Common.formatSeperators(game.getMap().getVersion(), ChatColor.GREEN, ChatColor.DARK_GRAY),
+                    Common.formatSeparators(game.getMap().getVersion(), ChatColor.GREEN, ChatColor.DARK_GRAY),
                     author(sender, game.getMap())
                 );
             }
@@ -86,7 +86,7 @@ public class MapCommands {
         return MessageUtil.replaceColors(String.format(
             Msg.locale(sender, format),
             game.getMap().getName(),
-            Common.formatSeperators(game.getMap().getVersion(), ChatColor.GREEN, ChatColor.DARK_GRAY),
+            Common.formatSeparators(game.getMap().getVersion(), ChatColor.GREEN, ChatColor.DARK_GRAY),
             author(sender, game.getMap())
         ));
     }

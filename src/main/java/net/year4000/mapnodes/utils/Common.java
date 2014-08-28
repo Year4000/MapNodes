@@ -1,9 +1,7 @@
 package net.year4000.mapnodes.utils;
 
-import com.ewized.utilities.bukkit.util.MessageUtil;
-import com.ewized.utilities.core.util.ChatColor;
-
-import java.util.regex.Matcher;
+import net.year4000.utilities.ChatColor;
+import net.year4000.utilities.bukkit.MessageUtil;
 
 public final class Common {
     private Common() {
@@ -68,7 +66,7 @@ public final class Common {
         return MessageUtil.replaceColors(color.toString() + current);
     }
 
-    public static String formatSeperators(String format, ChatColor prefix, ChatColor suffix) {
+    public static String formatSeparators(String format, ChatColor prefix, ChatColor suffix) {
         format = format.replace("", "") // no reason for this just to keep real one bellow
             .replaceAll("\\.", suffix + "." + prefix)
             .replaceAll("\\-", suffix + "-" + prefix)

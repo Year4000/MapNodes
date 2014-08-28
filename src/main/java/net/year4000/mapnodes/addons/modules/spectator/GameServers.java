@@ -1,10 +1,10 @@
 package net.year4000.mapnodes.addons.modules.spectator;
 
-import com.ewized.utilities.bukkit.util.ItemUtil;
 import net.year4000.mapnodes.addons.Addon;
 import net.year4000.mapnodes.addons.AddonInfo;
 import net.year4000.mapnodes.api.events.player.GamePlayerJoinSpectatorEvent;
 import net.year4000.mapnodes.game.components.NodeKit;
+import net.year4000.utilities.bukkit.ItemUtil;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 

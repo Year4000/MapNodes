@@ -1,10 +1,10 @@
 package net.year4000.mapnodes.utils.deserializers;
 
-import com.ewized.utilities.bukkit.util.ItemUtil;
 import com.google.gson.*;
 import net.year4000.mapnodes.game.components.kits.SlotItem;
 import net.year4000.mapnodes.utils.GsonUtil;
 import net.year4000.mapnodes.utils.typewrappers.PlayerInventoryList;
+import net.year4000.utilities.bukkit.ItemUtil;
 import org.bukkit.inventory.ItemStack;
 
 import java.lang.reflect.Type;

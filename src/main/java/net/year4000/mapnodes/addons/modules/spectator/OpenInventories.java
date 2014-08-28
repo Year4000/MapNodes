@@ -1,6 +1,5 @@
 package net.year4000.mapnodes.addons.modules.spectator;
 
-import com.ewized.utilities.bukkit.util.MessageUtil;
 import net.year4000.mapnodes.addons.Addon;
 import net.year4000.mapnodes.addons.AddonInfo;
 import net.year4000.mapnodes.api.MapNodes;
@@ -8,6 +7,7 @@ import net.year4000.mapnodes.api.game.GameManager;
 import net.year4000.mapnodes.api.game.GamePlayer;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.SchedulerUtil;
+import net.year4000.utilities.bukkit.MessageUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -108,7 +108,7 @@ public class OpenInventories extends Addon implements Listener {
 
     /** Get the heal for the player. */
     private ItemStack getHealth(Player player) {
-        int health = (int)player.getHealth();
+        int health = (int) player.getHealth();
 
         ItemStack level =  new ItemStack(Material.SPECKLED_MELON, health);
         ItemMeta meta = level.getItemMeta();
