@@ -6,6 +6,7 @@ import net.year4000.mapnodes.Settings;
 import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.game.GameMap;
 import net.year4000.mapnodes.game.Node;
+import net.year4000.mapnodes.messages.Message;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.*;
 import net.year4000.utilities.bukkit.FunEffectsUtil;
@@ -62,11 +63,7 @@ public class NextNode extends Clocker {
 
             BossBar.setMessage(
                 player.getPlayer(),
-                MessageUtil.message(
-                    Msg.locale(player, "clocks.next.tock"),
-                    map.getName(),
-                    Common.colorNumber(sec(position), sec(getTime()))
-                ),
+                Msg.locale(player, "clocks.next.tock", map.getName(), Common.colorNumber(sec(position), sec(getTime()))),
                 percent(getTime(), position)
             );
         });
@@ -75,7 +72,7 @@ public class NextNode extends Clocker {
     public void runLast(int position) {
         GameMap map = NodeFactory.get().peekNextQueued().getMatch().getGame().getMap();
 
-        MapNodesPlugin.log(MessageUtil.message(Msg.locale(Msg.DEFAULT_LOCALE, "clocks.next.last"), map.getName()));
+        MapNodesPlugin.log(Msg.locale(Message.DEFAULT_LOCALE, "clocks.next.last", map.getName()));
 
         Deque<Player> move = new ArrayDeque<>();
 
@@ -83,7 +80,7 @@ public class NextNode extends Clocker {
             FunEffectsUtil.playSound(player.getPlayer(), Sound.NOTE_BASS);
             BossBar.setMessage(
                 player.getPlayer(),
-                MessageUtil.message(Msg.locale(player, "clocks.next.last"), map.getName()),
+                Msg.locale(player, "clocks.next.last", map.getName()),
                 1
             );
             move.add(player.getPlayer());

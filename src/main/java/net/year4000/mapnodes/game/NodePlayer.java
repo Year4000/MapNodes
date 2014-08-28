@@ -206,18 +206,14 @@ public final class NodePlayer implements GamePlayer {
 
                         BossBar.setMessage(
                             player,
-                            MessageUtil.message(
-                                Msg.locale(player, "clocks.join.tock"),
-                                map.getName(),
-                                Common.colorNumber(sec(position), sec(getTime()))
-                            ),
+                            Msg.locale(player, "clocks.join.tock", map.getName(), Common.colorNumber(sec(position), sec(getTime()))),
                             percent(getTime(), position)
                         );
                     }
 
                     public void runLast(int position) {
                         FunEffectsUtil.playSound(player, Sound.NOTE_BASS);
-                        BossBar.setMessage(player, MessageUtil.message(Msg.locale(player, "clocks.join.last")), 1);
+                        BossBar.setMessage(player, Msg.locale(player, "clocks.join.last"), 1);
                         ((NodePlayer) gamePlayer).start();
                     }
                 };

@@ -37,8 +37,8 @@ public class Settings extends Config {
         inst = new Settings();
     }
 
-    @Comment("The max number of maps to load per session")
-    private boolean debug = false;
+    @Comment("The url to pull the locales from")
+    private String url = "https://git.year4000.net/year4000/locales/raw/master/net/year4000/mapnodes/locales/";
 
     @Comment("The max number of maps to load per session")
     private int loadMaps = 10;

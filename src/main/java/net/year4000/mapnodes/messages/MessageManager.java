@@ -1,20 +1,18 @@
 package net.year4000.mapnodes.messages;
 
-import net.year4000.utilities.locale.ClassLocaleManager;
+import net.year4000.mapnodes.Settings;
+import net.year4000.utilities.cache.QuickCache;
+import net.year4000.utilities.locale.URLLocaleManager;
 
-public class MessageManager extends ClassLocaleManager {
-    private static MessageManager inst = null;
-    private static final String LOCALE_PATH = "/locale/";
+public class MessageManager extends URLLocaleManager {
+    private static QuickCache<MessageManager> inst = QuickCache.builder(MessageManager.class).build();
+    private static String url = Settings.get().getUrl();
 
-    private MessageManager(String path, String... locales) {
-        super(path, locales);
-        inst = this;
+    public MessageManager() {
+        super(url, parseJson(url + LOCALES_JSON));
     }
 
     public static MessageManager get() {
-        if (inst == null) {
-            inst = new MessageManager(LOCALE_PATH, "messages", "en_US", "en_PT", "pt_PT", "pt_BR");
-        }
-        return inst;
+        return inst.get();
     }
 }

@@ -6,6 +6,7 @@ import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.game.GameMap;
 import net.year4000.mapnodes.game.NodeGame;
 import net.year4000.mapnodes.game.NodeStage;
+import net.year4000.mapnodes.messages.Message;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.MathUtil;
 import net.year4000.mapnodes.utils.Common;
@@ -57,22 +58,18 @@ public class StartGame extends Clocker {
 
             BossBar.setMessage(
                 player.getPlayer(),
-                MessageUtil.message(
-                    Msg.locale(player, "clocks.start.tock"),
-                    map.getName(),
-                    Common.colorNumber(sec(position), sec(getTime()))
-                ),
+                Msg.locale(player, "clocks.start.tock", map.getName(), Common.colorNumber(sec(position), sec(getTime()))),
                 percent(getTime(), position)
             );
         });
     }
 
     public void runLast(int position) {
-        MapNodesPlugin.log(MessageUtil.message(Msg.locale(Msg.DEFAULT_LOCALE, "clocks.start.last")));
+        MapNodesPlugin.log(Msg.locale(Message.DEFAULT_LOCALE, "clocks.start.last"));
 
         MapNodes.getCurrentGame().getPlayers().parallel().forEach(player -> {
             FunEffectsUtil.playSound(player.getPlayer(), Sound.NOTE_BASS);
-            BossBar.setMessage(player.getPlayer(), MessageUtil.message(Msg.locale(player, "clocks.start.last")), 1);
+            BossBar.setMessage(player.getPlayer(), Msg.locale(player, "clocks.start.last"), 1);
         });
 
         ((NodeGame)MapNodes.getCurrentGame()).start();

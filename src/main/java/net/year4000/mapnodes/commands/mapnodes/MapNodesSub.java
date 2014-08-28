@@ -7,7 +7,6 @@ import net.year4000.mapnodes.messages.MessageManager;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.Common;
 import net.year4000.utilities.ChatColor;
-import net.year4000.utilities.bukkit.MessageUtil;
 import net.year4000.utilities.bukkit.commands.*;
 import net.year4000.utilities.bukkit.pagination.SimplePaginatedResult;
 import org.bukkit.command.CommandSender;
@@ -21,11 +20,11 @@ public final class MapNodesSub {
     )
     @CommandPermissions({"mapnodes.admin", "mapnodes.*"})
     public static void git(CommandContext args, CommandSender sender) throws CommandException {
-        sender.sendMessage(MessageUtil.message(Msg.locale(sender, "cmd.git.build")));
+        sender.sendMessage(Msg.locale(sender, "cmd.git.build"));
         gitQuickSend(sender, "cmd.git.name", "git.build.user.name");
         gitQuickSend(sender, "cmd.git.email", "git.build.user.email");
         gitQuickSend(sender, "cmd.git.time", "git.build.time");
-        sender.sendMessage(MessageUtil.message(Msg.locale(sender, "cmd.git.commit")));
+        sender.sendMessage(Msg.locale(sender, "cmd.git.commit"));
         gitQuickSend(sender, "cmd.git.remote", "git.remote.origin.url");
         gitQuickSend(sender, "cmd.git.name", "git.commit.user.name");
         gitQuickSend(sender, "cmd.git.email", "git.commit.user.email");
@@ -33,22 +32,6 @@ public final class MapNodesSub {
         gitQuickSend(sender, "cmd.git.commit.branch", "git.branch");
         gitQuickSend(sender, "cmd.git.commit.id", "git.commit.id.describe");
         gitQuickSend(sender, "cmd.git.commit.message", "git.commit.message.short");
-    }
-
-    @Command(
-        aliases = {"debug"},
-        max = 1,
-        desc = "View info about you locale and available locales"
-    )
-    @CommandPermissions({"mapnodes.admin", "mapnodes.*"})
-    public static void debug(CommandContext args, CommandSender sender) throws CommandException {
-        if (args.argsLength() > 0) {
-            Settings.get().setDebug(Boolean.getBoolean(args.getString(0)));
-            sender.sendMessage(Boolean.valueOf(Settings.get().isDebug()).toString());
-        }
-        else {
-            sender.sendMessage(Boolean.valueOf(Settings.get().isDebug()).toString());
-        }
     }
 
     @Command(
@@ -60,7 +43,7 @@ public final class MapNodesSub {
         localeQuickSend(sender, "cmd.mapnodes.locale.name", "locale.name");
 
         if (sender.hasPermission("mapnodes.admin") || sender.hasPermission("mapnodes.*")) {
-            sender.sendMessage(MessageUtil.message(Msg.locale(sender, "cmd.mapnodes.locale.locales")));
+            sender.sendMessage(Msg.locale(sender, "cmd.mapnodes.locale.locales"));
             MessageManager.get().getLocales().keySet().stream()
                 .map(Locale::toString)
                 .filter(locale -> locale.contains("_"))
@@ -78,17 +61,15 @@ public final class MapNodesSub {
         new SimplePaginatedResult<AddonInfo>(null, MAX_PER_PAGE) {
             @Override
             public String formatHeader(int page, int maxPages) {
-                return MessageUtil.message(Msg.locale(sender, "cmd.addon.header"), page, maxPages);
+                return Msg.locale(sender, "cmd.addon.header", String.valueOf(page), String.valueOf(maxPages));
             }
 
             @Override
             public String format(AddonInfo addonInfo, int i) {
-                return (i + 1) + MessageUtil.message(
-                    " &7- " + Msg.locale(sender, "cmd.addon.list"),
+                return (i + 1) + " &7- " + Msg.locale(sender, "cmd.addon.list",
                     addonInfo.name(),
                     Common.formatSeparators(addonInfo.version(), ChatColor.GREEN, ChatColor.DARK_GRAY),
-                    Common.shortMessage(25, addonInfo.description())
-                );
+                    Common.shortMessage(25, addonInfo.description()));
             }
         }.display(
             new BukkitWrappedCommandSender(sender),
@@ -99,11 +80,11 @@ public final class MapNodesSub {
 
         /** Simple the git message output */
     private static void gitQuickSend(CommandSender sender, String head, String body) {
-        sender.sendMessage(MessageUtil.message(Msg.locale(sender, head), Msg.git(body)));
+        sender.sendMessage(Msg.locale(sender, head, Msg.git(body)));
     }
 
     /** Simple the locale message output*/
     private static void localeQuickSend(CommandSender sender, String head, String body) {
-        sender.sendMessage(MessageUtil.message(Msg.locale(sender, head), Msg.locale(sender, body)));
+        sender.sendMessage(Msg.locale(sender, head, Msg.locale(sender, body)));
     }
 }

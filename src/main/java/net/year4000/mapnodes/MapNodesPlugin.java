@@ -12,6 +12,7 @@ import net.year4000.mapnodes.game.Node;
 import net.year4000.mapnodes.game.WorldManager;
 import net.year4000.mapnodes.map.MapFactory;
 import net.year4000.mapnodes.messages.Msg;
+import net.year4000.utilities.LogUtil;
 import net.year4000.utilities.bukkit.BukkitPlugin;
 import net.year4000.utilities.bukkit.MessageUtil;
 import org.bukkit.Bukkit;
@@ -27,6 +28,7 @@ public class MapNodesPlugin extends BukkitPlugin implements Plugin {
     @Override
     public void onLoad() {
         inst = this;
+        log = new LogUtil(getLogger());
         MapNodes.init(inst);
 
         // Clean out old maps

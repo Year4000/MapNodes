@@ -24,11 +24,11 @@ public final class NodeSub {
         GameStage stage = MapNodes.getCurrentGame().getStage();
 
         if (stage.isEndGame()) {
-            throw new CommandException(MessageUtil.message(Msg.locale(sender, "cmd.node.no")));
+            throw new CommandException(Msg.locale(sender, "cmd.node.no"));
         }
 
         NodeFactory.get().getQueueNodes().clear();
-        sender.sendMessage(MessageUtil.message(Msg.locale(sender, "cmd.node.purge")));
+        sender.sendMessage(Msg.locale(sender, "cmd.node.purge"));
     }
 
     @Command(
@@ -41,7 +41,7 @@ public final class NodeSub {
         GameStage stage = MapNodes.getCurrentGame().getStage();
 
         if (stage.isEndGame()) {
-            throw new CommandException(MessageUtil.message(Msg.locale(sender, "cmd.node.no")));
+            throw new CommandException(Msg.locale(sender, "cmd.node.no"));
         }
 
         String mapName = args.getString(0);
@@ -49,13 +49,13 @@ public final class NodeSub {
         if (MapFactory.isMap(mapName)) {
             try {
                 NodeFactory.get().addMap(MapFactory.getMap(mapName));
-                sender.sendMessage(MessageUtil.message(Msg.locale(sender, "cmd.node.add"), mapName));
+                sender.sendMessage(Msg.locale(sender, "cmd.node.add", mapName));
             } catch (InvalidJsonException | WorldLoadException e) {
                 throw new CommandException(e.getMessage());
             }
         }
         else {
-            throw new CommandException(MessageUtil.message(Msg.locale(sender, "cmd.node.add.empty"), mapName));
+            throw new CommandException(Msg.locale(sender, "cmd.node.add.empty", mapName));
         }
     }
 
@@ -72,7 +72,7 @@ public final class NodeSub {
         }
 
         if (args.argsLength() > 0 && args.getInteger(0) >= NodeFactory.get().getQueueNodes().size()) {
-            throw new CommandException(MessageUtil.message(Msg.locale(sender, "cmd.node.remove.bounds")));
+            throw new CommandException(Msg.locale(sender, "cmd.node.remove.bounds"));
         }
 
         int limit = args.argsLength() > 0 ? args.getInteger(0) : 1;

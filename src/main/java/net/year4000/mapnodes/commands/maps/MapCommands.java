@@ -29,7 +29,7 @@ public class MapCommands {
         new SimplePaginatedResult<Node>(null, MAX_PER_PAGE) {
             @Override
             public String formatHeader(int page, int maxPages) {
-                return MessageUtil.message(Msg.locale(sender, "cmd.maps.header"), page, maxPages);
+                return Msg.locale(sender, "cmd.maps.header", String.valueOf(page), String.valueOf(maxPages));
             }
 
             @Override
@@ -37,16 +37,14 @@ public class MapCommands {
                 GameManager game = node.getMatch().getGame();
 
                 if (index == 0) {
-                    return MessageUtil.message(
-                        Msg.locale(sender, "cmd.maps.current"),
+                    return Msg.locale(sender, "cmd.maps.current",
                         game.getMap().getName(),
                         Common.formatSeparators(game.getMap().getVersion(), ChatColor.GREEN, ChatColor.DARK_GRAY),
                         author(sender, game.getMap())
                     );
                 }
-                return MessageUtil.message(
-                    Msg.locale(sender, "cmd.maps.queued"),
-                    index,
+                return Msg.locale(sender, "cmd.maps.queued",
+                    String.valueOf(index),
                     game.getMap().getName(),
                     Common.formatSeparators(game.getMap().getVersion(), ChatColor.GREEN, ChatColor.DARK_GRAY),
                     author(sender, game.getMap())
@@ -78,32 +76,28 @@ public class MapCommands {
             throw new CommandException(Msg.locale(sender, "cmd.next.none"));
         }
 
-        sender.sendMessage(map(sender, "cmd.next", (GameManager)NodeFactory.get().peekNextQueued().getMatch()));
+        sender.sendMessage(map(sender, "cmd.next", (GameManager)NodeFactory.get().peekNextQueued().getMatch().getGame()));
     }
 
     /** The string for the map */
     private static String map(CommandSender sender, String format, GameManager game) {
-        return MessageUtil.replaceColors(String.format(
-            Msg.locale(sender, format),
+        return Msg.locale(
+            sender,
+            format,
             game.getMap().getName(),
             Common.formatSeparators(game.getMap().getVersion(), ChatColor.GREEN, ChatColor.DARK_GRAY),
             author(sender, game.getMap())
-        ));
+        );
     }
 
     /** Fancy authors display */
     private static String author(CommandSender sender, GameMap map) {
         if (map.hasOtherAuthors()) {
             int size = map.getOtherAuthors().size();
-            String authors = Msg.locale(sender, "map.authors");
 
-            return MessageUtil.message(
-                size == 1 ? authors.substring(0, authors.length() - 1) : authors,
-                map.getMainAuthor(),
-                size
-            );
+            return Msg.locale(sender, "map.authors", map.getMainAuthor(), String.valueOf(size));
         }
 
-        return MessageUtil.message(Msg.locale(sender, "map.author"), map.getMainAuthor());
+        return Msg.locale(sender, "map.author", map.getMainAuthor());
     }
 }

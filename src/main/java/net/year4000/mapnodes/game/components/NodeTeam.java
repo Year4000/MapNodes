@@ -87,7 +87,7 @@ public class NodeTeam implements GameTeam, Validator {
             players.add(player);
 
             if (display) {
-                player.sendMessage(Msg.locale(player, "team.join"), getDisplayName());
+                player.sendMessage(Msg.locale(player, "team.join", getDisplayName()));
             }
 
             MapNodesPlugin.debug(player.getPlayer().getName() + " join " + name);
@@ -96,7 +96,7 @@ public class NodeTeam implements GameTeam, Validator {
             queue.add(player);
 
             if (display) {
-                player.sendMessage(Msg.locale(player, "team.queue"), getDisplayName());
+                player.sendMessage(Msg.locale(player, "team.queue", getDisplayName()));
             }
 
             MapNodesPlugin.debug(player.getPlayer().getName() + " queue " + name);

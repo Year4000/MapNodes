@@ -77,7 +77,7 @@ public class DeathMessages extends Addon implements Listener {
             case FALL:
                 return replace(k, d, Msg.locale(viewer, "death.fall"));
             case ENTITY_ATTACK:
-                return replace(k, d, Msg.locale(viewer, "death.entity_attack"), humanItem(k.getItemInHand()));
+                return replace(k, d, Msg.locale(viewer, "death.entity_attack", humanItem(k.getItemInHand())));
             case ENTITY_EXPLOSION:
                 return replace(k, d, Msg.locale(viewer, "death.entity_explosion"));
             case FALLING_BLOCK:
@@ -93,7 +93,7 @@ public class DeathMessages extends Addon implements Listener {
                 return replace(k, d, Msg.locale(viewer, "death.lighting"));
             case PROJECTILE:
                 int distance = (int)Math.sqrt(k.getLocation().distanceSquared(d.getLocation()));
-                return replace(k, d, Msg.locale(viewer, "death.projectile"), distance);
+                return replace(k, d, Msg.locale(viewer, "death.projectile", String.valueOf(distance)));
             case MAGIC:
                 return replace(k, d, Msg.locale(viewer, "death.magic"));
             case SUFFOCATION:
