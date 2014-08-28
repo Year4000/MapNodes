@@ -33,7 +33,7 @@ public class RestartServer extends Clocker {
     }
 
     public RestartServer(int time) {
-        super(MathUtil.ticks(Settings.get().isDebug() ? 10 : time));
+        super(MapNodesPlugin.getInst().getLog().isDebug() ? 10 : time));
     }
     public void runFirst(int position) {
         MapNodesPlugin.log(MessageUtil.message(Msg.util("clocks.restart.first"), sec(position) - 1));

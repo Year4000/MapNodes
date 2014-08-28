@@ -95,7 +95,7 @@ public class WorldManager {
         world.setSpawnLocation(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
         Block platform = world.getSpawnLocation().add(0, -1, 0).getBlock();
 
-        if (platform.isEmpty() && Settings.get().isDebug()) {
+        if (platform.isEmpty() && MapNodesPlugin.getInst().getLog().isDebug()) {
             platform.setType(Material.BEDROCK);
         }
 

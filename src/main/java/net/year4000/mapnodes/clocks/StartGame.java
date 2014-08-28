@@ -34,7 +34,7 @@ public class StartGame extends Clocker {
     }
 
     public StartGame(int time) {
-        super(MathUtil.ticks(Settings.get().isDebug() ? 10 : time));
+        super(MathUtil.ticks(MapNodesPlugin.getInst().getLog().isDebug() ? 10 : time));
     }
 
     public void runFirst(int position) {
