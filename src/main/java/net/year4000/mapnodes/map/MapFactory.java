@@ -1,6 +1,5 @@
 package net.year4000.mapnodes.map;
 
-
 import lombok.Getter;
 import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.Settings;

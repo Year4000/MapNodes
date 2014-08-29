@@ -81,9 +81,11 @@ public class MatchManager implements Validator {
 
     /** Register the map with world spawns */
     public void register() {
+        // todo check if the map still exists, as we are re pulling the data
         try {
             game = GsonUtil.createGson(node.getWorld().getWorld()).fromJson(loadMap(), NodeGame.class);
 
+            // todo check kits and handle them better to prevent bugs
             // register external team and kit
             if (game.getTeams().containsKey("spectator")) {
                 game.getTeams().remove("spectator");

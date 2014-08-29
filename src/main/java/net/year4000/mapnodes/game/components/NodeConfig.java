@@ -32,12 +32,12 @@ import static com.google.common.base.Preconditions.checkArgument;
 public final class NodeConfig implements GameConfig, Validator {
     /** The map's difficulty level. */
     @Since(1.0)
-    private int difficulty = 3;
+    private int difficulty = 3; // todo allow support for names easy, normal, hard
 
     /** The time that the map should be locked to. */
     @Since(1.0)
     @SerializedName("time_lock")
-    private long timeLock = -1;
+    private long timeLock = -1; // todo allow for name's ex dawn, dusk, day, night, midnight, midday
 
     /** Should the weather be forced on. */
     @Since(1.0)
@@ -45,7 +45,7 @@ public final class NodeConfig implements GameConfig, Validator {
 
     /** Can the map be destroyed. */
     @Since(1.0)
-    private boolean destructible = true;
+    private boolean destructible = true; // todo make an enum for fast settings of all, foliage, natural...
 
     /** The Environment of the world. */
     @Since(1.0)

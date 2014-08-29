@@ -100,6 +100,7 @@ public class NodeKit implements GameKit, Validator {
     public void giveKit(GamePlayer player) {
         giveKit(player.getPlayer());
 
+        // todo assign the task to the player's list of tasks
         SchedulerUtil.runSync(() -> {
             List<ItemStack> items = new ArrayList<>(armor);
             items.forEach(item -> {
@@ -122,6 +123,7 @@ public class NodeKit implements GameKit, Validator {
     public void giveKit(Player player) {
         reset(player);
 
+        // todo assign the task to the player's list of tasks
         SchedulerUtil.runSync(() -> {
             player.getInventory().setContents(items.toArray(new ItemStack[items.size()]));
             player.getInventory().setArmorContents(armor.toArray(new ItemStack[armor.size()]));
@@ -142,6 +144,7 @@ public class NodeKit implements GameKit, Validator {
 
     /** Immortal starter kit */
     public static List<BukkitTask> immortal(Player player) {
+        // todo handle if the player all rdy has potion effect
         Clocker immortal = new Clocker(MathUtil.ticks(10)) {
             PotionEffectType[] types = {
                 PotionEffectType.DAMAGE_RESISTANCE,

@@ -55,7 +55,7 @@ public final class NodePlayer implements GamePlayer {
         scoreboard = ScoreboardFactory.manager.getNewScoreboard();
 
         // TODO Better scoreboards
-        playerTasks.add(SchedulerUtil.runAsync(() -> {
+        /*playerTasks.add(SchedulerUtil.runAsync(() -> {
             MapNodes.getCurrentGame().getTeams().values().parallelStream().forEach(team -> {
                 Team sbTeam = scoreboard.registerNewTeam(team.getName());
                 sbTeam.setAllowFriendlyFire(team.isAllowFriendlyFire());
@@ -65,7 +65,7 @@ public final class NodePlayer implements GamePlayer {
                 sbTeam.setSuffix(MessageUtil.replaceColors("&r"));
                 teams.put(team.getName(), sbTeam);
             });
-        }));
+        }));*/
     }
 
     public void start() {

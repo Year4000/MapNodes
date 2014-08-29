@@ -51,7 +51,7 @@ public class NodeTeam implements GameTeam, Validator {
 
     /** The kit this team will have. */
     @Since(1.0)
-    private String kit = "default";
+    private String kit = "default"; // todo make a list to allow for multiple kits
 
     /** Points to where the player can spawn. */
     //@Since(1.0)
