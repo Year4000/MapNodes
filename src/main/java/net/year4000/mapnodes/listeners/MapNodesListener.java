@@ -71,12 +71,10 @@ public final class MapNodesListener implements Listener {
         event.setMaxPlayers(gm.getMaxPlayers());
 
         event.setMotd(MessageUtil.message(
-            "%s%s &7| &5&o%s &7%s \n&f%s",
+            "%s%s &7| &5&o%s",
             gm.getStage().getStageColor(),
             gm.getStage(),
-            gm.getMap().getName(),
-            Common.formatSeparators(gm.getMap().getVersion(), ChatColor.GRAY, ChatColor.DARK_GRAY),
-            ((NodeMap) gm.getMap()).getShortDescription(45)
+            gm.getMap().getName()
         ));
 
         if (mm.getIcon() != null) {
