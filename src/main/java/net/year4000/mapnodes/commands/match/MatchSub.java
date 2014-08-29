@@ -1,12 +1,20 @@
 package net.year4000.mapnodes.commands.match;
 
+import com.google.common.annotations.Beta;
 import net.year4000.mapnodes.api.MapNodes;
+import net.year4000.mapnodes.api.events.game.GamePlayerWinEvent;
+import net.year4000.mapnodes.api.events.game.GameTeamWinEvent;
+import net.year4000.mapnodes.api.events.game.GameWinEvent;
+import net.year4000.mapnodes.api.game.GamePlayer;
+import net.year4000.mapnodes.api.game.GameTeam;
 import net.year4000.mapnodes.clocks.StartGame;
 import net.year4000.mapnodes.game.NodeGame;
 import net.year4000.utilities.bukkit.commands.Command;
 import net.year4000.utilities.bukkit.commands.CommandContext;
 import net.year4000.utilities.bukkit.commands.CommandException;
 import org.bukkit.command.CommandSender;
+
+import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
@@ -62,6 +70,39 @@ public final class MatchSub {
         }
         else {
             ((NodeGame) MapNodes.getCurrentGame()).stop();
+        }
+    }
+
+    @Command(
+        aliases = {"win"},
+        flags = ":t:p",
+        desc = "Win the match"
+    )
+    @Beta
+    public static void win(CommandContext args, CommandSender sender) throws CommandException {
+        // checks to only win the game if the game is running
+        try {
+            checkArgument(!MapNodes.getCurrentGame().getStage().isPreGame());
+            checkArgument(!MapNodes.getCurrentGame().getStage().isEndGame());
+        } catch (IllegalArgumentException e) {
+            throw new CommandException(e.getMessage());
+        }
+
+        // win the game with the specific team
+        try {
+            if (args.hasFlag('p')) {
+                GamePlayer player = MapNodes.getCurrentGame().getPlaying()
+                    .filter(p -> p.getPlayer().getName().equalsIgnoreCase(args.getFlag('p')))
+                    .collect(Collectors.toList()).get(0);
+                new GamePlayerWinEvent(player).call();
+            } else if (args.hasFlag('t')) {
+                GameTeam team = MapNodes.getCurrentGame().getTeams().get(args.getFlag('t'));
+                new GameTeamWinEvent(team).call();
+            } else {
+                new GameWinEvent().call();
+            }
+        } catch (Exception e) {
+            throw new CommandException(e);
         }
     }
 }
