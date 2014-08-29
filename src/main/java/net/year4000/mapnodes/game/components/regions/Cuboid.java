@@ -21,11 +21,11 @@ public class Cuboid implements Region, Validator {
 
     @Override
     public void validate() throws InvalidJsonException {
-        checkArgument(min != null, Msg.util("settings.region"), "min");
+        checkArgument(min != null, Msg.util("settings.region", "min"));
 
         min.validate();
 
-        checkArgument(max != null, Msg.util("settings.region"), "max");
+        checkArgument(max != null, Msg.util("settings.region", "max"));
 
         max.validate();
     }

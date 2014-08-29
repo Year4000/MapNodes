@@ -66,7 +66,7 @@ public class MatchManager implements Validator {
 
     public void validate() throws InvalidJsonException {
         try {
-            MapNodesPlugin.debug(Msg.util("debug.map.validate"), name);
+            MapNodesPlugin.debug(Msg.util("debug.map.validate", name));
 
             World world = Bukkit.getWorlds().get(0);
             GsonUtil.createGson(world).fromJson(loadMap(), NodeGame.class).validate();

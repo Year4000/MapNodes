@@ -4,25 +4,17 @@ import net.year4000.mapnodes.api.game.GamePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.Properties;
-
 public class Msg {
-    //public static final String DEFAULT_LOCALE = Message.DEFAULT_LOCALE;
-    //public static final String UTIL = "messages";
-    //public static final String GIT = "git";
+    private static System util = new System();
 
     /** Load the git log key */
     public static String git(String key) {
-        //Properties locale = MessageManager.get() == null ? null : MessageManager.get().getLocale(GIT);
-        //return locale == null ? key : locale.getProperty(key, key);
-        return key;
+        return Git.get(key);
     }
 
     /** Load a util message */
-    public static String util(String key) {
-        //Properties locale = MessageManager.get() == null ? null : MessageManager.get().getLocale(UTIL);
-        //return locale == null ? key : locale.getProperty(key, key);
-        return key;
+    public static String util(String key, String... values) {
+        return util.get(key, values);
     }
 
     /** Load the message based off the locale string code */

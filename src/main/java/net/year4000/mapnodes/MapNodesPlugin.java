@@ -49,11 +49,10 @@ public class MapNodesPlugin extends BukkitPlugin implements Plugin {
         }
 
         // Generate all the games
-        maps.forEach(node -> log(
-            Msg.util("debug.map.ready"),
+        maps.forEach(node -> log(Msg.util("debug.map.ready",
             node.getMatch().getGame().getMap().getName(),
             node.getMatch().getGame().getMap().getVersion()
-        ));
+        )));
 
         // Addons (The internal system that loads addons)
         // The order is the dependency list

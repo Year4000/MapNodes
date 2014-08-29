@@ -25,7 +25,7 @@ public class ListenerBuilder {
         PluginManager manager = Bukkit.getPluginManager();
         listeners.forEach(listener -> {
             try {
-                MapNodesPlugin.debug(Msg.util("debug.listener.register"), listener.getSimpleName());
+                MapNodesPlugin.debug(Msg.util("debug.listener.register", listener.getSimpleName()));
                 Listener instance = (Listener) listener.newInstance();
                 manager.registerEvents(instance, MapNodesPlugin.getInst());
                 registered.add(instance);

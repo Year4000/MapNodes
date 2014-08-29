@@ -51,7 +51,7 @@ public class WorldManager {
 
         try {
             worldFile.extractAll(location.getPath());
-            MapNodesPlugin.debug(Msg.util("debug.world.unzip"), worldName);
+            MapNodesPlugin.debug(Msg.util("debug.world.unzip", worldName));
         } catch (ZipException e) {
             throw new WorldLoadException(e.getMessage());
         }
@@ -101,7 +101,7 @@ public class WorldManager {
         }
 
         this.world = world;
-        MapNodesPlugin.debug(Msg.util("debug.world.loaded"), worldName);
+        MapNodesPlugin.debug(Msg.util("debug.world.loaded", worldName));
     }
 
     /** Unload the world from the system */
@@ -110,7 +110,7 @@ public class WorldManager {
 
         Bukkit.unloadWorld(world, false);
 
-        MapNodesPlugin.debug(Msg.util("debug.world.unloaded"), worldName);
+        MapNodesPlugin.debug(Msg.util("debug.world.unloaded", worldName));
     }
 
     /** Delete the world from the system */
@@ -121,7 +121,7 @@ public class WorldManager {
 
         try {
             FileUtils.deleteDirectory(location);
-            MapNodesPlugin.debug(Msg.util("debug.world.deleted"), worldName);
+            MapNodesPlugin.debug(Msg.util("debug.world.deleted", worldName));
         } catch (IOException e) {
             MapNodesPlugin.debug(e.getMessage());
         }

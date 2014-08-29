@@ -56,7 +56,7 @@ public class Node {
                 ++count;
 
                 if (count % 1000000 == 0) {
-                    MapNodesPlugin.debug(Msg.util("debug.world.remove"), world.getWorld().getName());
+                    MapNodesPlugin.debug(Msg.util("debug.world.remove", world.getWorld().getName()));
                 }
 
                 boolean online = false;

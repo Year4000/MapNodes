@@ -28,7 +28,7 @@ public class MapFactory {
                 if (maps.isDirectory()) {
                     for (File world : checkNotNull(maps.listFiles())) {
                         try {
-                            MapNodesPlugin.debug(Msg.util("debug.map.loaded"), world.getName());
+                            MapNodesPlugin.debug(Msg.util("debug.map.loaded", world.getName()));
                             folders.put(world.getName(), new MapFolder(world));
                         } catch (InvalidMapException e) {
                             MapNodesPlugin.debug(e.getMessage());

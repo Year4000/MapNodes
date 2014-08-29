@@ -41,11 +41,11 @@ public class AddonBuilder {
                 listeners.put(addon, builder);
                 infos.add(info);
 
-                MapNodesPlugin.debug(Msg.util("addon.start"), info.name(), info.version());
+                MapNodesPlugin.debug(Msg.util("addon.start", info.name(), info.version()));
             } catch (InstantiationException | IllegalAccessException e) {
                 MapNodesPlugin.debug(e, true);
             } catch (NullPointerException e) {
-                MapNodesPlugin.debug(Msg.util("addon.invalid"), clazz.getSimpleName());
+                MapNodesPlugin.debug(Msg.util("addon.invalid", clazz.getSimpleName()));
             }
         });
     }
@@ -59,7 +59,7 @@ public class AddonBuilder {
             builder.unregister();
 
             AddonInfo current = info.next();
-            MapNodesPlugin.debug(Msg.util("addon.stop"), current.name(), current.version());
+            MapNodesPlugin.debug(Msg.util("addon.stop", current.name(), current.version()));
         });
     }
 }

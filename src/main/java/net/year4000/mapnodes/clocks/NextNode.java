@@ -42,7 +42,7 @@ public class NextNode extends Clocker {
     public void runFirst(int position) {
         GameMap map = NodeFactory.get().peekNextQueued().getMatch().getGame().getMap();
 
-        MapNodesPlugin.log(MessageUtil.message(Msg.util("clocks.next.first"), map.getName(), sec(position) - 1));
+        MapNodesPlugin.log(Msg.util("clocks.next.first", map.getName(), String.valueOf(sec(position) - 1)));
 
         MapNodes.getCurrentGame().getPlayers().parallel().forEach(player -> FunEffectsUtil.playSound(
             player.getPlayer(),

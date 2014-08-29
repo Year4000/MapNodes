@@ -18,7 +18,7 @@ public class MaterialDeserializer implements JsonDeserializer<Material> {
         try {
             return Material.valueOf(name.toUpperCase());
         } catch (IllegalArgumentException e) {
-            MapNodesPlugin.debug(Msg.util("settings.material"), name);
+            MapNodesPlugin.debug(Msg.util("settings.material", name));
         }
 
         return null;

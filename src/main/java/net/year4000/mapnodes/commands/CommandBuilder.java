@@ -17,7 +17,7 @@ public class CommandBuilder {
     public void register() {
         MapNodesPlugin plugin = MapNodesPlugin.getInst();
         commands.forEach(command -> {
-            MapNodesPlugin.debug(Msg.util("debug.command.register"), command.getSimpleName());
+            MapNodesPlugin.debug(Msg.util("debug.command.register", command.getSimpleName()));
             MapNodesPlugin.getInst().registerCommand(command);
         });
     }

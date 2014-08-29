@@ -19,7 +19,7 @@ public class ChatColorDeserializer  implements JsonDeserializer<ChatColor> {
         try {
             return ChatColor.valueOf(name.toUpperCase());
         } catch (IllegalArgumentException e) {
-            MapNodesPlugin.debug(Msg.util("settings.color"), name);
+            MapNodesPlugin.debug(Msg.util("settings.color", name));
         }
 
         return ChatColor.WHITE;

@@ -28,7 +28,7 @@ public class MapFolder {
     /** Create and check if this is a valid map folder */
     public MapFolder(File path) throws InvalidMapException {
         if (!isMapFolder(path)) {
-            throw new InvalidMapException(String.format(Msg.util("error.world.folder"), path.getName()));
+            throw new InvalidMapException(Msg.util("error.world.folder", path.getName()));
         }
 
         name = path.getName();

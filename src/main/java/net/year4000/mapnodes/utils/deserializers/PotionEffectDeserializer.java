@@ -18,7 +18,7 @@ public class PotionEffectDeserializer implements JsonDeserializer<PotionEffectTy
         PotionEffectType potion = PotionEffectType.getByName(name.toUpperCase());
 
         if (potion == null) {
-            MapNodesPlugin.debug(Msg.util("settings.kit.effect.name"), name);
+            MapNodesPlugin.debug(Msg.util("settings.kit.effect.name", name));
         }
 
         return potion;

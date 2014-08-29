@@ -24,11 +24,11 @@ public class Point implements Region, Validator {
 
     @Override
     public void validate() throws InvalidJsonException {
-        checkArgument(x != null, Msg.util("settings.region"), "X");
+        checkArgument(x != null, Msg.util("settings.region", "X"));
 
-        checkArgument(y != null, Msg.util("settings.region"), "Y");
+        checkArgument(y != null, Msg.util("settings.region", "Y"));
 
-        checkArgument(z != null, Msg.util("settings.region"), "Z");
+        checkArgument(z != null, Msg.util("settings.region", "Z"));
     }
 
     @Override

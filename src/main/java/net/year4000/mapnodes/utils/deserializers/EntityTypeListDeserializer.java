@@ -29,7 +29,7 @@ public class EntityTypeListDeserializer implements JsonDeserializer<List<EntityT
             try {
                 newList.add(EntityType.valueOf(itemName.toUpperCase()));
             } catch (IllegalArgumentException e) {
-                MapNodesPlugin.debug(Msg.util("settings.entitytype"), itemName);
+                MapNodesPlugin.debug(Msg.util("settings.entitytype", itemName));
             }
         }
 

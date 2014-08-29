@@ -18,7 +18,7 @@ public class GameModeDeserializer implements JsonDeserializer<GameMode> {
         try {
             return GameMode.valueOf(name.toUpperCase());
         } catch (IllegalArgumentException e) {
-            MapNodesPlugin.debug(Msg.util("settings.gamemode"), name);
+            MapNodesPlugin.debug(Msg.util("settings.gamemode", name));
         }
 
         return GameMode.SURVIVAL;
