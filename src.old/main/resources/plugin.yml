@@ -1,6 +1,0 @@
-name: ${pom.name}
-author: Year4000
-version: ${pom.version}-git-${git.commit.id.abbrev}
-description: ${git.commit.message.short}
-main: ${pom.groupId}.${pom.artifactId}.${pom.name}
-depend: [Utilities]
