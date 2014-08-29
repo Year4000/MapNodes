@@ -8,16 +8,15 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerRespawnEvent;
 
 public final class GameListener implements Listener {
-
     @EventHandler
-    public void respawn(PlayerRespawnEvent e) {
-        GamePlayer player = MapNodes.getCurrentGame().getPlayer(e.getPlayer());
+    public void respawn(PlayerRespawnEvent event) {
+        GamePlayer player = MapNodes.getCurrentGame().getPlayer(event.getPlayer());
 
         if (player.isPlaying()) {
             ((NodeKit) player.getTeam().getKit()).giveKit(player);
 
             // God buffer mode
-            player.getPlayerTasks().addAll(NodeKit.immortal(e.getPlayer()));
+            player.getPlayerTasks().addAll(NodeKit.immortal(event.getPlayer()));
         }
     }
 }

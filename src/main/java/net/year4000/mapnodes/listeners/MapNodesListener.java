@@ -11,6 +11,7 @@ import net.year4000.mapnodes.utils.Common;
 import net.year4000.mapnodes.utils.SchedulerUtil;
 import net.year4000.utilities.ChatColor;
 import net.year4000.utilities.bukkit.FunEffectsUtil;
+import net.year4000.utilities.bukkit.LocationUtil;
 import net.year4000.utilities.bukkit.MessageUtil;
 import org.bukkit.Effect;
 import org.bukkit.Location;
@@ -24,44 +25,35 @@ import org.bukkit.event.server.ServerListPingEvent;
 
 public final class MapNodesListener implements Listener {
     @EventHandler
-    public void onJoin(PlayerJoinEvent e) {
-        ((NodeGame) MapNodes.getCurrentGame()).join(e.getPlayer());
+    public void onJoin(PlayerJoinEvent event) {
+        event.setJoinMessage(null);
+        ((NodeGame) MapNodes.getCurrentGame()).join(event.getPlayer());
     }
 
     @EventHandler
-    public void onQuit(PlayerQuitEvent e) {
-        ((NodeGame) MapNodes.getCurrentGame()).quit(e.getPlayer());
+    public void onQuit(PlayerQuitEvent event) {
+        ((NodeGame) MapNodes.getCurrentGame()).quit(event.getPlayer());
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
-    public void onRespawn(PlayerRespawnEvent e) {
-        Location to = e.getRespawnLocation().clone();
+    public void onRespawn(PlayerRespawnEvent event) {
+        event.setRespawnLocation(LocationUtil.center(event.getRespawnLocation().clone()));
 
-        to.setX(to.getBlockX() >= 0 ? to.getBlockX() + 0.5 : to.getBlockX() - 0.5);
-        to.setZ(to.getBlockZ() >= 0 ? to.getBlockZ() + 0.5 : to.getBlockZ() - 0.5);
-
-        e.setRespawnLocation(to);
-
-        MapNodes.getCurrentGame().getPlayer(e.getPlayer()).getPlayerTasks().add(SchedulerUtil.runSync(() -> {
-            FunEffectsUtil.playSound(e.getPlayer(), Sound.ENDERMAN_TELEPORT);
-            FunEffectsUtil.playEffect(e.getPlayer(), Effect.ENDER_SIGNAL);
+        MapNodes.getCurrentGame().getPlayer(event.getPlayer()).getPlayerTasks().add(SchedulerUtil.runSync(() -> {
+            FunEffectsUtil.playSound(event.getPlayer(), Sound.ENDERMAN_TELEPORT);
+            FunEffectsUtil.playEffect(event.getPlayer(), Effect.ENDER_SIGNAL);
         }, 1));
     }
 
     @EventHandler(ignoreCancelled = true)
-    public void onTeleport(PlayerTeleportEvent e) {
-        if (e.getCause() != PlayerTeleportEvent.TeleportCause.PLUGIN) return;
+    public void onTeleport(PlayerTeleportEvent event) {
+        if (event.getCause() != PlayerTeleportEvent.TeleportCause.PLUGIN) return;
 
-        Location to = e.getTo().clone();
+        event.setTo(LocationUtil.center(event.getTo().clone()));
 
-        to.setX(to.getBlockX() >= 0 ? to.getBlockX() + 0.5 : to.getBlockX() - 0.5);
-        to.setZ(to.getBlockZ() >= 0 ? to.getBlockZ() + 0.5 : to.getBlockZ() - 0.5);
-
-        e.setTo(to);
-
-        MapNodes.getCurrentGame().getPlayer(e.getPlayer()).getPlayerTasks().add(SchedulerUtil.runSync(() -> {
-            FunEffectsUtil.playSound(e.getPlayer(), Sound.ENDERMAN_TELEPORT);
-            FunEffectsUtil.playEffect(e.getPlayer(), Effect.ENDER_SIGNAL);
+        MapNodes.getCurrentGame().getPlayer(event.getPlayer()).getPlayerTasks().add(SchedulerUtil.runSync(() -> {
+            FunEffectsUtil.playSound(event.getPlayer(), Sound.ENDERMAN_TELEPORT);
+            FunEffectsUtil.playEffect(event.getPlayer(), Effect.ENDER_SIGNAL);
         }, 1));
     }
 
@@ -71,14 +63,14 @@ public final class MapNodesListener implements Listener {
     }
 
     @EventHandler
-    public void onPing(ServerListPingEvent e) {
+    public void onPing(ServerListPingEvent event) {
         GameManager gm = MapNodes.getCurrentGame();
         MatchManager mm = NodeFactory.get().getCurrentGame().getMatch();
 
-        e.setNumPlayers((int) gm.getPlayers().filter(GamePlayer::isPlaying).count());
-        e.setMaxPlayers(gm.getMaxPlayers());
+        event.setNumPlayers((int) gm.getPlayers().filter(GamePlayer::isPlaying).count());
+        event.setMaxPlayers(gm.getMaxPlayers());
 
-        e.setMotd(MessageUtil.message(
+        event.setMotd(MessageUtil.message(
             "%s%s &7| &5&o%s &7%s \n&f%s",
             gm.getStage().getStageColor(),
             gm.getStage(),
@@ -88,14 +80,14 @@ public final class MapNodesListener implements Listener {
         ));
 
         if (mm.getIcon() != null) {
-            e.setServerIcon(mm.getIcon());
+            event.setServerIcon(mm.getIcon());
         }
     }
 
     @EventHandler
-    public void onMove(PlayerMoveEvent e) {
-        Player player = e.getPlayer();
-        Location loc = e.getTo().clone();
+    public void onMove(PlayerMoveEvent event) {
+        Player player = event.getPlayer();
+        Location loc = event.getTo().clone();
         loc.setYaw(0);
         loc.setPitch(0);
 
