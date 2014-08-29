@@ -1,7 +1,9 @@
 package net.year4000.mapnodes.listeners;
 
 import net.year4000.mapnodes.api.MapNodes;
+import net.year4000.mapnodes.api.events.game.GameWinEvent;
 import net.year4000.mapnodes.api.game.GamePlayer;
+import net.year4000.mapnodes.game.NodeGame;
 import net.year4000.mapnodes.game.components.NodeKit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -18,5 +20,10 @@ public final class GameListener implements Listener {
             // God buffer mode
             player.getPlayerTasks().addAll(NodeKit.immortal(event.getPlayer()));
         }
+    }
+
+    @EventHandler
+    public void onWin(GameWinEvent event) {
+        ((NodeGame) MapNodes.getCurrentGame()).stop();
     }
 }
