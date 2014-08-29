@@ -17,12 +17,13 @@ import org.bukkit.block.Block;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Date;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
 public class WorldManager {
-    private static final File WORLD_CONTAINER = Bukkit.getWorldContainer();
-    private static final String TEMPLATE = "MN-%d-%s";
+    private static final File WORLD_CONTAINER = new File(Bukkit.getWorldContainer(), MapNodesPlugin.getInst().getName());
+    private static final String TEMPLATE = "%d-%s";
     private final String worldName;
     private final Node node;
     private ZipFile worldFile;
@@ -65,7 +66,7 @@ public class WorldManager {
         GameConfig config = node.getMatch().getGame().getConfig();
 
         // Create the world
-        WorldCreator worldCreator = new WorldCreator(worldName);
+        WorldCreator worldCreator = new WorldCreator(MapNodesPlugin.getInst().getName() + File.separator + worldName);
         worldCreator.generateStructures(false);
         worldCreator.environment(config.getEnvironment());
         worldCreator.generator(new NullGenerator());
@@ -128,13 +129,8 @@ public class WorldManager {
 
     /** Delete stray maps created by MapNodes */
     public static void removeStrayMaps() {
-        File worlds = Bukkit.getWorldContainer();
-        File[] maps = worlds.listFiles();
-
-        if (maps != null) {
-            Arrays.asList(maps).parallelStream()
-                .filter(folder -> folder.getName().contains("MN-"))
-                .forEach(FileUtils::deleteQuietly);
+        if (WORLD_CONTAINER.exists()) {
+            FileUtils.deleteQuietly(WORLD_CONTAINER);
         }
     }
 }
