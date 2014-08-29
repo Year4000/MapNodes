@@ -141,8 +141,7 @@ public final class NodeGame implements GameManager, Validator {
         start.getGame().getSpectating().forEach(player -> player.getPlayer().closeInventory());
         start.getGame().getEntering().forEach(player -> ((NodePlayer) player).start());
 
-        // nodeclock
-
+        // todo nodeclock (the clock that run every sec)
     }
 
     /** Stop the game and cycle to the next with default time */

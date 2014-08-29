@@ -56,7 +56,7 @@ public final class MatchSub {
             }
         }
 
-        // Start the game with the clock
+        // Stop the game with the clock
         if (args.argsLength() > 0){
             ((NodeGame) MapNodes.getCurrentGame()).stop(args.getInteger(0));
         }
