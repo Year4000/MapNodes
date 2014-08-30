@@ -3,6 +3,7 @@ package net.year4000.mapnodes.game.components;
 import com.google.gson.annotations.Since;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.game.GameMap;
 import net.year4000.mapnodes.exceptions.InvalidJsonException;
 import net.year4000.mapnodes.messages.Msg;
@@ -63,12 +64,15 @@ public final class NodeMap implements GameMap, Validator {
         return others;
     }
 
-    /** Get multi line description */
-    public List<String> getDescription(boolean multiline) {
-        checkArgument(multiline, Msg.util("error.multiline"));
+    /** Get the description in your own locale */
+    public String getDescription(String locale) {
+        return MapNodes.getCurrentGame().locale(locale, description);
+    }
 
+    /** Get multi line description */
+    public List<String> getMultiLineDescription(String locale) {
         List<String> lines = new ArrayList<>();
-        String[] spited = description.split(" ");
+        String[] spited = MapNodes.getCurrentGame().locale(locale, description).split(" ");
 
         String line = "";
         int counter = 0;

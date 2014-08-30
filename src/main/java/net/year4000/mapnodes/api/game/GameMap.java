@@ -19,14 +19,14 @@ public interface GameMap {
      * Get the description of the map.
      * @return The description.
      */
-    public String getDescription();
+    public String getDescription(String locale);
 
     /**
      * Get the description of the map in a list with the max of seven words.
-     * @param multiline Can only be true.
+     * @param locale Can only be true.
      * @return The list of lines.
      */
-    public List<String> getDescription(boolean multiline);
+    public List<String> getMultiLineDescription(String locale);
 
     /**
      * Get the list of all the authors of the map.
