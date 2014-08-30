@@ -4,6 +4,7 @@ import net.year4000.mapnodes.game.components.NodeKit;
 import net.year4000.mapnodes.game.components.NodeTeam;
 import org.bukkit.entity.Player;
 
+import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Stream;
 
@@ -37,4 +38,8 @@ public interface GameManager {
     public int getMaxPlayers();
 
     public GameStage getStage();
+
+    public String locale(Locale locale, String key);
+
+    public String locale(String locale, String key);
 }

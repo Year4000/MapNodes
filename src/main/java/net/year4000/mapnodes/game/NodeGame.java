@@ -15,16 +15,15 @@ import net.year4000.mapnodes.clocks.NextNode;
 import net.year4000.mapnodes.clocks.RestartServer;
 import net.year4000.mapnodes.exceptions.InvalidJsonException;
 import net.year4000.mapnodes.game.components.*;
+import net.year4000.mapnodes.messages.Message;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.Validator;
 import org.bukkit.entity.Player;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkArgument;
@@ -41,6 +40,10 @@ public final class NodeGame implements GameManager, Validator {
     @Since(1.0)
     @SerializedName("game")
     private NodeConfig config = null;
+
+    /** The mini locale system built right into the map.json */
+    @Since(1.0)
+    private Map<String, Map<String, String>> locales = new ConcurrentHashMap<>();
 
     /** Manage the items and effects that are given to the player. */
     @Since(1.0)
@@ -89,6 +92,29 @@ public final class NodeGame implements GameManager, Validator {
     private transient static final Joiner pageJoiner = Joiner.on('\n');
     private transient Map<UUID, GamePlayer> players = new ConcurrentHashMap<>();
     private transient NodeStage stage = NodeStage.WAITING;
+
+    /** Get the locale wanted or try to default to en_US or use any locale */
+    public String locale(Locale locale, String key) {
+        return locale(locale.toString(), key);
+    }
+
+    /** Get the locale wanted or try to default to en_US or use any locale */
+    public String locale(String code, String key) {
+        if (locales.size() > 0) {
+            if (locales.containsKey(code)) {
+                return locales.get(code).get(key);
+            }
+            else if (locales.containsKey(Message.DEFAULT_LOCALE)) {
+                return locales.get(Message.DEFAULT_LOCALE).get(key);
+            }
+            else {
+                return locales.values().stream().collect(Collectors.toList()).get(0).get(key);
+            }
+        }
+        else {
+            return key;
+        }
+    }
 
     public Stream<GamePlayer> getPlayers() {
         return players.values().stream();
