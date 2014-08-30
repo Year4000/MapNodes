@@ -6,6 +6,7 @@ import com.google.gson.annotations.Since;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import net.year4000.mapnodes.NodeFactory;
+import net.year4000.mapnodes.api.events.game.GameClockEvent;
 import net.year4000.mapnodes.api.events.game.GameStartEvent;
 import net.year4000.mapnodes.api.events.game.GameStopEvent;
 import net.year4000.mapnodes.api.game.GameManager;
@@ -17,8 +18,10 @@ import net.year4000.mapnodes.exceptions.InvalidJsonException;
 import net.year4000.mapnodes.game.components.*;
 import net.year4000.mapnodes.messages.Message;
 import net.year4000.mapnodes.messages.Msg;
+import net.year4000.mapnodes.utils.SchedulerUtil;
 import net.year4000.mapnodes.utils.Validator;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitTask;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -92,6 +95,7 @@ public final class NodeGame implements GameManager, Validator {
     private transient static final Joiner pageJoiner = Joiner.on('\n');
     private transient Map<UUID, GamePlayer> players = new ConcurrentHashMap<>();
     private transient NodeStage stage = NodeStage.WAITING;
+    private transient BukkitTask gameClock;
 
     /** Get the locale wanted or try to default to en_US or use any locale */
     public String defaultLocale(String key) {
@@ -172,7 +176,7 @@ public final class NodeGame implements GameManager, Validator {
         start.getGame().getSpectating().forEach(player -> player.getPlayer().closeInventory());
         start.getGame().getEntering().forEach(player -> ((NodePlayer) player).start());
 
-        // todo nodeclock (the clock that run every sec)
+        gameClock = SchedulerUtil.repeatAsync(() -> new GameClockEvent(this).call(), 20);
     }
 
     /** Stop the game and cycle to the next with default time */
@@ -183,6 +187,7 @@ public final class NodeGame implements GameManager, Validator {
     /** Stop the game anc cycle to the next with a time */
     public void stop(@Nullable Integer time) {
         stage = NodeStage.ENDING;
+        gameClock.cancel();
 
         GameStopEvent stop = new GameStopEvent(this);
         stop.call();

@@ -1,6 +1,8 @@
 package net.year4000.mapnodes.listeners;
 
+import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.api.MapNodes;
+import net.year4000.mapnodes.api.events.game.GameClockEvent;
 import net.year4000.mapnodes.api.events.game.GameWinEvent;
 import net.year4000.mapnodes.api.game.GamePlayer;
 import net.year4000.mapnodes.game.NodeGame;
@@ -25,5 +27,15 @@ public final class GameListener implements Listener {
     @EventHandler
     public void onWin(GameWinEvent event) {
         ((NodeGame) MapNodes.getCurrentGame()).stop();
+    }
+
+    @EventHandler
+    public void onClock(GameClockEvent event) {
+        // If not in debug mode check if their are still players.
+        if (!MapNodesPlugin.getInst().getLog().isDebug()) {
+            if (event.getGame().getPlaying().count() == 0) {
+                ((NodeGame) event.getGame()).stop();
+            }
+        }
     }
 }
