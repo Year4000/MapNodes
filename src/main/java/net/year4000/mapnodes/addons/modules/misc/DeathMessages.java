@@ -3,6 +3,7 @@ package net.year4000.mapnodes.addons.modules.misc;
 import net.year4000.mapnodes.addons.Addon;
 import net.year4000.mapnodes.addons.AddonInfo;
 import net.year4000.mapnodes.api.MapNodes;
+import net.year4000.mapnodes.api.events.player.GamePlayerDeathEvent;
 import net.year4000.mapnodes.api.game.GameManager;
 import net.year4000.mapnodes.api.game.GamePlayer;
 import net.year4000.mapnodes.messages.Msg;
@@ -26,20 +27,37 @@ public class DeathMessages extends Addon implements Listener {
     public void onPlayerDeath(PlayerDeathEvent event) {
         String message = MessageUtil.message("&7&o%s", event.getDeathMessage());
         event.setDeathMessage(null);
+
         Player player = event.getEntity();
         Player killer = player.getKiller();
 
         // Check if your death was null
         if (player.getLastDamageCause() == null) return;
 
+        GamePlayerDeathEvent deathEvent = new GamePlayerDeathEvent(event);
+        deathEvent.call();
+
         // Send messages
         if (killer != null) {
+            // Show messages to others depending on event
+            deathEvent.getViewers().stream()
+                .filter(v -> !v.getPlayer().getName().equals(player.getName())) // not player
+                .filter(v -> !v.getPlayer().getName().equals(killer.getName())) // not killer
+                .forEach(v -> v.sendMessage(getMessage(v.getPlayer(), player, killer)));
+
             killer.sendMessage(getMessage(killer, player, killer));
             player.sendMessage(getMessage(player, player, killer));
         }
         else {
             GamePlayer gPlayer = MapNodes.getCurrentGame().getPlayer(player);
-            gPlayer.sendMessage(message.replaceAll(player.getName(), gPlayer.getPlayerColor() + "&7&o") + ".");
+            String formattedMessage = message.replaceAll(player.getName(), gPlayer.getPlayerColor() + "&7&o") + ".";
+
+            // Show messages to others depending on event
+            deathEvent.getViewers().stream()
+                .filter(v -> !v.getPlayer().getName().equals(player.getName())) // not player
+                .forEach(v -> v.sendMessage(formattedMessage));
+
+            gPlayer.sendMessage(formattedMessage);
         }
     }
 
