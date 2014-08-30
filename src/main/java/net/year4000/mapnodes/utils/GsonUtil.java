@@ -2,6 +2,7 @@ package net.year4000.mapnodes.utils;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import net.year4000.mapnodes.game.components.regions.Region;
 import net.year4000.mapnodes.utils.deserializers.*;
 import net.year4000.mapnodes.utils.typewrappers.*;
 import org.bukkit.ChatColor;
@@ -12,10 +13,12 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.potion.PotionEffectType;
 
 public final class GsonUtil {
+    public static final Gson GSON = new Gson();
+
     /** Normal gson object for standard things */
     public static Gson createGson(World world) {
         return gsonBuilder()
-            .registerTypeAdapter(LocationList.class, new LocationListDesterializer(world))
+            .registerTypeAdapter(LocationList.class, new LocationListDeserializer(world))
             .create();
     }
 
@@ -39,6 +42,7 @@ public final class GsonUtil {
             .registerTypeAdapter(GameMode.class, new GameModeDeserializer())
             .registerTypeAdapter(PotionEffectList.class, new PotionEffectListDeserializer())
             .registerTypeAdapter(PlayerInventoryList.class, new PlayerInventoryDeserializer())
-            .registerTypeAdapter(PlayerArmorList.class, new PlayerArmorDeserializer());
+            .registerTypeAdapter(PlayerArmorList.class, new PlayerArmorDeserializer())
+            ;
     }
 }

@@ -17,6 +17,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@RegionType("point")
 public class Point implements Region, Validator {
     private Integer x = null;
     private Integer y = null;

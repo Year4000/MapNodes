@@ -1,0 +1,55 @@
+package net.year4000.mapnodes.game.components.regions;
+
+import net.year4000.mapnodes.MapNodesPlugin;
+
+import java.security.InvalidParameterException;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
+import static com.google.common.base.Preconditions.checkArgument;
+
+public final class RegionManager {
+    private static RegionManager inst;
+    private Set<Class<? extends Region>> rawRegionTypes = new HashSet<>();
+    private Map<RegionType, Class<? extends Region>> regionTypes = new HashMap<>();
+    private boolean built = false;
+
+    public static RegionManager get() {
+        if (inst == null) {
+            inst = new RegionManager();
+        }
+
+        return inst;
+    }
+
+    public RegionManager add(Class<? extends Region> type) {
+        rawRegionTypes.add(type);
+        return this;
+    }
+
+    public void build() {
+        rawRegionTypes.forEach(type -> {
+            try {
+                RegionType typeName = type.getAnnotation(RegionType.class);
+                regionTypes.put(typeName, type);
+            } catch (Exception e) {
+                MapNodesPlugin.log(e, false);
+            }
+        });
+        built = true;
+    }
+
+    public Class<? extends Region> getRegionType(String name) {
+        checkArgument(built); // Make sure we are built
+
+        for (RegionType type : regionTypes.keySet()) {
+            if (type.value().equals(name.toLowerCase())) {
+                return regionTypes.get(type);
+            }
+        }
+
+        throw new InvalidParameterException(name + " is not a valid region type.");
+    }
+}

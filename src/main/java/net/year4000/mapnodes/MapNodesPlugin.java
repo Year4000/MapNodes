@@ -10,6 +10,9 @@ import net.year4000.mapnodes.api.Plugin;
 import net.year4000.mapnodes.api.game.GameManager;
 import net.year4000.mapnodes.game.Node;
 import net.year4000.mapnodes.game.WorldManager;
+import net.year4000.mapnodes.game.components.regions.Cuboid;
+import net.year4000.mapnodes.game.components.regions.Point;
+import net.year4000.mapnodes.game.components.regions.RegionManager;
 import net.year4000.mapnodes.map.MapFactory;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.utilities.LogUtil;
@@ -30,6 +33,15 @@ public class MapNodesPlugin extends BukkitPlugin implements Plugin {
         inst = this;
         log = new LogUtil(getLogger());
         MapNodes.init(inst);
+
+        // Register region types to be used during map.json parsing
+        RegionManager.get()
+            .add(Point.class)
+            .add(Cuboid.class)
+            //.add(Cube.class)
+            //.add(Sphere.class)
+            //.add(Cylinder.class)
+            .build();
 
         // Clean out old maps
         WorldManager.removeStrayMaps();

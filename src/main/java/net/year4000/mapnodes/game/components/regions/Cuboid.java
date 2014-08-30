@@ -15,6 +15,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 @Data
 @NoArgsConstructor
+@RegionType("cuboid")
 public class Cuboid implements Region, Validator {
     private Point min = null;
     private Point max = null;
