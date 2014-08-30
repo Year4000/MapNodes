@@ -107,13 +107,13 @@ public final class NodeGame implements GameManager, Validator {
     public String locale(String code, String key) {
         if (locales.size() > 0) {
             if (locales.containsKey(code)) {
-                return locales.get(code).get(key);
+                return locales.get(code).getOrDefault(key, key);
             }
             else if (locales.containsKey(Message.DEFAULT_LOCALE)) {
-                return locales.get(Message.DEFAULT_LOCALE).get(key);
+                return locales.get(Message.DEFAULT_LOCALE).getOrDefault(key, key);
             }
             else {
-                return locales.values().stream().collect(Collectors.toList()).get(0).get(key);
+                return locales.values().stream().collect(Collectors.toList()).get(0).getOrDefault(key, key);
             }
         }
         else {
