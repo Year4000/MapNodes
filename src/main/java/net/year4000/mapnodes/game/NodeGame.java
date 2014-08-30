@@ -94,6 +94,11 @@ public final class NodeGame implements GameManager, Validator {
     private transient NodeStage stage = NodeStage.WAITING;
 
     /** Get the locale wanted or try to default to en_US or use any locale */
+    public String defaultLocale(String key) {
+        return locale(Message.DEFAULT_LOCALE, key);
+    }
+
+    /** Get the locale wanted or try to default to en_US or use any locale */
     public String locale(Locale locale, String key) {
         return locale(locale.toString(), key);
     }
