@@ -14,10 +14,12 @@ import net.year4000.mapnodes.game.ScoreboardFactory;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.Common;
 import net.year4000.mapnodes.utils.Validator;
+import net.year4000.mapnodes.utils.typewrappers.LocationList;
 import net.year4000.utilities.bukkit.BukkitUtil;
 import net.year4000.utilities.bukkit.MessageUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import java.util.*;
@@ -54,8 +56,8 @@ public class NodeTeam implements GameTeam, Validator {
     private String kit = "default"; // todo make a list to allow for multiple kits
 
     /** Points to where the player can spawn. */
-    //@Since(1.0)
-    //private List<Points> spawns = new ArrayList<>();
+    @Since(1.0)
+    private LocationList<Location> spawns = new LocationList<>();
 
     /** Should this team be tracked by the scoreboard. */
     @Since(1.0)
@@ -68,9 +70,9 @@ public class NodeTeam implements GameTeam, Validator {
             throw new InvalidJsonException(Msg.util("settings.team.name"));
         }
 
-        /*if (spawns.size() == 0) {
+        if (spawns.size() == 0) {
             throw new InvalidJsonException(Msg.util("settings.team.spawns"));
-        }*/
+        }
     }
 
     /*//--------------------------------------------//

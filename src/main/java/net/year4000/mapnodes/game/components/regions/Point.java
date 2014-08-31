@@ -42,6 +42,6 @@ public class Point implements Region, Validator {
     }
 
     public Location create(World world) {
-        return new Location(world, x, y, x);
+        return new Location(world, x, y, z);
     }
 }

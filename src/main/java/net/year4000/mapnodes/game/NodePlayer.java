@@ -76,9 +76,10 @@ public final class NodePlayer implements GamePlayer {
             this.setImmortal(true);
             this.setKit(team.getKit());
             this.setTeam(team);
-            this.setSpawn(MapNodes.getCurrentWorld().getSpawnLocation()); // TODO Fix
+            // todo change to set<spawns>, and spawn type RANDOM, LINEAR
+            this.setSpawn(team.getSpawns().get(0)); // TODO Add logic to spawning ex random, linear
             this.setMessage(new ArrayList<String>() {{
-                add("&7&m****&a&l Game Started &7&m****");//TODO proper start message
+                add("&7&m****&a&l Game Started &7&m****"); // TODO proper start message
             }});
         }};
         start.call();

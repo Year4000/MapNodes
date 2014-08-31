@@ -105,6 +105,8 @@ public final class NodeConfig implements GameConfig, Validator {
 
         checkArgument(0 <= worldHeight && worldHeight <= 256, Msg.util("settings.game.worldHeight"));
 
+        checkArgument(spawn.size() > 0, Msg.util("settings.game.spawn"));
+
         tnt.validate();
     }
 }
