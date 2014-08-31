@@ -36,6 +36,7 @@ public class MapCommands {
             public String format(Node node, int index) {
                 GameManager game = node.getMatch().getGame();
 
+                // todo only show map name as maps update right before the game starts.
                 if (index == 0) {
                     return Msg.locale(sender, "cmd.maps.current",
                         game.getMap().getName(),
@@ -81,6 +82,7 @@ public class MapCommands {
 
     /** The string for the map */
     private static String map(CommandSender sender, String format, GameManager game) {
+        // todo only show map name as maps update right before the game starts.
         return Msg.locale(
             sender,
             format,
