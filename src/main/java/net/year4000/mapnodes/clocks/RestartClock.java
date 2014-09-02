@@ -1,13 +1,12 @@
 package net.year4000.mapnodes.clocks;
 
-import com.ewized.utilities.bukkit.util.FunEffectsUtil;
 import net.year4000.mapnodes.MapNodes;
 import net.year4000.mapnodes.configs.Messages;
 import net.year4000.mapnodes.game.GameManager;
-import net.year4000.mapnodes.game.GamePlayer;
 import net.year4000.mapnodes.game.GameStage;
-import net.year4000.mapnodes.utils.BarAPI;
 import net.year4000.mapnodes.world.WorldManager;
+import net.year4000.utilities.bukkit.FunEffectsUtil;
+import net.year4000.utilities.bukkit.bossbar.BossBar;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 
@@ -25,8 +24,8 @@ public class RestartClock extends Clocker {
             if (position <= 5)
                 FunEffectsUtil.playSound(player.getPlayer(), Sound.NOTE_PLING);
 
-            BarAPI.removeBar(player.getPlayer());
-            BarAPI.setMessage(
+            BossBar.removeBar(player.getPlayer());
+            BossBar.setMessage(
                 player.getPlayer(),
                 String.format(Messages.get(player.getPlayer().getLocale(), "clock-restart"), position),
                 (float) ((double) position / (double) getTime()) * 100
@@ -42,8 +41,8 @@ public class RestartClock extends Clocker {
         gm.getPlayers().values().parallelStream().forEach(player -> {
             FunEffectsUtil.playSound(player.getPlayer(), Sound.NOTE_BASS);
 
-            BarAPI.removeBar(player.getPlayer());
-            BarAPI.setMessage(player.getPlayer(), Messages.get(player.getPlayer().getLocale(), "clock-restart-last"), 1);
+            BossBar.removeBar(player.getPlayer());
+            BossBar.setMessage(player.getPlayer(), Messages.get(player.getPlayer().getLocale(), "clock-restart-last"), 1);
         });
 
         Bukkit.getScheduler().runTask(MapNodes.getInst(), () -> gm.setStage(GameStage.ENDED));

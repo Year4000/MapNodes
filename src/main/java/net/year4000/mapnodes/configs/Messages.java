@@ -1,10 +1,9 @@
 package net.year4000.mapnodes.configs;
 
-import com.ewized.utilities.bukkit.util.MessageUtil;
-import net.cubespace.Yamler.Config.Comment;
-import net.cubespace.Yamler.Config.Config;
-import net.cubespace.Yamler.Config.InvalidConfigurationException;
 import net.year4000.mapnodes.MapNodes;
+import net.year4000.utilities.bukkit.MessageUtil;
+import net.year4000.utilities.config.Comment;
+import net.year4000.utilities.config.Config;
 
 import java.io.File;
 import java.util.TreeMap;

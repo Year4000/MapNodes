@@ -1,10 +1,6 @@
 package net.year4000.mapnodes.game;
 
 
-import com.ewized.utilities.bukkit.util.BukkitUtil;
-import com.ewized.utilities.bukkit.util.ItemUtil;
-import com.ewized.utilities.bukkit.util.LocationUtil;
-import com.ewized.utilities.bukkit.util.MessageUtil;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Setter;
@@ -13,11 +9,13 @@ import net.year4000.mapnodes.configs.Messages;
 import net.year4000.mapnodes.configs.map.Points;
 import net.year4000.mapnodes.configs.map.Teams;
 import net.year4000.mapnodes.clocks.DelayJoin;
-import net.year4000.mapnodes.utils.PlayerBadges;
 import net.year4000.mapnodes.utils.TeamException;
 import net.year4000.mapnodes.world.WorldManager;
+import net.year4000.utilities.bukkit.BukkitUtil;
+import net.year4000.utilities.bukkit.ItemUtil;
+import net.year4000.utilities.bukkit.LocationUtil;
+import net.year4000.utilities.bukkit.MessageUtil;
 import org.bukkit.*;
-import org.bukkit.craftbukkit.v1_7_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;

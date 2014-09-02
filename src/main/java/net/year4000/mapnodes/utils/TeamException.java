@@ -1,6 +1,7 @@
 package net.year4000.mapnodes.utils;
 
-import com.ewized.utilities.bukkit.util.MessageUtil;
+
+import net.year4000.utilities.bukkit.MessageUtil;
 
 public class TeamException extends Exception {
     public TeamException(String message) {

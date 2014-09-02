@@ -1,8 +1,8 @@
 package net.year4000.mapnodes.configs.map;
 
-import com.ewized.utilities.bukkit.util.ItemUtil;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import net.year4000.utilities.bukkit.items.NBT;
 
 @Data
 @NoArgsConstructor
@@ -52,7 +52,7 @@ public class Kits {
         /** The name of the item. */
         private String item = null;
         /** NBT data of the item. */
-        private ItemUtil.Nbt nbt;
+        private NBT nbt;
     }
 
     @Data

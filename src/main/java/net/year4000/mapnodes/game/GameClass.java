@@ -1,8 +1,5 @@
 package net.year4000.mapnodes.game;
 
-import com.ewized.utilities.bukkit.util.BukkitUtil;
-import com.ewized.utilities.bukkit.util.ItemUtil;
-import com.ewized.utilities.bukkit.util.MessageUtil;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Setter;
@@ -10,6 +7,9 @@ import net.year4000.mapnodes.configs.Messages;
 import net.year4000.mapnodes.configs.map.Classes;
 import net.year4000.mapnodes.utils.ClassException;
 import net.year4000.mapnodes.world.WorldManager;
+import net.year4000.utilities.bukkit.BukkitUtil;
+import net.year4000.utilities.bukkit.ItemUtil;
+import net.year4000.utilities.bukkit.MessageUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -67,13 +67,13 @@ public class GameClass {
         message += "\"";
 
         setIcon(checkNotNull(ItemUtil.makeItem(
-                checkNotNull(classes.getIcon().toUpperCase(), Messages.get("error-json-class-icon")),
-                MessageUtil.replaceColors(String.format(
-                        "{\"display\": {\"name\": \"%s\", \"lore\": [\"\",%s%s]}}",
-                        getName(),
-                        message,
-                        getPermission().equals("") ? "" : ",\"\",\"&6" + getPermMessage() + "\""
-                ))
+            checkNotNull(classes.getIcon().toUpperCase(), Messages.get("error-json-class-icon")),
+            MessageUtil.replaceColors(String.format(
+                "{\"display\": {\"name\": \"%s\", \"lore\": [\"\",%s%s]}}",
+                getName(),
+                message,
+                getPermission().equals("") ? "" : ",\"\",\"&6" + getPermMessage() + "\""
+            ))
         ), Messages.get("error-json-class-icon")));
 
         // Set up the kit

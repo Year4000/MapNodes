@@ -1,9 +1,9 @@
 package net.year4000.mapnodes.clocks;
 
-import com.ewized.utilities.bukkit.util.FunEffectsUtil;
 import net.year4000.mapnodes.configs.Messages;
 import net.year4000.mapnodes.game.GamePlayer;
-import net.year4000.mapnodes.utils.BarAPI;
+import net.year4000.utilities.bukkit.FunEffectsUtil;
+import net.year4000.utilities.bukkit.bossbar.BossBar;
 import org.bukkit.Sound;
 
 public class DelayJoin extends Clocker {
@@ -20,11 +20,11 @@ public class DelayJoin extends Clocker {
 
         FunEffectsUtil.playSound(player.getPlayer(), Sound.NOTE_PLING);
 
-        BarAPI.removeBar(player.getPlayer());
-        BarAPI.setMessage(
+        BossBar.removeBar(player.getPlayer());
+        BossBar.setMessage(
             player.getPlayer(),
             msg,
-            (float) ((double)position / (double)getTime()) * 100
+            (float) ((double) position / (double) getTime()) * 100
         );
     }
 
@@ -34,8 +34,8 @@ public class DelayJoin extends Clocker {
 
         FunEffectsUtil.playSound(player.getPlayer(), Sound.NOTE_BASS);
 
-        BarAPI.removeBar(player.getPlayer());
-        BarAPI.setMessage(player.getPlayer(), msg, 1);
+        BossBar.removeBar(player.getPlayer());
+        BossBar.setMessage(player.getPlayer(), msg, 1);
 
         player.start();
     }

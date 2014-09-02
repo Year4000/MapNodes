@@ -1,13 +1,13 @@
 package net.year4000.mapnodes.commands;
 
-import com.ewized.utilities.bukkit.util.MessageUtil;
-import com.sk89q.minecraft.util.commands.Command;
-import com.sk89q.minecraft.util.commands.CommandContext;
-import com.sk89q.minecraft.util.commands.CommandException;
 import net.year4000.mapnodes.configs.MainConfig;
 import net.year4000.mapnodes.configs.Messages;
 import net.year4000.mapnodes.game.GameManager;
 import net.year4000.mapnodes.world.WorldManager;
+import net.year4000.utilities.bukkit.MessageUtil;
+import net.year4000.utilities.bukkit.commands.Command;
+import net.year4000.utilities.bukkit.commands.CommandContext;
+import net.year4000.utilities.bukkit.commands.CommandException;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.World;

@@ -1,8 +1,7 @@
 package net.year4000.mapnodes.commands;
 
-import com.sk89q.bukkit.util.CommandsManagerRegistration;
-import com.sk89q.minecraft.util.commands.*;
 import net.year4000.mapnodes.MapNodes;
+import net.year4000.utilities.bukkit.commands.*;
 import org.bukkit.command.CommandSender;
 
 public final class MatchBaseCommand {

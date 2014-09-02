@@ -1,6 +1,5 @@
 package net.year4000.mapnodes.game;
 
-import com.ewized.utilities.bukkit.util.ItemUtil;
 import com.google.gson.Gson;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,6 +8,7 @@ import net.year4000.mapnodes.configs.MapConfig;
 import net.year4000.mapnodes.configs.Messages;
 import net.year4000.mapnodes.configs.map.Kits;
 import net.year4000.mapnodes.world.WorldManager;
+import net.year4000.utilities.bukkit.ItemUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.GameMode;

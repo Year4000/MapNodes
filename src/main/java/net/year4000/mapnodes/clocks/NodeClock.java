@@ -1,14 +1,13 @@
 package net.year4000.mapnodes.clocks;
 
-import com.ewized.utilities.bukkit.util.MessageUtil;
 import net.year4000.mapnodes.MapNodes;
 import net.year4000.mapnodes.configs.Messages;
 import net.year4000.mapnodes.game.GameManager;
 import net.year4000.mapnodes.game.GameStage;
 import net.year4000.mapnodes.game.GameTeam;
 import net.year4000.mapnodes.world.WorldManager;
+import net.year4000.utilities.bukkit.MessageUtil;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import org.joda.time.DateTime;
 
 import java.util.Arrays;
@@ -62,8 +61,8 @@ public class NodeClock implements Runnable {
                         gm.getScoreboard().getScoreboard().resetScores(team.getDisplayName());
                         gm.getScoreboard().getSidebarScore(MessageUtil.replaceColors(
                             "&" + team.getChatColor().getChar() +
-                            "&m" +
-                            team.getName()
+                                "&m" +
+                                team.getName()
                         )).setScore(-1);
                     }
                 });
@@ -89,7 +88,7 @@ public class NodeClock implements Runnable {
             )));
         }
         else if (GameStage.isEnded()) {
-            Arrays.asList(Bukkit.getOnlinePlayers()).parallelStream().forEach(player -> {
+            Bukkit.getOnlinePlayers().parallelStream().forEach(player -> {
                 player.kickPlayer(Messages.get(player.getLocale(), "clock-restart-kick"));
             });
             Bukkit.shutdown();

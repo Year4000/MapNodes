@@ -1,8 +1,5 @@
 package net.year4000.mapnodes.game;
 
-import com.ewized.utilities.bukkit.util.FunEffectsUtil;
-import com.ewized.utilities.bukkit.util.LocationUtil;
-import com.ewized.utilities.bukkit.util.MessageUtil;
 import com.google.gson.Gson;
 import lombok.AccessLevel;
 import lombok.Data;
@@ -23,6 +20,9 @@ import net.year4000.mapnodes.listeners.MapConfigListener;
 import net.year4000.mapnodes.utils.Minify;
 import net.year4000.mapnodes.utils.MissingJsonElement;
 import net.year4000.mapnodes.world.WorldManager;
+import net.year4000.utilities.bukkit.FunEffectsUtil;
+import net.year4000.utilities.bukkit.LocationUtil;
+import net.year4000.utilities.bukkit.MessageUtil;
 import org.bukkit.*;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;

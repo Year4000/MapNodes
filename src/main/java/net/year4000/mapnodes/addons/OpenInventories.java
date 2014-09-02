@@ -1,12 +1,11 @@
 package net.year4000.mapnodes.addons;
 
-import com.ewized.utilities.bukkit.util.BukkitUtil;
-import com.ewized.utilities.bukkit.util.MessageUtil;
 import net.year4000.mapnodes.MapNodes;
 import net.year4000.mapnodes.game.GameManager;
 import net.year4000.mapnodes.game.GamePlayer;
 import net.year4000.mapnodes.game.GameStage;
 import net.year4000.mapnodes.world.WorldManager;
+import net.year4000.utilities.bukkit.MessageUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;

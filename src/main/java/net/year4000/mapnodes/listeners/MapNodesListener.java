@@ -1,13 +1,13 @@
 package net.year4000.mapnodes.listeners;
 
-import com.ewized.utilities.bukkit.util.FunEffectsUtil;
-import com.ewized.utilities.bukkit.util.MessageUtil;
 import net.year4000.mapnodes.MapNodes;
 import net.year4000.mapnodes.configs.Messages;
 import net.year4000.mapnodes.game.*;
 import net.year4000.mapnodes.utils.ClassException;
 import net.year4000.mapnodes.utils.TeamException;
 import net.year4000.mapnodes.world.WorldManager;
+import net.year4000.utilities.bukkit.FunEffectsUtil;
+import net.year4000.utilities.bukkit.MessageUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;

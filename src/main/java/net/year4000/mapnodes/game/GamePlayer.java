@@ -1,19 +1,19 @@
 package net.year4000.mapnodes.game;
 
-import com.ewized.utilities.bukkit.util.FunEffectsUtil;
-import com.ewized.utilities.bukkit.util.MessageUtil;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Setter;
-import net.minecraft.server.v1_7_R3.EntityPlayer;
-import net.minecraft.server.v1_7_R3.EnumClientCommand;
-import net.minecraft.server.v1_7_R3.PacketPlayInClientCommand;
+import net.minecraft.server.v1_7_R4.EntityPlayer;
+import net.minecraft.server.v1_7_R4.EnumClientCommand;
+import net.minecraft.server.v1_7_R4.PacketPlayInClientCommand;
 import net.year4000.mapnodes.MapNodes;
 import net.year4000.mapnodes.configs.Messages;
 import net.year4000.mapnodes.world.WorldManager;
+import net.year4000.utilities.bukkit.FunEffectsUtil;
+import net.year4000.utilities.bukkit.MessageUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Effect;
-import org.bukkit.craftbukkit.v1_7_R3.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
 @Data

@@ -1,9 +1,5 @@
 package net.year4000.mapnodes.commands;
 
-import com.sk89q.bukkit.util.CommandsManagerRegistration;
-import com.sk89q.minecraft.util.commands.Command;
-import com.sk89q.minecraft.util.commands.CommandContext;
-import com.sk89q.minecraft.util.commands.CommandException;
 import net.year4000.mapnodes.MapNodes;
 import net.year4000.mapnodes.configs.Messages;
 import net.year4000.mapnodes.game.GameManager;
@@ -12,6 +8,10 @@ import net.year4000.mapnodes.game.GameStage;
 import net.year4000.mapnodes.game.GameTeam;
 import net.year4000.mapnodes.utils.TeamException;
 import net.year4000.mapnodes.world.WorldManager;
+import net.year4000.utilities.bukkit.commands.Command;
+import net.year4000.utilities.bukkit.commands.CommandContext;
+import net.year4000.utilities.bukkit.commands.CommandException;
+import net.year4000.utilities.bukkit.commands.CommandsManagerRegistration;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;

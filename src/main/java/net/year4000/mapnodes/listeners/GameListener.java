@@ -1,17 +1,13 @@
 package net.year4000.mapnodes.listeners;
 
-import com.ewized.utilities.bukkit.util.FunEffectsUtil;
-import net.minecraft.server.v1_7_R3.EntityPlayer;
-import net.minecraft.server.v1_7_R3.EnumClientCommand;
-import net.minecraft.server.v1_7_R3.PacketPlayInClientCommand;
 import net.year4000.mapnodes.MapNodes;
 import net.year4000.mapnodes.configs.Messages;
 import net.year4000.mapnodes.game.*;
 import net.year4000.mapnodes.world.WorldManager;
+import net.year4000.utilities.bukkit.FunEffectsUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Effect;
 import org.bukkit.Sound;
-import org.bukkit.craftbukkit.v1_7_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;

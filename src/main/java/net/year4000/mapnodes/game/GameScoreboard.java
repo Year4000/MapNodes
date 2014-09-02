@@ -1,10 +1,10 @@
 package net.year4000.mapnodes.game;
 
-import com.ewized.utilities.bukkit.util.MessageUtil;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import net.year4000.utilities.bukkit.MessageUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.scoreboard.*;
 

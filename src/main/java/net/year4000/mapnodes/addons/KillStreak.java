@@ -1,11 +1,11 @@
 package net.year4000.mapnodes.addons;
 
-import com.ewized.utilities.bukkit.util.FunEffectsUtil;
-import com.ewized.utilities.bukkit.util.MessageUtil;
 import net.year4000.mapnodes.MapNodes;
 import net.year4000.mapnodes.game.GameManager;
 import net.year4000.mapnodes.game.GamePlayer;
 import net.year4000.mapnodes.world.WorldManager;
+import net.year4000.utilities.bukkit.FunEffectsUtil;
+import net.year4000.utilities.bukkit.MessageUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Effect;
 import org.bukkit.Sound;
@@ -17,6 +17,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class KillStreak implements Listener {
     public KillStreak() {
@@ -43,7 +44,7 @@ public class KillStreak implements Listener {
                 FunEffectsUtil.playEffect(killer.getPlayer(), Effect.GHAST_SHRIEK);
             }
 
-            List<Player> online = Arrays.asList(Bukkit.getOnlinePlayers());
+            List<Player> online = Bukkit.getOnlinePlayers().stream().collect(Collectors.toList());
 
             if (getBroadcast(killer) != null) {
                 MessageUtil.broadcast(getBroadcast(killer));
