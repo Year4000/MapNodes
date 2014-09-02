@@ -34,12 +34,14 @@ public class MapNodesListener implements Listener {
     /** Add the player to the system */
     @EventHandler
     public void onPlayerJoin(final PlayerJoinEvent event) {
+        event.setJoinMessage(null);
         Bukkit.getScheduler().runTask(MapNodes.getInst(), () -> GamePlayer.join(event.getPlayer()));
     }
 
     /** Remove player from system. */
     @EventHandler
     public void onPlayerLeave(final PlayerQuitEvent event) {
+        event.setQuitMessage(null);
         WorldManager.get().getCurrentGame().getPlayer(event.getPlayer()).leave();
     }
 
@@ -151,5 +153,4 @@ public class MapNodesListener implements Listener {
     public void onAchievement(PlayerAchievementAwardedEvent event) {
         event.setCancelled(true);
     }
-
 }
