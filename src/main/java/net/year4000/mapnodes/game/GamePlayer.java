@@ -83,13 +83,13 @@ public class GamePlayer {
         player.setResourcePack(gm.getMap().getResourcepack());
 
         // Show message of the current map, later to allow time for choosing a team.
-        Bukkit.getScheduler().runTaskLater(MapNodes.getInst(), () ->
+        /*Bukkit.getScheduler().runTaskLater(MapNodes.getInst(), () ->
             player.sendMessage(MessageUtil.replaceColors(String.format(
                 Messages.get(player.getLocale(), "game-login"),
                 gm.getMap().getName(),
                 gm.getMap().getVersion(),
                 gm.getMap().getAuthors().get(0)
-            ))), 5 * 20);
+            ))), 5 * 20);*/
     }
 
     /** Add x life's */

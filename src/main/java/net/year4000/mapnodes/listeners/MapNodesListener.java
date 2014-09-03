@@ -12,6 +12,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -32,14 +33,14 @@ public class MapNodesListener implements Listener {
     }
 
     /** Add the player to the system */
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerJoin(final PlayerJoinEvent event) {
         event.setJoinMessage(null);
         Bukkit.getScheduler().runTask(MapNodes.getInst(), () -> GamePlayer.join(event.getPlayer()));
     }
 
     /** Remove player from system. */
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerLeave(final PlayerQuitEvent event) {
         event.setQuitMessage(null);
         WorldManager.get().getCurrentGame().getPlayer(event.getPlayer()).leave();

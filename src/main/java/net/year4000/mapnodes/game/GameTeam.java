@@ -99,7 +99,7 @@ public class GameTeam {
         Random random = new Random(System.currentTimeMillis());
         int spawn = Math.abs(random.nextInt()) % getSpawns().size();
 
-        return LocationUtil.center(getSpawns().get(spawn));
+        return LocationUtil.center(getSpawns().get(spawn).clone());
     }
 
     /** Get a safe random spawn. */

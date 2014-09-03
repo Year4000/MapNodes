@@ -10,7 +10,7 @@ import java.util.TreeMap;
 
 @SuppressWarnings("unused")
 public class Messages extends Config {
-    public static final String ERROR = " &7[&e⚠&7] &c";
+    public static final String ERROR = " &7[&e!&7] &c";
 
     private Messages(String locale) {
         // When local is not found default to messages

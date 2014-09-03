@@ -17,7 +17,7 @@ public class ChunkUnloadClock implements Runnable {
         for (World world : Bukkit.getWorlds()) {
             if (WorldManager.get().getCurrentGame().getWorld() == world) continue;
 
-            Arrays.asList(world.getLoadedChunks()).parallelStream().forEach(chunk -> chunk.unload(true));
+            Arrays.asList(world.getLoadedChunks()).stream().forEach(chunk -> chunk.unload(true));
         }
     }
 }
