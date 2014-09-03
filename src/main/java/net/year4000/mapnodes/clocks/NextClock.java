@@ -41,7 +41,7 @@ public class NextClock extends Clocker {
         wm.nextGame();
 
         Bukkit.getConsoleSender().sendMessage(String.format(Messages.get("clock-next-last"), position));
-        gm.getPlayers().values().parallelStream().forEach(player -> {
+        gm.getPlayers().values().stream().forEach(player -> {
             FunEffectsUtil.playSound(player.getPlayer(), Sound.NOTE_BASS);
 
             BossBar.removeBar(player.getPlayer());

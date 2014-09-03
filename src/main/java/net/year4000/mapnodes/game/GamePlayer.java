@@ -124,7 +124,7 @@ public class GamePlayer {
         if (!getTeam().getName().equals("SPECTATOR"))
             hasPlayed = true;
 
-        getPlayer().teleport(getTeam().getSafeRandomSpawn());
+        getPlayer().teleport(getTeam().getRandomSpawn());
         FunEffectsUtil.playEffect(getPlayer(), Effect.SMOKE);
         GameHelper.startMessage(this);
 

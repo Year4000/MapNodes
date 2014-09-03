@@ -95,7 +95,7 @@ public class GameTeam {
     }
 
     /** Get a random spawn. */
-    private Location getRandomSpawn() {
+    public Location getRandomSpawn() {
         Random random = new Random(System.currentTimeMillis());
         int spawn = Math.abs(random.nextInt()) % getSpawns().size();
 
