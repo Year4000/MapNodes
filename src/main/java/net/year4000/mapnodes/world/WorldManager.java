@@ -22,6 +22,7 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class WorldManager {
     /** WorldManager. */
@@ -166,11 +167,18 @@ public class WorldManager {
     /** Set the next game */
     public GameManager nextGame() {
         // Unload the last game's world, when all players left it.
-        World lastGameWorld = currentGame.getWorld();
-        Bukkit.getScheduler().runTask(MapNodes.getInst(), () -> {
-            while (lastGameWorld.getPlayers().size() > 0);
+        final World lastGameWorld = currentGame.getWorld();
+        long start = System.currentTimeMillis();
+
+        Bukkit.getScheduler().runTaskAsynchronously(MapNodes.getInst(), () -> {
+            // break the loop after 5 secs as a fail safe
+            while (lastGameWorld.getPlayers().size() > 0) {
+                if (start + TimeUnit.SECONDS.toMillis(5) < System.currentTimeMillis()) break;
+            }
+
             unLoadMap(lastGameWorld);
         });
+
         currentGame = games.pop();
         return currentGame;
     }
