@@ -7,6 +7,7 @@ import net.year4000.utilities.config.InvalidConfigurationException;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -25,6 +26,12 @@ public class MainConfig extends Config {
             CONFIG_HEADER = new String[] {"MapNodes Configuration"};
             CONFIG_FILE = new File(MapNodes.getInst().getDataFolder(), "config.yml");
             init();
+
+            // if their is a maps flag use that hack for mapnodes v2
+
+            if (System.getProperty("maps", null) != null) {
+                mapsFolder = Arrays.asList(System.getProperty("maps", null).split(";"));
+            }
         } catch (InvalidConfigurationException e) {
             e.printStackTrace();
         }
