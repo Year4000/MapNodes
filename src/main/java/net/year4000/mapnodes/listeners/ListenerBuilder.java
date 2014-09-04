@@ -12,6 +12,7 @@ import java.util.List;
 
 public class ListenerBuilder {
     private List<Class<?>> listeners = new ArrayList<>();
+    // todo allow getters for registered listeners
     private List<Listener> registered = new ArrayList<>();
 
     /** Add a class to this listener builder */

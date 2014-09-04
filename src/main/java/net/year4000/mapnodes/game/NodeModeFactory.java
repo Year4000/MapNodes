@@ -99,6 +99,7 @@ public class NodeModeFactory {
     }
 
     /** enable the current listeners for the game mode */
+    // todo use listener builder to create listeners...
     public void registerListeners(GameMode mode) {
         PluginManager manager = Bukkit.getPluginManager();
         List<Listener> listeners = new ArrayList<>();
@@ -123,6 +124,7 @@ public class NodeModeFactory {
     }
 
     /** disable the current listeners for the game mode */
+    // todo use listener builder to remove listeners...
     public void unregisterListeners(GameMode mode) {
         mode.getListeners().forEach(l -> {
             MapNodesPlugin.debug(Msg.util("debug.listener.unregister", l.getClass().getSimpleName()));
