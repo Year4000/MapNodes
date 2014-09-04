@@ -12,6 +12,8 @@ import net.year4000.mapnodes.api.events.game.GameStopEvent;
 import net.year4000.mapnodes.api.game.GameManager;
 import net.year4000.mapnodes.api.game.GamePlayer;
 import net.year4000.mapnodes.api.game.GameTeam;
+import net.year4000.mapnodes.api.game.modes.GameMode;
+import net.year4000.mapnodes.api.game.modes.GameModeConfig;
 import net.year4000.mapnodes.clocks.NextNode;
 import net.year4000.mapnodes.clocks.RestartServer;
 import net.year4000.mapnodes.exceptions.InvalidJsonException;
@@ -20,6 +22,7 @@ import net.year4000.mapnodes.messages.Message;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.SchedulerUtil;
 import net.year4000.mapnodes.utils.Validator;
+import net.year4000.mapnodes.utils.typewrappers.GameSet;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -48,6 +51,10 @@ public final class NodeGame implements GameManager, Validator {
     @Since(1.0)
     private Map<String, Map<String, String>> locales = new ConcurrentHashMap<>();
 
+    @Since(1.0)
+    @SerializedName("modes")
+    private GameSet<GameMode> gameModes = new GameSet<>();
+
     /** Manage the items and effects that are given to the player. */
     @Since(1.0)
     private Map<String, NodeKit> kits = new ConcurrentHashMap<>();
@@ -73,6 +80,14 @@ public final class NodeGame implements GameManager, Validator {
 
         // Validate component
         config.validate();
+
+        // Required component
+        checkNotNull(gameModes != null, Msg.util("settings.modes"));
+
+        // Validate components
+        for (GameModeConfig mode : gameModes.stream().map(GameMode::getConfig).collect(Collectors.toList())) {
+            mode.validate();
+        }
 
         // Required component
         checkArgument(teams.size() != 0, Msg.util("settings.team"));
@@ -169,6 +184,9 @@ public final class NodeGame implements GameManager, Validator {
     public void start() {
         stage = NodeStage.PLAYING;
 
+        // Register game mode listeners
+        gameModes.forEach(m -> NodeModeFactory.get().registerListeners(m));
+
         GameStartEvent start = new GameStartEvent(this);
         start.call();
 
@@ -193,6 +211,9 @@ public final class NodeGame implements GameManager, Validator {
         stop.call();
 
         stop.getGame().getPlaying().forEach(p -> ((NodePlayer) p).joinTeam(null));
+
+        // Unregister game mode listeners
+        gameModes.forEach(m -> NodeModeFactory.get().unregisterListeners(m));
 
         if (NodeFactory.get().isQueuedGames()) {
             if (time != null) {

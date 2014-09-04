@@ -1,11 +1,13 @@
 package net.year4000.mapnodes.api.game;
 
+import net.year4000.mapnodes.api.game.modes.GameMode;
 import net.year4000.mapnodes.game.components.NodeKit;
 import net.year4000.mapnodes.game.components.NodeTeam;
 import org.bukkit.entity.Player;
 
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Stream;
 
 public interface GameManager {
@@ -32,6 +34,8 @@ public interface GameManager {
     public Stream<GamePlayer> getSpectating();
 
     public Stream<GamePlayer> getEntering();
+
+    public Set<GameMode> getGameModes();
 
     public GamePlayer getPlayer(Player player);
 

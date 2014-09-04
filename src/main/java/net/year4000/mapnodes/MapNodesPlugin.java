@@ -10,9 +10,20 @@ import net.year4000.mapnodes.api.Plugin;
 import net.year4000.mapnodes.api.game.GameManager;
 import net.year4000.mapnodes.game.Node;
 import net.year4000.mapnodes.game.WorldManager;
+import net.year4000.mapnodes.game.NodeModeFactory;
 import net.year4000.mapnodes.game.components.regions.Cuboid;
 import net.year4000.mapnodes.game.components.regions.Point;
 import net.year4000.mapnodes.game.components.regions.RegionManager;
+import net.year4000.mapnodes.gamemodes.arrowtag.ArrowTag;
+import net.year4000.mapnodes.gamemodes.bomber.Bomber;
+import net.year4000.mapnodes.gamemodes.capture.Capture;
+import net.year4000.mapnodes.gamemodes.deathmatch.Deathmatch;
+import net.year4000.mapnodes.gamemodes.destory.Destroy;
+import net.year4000.mapnodes.gamemodes.endtimes.EndTimes;
+import net.year4000.mapnodes.gamemodes.juggernaut.Juggernaut;
+import net.year4000.mapnodes.gamemodes.magewars.MageWars;
+import net.year4000.mapnodes.gamemodes.paintball.PaintBall;
+import net.year4000.mapnodes.gamemodes.skywars.Skywars;
 import net.year4000.mapnodes.map.MapFactory;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.utilities.LogUtil;
@@ -41,6 +52,20 @@ public class MapNodesPlugin extends BukkitPlugin implements Plugin {
             //.add(Cube.class)
             //.add(Sphere.class)
             //.add(Cylinder.class)
+            .build();
+
+        // Register game modes that MapNodes can support
+        NodeModeFactory.get()
+            .add(ArrowTag.class)
+            .add(Bomber.class)
+            .add(Capture.class)
+            .add(Deathmatch.class)
+            .add(Destroy.class)
+            .add(EndTimes.class)
+            .add(Juggernaut.class)
+            .add(MageWars.class)
+            .add(PaintBall.class)
+            .add(Skywars.class)
             .build();
 
         // Clean out old maps

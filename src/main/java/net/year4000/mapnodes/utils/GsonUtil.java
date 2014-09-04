@@ -2,7 +2,6 @@ package net.year4000.mapnodes.utils;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import net.year4000.mapnodes.game.components.regions.Region;
 import net.year4000.mapnodes.utils.deserializers.*;
 import net.year4000.mapnodes.utils.typewrappers.*;
 import org.bukkit.ChatColor;
@@ -43,6 +42,7 @@ public final class GsonUtil {
             .registerTypeAdapter(PotionEffectList.class, new PotionEffectListDeserializer())
             .registerTypeAdapter(PlayerInventoryList.class, new PlayerInventoryDeserializer())
             .registerTypeAdapter(PlayerArmorList.class, new PlayerArmorDeserializer())
+            .registerTypeAdapter(GameSet.class, new GameModesDeserializer())
             ;
     }
 }
