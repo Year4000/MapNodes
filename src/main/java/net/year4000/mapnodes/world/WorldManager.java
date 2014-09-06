@@ -10,10 +10,7 @@ import net.year4000.mapnodes.game.GameManager;
 import net.year4000.mapnodes.utils.MissingJsonElement;
 import net.year4000.mapnodes.utils.PureRandom;
 import net.year4000.utilities.FileUtil;
-import org.bukkit.Bukkit;
-import org.bukkit.World;
-import org.bukkit.WorldCreator;
-import org.bukkit.WorldType;
+import org.bukkit.*;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -112,6 +109,7 @@ public class WorldManager {
         World world = worldCreator.createWorld();
         world.setKeepSpawnInMemory(false);
         world.setAutoSave(false);
+        world.setDifficulty(Difficulty.HARD);
 
         return world;
     }

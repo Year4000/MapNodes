@@ -23,7 +23,6 @@ public class WorldClock implements Runnable {
         GameManager gm = WorldManager.get().getCurrentGame();
         World world = gm.getWorld();
 
-        world.setDifficulty(Difficulty.HARD);
         world.setStorm(gm.getMap().isForceWeather());
         if (gm.getMap().getWorldLock() != -1)
             world.setTime(gm.getMap().getWorldLock());
