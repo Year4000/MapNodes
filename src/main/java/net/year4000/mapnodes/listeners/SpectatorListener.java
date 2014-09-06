@@ -112,6 +112,7 @@ public class SpectatorListener implements Listener {
 
         if (gPlayer.isSpecatator() || !GameStage.isPlaying() || !gPlayer.isHasPlayed()) {
             event.getPlayer().setFireTicks(0);
+            event.getPlayer().setFoodLevel(20);
         }
     }
 }
