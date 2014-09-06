@@ -286,7 +286,6 @@ public class GameManager {
         MapConfigListener.chests.clear(); // Clear chests from list for next map
 
         getPlayers().values().parallelStream().forEach(player -> {
-            if (!player.isSpecatator()) {
                 // TODO MOVE FIREWORK TO FUN EFFECT UTIL
                 Firework firework = (Firework)player.getPlayer().getWorld().spawn(player.getPlayer().getLocation(), Firework.class);
                 FireworkEffect effect = FireworkEffect.builder()
@@ -300,8 +299,9 @@ public class GameManager {
                 meta.addEffect(effect);
                 meta.setPower(1);
                 firework.setFireworkMeta(meta);
-                FunEffectsUtil.playSound(player.getPlayer(), Sound.FIREWORK_LARGE_BLAST2);
 
+            if (!player.isSpecatator()) {
+                FunEffectsUtil.playSound(player.getPlayer(), Sound.FIREWORK_LARGE_BLAST2);
                 GameHelper.endMessage(player);
             }
 
