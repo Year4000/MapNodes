@@ -23,20 +23,9 @@ public class WorldClock implements Runnable {
         GameManager gm = WorldManager.get().getCurrentGame();
         World world = gm.getWorld();
 
-        world.setDifficulty(numberToDifficulty(gm.getMap().getDifficulty()));
+        world.setDifficulty(Difficulty.HARD);
         world.setStorm(gm.getMap().isForceWeather());
         if (gm.getMap().getWorldLock() != -1)
             world.setTime(gm.getMap().getWorldLock());
-    }
-
-    /** Map the difficulty level number to the enum. */
-    private Difficulty numberToDifficulty(int number) {
-        switch (number) {
-            case 0: return Difficulty.PEACEFUL;
-            case 1: return Difficulty.EASY;
-            case 2: return Difficulty.NORMAL;
-            case 3: return Difficulty.HARD;
-        }
-        return WorldManager.get().getCurrentGame().getWorld().getDifficulty();
     }
 }
