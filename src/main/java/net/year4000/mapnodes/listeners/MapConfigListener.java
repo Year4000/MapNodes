@@ -82,12 +82,10 @@ public class MapConfigListener implements Listener {
     /** Set the yield and blocks of the tnt. */
     @EventHandler(priority=EventPriority.HIGH)
     public void onTnt(EntityExplodeEvent event) {
-        if (event.getEntityType() == null || event.getEntityType() == EntityType.PRIMED_TNT) {
-            event.setYield(WorldManager.get().getCurrentGame().getMap().getTntYield());
+        event.setYield(WorldManager.get().getCurrentGame().getMap().getTntYield());
 
-            if (!WorldManager.get().getCurrentGame().getMap().isTntBlockDamage()) {
-                event.blockList().clear();
-            }
+        if (!WorldManager.get().getCurrentGame().getMap().isTntBlockDamage()) {
+            event.blockList().clear();
         }
     }
 
