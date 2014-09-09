@@ -1,9 +1,11 @@
-package net.year4000.mapnodes.game.components.regions;
+package net.year4000.mapnodes.game.components.regions.types;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import net.year4000.mapnodes.exceptions.InvalidJsonException;
+import net.year4000.mapnodes.game.components.regions.Region;
+import net.year4000.mapnodes.game.components.regions.RegionType;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.Validator;
 import org.bukkit.Location;
@@ -22,6 +24,8 @@ public class Point implements Region, Validator {
     private Integer x = null;
     private Integer y = null;
     private Integer z = null;
+    private Integer yaw;
+    private Integer pitch;
 
     @Override
     public void validate() throws InvalidJsonException {
@@ -41,7 +45,25 @@ public class Point implements Region, Validator {
         return locations;
     }
 
+    @Override
+    public List<Point> getPoints() {
+        List<Point> locations = new ArrayList<>();
+
+        locations.add(this);
+
+        return locations;
+    }
+
+    @Override
+    public boolean inRegion(Point region) {
+        return region.equals(this);
+    }
+
     public Location create(World world) {
-        return new Location(world, x, y, z);
+        if (yaw == null || pitch == null) {
+            return new Location(world, x, y, z);
+        }
+
+        return new Location(world, x, y, z, yaw, pitch);
     }
 }
