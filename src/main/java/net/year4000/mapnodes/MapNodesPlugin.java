@@ -82,8 +82,8 @@ public class MapNodesPlugin extends BukkitPlugin implements Plugin {
 
         // Disable if no loaded maps
         if (maps.size() == 0) {
-            Bukkit.getPluginManager().disablePlugin(this);
             enable = false;
+            Bukkit.getPluginManager().disablePlugin(this);
             return;
         }
 
