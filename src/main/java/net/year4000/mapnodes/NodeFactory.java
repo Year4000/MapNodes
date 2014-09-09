@@ -31,14 +31,13 @@ public class NodeFactory {
             try {
                 addMap(world);
             } catch (InvalidJsonException | WorldLoadException e) {
-                MapNodesPlugin.log(Msg.util("error.world.none"));
+                MapNodesPlugin.log(e, true);
             }
         });
     }
 
     public void addMap(MapFolder world) throws InvalidJsonException, WorldLoadException {
         queueNodes.add(new Node(getGameID(), world));
-
     }
 
     public static NodeFactory get() {
@@ -60,7 +59,7 @@ public class NodeFactory {
                 add(getCurrentGame());
                 addAll(queueNodes);
             } catch (NullPointerException e) {
-                MapNodesPlugin.debug(e, true);
+                MapNodesPlugin.debug(Msg.util("error.world.none"));
             }
         }};
     }
