@@ -10,7 +10,7 @@ import org.bukkit.event.block.*;
 public final class WorldListener implements Listener {
     /** Return true | false if the map is running. */
     private boolean isMapPlaying(World world) {
-        return MapNodes.getCurrentWorld() != world;
+        return !(MapNodes.getCurrentWorld() == world && MapNodes.getCurrentGame().getStage().isPlaying());
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
