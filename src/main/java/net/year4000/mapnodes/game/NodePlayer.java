@@ -118,13 +118,16 @@ public final class NodePlayer implements GamePlayer {
         }};
         join.call();
 
-        player.teleport(join.getSpawn());
-        player.setBedSpawnLocation(join.getSpawn(), true);
+        // run a tick later to allow player to login
+        playerTasks.add(SchedulerUtil.runAsync(() -> {
+            player.teleport(join.getSpawn());
+            player.setBedSpawnLocation(join.getSpawn(), true);
 
-        // start menu
-        if (join.isMenu()) {
-            // TODO open inventory
-        }
+            // start menu
+            if (join.isMenu()) {
+                // TODO open inventory
+            }
+        }, 20L));
     }
 
     public void leave() {

@@ -10,6 +10,7 @@ import net.year4000.mapnodes.commands.misc.MenuCommands;
 import net.year4000.mapnodes.commands.node.NodeBase;
 import net.year4000.mapnodes.listeners.GameListener;
 import net.year4000.mapnodes.listeners.MapNodesListener;
+import net.year4000.mapnodes.listeners.RegionListener;
 import net.year4000.mapnodes.listeners.WorldListener;
 
 @AddonInfo(
@@ -19,7 +20,8 @@ import net.year4000.mapnodes.listeners.WorldListener;
     listeners = {
         GameListener.class,
         MapNodesListener.class,
-        WorldListener.class
+        WorldListener.class,
+        RegionListener.class
     }
 )
 public class Internals extends Addon {

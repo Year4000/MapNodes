@@ -44,7 +44,7 @@ public final class NodeGame implements GameManager, Validator {
 
     /** General game settings. */
     @Since(1.0)
-    @SerializedName("game")
+    @SerializedName("world")
     private NodeConfig config = null;
 
     /** The mini locale system built right into the map.json */
@@ -52,12 +52,16 @@ public final class NodeGame implements GameManager, Validator {
     private Map<String, Map<String, String>> locales = new ConcurrentHashMap<>();
 
     @Since(1.0)
-    @SerializedName("modes")
+    @SerializedName("game")
     private GameSet<GameMode> gameModes = new GameSet<>();
 
     /** Manage the items and effects that are given to the player. */
     @Since(1.0)
     private Map<String, NodeKit> kits = new ConcurrentHashMap<>();
+
+    /** Manage the regions and zones that can apply effects. */
+    @Since(1.0)
+    private Map<String, NodeRegion> regions = new ConcurrentHashMap<>();
 
     /** Manages the teams. */
     @Since(1.0)

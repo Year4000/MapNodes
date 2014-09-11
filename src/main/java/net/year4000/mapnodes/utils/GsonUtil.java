@@ -43,6 +43,7 @@ public final class GsonUtil {
             .registerTypeAdapter(PlayerInventoryList.class, new PlayerInventoryDeserializer())
             .registerTypeAdapter(PlayerArmorList.class, new PlayerArmorDeserializer())
             .registerTypeAdapter(GameSet.class, new GameModesDeserializer())
+            .registerTypeAdapter(RegionList.class, new RegionListDeserializer())
             ;
     }
 }

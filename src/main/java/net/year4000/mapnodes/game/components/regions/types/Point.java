@@ -27,6 +27,10 @@ public class Point implements Region, Validator {
     private Integer yaw;
     private Integer pitch;
 
+    public Point(Integer x, Integer y, Integer z) {
+        this(x, y, z, null, null);
+    }
+
     @Override
     public void validate() throws InvalidJsonException {
         checkArgument(x != null, Msg.util("settings.region", "X"));
