@@ -56,8 +56,14 @@ public class MainConfig extends Config {
         for (String path : mapsFolder) {
             File mapsFolder = new File(path);
 
-            for (File file : checkNotNull(mapsFolder.listFiles(), "Not a valid folder path."))
+            for (File file : checkNotNull(mapsFolder.listFiles(), "Not a valid folder path.")) {
+                // dont try to add disabled maps
+                if (new File(file, ".disabled").exists()) {
+                    continue;
+                }
+
                 folders.add(file);
+            }
         }
 
         return folders;
