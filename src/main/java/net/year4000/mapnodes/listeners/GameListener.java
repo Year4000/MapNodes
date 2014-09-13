@@ -7,8 +7,10 @@ import net.year4000.mapnodes.api.events.game.GameWinEvent;
 import net.year4000.mapnodes.api.game.GamePlayer;
 import net.year4000.mapnodes.game.NodeGame;
 import net.year4000.mapnodes.game.components.NodeKit;
+import net.year4000.mapnodes.messages.Msg;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 
 public final class GameListener implements Listener {
@@ -35,6 +37,21 @@ public final class GameListener implements Listener {
         if (!MapNodesPlugin.getInst().getLog().isDebug()) {
             if (event.getGame().getPlaying().count() == 0) {
                 ((NodeGame) event.getGame()).stop();
+            }
+        }
+    }
+
+    /** The world height cap. */
+    @EventHandler(ignoreCancelled = true)
+    public void onHeight(BlockPlaceEvent event) {
+        int height = MapNodes.getCurrentGame().getConfig().getWorldHeight();
+
+        if (height > 0) {
+            int y = event.getBlockPlaced().getY();
+
+            if (y >= height) {
+                event.getPlayer().sendMessage(Msg.locale(event.getPlayer(), "region.deny.height"));
+                event.setCancelled(true);
             }
         }
     }

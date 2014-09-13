@@ -1,4 +1,4 @@
-package net.year4000.mapnodes.game.components.configs;
+package net.year4000.mapnodes.game.components.regions.flags;
 
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.annotations.Since;

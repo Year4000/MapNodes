@@ -2,6 +2,7 @@ package net.year4000.mapnodes.api.game;
 
 import net.year4000.mapnodes.api.game.modes.GameMode;
 import net.year4000.mapnodes.game.components.NodeKit;
+import net.year4000.mapnodes.game.components.NodeRegion;
 import net.year4000.mapnodes.game.components.NodeTeam;
 import org.bukkit.entity.Player;
 
@@ -26,6 +27,8 @@ public interface GameManager {
     public Map<String, NodeKit> getKits();
 
     public Map<String, NodeTeam> getTeams();
+
+    public Map<String, NodeRegion> getRegions();
 
     public Stream<GamePlayer> getPlayers();
 

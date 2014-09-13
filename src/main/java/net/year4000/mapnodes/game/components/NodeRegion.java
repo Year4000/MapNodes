@@ -5,20 +5,27 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import net.year4000.mapnodes.api.MapNodes;
+import net.year4000.mapnodes.api.game.GamePlayer;
 import net.year4000.mapnodes.api.game.GameRegion;
+import net.year4000.mapnodes.api.game.GameTeam;
 import net.year4000.mapnodes.exceptions.InvalidJsonException;
+import net.year4000.mapnodes.game.NodeGame;
 import net.year4000.mapnodes.game.components.regions.Region;
 import net.year4000.mapnodes.game.components.regions.types.Point;
 import net.year4000.mapnodes.game.components.regions.RegionFlags;
+import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.Validator;
 import net.year4000.mapnodes.utils.typewrappers.LocationList;
 import net.year4000.mapnodes.utils.typewrappers.RegionList;
 import org.bukkit.Location;
+import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
@@ -70,11 +77,34 @@ public final class NodeRegion implements GameRegion, Validator, Comparable {
         return zoneSet;
     }
 
+    /** Is the point in the region */
     public boolean inZone(Point point) {
         return getZones().stream().filter(z -> z.getPoints().contains(point)).count() > 0;
     }
 
-    // todo should event be stopped
+    /** Get a list of all regions sorted by their weight */
+    public static List<GameRegion> getRegions(Point point) {
+        return ((NodeGame) MapNodes.getCurrentGame()).getRegions().values().stream()
+            .filter(r -> r.inZone(point))
+            .sorted()
+            .collect(Collectors.toList());
+    }
+
+    /** Send the deny message or default message */
+    public static void sendDenyMessage(Player player, NodeRegion region, String key) {
+        if (region.getFlags().getMessage() != null) {
+            player.sendMessage(MapNodes.getCurrentGame().locale(player.getLocale(), region.getFlags().getMessage()));
+        }
+        else {
+            player.sendMessage(Msg.locale(player, key));
+        }
+    }
+
+    /** Does the region apply to the current player */
+    public static boolean applyToPlayer(Player player, NodeRegion region) {
+        String team = MapNodes.getCurrentGame().getPlayer(player).getTeam().getName().toLowerCase();
+        return region.getApply().stream().filter(apply -> apply.toLowerCase().equals(team)).count() > 0L;
+    }
 
     /** Compare the node regions so that we can handle zone weights */
     @Override
