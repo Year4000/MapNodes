@@ -79,7 +79,7 @@ public final class NodeRegion implements GameRegion, Validator, Comparable {
 
     /** Is the point in the region */
     public boolean inZone(Point point) {
-        return getZones().stream().filter(z -> z.getPoints().contains(point)).count() > 0;
+        return getZones().stream().filter(z -> z.inRegion(point)).count() > 0;
     }
 
     /** Get a list of all regions sorted by their weight */
