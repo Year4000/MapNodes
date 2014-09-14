@@ -54,7 +54,17 @@ public class MapFactory {
 
     /** Check if the following map name exists */
     public static boolean isMap(String name) {
-        return folders.containsKey(name);
+        return isMap(name, false);
+    }
+
+    /** Check if the following map name exists */
+    public static boolean isMap(String name, boolean findDisabled) {
+        if (!findDisabled) {
+            return folders.containsKey(name) && !folders.get(name).isDisabled();
+        }
+        else {
+            return folders.containsKey(name);
+        }
     }
 
     /** A shuffle list of allowed maps */

@@ -33,6 +33,7 @@ public final class NodeSub {
 
     @Command(
         aliases = {"add"},
+        flags = "f",
         max = 1,
         min = 1,
         desc = "Add a map to the node queue."
@@ -46,7 +47,7 @@ public final class NodeSub {
 
         String mapName = args.getString(0);
 
-        if (MapFactory.isMap(mapName)) {
+        if (MapFactory.isMap(mapName, args.hasFlag('f'))) {
             try {
                 NodeFactory.get().addMap(MapFactory.getMap(mapName));
                 sender.sendMessage(Msg.locale(sender, "cmd.node.add", mapName));

@@ -25,6 +25,9 @@ public class MapFolder {
     @Nullable
     private File icon;
 
+    /** Is the map disabled */
+    private boolean disabled;
+
     /** Create and check if this is a valid map folder */
     public MapFolder(File path) throws InvalidMapException {
         if (!isMapFolder(path)) {
@@ -35,6 +38,7 @@ public class MapFolder {
         map = new File(path, "map.json");
         world = new File(path, "world.zip");
         icon = new File(path, "icon.png");
+        disabled = new File(path, ".disabled").exists();
 
         if (!(icon.exists() && icon.isFile() && icon.canRead())) {
             icon = null;
