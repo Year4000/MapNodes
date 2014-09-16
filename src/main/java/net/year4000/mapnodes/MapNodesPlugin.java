@@ -53,6 +53,7 @@ public class MapNodesPlugin extends BukkitPlugin implements Plugin {
             .add(Global.class)
             .add(Sphere.class)
             .add(Cylinder.class)
+            .add(Chunk.class)
             .build();
 
         // Register game modes that MapNodes can support

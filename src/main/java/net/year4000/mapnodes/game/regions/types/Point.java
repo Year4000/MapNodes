@@ -24,8 +24,8 @@ public class Point implements Region, Validator {
     private Integer x = null;
     private Integer y = null;
     private Integer z = null;
-    private Integer yaw;
-    private Integer pitch;
+    private transient Integer yaw;
+    private transient Integer pitch;
 
     public Point(Integer x, Integer y, Integer z) {
         this(x, y, z, null, null);
@@ -60,7 +60,7 @@ public class Point implements Region, Validator {
 
     @Override
     public boolean inRegion(Point region) {
-        return region.equals(this);
+        return region.getX().equals(x) && region.getY().equals(y) && region.getZ().equals(z);
     }
 
     public Location create(World world) {

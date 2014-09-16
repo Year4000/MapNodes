@@ -22,8 +22,12 @@ import static com.google.common.base.Preconditions.checkArgument;
 public class Cuboid implements Region, Validator {
     private Point min = null;
     private Point max = null;
-    private Integer yaw;
-    private Integer pitch;
+    private transient Integer yaw;
+    private transient Integer pitch;
+
+    // Cached vars
+    private transient List<Point> cachedPoints = null;
+    private transient List<Location> cachedLocations = null;
 
     @Override
     public void validate() throws InvalidJsonException {
@@ -38,22 +42,30 @@ public class Cuboid implements Region, Validator {
 
     @Override
     public List<Location> getLocations(World world) {
-        return getPoints().stream().map(p -> p.create(world)).collect(Collectors.toList());
+        if (cachedLocations == null) {
+            cachedLocations = getPoints().stream().map(p -> p.create(world)).collect(Collectors.toList());
+        }
+
+        return cachedLocations;
     }
 
     @Override
     public List<Point> getPoints() {
-        List<Point> locations = new ArrayList<>();
+        if (cachedPoints == null) {
+            List<Point> locations = new ArrayList<>();
 
-        for (int y = min.getY(); y <= max.getY(); y++) {
-            for (int x = min.getX(); x <= max.getX(); x++) {
-                for (int z = min.getZ(); z <= max.getZ(); z++) {
-                    locations.add(new Point(x, y, z, yaw, pitch));
+            for (int y = min.getY(); y <= max.getY(); y++) {
+                for (int x = min.getX(); x <= max.getX(); x++) {
+                    for (int z = min.getZ(); z <= max.getZ(); z++) {
+                        locations.add(new Point(x, y, z, yaw, pitch));
+                    }
                 }
             }
+
+            cachedPoints = locations;
         }
 
-        return locations;
+        return cachedPoints;
     }
 
     @Override

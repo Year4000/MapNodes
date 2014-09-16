@@ -16,6 +16,7 @@ import java.util.List;
 @RegionType("void")
 public class Void implements Region {
     private static int WORLD_HEIGHT = 256;
+
     @Override
     public List<Location> getLocations(World world) {
         throw new UnsupportedOperationException();
