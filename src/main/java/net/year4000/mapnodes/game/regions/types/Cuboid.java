@@ -70,8 +70,6 @@ public class Cuboid implements Region, Validator {
 
     @Override
     public boolean inRegion(Point region) {
-        return region.getX() >= min.getX() && region.getX() <= max.getX() &&
-            region.getY() >= min.getY() && region.getY() <= max.getY() &&
-            region.getZ() >= min.getZ() && region.getZ() <= max.getZ();
+        return getPoints().contains(region);
     }
 }

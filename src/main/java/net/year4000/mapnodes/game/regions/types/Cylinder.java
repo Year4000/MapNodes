@@ -70,6 +70,6 @@ public class Cylinder implements Region, Validator {
 
     @Override
     public boolean inRegion(Point region) {
-        return region.getY() >= center.getY() && region.getY() <= center.getY() + height && Math.pow(region.getX() - center.getX(), 2.0D) + Math.pow(region.getZ() - center.getZ(), 2.0D) < (radius * radius);
+        return getPoints().contains(region);
     }
 }

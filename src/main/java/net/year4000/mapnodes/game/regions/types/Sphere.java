@@ -69,6 +69,6 @@ public class Sphere implements Region, Validator {
 
     @Override
     public boolean inRegion(Point region) {
-        return region.getLocations(MapNodes.getCurrentWorld()).get(0).distance(center.getLocations(MapNodes.getCurrentWorld()).get(0)) <= radius;
+        return getPoints().contains(region);
     }
 }
