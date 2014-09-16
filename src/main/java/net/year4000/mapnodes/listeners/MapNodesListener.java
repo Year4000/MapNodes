@@ -29,6 +29,7 @@ public final class MapNodesListener implements Listener {
 
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
+        event.setQuitMessage(null);
         ((NodeGame) MapNodes.getCurrentGame()).quit(event.getPlayer());
     }
 
