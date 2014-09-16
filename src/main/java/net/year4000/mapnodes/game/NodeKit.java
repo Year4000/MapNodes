@@ -1,5 +1,6 @@
 package net.year4000.mapnodes.game;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.gson.annotations.Since;
 import lombok.AccessLevel;
 import lombok.Data;
@@ -27,6 +28,7 @@ import org.bukkit.scheduler.BukkitTask;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @NoArgsConstructor
@@ -164,17 +166,22 @@ public class NodeKit implements GameKit, GameValidator {
 
     /** Immortal starter kit */
     public static List<BukkitTask> immortal(Player player) {
-        // todo handle if the player all rdy has potion effect
         Clocker immortal = new Clocker(MathUtil.ticks(10)) {
-            PotionEffectType[] types = {
+            Set<PotionEffectType> types = ImmutableSet.of(
                 PotionEffectType.DAMAGE_RESISTANCE,
                 PotionEffectType.NIGHT_VISION,
                 PotionEffectType.REGENERATION,
                 PotionEffectType.FIRE_RESISTANCE
-            };
+            );
 
             @Override
             public void runFirst(int position) {
+                player.getActivePotionEffects().stream()
+                    .filter(p -> p.getDuration() != Integer.MAX_VALUE)
+                    .map(PotionEffect::getType)
+                    .filter(types::contains)
+                    .forEach(player::removePotionEffect);
+
                 for (PotionEffectType type : types) {
                     player.addPotionEffect(new PotionEffect(type, getTime(), 10, true));
                 }
