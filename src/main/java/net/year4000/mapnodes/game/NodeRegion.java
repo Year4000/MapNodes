@@ -6,14 +6,13 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import net.year4000.mapnodes.api.MapNodes;
-import net.year4000.mapnodes.api.game.GameManager;
 import net.year4000.mapnodes.api.game.GameRegion;
 import net.year4000.mapnodes.exceptions.InvalidJsonException;
 import net.year4000.mapnodes.game.regions.Region;
 import net.year4000.mapnodes.game.regions.types.Point;
 import net.year4000.mapnodes.game.regions.RegionFlags;
 import net.year4000.mapnodes.messages.Msg;
-import net.year4000.mapnodes.utils.GameValidator;
+import net.year4000.mapnodes.utils.Validator;
 import net.year4000.mapnodes.utils.typewrappers.RegionList;
 import org.bukkit.entity.Player;
 
@@ -26,7 +25,7 @@ import java.util.stream.Collectors;
 import static com.google.common.base.Preconditions.checkArgument;
 
 @Data
-public final class NodeRegion implements GameRegion, GameValidator, Comparable {
+public final class NodeRegion implements GameRegion, Validator, Comparable {
     /** The teams this region apply to option if just used for zones */
     @Since(1.0)
     private List<String> apply = new ArrayList<>();
@@ -58,19 +57,12 @@ public final class NodeRegion implements GameRegion, GameValidator, Comparable {
         }
     }
 
-    @Override
-    public void validate(GameManager game) throws InvalidJsonException {
-        this.game = game;
-        validate();
-    }
-
     /*//--------------------------------------------//
          Upper Json Settings / Bellow Instance Code
     *///--------------------------------------------//
 
     @Setter(AccessLevel.NONE)
     private transient String id;
-    private transient GameManager game;
     private Set<Region> zoneSet = new HashSet<>();
 
     /** Get the id of this class and cache it */
@@ -78,7 +70,7 @@ public final class NodeRegion implements GameRegion, GameValidator, Comparable {
         if (id == null) {
             NodeRegion thisObject = this;
 
-            game.getRegions().forEach((string, object) -> {
+            MapNodes.getCurrentGame().getRegions().forEach((string, object) -> {
                 if (object.equals(thisObject)) {
                     id = string;
                 }

@@ -9,13 +9,12 @@ import lombok.Setter;
 import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.game.GameKit;
-import net.year4000.mapnodes.api.game.GameManager;
 import net.year4000.mapnodes.api.game.GamePlayer;
 import net.year4000.mapnodes.api.game.GameTeam;
 import net.year4000.mapnodes.exceptions.InvalidJsonException;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.Common;
-import net.year4000.mapnodes.utils.GameValidator;
+import net.year4000.mapnodes.utils.Validator;
 import net.year4000.mapnodes.utils.typewrappers.LocationList;
 import net.year4000.utilities.bukkit.BukkitUtil;
 import net.year4000.utilities.bukkit.MessageUtil;
@@ -26,10 +25,11 @@ import org.bukkit.entity.Player;
 
 import java.util.*;
 
+
 @Data
 @NoArgsConstructor
 /** Manges the teams. */
-public class NodeTeam implements GameTeam, GameValidator {
+public class NodeTeam implements GameTeam, Validator {
     /** The name of the team. */
     @Since(1.0)
     private String name = null;
@@ -76,19 +76,12 @@ public class NodeTeam implements GameTeam, GameValidator {
         }
     }
 
-    @Override
-    public void validate(GameManager game) throws InvalidJsonException {
-        this.game = game;
-        validate();
-    }
-
     /*//--------------------------------------------//
          Upper Json Settings / Bellow Instance Code
     *///--------------------------------------------//
 
     @Setter(AccessLevel.NONE)
     private transient String id;
-    private transient GameManager game;
     private transient static final String TEAM_FORMAT = "%s%s &7(%s&8/&6%d&7)";
     private transient List<GamePlayer> players = new ArrayList<>();
     private transient Queue<GamePlayer> queue = new PriorityQueue<>();
@@ -98,7 +91,7 @@ public class NodeTeam implements GameTeam, GameValidator {
         if (id == null) {
             NodeTeam thisObject = this;
 
-            game.getTeams().forEach((string, object) -> {
+            MapNodes.getCurrentGame().getTeams().forEach((string, object) -> {
                 if (object.equals(thisObject)) {
                     id = string;
                 }
@@ -181,7 +174,7 @@ public class NodeTeam implements GameTeam, GameValidator {
 
     /** Get the kit that is with this team */
     public GameKit getKit() {
-        return game.getKits().get(kit);
+        return MapNodes.getCurrentGame().getKits().get(kit);
     }
 
     /** Get the color of this team */

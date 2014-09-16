@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import net.year4000.mapnodes.api.game.configs.GameTNT;
 import net.year4000.mapnodes.exceptions.InvalidJsonException;
 import net.year4000.mapnodes.messages.Msg;
-import net.year4000.mapnodes.api.util.Validator;
+import net.year4000.mapnodes.utils.Validator;
 
 @Data
 @NoArgsConstructor

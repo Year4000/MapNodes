@@ -20,7 +20,7 @@ import net.year4000.mapnodes.exceptions.InvalidJsonException;
 import net.year4000.mapnodes.messages.Message;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.SchedulerUtil;
-import net.year4000.mapnodes.api.util.Validator;
+import net.year4000.mapnodes.utils.Validator;
 import net.year4000.mapnodes.utils.typewrappers.GameSet;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
@@ -76,13 +76,13 @@ public final class NodeGame implements GameManager, Validator {
         checkNotNull(map != null, Msg.util("settings.map"));
 
         // Validate component
-        map.validate(this);
+        map.validate();
 
         // Required component
         checkNotNull(config != null, Msg.util("settings.game"));
 
         // Validate component
-        config.validate(this);
+        config.validate();
 
         // Required component
         checkNotNull(gameModes != null, Msg.util("settings.modes"));
@@ -97,12 +97,12 @@ public final class NodeGame implements GameManager, Validator {
 
         // Validate components
         for (NodeTeam team : teams.values()) {
-            team.validate(this);
+            team.validate();
         }
 
         // Validate components
         for (NodeClass clazz : classes.values()) {
-            clazz.validate(this);
+            clazz.validate();
         }
     }
 
