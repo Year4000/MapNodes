@@ -1,4 +1,4 @@
-package net.year4000.mapnodes.game.components.regions;
+package net.year4000.mapnodes.game.regions;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

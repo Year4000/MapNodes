@@ -1,9 +1,9 @@
-package net.year4000.mapnodes.game.components.regions.types;
+package net.year4000.mapnodes.game.regions.types;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import net.year4000.mapnodes.game.components.regions.Region;
-import net.year4000.mapnodes.game.components.regions.RegionType;
+import net.year4000.mapnodes.game.regions.Region;
+import net.year4000.mapnodes.game.regions.RegionType;
 import org.bukkit.Location;
 import org.bukkit.World;
 

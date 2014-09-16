@@ -1,4 +1,4 @@
-package net.year4000.mapnodes.game.components;
+package net.year4000.mapnodes.game;
 
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.annotations.Since;
@@ -10,7 +10,6 @@ import net.year4000.mapnodes.api.game.GameKit;
 import net.year4000.mapnodes.api.game.GamePlayer;
 import net.year4000.mapnodes.api.game.GameTeam;
 import net.year4000.mapnodes.exceptions.InvalidJsonException;
-import net.year4000.mapnodes.game.ScoreboardFactory;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.Common;
 import net.year4000.mapnodes.utils.Validator;

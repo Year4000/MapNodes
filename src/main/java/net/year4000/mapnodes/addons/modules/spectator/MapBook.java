@@ -10,7 +10,7 @@ import net.year4000.mapnodes.api.events.player.GamePlayerJoinTeamEvent;
 import net.year4000.mapnodes.api.game.GameManager;
 import net.year4000.mapnodes.api.game.GamePlayer;
 import net.year4000.mapnodes.game.NodeGame;
-import net.year4000.mapnodes.game.components.NodeKit;
+import net.year4000.mapnodes.game.NodeKit;
 import net.year4000.utilities.bukkit.ItemUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;

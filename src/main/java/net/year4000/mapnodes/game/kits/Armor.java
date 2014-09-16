@@ -1,4 +1,4 @@
-package net.year4000.mapnodes.game.components.kits;
+package net.year4000.mapnodes.game.kits;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

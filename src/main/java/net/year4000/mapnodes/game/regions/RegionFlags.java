@@ -1,14 +1,14 @@
-package net.year4000.mapnodes.game.components.regions;
+package net.year4000.mapnodes.game.regions;
 
 import com.google.common.annotations.Beta;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.annotations.Since;
 import lombok.Data;
 import net.year4000.mapnodes.exceptions.InvalidJsonException;
-import net.year4000.mapnodes.game.components.NodeRegion;
-import net.year4000.mapnodes.game.components.regions.flags.Bow;
-import net.year4000.mapnodes.game.components.regions.flags.Chest;
-import net.year4000.mapnodes.game.components.regions.flags.TNT;
+import net.year4000.mapnodes.game.NodeRegion;
+import net.year4000.mapnodes.game.regions.flags.Bow;
+import net.year4000.mapnodes.game.regions.flags.Chest;
+import net.year4000.mapnodes.game.regions.flags.TNT;
 import net.year4000.mapnodes.utils.Validator;
 import net.year4000.mapnodes.utils.typewrappers.DamageCauseList;
 import net.year4000.mapnodes.utils.typewrappers.EntityTypeList;

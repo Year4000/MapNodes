@@ -1,7 +1,7 @@
 package net.year4000.mapnodes.utils.deserializers;
 
 import com.google.gson.*;
-import net.year4000.mapnodes.game.components.kits.Effect;
+import net.year4000.mapnodes.game.kits.Effect;
 import net.year4000.mapnodes.utils.GsonUtil;
 import net.year4000.mapnodes.utils.typewrappers.PotionEffectList;
 import org.bukkit.potion.PotionEffect;

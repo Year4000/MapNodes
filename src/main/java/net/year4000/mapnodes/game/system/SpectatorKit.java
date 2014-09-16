@@ -1,6 +1,6 @@
 package net.year4000.mapnodes.game.system;
 
-import net.year4000.mapnodes.game.components.NodeKit;
+import net.year4000.mapnodes.game.NodeKit;
 import net.year4000.mapnodes.utils.typewrappers.PlayerArmorList;
 import net.year4000.mapnodes.utils.typewrappers.PlayerInventoryList;
 import net.year4000.utilities.bukkit.ItemUtil;

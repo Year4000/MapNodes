@@ -1,4 +1,4 @@
-package net.year4000.mapnodes.game.components;
+package net.year4000.mapnodes.game;
 
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.annotations.Since;
@@ -6,23 +6,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import net.year4000.mapnodes.api.game.GameConfig;
 import net.year4000.mapnodes.exceptions.InvalidJsonException;
-import net.year4000.mapnodes.game.components.regions.flags.Bow;
-import net.year4000.mapnodes.game.components.regions.flags.Chest;
-import net.year4000.mapnodes.game.components.regions.flags.TNT;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.*;
-import net.year4000.mapnodes.utils.typewrappers.DamageCauseList;
-import net.year4000.mapnodes.utils.typewrappers.EntityTypeList;
 import net.year4000.mapnodes.utils.typewrappers.LocationList;
-import net.year4000.mapnodes.utils.typewrappers.MaterialList;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.World;
-import org.bukkit.entity.EntityType;
-import org.bukkit.event.entity.EntityDamageEvent;
 
 import java.net.URL;
-import java.util.Arrays;
 
 import static com.google.common.base.Preconditions.checkArgument;
 

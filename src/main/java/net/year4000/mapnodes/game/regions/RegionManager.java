@@ -1,4 +1,4 @@
-package net.year4000.mapnodes.game.components.regions;
+package net.year4000.mapnodes.game.regions;
 
 import net.year4000.mapnodes.MapNodesPlugin;
 

@@ -1,9 +1,9 @@
 package net.year4000.mapnodes.api.game;
 
 import net.year4000.mapnodes.api.game.modes.GameMode;
-import net.year4000.mapnodes.game.components.NodeKit;
-import net.year4000.mapnodes.game.components.NodeRegion;
-import net.year4000.mapnodes.game.components.NodeTeam;
+import net.year4000.mapnodes.game.NodeKit;
+import net.year4000.mapnodes.game.NodeRegion;
+import net.year4000.mapnodes.game.NodeTeam;
 import org.bukkit.entity.Player;
 
 import java.util.Locale;

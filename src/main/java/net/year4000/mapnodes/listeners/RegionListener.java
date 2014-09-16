@@ -2,12 +2,10 @@ package net.year4000.mapnodes.listeners;
 
 import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.game.GameRegion;
-import net.year4000.mapnodes.game.components.NodeRegion;
-import net.year4000.mapnodes.game.components.regions.types.Global;
-import net.year4000.mapnodes.game.components.regions.types.Point;
+import net.year4000.mapnodes.game.NodeRegion;
+import net.year4000.mapnodes.game.regions.types.Point;
 import net.year4000.mapnodes.utils.ChestUtil;
 import net.year4000.mapnodes.utils.SchedulerUtil;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Chest;
 import org.bukkit.entity.Player;

@@ -6,7 +6,7 @@ import net.year4000.mapnodes.api.events.game.GameClockEvent;
 import net.year4000.mapnodes.api.events.game.GameWinEvent;
 import net.year4000.mapnodes.api.game.GamePlayer;
 import net.year4000.mapnodes.game.NodeGame;
-import net.year4000.mapnodes.game.components.NodeKit;
+import net.year4000.mapnodes.game.NodeKit;
 import net.year4000.mapnodes.messages.Msg;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

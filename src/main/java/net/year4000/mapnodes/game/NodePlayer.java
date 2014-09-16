@@ -10,8 +10,6 @@ import net.year4000.mapnodes.api.game.GameMap;
 import net.year4000.mapnodes.api.game.GamePlayer;
 import net.year4000.mapnodes.api.game.GameTeam;
 import net.year4000.mapnodes.clocks.Clocker;
-import net.year4000.mapnodes.game.components.NodeKit;
-import net.year4000.mapnodes.game.components.NodeTeam;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.MathUtil;
 import net.year4000.mapnodes.utils.Common;

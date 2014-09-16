@@ -1,6 +1,6 @@
 package net.year4000.mapnodes.game.system;
 
-import net.year4000.mapnodes.game.components.NodeTeam;
+import net.year4000.mapnodes.game.NodeTeam;
 import org.bukkit.ChatColor;
 
 public class SpectatorTeam extends NodeTeam {

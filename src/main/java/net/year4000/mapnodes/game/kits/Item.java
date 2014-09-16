@@ -1,4 +1,4 @@
-package net.year4000.mapnodes.game.components.kits;
+package net.year4000.mapnodes.game.kits;
 
 import com.google.gson.Gson;
 import lombok.Data;

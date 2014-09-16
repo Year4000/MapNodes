@@ -3,10 +3,9 @@ package net.year4000.mapnodes.utils.deserializers;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.*;
 import net.year4000.mapnodes.MapNodesPlugin;
-import net.year4000.mapnodes.game.components.regions.Region;
-import net.year4000.mapnodes.game.components.regions.RegionManager;
+import net.year4000.mapnodes.game.regions.Region;
+import net.year4000.mapnodes.game.regions.RegionManager;
 import net.year4000.mapnodes.utils.GsonUtil;
-import net.year4000.mapnodes.utils.typewrappers.LocationList;
 import net.year4000.mapnodes.utils.typewrappers.RegionList;
 
 import java.lang.reflect.Type;

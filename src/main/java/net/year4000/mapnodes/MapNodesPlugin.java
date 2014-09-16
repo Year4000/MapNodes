@@ -11,8 +11,8 @@ import net.year4000.mapnodes.api.game.GameManager;
 import net.year4000.mapnodes.game.Node;
 import net.year4000.mapnodes.game.WorldManager;
 import net.year4000.mapnodes.game.NodeModeFactory;
-import net.year4000.mapnodes.game.components.regions.types.*;
-import net.year4000.mapnodes.game.components.regions.RegionManager;
+import net.year4000.mapnodes.game.regions.types.*;
+import net.year4000.mapnodes.game.regions.RegionManager;
 import net.year4000.mapnodes.gamemodes.arrowtag.ArrowTag;
 import net.year4000.mapnodes.gamemodes.bomber.Bomber;
 import net.year4000.mapnodes.gamemodes.capture.Capture;
@@ -49,7 +49,7 @@ public class MapNodesPlugin extends BukkitPlugin implements Plugin {
         RegionManager.get()
             .add(Point.class)
             .add(Cuboid.class)
-            .add(net.year4000.mapnodes.game.components.regions.types.Void.class)
+            .add(net.year4000.mapnodes.game.regions.types.Void.class)
             .add(Global.class)
             .add(Sphere.class)
             .add(Cylinder.class)

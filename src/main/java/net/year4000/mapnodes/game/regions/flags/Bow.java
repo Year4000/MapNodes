@@ -1,4 +1,4 @@
-package net.year4000.mapnodes.game.components.regions.flags;
+package net.year4000.mapnodes.game.regions.flags;
 
 import com.google.gson.annotations.Since;
 import lombok.Data;

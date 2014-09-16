@@ -17,7 +17,6 @@ import net.year4000.mapnodes.api.game.modes.GameModeConfig;
 import net.year4000.mapnodes.clocks.NextNode;
 import net.year4000.mapnodes.clocks.RestartServer;
 import net.year4000.mapnodes.exceptions.InvalidJsonException;
-import net.year4000.mapnodes.game.components.*;
 import net.year4000.mapnodes.messages.Message;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.SchedulerUtil;

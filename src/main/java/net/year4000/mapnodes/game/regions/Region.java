@@ -1,6 +1,6 @@
-package net.year4000.mapnodes.game.components.regions;
+package net.year4000.mapnodes.game.regions;
 
-import net.year4000.mapnodes.game.components.regions.types.Point;
+import net.year4000.mapnodes.game.regions.types.Point;
 import org.bukkit.Location;
 import org.bukkit.World;
 

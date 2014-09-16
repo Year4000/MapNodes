@@ -1,4 +1,4 @@
-package net.year4000.mapnodes.game.components;
+package net.year4000.mapnodes.game;
 
 import com.google.gson.annotations.Since;
 import lombok.Data;

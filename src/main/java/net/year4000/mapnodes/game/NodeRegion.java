@@ -1,4 +1,4 @@
-package net.year4000.mapnodes.game.components;
+package net.year4000.mapnodes.game;
 
 import com.google.gson.annotations.Since;
 import lombok.AccessLevel;
@@ -6,19 +6,14 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import net.year4000.mapnodes.api.MapNodes;
-import net.year4000.mapnodes.api.game.GamePlayer;
 import net.year4000.mapnodes.api.game.GameRegion;
-import net.year4000.mapnodes.api.game.GameTeam;
 import net.year4000.mapnodes.exceptions.InvalidJsonException;
-import net.year4000.mapnodes.game.NodeGame;
-import net.year4000.mapnodes.game.components.regions.Region;
-import net.year4000.mapnodes.game.components.regions.types.Point;
-import net.year4000.mapnodes.game.components.regions.RegionFlags;
+import net.year4000.mapnodes.game.regions.Region;
+import net.year4000.mapnodes.game.regions.types.Point;
+import net.year4000.mapnodes.game.regions.RegionFlags;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.Validator;
-import net.year4000.mapnodes.utils.typewrappers.LocationList;
 import net.year4000.mapnodes.utils.typewrappers.RegionList;
-import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
