@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.game.regions.Region;
 import net.year4000.mapnodes.game.regions.RegionType;
+import net.year4000.mapnodes.game.regions.RegionTypes;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -13,7 +14,7 @@ import java.util.List;
 
 @Data
 @NoArgsConstructor
-@RegionType("void")
+@RegionType(RegionTypes.VOID)
 public class Void implements Region {
     private static int WORLD_HEIGHT = 256;
 

@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import net.year4000.mapnodes.exceptions.InvalidJsonException;
 import net.year4000.mapnodes.game.regions.Region;
 import net.year4000.mapnodes.game.regions.RegionType;
+import net.year4000.mapnodes.game.regions.RegionTypes;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.Validator;
 import org.bukkit.Location;
@@ -18,7 +19,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 @Data
 @NoArgsConstructor
-@RegionType("chunk")
+@RegionType(RegionTypes.CHUNK)
 public class Chunk  implements Region, Validator {
     private static final int CHUNK_SIZE = 16;
     private static final int CHUNK_HEIGHT = 256;

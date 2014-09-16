@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import net.year4000.mapnodes.game.regions.Region;
 import net.year4000.mapnodes.game.regions.RegionType;
+import net.year4000.mapnodes.game.regions.RegionTypes;
 import org.bukkit.Location;
 import org.bukkit.World;
 
@@ -11,7 +12,7 @@ import java.util.List;
 
 @Data
 @NoArgsConstructor
-@RegionType("global")
+@RegionType(RegionTypes.GLOBAL)
 public class Global implements Region {
     @Override
     public List<Location> getLocations(World world) {

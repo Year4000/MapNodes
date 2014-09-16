@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import net.year4000.mapnodes.exceptions.InvalidJsonException;
 import net.year4000.mapnodes.game.regions.Region;
 import net.year4000.mapnodes.game.regions.RegionType;
+import net.year4000.mapnodes.game.regions.RegionTypes;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.Validator;
 import org.bukkit.Location;
@@ -19,7 +20,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@RegionType("point")
+@RegionType(RegionTypes.POINT)
 public class Point implements Region, Validator {
     private Integer x = null;
     private Integer y = null;

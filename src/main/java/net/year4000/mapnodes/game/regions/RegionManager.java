@@ -45,7 +45,7 @@ public final class RegionManager {
         checkArgument(built); // Make sure we are built
 
         for (RegionType type : regionTypes.keySet()) {
-            if (type.value().equals(name.toLowerCase())) {
+            if (type.value().isType(name)) {
                 return regionTypes.get(type);
             }
         }

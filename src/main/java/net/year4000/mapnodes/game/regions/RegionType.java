@@ -9,5 +9,5 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 public @interface RegionType {
     /** The name of the type to be used in json markups */
-    public String value();
+    public RegionTypes value();
 }

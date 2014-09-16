@@ -6,6 +6,7 @@ import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.exceptions.InvalidJsonException;
 import net.year4000.mapnodes.game.regions.Region;
 import net.year4000.mapnodes.game.regions.RegionType;
+import net.year4000.mapnodes.game.regions.RegionTypes;
 import net.year4000.mapnodes.utils.Validator;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -18,7 +19,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 @Data
 @NoArgsConstructor
-@RegionType("sphere")
+@RegionType(RegionTypes.SPHERE)
 public class Sphere implements Region, Validator {
     private Point center = null;
     private Integer radius = null;
