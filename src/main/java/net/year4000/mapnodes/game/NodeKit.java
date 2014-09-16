@@ -124,12 +124,15 @@ public class NodeKit implements GameKit, GameValidator {
         player.setArrowsStuck(0);
     }
 
-    /** Give this kit to the game player */
+    /** Give this kit to the player */
     public void giveKit(GamePlayer player) {
-        giveKit(player.getPlayer());
+        Player rawPlayer = player.getPlayer();
+        reset(rawPlayer);
 
-        // todo assign the task to the player's list of tasks
-        SchedulerUtil.runSync(() -> {
+        player.getPlayerTasks().add(SchedulerUtil.runSync(() -> {
+            rawPlayer.getInventory().setContents(items.toArray(new ItemStack[items.size()]));
+
+            // Color the armor
             List<ItemStack> items = new ArrayList<>(armor);
             items.forEach(item -> {
                 if (item.getItemMeta() instanceof LeatherArmorMeta) {
@@ -143,31 +146,20 @@ public class NodeKit implements GameKit, GameValidator {
                 }
             });
 
-            player.getPlayer().getInventory().setArmorContents(items.toArray(new ItemStack[items.size()]));
-        }, 2L);
-    }
+            rawPlayer.getInventory().setArmorContents(items.toArray(new ItemStack[items.size()]));
 
-    /** Give this kit to the player */
-    public void giveKit(Player player) {
-        reset(player);
-
-        // todo assign the task to the player's list of tasks
-        SchedulerUtil.runSync(() -> {
-            player.getInventory().setContents(items.toArray(new ItemStack[items.size()]));
-            player.getInventory().setArmorContents(armor.toArray(new ItemStack[armor.size()]));
-
-            effects.forEach(effect -> player.addPotionEffect(effect, true));
+            effects.forEach(effect -> rawPlayer.addPotionEffect(effect, true));
 
             // noinspection deprecation
-            player.updateInventory();
-        }, 1L);
+            rawPlayer.updateInventory();
+        }, 1L));
 
-        player.setMaxHealth(health);
-        player.setHealth(health);
-        player.setFoodLevel(food);
-        player.setGameMode(gamemode);
-        player.setAllowFlight(fly);
-        player.setFlying(fly);
+        rawPlayer.setMaxHealth(health);
+        rawPlayer.setHealth(health);
+        rawPlayer.setFoodLevel(food);
+        rawPlayer.setGameMode(gamemode);
+        rawPlayer.setAllowFlight(fly);
+        rawPlayer.setFlying(fly);
     }
 
     /** Immortal starter kit */
