@@ -1,8 +1,11 @@
 package net.year4000.mapnodes.game;
 
 import com.google.gson.annotations.Since;
+import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.game.GameKit;
 import net.year4000.mapnodes.api.game.GamePlayer;
 import net.year4000.mapnodes.clocks.Clocker;
@@ -75,7 +78,24 @@ public class NodeKit implements GameKit, Validator {
          Upper Json Settings / Bellow Instance Code
     *///--------------------------------------------//
 
+    @Setter(AccessLevel.NONE)
+    private transient String id;
     private transient static final String DEFAULT_LEATHER = "A06540";
+
+    /** Get the id of this class and cache it */
+    public String getId() {
+        if (id == null) {
+            NodeKit thisObject = this;
+
+            MapNodes.getCurrentGame().getKits().forEach((string, object) -> {
+                if (object.equals(thisObject)) {
+                    id = string;
+                }
+            });
+        }
+
+        return id;
+    }
 
     /** Reset the player to default settings */
     public static void reset(Player player) {

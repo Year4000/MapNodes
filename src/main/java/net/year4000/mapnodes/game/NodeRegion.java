@@ -61,7 +61,24 @@ public final class NodeRegion implements GameRegion, Validator, Comparable {
          Upper Json Settings / Bellow Instance Code
     *///--------------------------------------------//
 
+    @Setter(AccessLevel.NONE)
+    private transient String id;
     private Set<Region> zoneSet = new HashSet<>();
+
+    /** Get the id of this class and cache it */
+    public String getId() {
+        if (id == null) {
+            NodeRegion thisObject = this;
+
+            MapNodes.getCurrentGame().getRegions().forEach((string, object) -> {
+                if (object.equals(thisObject)) {
+                    id = string;
+                }
+            });
+        }
+
+        return id;
+    }
 
     /** Get the zone set with zone caching from conversion */
     public Set<Region> getZones() {

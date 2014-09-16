@@ -2,8 +2,10 @@ package net.year4000.mapnodes.game;
 
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.annotations.Since;
+import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.game.GameKit;
@@ -78,9 +80,26 @@ public class NodeTeam implements GameTeam, Validator {
          Upper Json Settings / Bellow Instance Code
     *///--------------------------------------------//
 
+    @Setter(AccessLevel.NONE)
+    private transient String id;
     private transient static final String TEAM_FORMAT = "%s%s &7(%s&8/&6%d&7)";
     private transient List<GamePlayer> players = new ArrayList<>();
     private transient Queue<GamePlayer> queue = new PriorityQueue<>();
+
+    /** Get the id of this class and cache it */
+    public String getId() {
+        if (id == null) {
+            NodeTeam thisObject = this;
+
+            MapNodes.getCurrentGame().getTeams().forEach((string, object) -> {
+                if (object.equals(thisObject)) {
+                    id = string;
+                }
+            });
+        }
+
+        return id;
+    }
 
     /** Join this team or add to queue */
     public void join(GamePlayer player, boolean display) {
