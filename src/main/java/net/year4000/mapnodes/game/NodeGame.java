@@ -208,7 +208,10 @@ public final class NodeGame implements GameManager, Validator {
     /** Stop the game anc cycle to the next with a time */
     public void stop(@Nullable Integer time) {
         stage = NodeStage.ENDING;
-        gameClock.cancel();
+
+        if (gameClock != null) {
+            gameClock.cancel();
+        }
 
         GameStopEvent stop = new GameStopEvent(this);
         stop.call();
