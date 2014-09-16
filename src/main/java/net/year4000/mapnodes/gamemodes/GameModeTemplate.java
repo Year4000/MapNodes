@@ -10,5 +10,4 @@ import java.util.List;
 @Data
 public class GameModeTemplate {
     private GameModeConfig config;
-    private List<Listener> listeners;
 }

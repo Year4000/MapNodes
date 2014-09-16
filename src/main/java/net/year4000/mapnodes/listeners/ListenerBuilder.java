@@ -8,16 +8,23 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginManager;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class ListenerBuilder {
     private List<Class<?>> listeners = new ArrayList<>();
-    // todo allow getters for registered listeners
     private List<Listener> registered = new ArrayList<>();
 
     /** Add a class to this listener builder */
     public ListenerBuilder add(Class<?> commandClass) {
         listeners.add(commandClass);
+        return this;
+    }
+
+    /** Add a class to this listener builder */
+    public ListenerBuilder addAll(Class<?>... commandClass) {
+        Collections.addAll(listeners, commandClass);
+
         return this;
     }
 

@@ -6,6 +6,7 @@ import net.year4000.mapnodes.api.game.modes.GameMode;
 import net.year4000.mapnodes.api.game.modes.GameModeConfig;
 import net.year4000.mapnodes.api.game.modes.GameModeConfigName;
 import net.year4000.mapnodes.api.game.modes.GameModeInfo;
+import net.year4000.mapnodes.listeners.ListenerBuilder;
 import net.year4000.mapnodes.messages.Msg;
 import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
@@ -21,6 +22,7 @@ public class NodeModeFactory {
     private static NodeModeFactory inst;
     private Set<Class<? extends GameMode>> rawGameModes = new HashSet<>();
     private Map<GameModeInfo, Class<? extends GameMode>> loadedGameModes = new HashMap<>();
+    private Map<GameMode, ListenerBuilder> enabledListeners = new HashMap<>();
     private boolean built = false;
 
     public static NodeModeFactory get() {
@@ -99,36 +101,21 @@ public class NodeModeFactory {
     }
 
     /** enable the current listeners for the game mode */
-    // todo use listener builder to create listeners...
     public void registerListeners(GameMode mode) {
-        PluginManager manager = Bukkit.getPluginManager();
-        List<Listener> listeners = new ArrayList<>();
-
         try {
             GameModeInfo configName = mode.getClass().getAnnotation(GameModeInfo.class);
+            ListenerBuilder builder = new ListenerBuilder();
 
-            for (Class<? extends Listener> listen : configName.listeners()) {
-                try {
-                    MapNodesPlugin.debug(Msg.util("debug.listener.register", listen.getSimpleName()));
-                    Listener listener = listen.newInstance();
-                    manager.registerEvents(listener, MapNodesPlugin.getInst());
-                    listeners.add(listener);
-                    mode.setListeners(listeners);
-                } catch (InstantiationException | IllegalAccessException e) {
-                    MapNodesPlugin.log(e, false);
-                }
-            }
+            builder.addAll(configName.listeners());
+            builder.register();
+            enabledListeners.put(mode, builder);
         } catch (NullPointerException e) {
             MapNodesPlugin.log(e, false);
         }
     }
 
     /** disable the current listeners for the game mode */
-    // todo use listener builder to remove listeners...
     public void unregisterListeners(GameMode mode) {
-        mode.getListeners().forEach(l -> {
-            MapNodesPlugin.debug(Msg.util("debug.listener.unregister", l.getClass().getSimpleName()));
-            HandlerList.unregisterAll(l);
-        });
+        enabledListeners.get(mode).unregister();
     }
 }
