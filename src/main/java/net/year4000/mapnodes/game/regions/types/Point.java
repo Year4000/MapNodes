@@ -7,7 +7,7 @@ import net.year4000.mapnodes.exceptions.InvalidJsonException;
 import net.year4000.mapnodes.game.regions.Region;
 import net.year4000.mapnodes.game.regions.RegionType;
 import net.year4000.mapnodes.messages.Msg;
-import net.year4000.mapnodes.utils.Validator;
+import net.year4000.mapnodes.api.util.Validator;
 import org.bukkit.Location;
 import org.bukkit.World;
 

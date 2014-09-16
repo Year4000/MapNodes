@@ -10,7 +10,7 @@ import net.year4000.mapnodes.game.system.SpectatorTeam;
 import net.year4000.mapnodes.map.MapFolder;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.GsonUtil;
-import net.year4000.mapnodes.utils.Validator;
+import net.year4000.mapnodes.api.util.Validator;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.util.CachedServerIcon;

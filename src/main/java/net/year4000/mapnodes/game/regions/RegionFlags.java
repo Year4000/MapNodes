@@ -9,7 +9,7 @@ import net.year4000.mapnodes.game.NodeRegion;
 import net.year4000.mapnodes.game.regions.flags.Bow;
 import net.year4000.mapnodes.game.regions.flags.Chest;
 import net.year4000.mapnodes.game.regions.flags.TNT;
-import net.year4000.mapnodes.utils.Validator;
+import net.year4000.mapnodes.api.util.Validator;
 import net.year4000.mapnodes.utils.typewrappers.DamageCauseList;
 import net.year4000.mapnodes.utils.typewrappers.EntityTypeList;
 import net.year4000.mapnodes.utils.typewrappers.MaterialList;

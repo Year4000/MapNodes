@@ -3,7 +3,7 @@ package net.year4000.mapnodes.game.kits;
 import com.google.gson.annotations.Since;
 import net.year4000.mapnodes.exceptions.InvalidJsonException;
 import net.year4000.mapnodes.messages.Msg;
-import net.year4000.mapnodes.utils.Validator;
+import net.year4000.mapnodes.api.util.Validator;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 

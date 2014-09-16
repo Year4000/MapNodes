@@ -4,11 +4,12 @@ import com.google.gson.annotations.Since;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import net.year4000.mapnodes.api.MapNodes;
+import net.year4000.mapnodes.api.game.GameManager;
 import net.year4000.mapnodes.api.game.GameMap;
 import net.year4000.mapnodes.exceptions.InvalidJsonException;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.Common;
-import net.year4000.mapnodes.utils.Validator;
+import net.year4000.mapnodes.utils.GameValidator;
 import net.year4000.utilities.bukkit.MessageUtil;
 import org.bukkit.entity.Player;
 
@@ -20,7 +21,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 @Data
 @NoArgsConstructor
 /** Details about the current map. */
-public final class NodeMap implements GameMap, Validator {
+public final class NodeMap implements GameMap, GameValidator {
     /** The name of the current map. */
     @Since(1.0)
     private String name = null;
@@ -48,9 +49,17 @@ public final class NodeMap implements GameMap, Validator {
         checkArgument(authors.size() > 0, Msg.util("settings.map.authors"));
     }
 
+    @Override
+    public void validate(GameManager game) throws InvalidJsonException {
+        this.game = game;
+        validate();
+    }
+
     /*//--------------------------------------------//
          Upper Json Settings / Bellow Instance Code
     *///--------------------------------------------//
+
+    private transient GameManager game;
 
     /** Get main author */
     public String getMainAuthor() {

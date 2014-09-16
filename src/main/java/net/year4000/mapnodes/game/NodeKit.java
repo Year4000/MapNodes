@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.game.GameKit;
+import net.year4000.mapnodes.api.game.GameManager;
 import net.year4000.mapnodes.api.game.GamePlayer;
 import net.year4000.mapnodes.clocks.Clocker;
 import net.year4000.mapnodes.exceptions.InvalidJsonException;
@@ -30,7 +31,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 /** Manage the items and effects that are given to the player. */
-public class NodeKit implements GameKit, Validator {
+public class NodeKit implements GameKit, GameValidator {
     /** The items to put in the player's inventory. */
     @Since(1.0)
     private PlayerInventoryList<ItemStack> items = new PlayerInventoryList<>();
@@ -74,12 +75,19 @@ public class NodeKit implements GameKit, Validator {
         }
     }
 
+    @Override
+    public void validate(GameManager game) throws InvalidJsonException {
+        this.game = game;
+        validate();
+    }
+
     /*//--------------------------------------------//
          Upper Json Settings / Bellow Instance Code
     *///--------------------------------------------//
 
     @Setter(AccessLevel.NONE)
     private transient String id;
+    private transient GameManager game;
     private transient static final String DEFAULT_LEATHER = "A06540";
 
     /** Get the id of this class and cache it */
@@ -87,7 +95,7 @@ public class NodeKit implements GameKit, Validator {
         if (id == null) {
             NodeKit thisObject = this;
 
-            MapNodes.getCurrentGame().getKits().forEach((string, object) -> {
+            game.getKits().forEach((string, object) -> {
                 if (object.equals(thisObject)) {
                     id = string;
                 }
