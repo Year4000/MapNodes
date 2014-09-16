@@ -17,6 +17,7 @@ import net.year4000.mapnodes.api.game.modes.GameModeConfig;
 import net.year4000.mapnodes.clocks.NextNode;
 import net.year4000.mapnodes.clocks.RestartServer;
 import net.year4000.mapnodes.exceptions.InvalidJsonException;
+import net.year4000.mapnodes.game.regions.RegionEvents;
 import net.year4000.mapnodes.messages.Message;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.SchedulerUtil;
@@ -189,6 +190,11 @@ public final class NodeGame implements GameManager, Validator {
 
         // Register game mode listeners
         gameModes.forEach(m -> NodeModeFactory.get().registerListeners(m));
+        // Register region events
+        regions.values().stream()
+            .map(NodeRegion::getEvents)
+            .filter(e -> e != null)
+            .forEach(RegionEvents::registerEvents);
 
         GameStartEvent start = new GameStartEvent(this);
         start.call();
@@ -220,6 +226,11 @@ public final class NodeGame implements GameManager, Validator {
 
         // Unregister game mode listeners
         gameModes.forEach(m -> NodeModeFactory.get().unregisterListeners(m));
+        // Unregister region events
+        regions.values().stream()
+            .map(NodeRegion::getEvents)
+            .filter(e -> e != null)
+            .forEach(RegionEvents::unregisterEvents);
 
         if (NodeFactory.get().isQueuedGames()) {
             if (time != null) {

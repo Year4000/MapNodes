@@ -45,6 +45,9 @@ public class ListenerBuilder {
 
     /** Unregister the listeners */
     public void unregister() {
-        registered.forEach(HandlerList::unregisterAll);
+        registered.forEach(listener -> {
+            MapNodesPlugin.debug(Msg.util("debug.listener.unregister", listener.getClass().getSimpleName()));
+            HandlerList.unregisterAll(listener);
+        });
     }
 }

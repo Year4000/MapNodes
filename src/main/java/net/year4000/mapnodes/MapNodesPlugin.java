@@ -11,6 +11,8 @@ import net.year4000.mapnodes.api.game.GameManager;
 import net.year4000.mapnodes.game.Node;
 import net.year4000.mapnodes.game.WorldManager;
 import net.year4000.mapnodes.game.NodeModeFactory;
+import net.year4000.mapnodes.game.regions.EventManager;
+import net.year4000.mapnodes.game.regions.events.EnterEvent;
 import net.year4000.mapnodes.game.regions.types.*;
 import net.year4000.mapnodes.game.regions.RegionManager;
 import net.year4000.mapnodes.gamemodes.arrowtag.ArrowTag;
@@ -54,6 +56,11 @@ public class MapNodesPlugin extends BukkitPlugin implements Plugin {
             .add(Sphere.class)
             .add(Cylinder.class)
             .add(Chunk.class)
+            .build();
+
+        // Register event types
+        EventManager.get()
+            .add(EnterEvent.class)
             .build();
 
         // Register game modes that MapNodes can support

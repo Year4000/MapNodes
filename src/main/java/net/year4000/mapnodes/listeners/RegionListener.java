@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Random;
 
 public class RegionListener implements Listener {
-    /** Disable movement based on regions */
+/*    *//** Disable movement based on regions *//*
     @EventHandler
     public void onMove(PlayerMoveEvent event) {
         if (MapNodes.getCurrentGame().getRegions().size() == 0) return;
@@ -62,7 +62,7 @@ public class RegionListener implements Listener {
         }
     }
 
-    /** Disable block placing based on regions */
+    *//** Disable block placing based on regions *//*
     @EventHandler(ignoreCancelled = true)
     public void onPlace(BlockPlaceEvent event) {
         if (MapNodes.getCurrentGame().getRegions().size() == 0) return;
@@ -83,7 +83,7 @@ public class RegionListener implements Listener {
         NodeRegion.sendDenyMessage(player, region, "region.deny.place");
     }
 
-    /** Disable block break based on regions */
+    *//** Disable block break based on regions *//*
     @EventHandler(ignoreCancelled = true)
     public void onBreak(BlockBreakEvent event) {
         if (MapNodes.getCurrentGame().getRegions().size() == 0) return;
@@ -104,7 +104,7 @@ public class RegionListener implements Listener {
         NodeRegion.sendDenyMessage(player, region, "region.deny.break");
     }
 
-    /** Disable block fade based on regions */
+    *//** Disable block fade based on regions *//*
     @EventHandler
     public void onBlockFade(BlockFadeEvent event) {
         if (MapNodes.getCurrentGame().getRegions().size() == 0) return;
@@ -123,7 +123,7 @@ public class RegionListener implements Listener {
         event.setCancelled(region.getFlags().getBlockFade());
     }
 
-    /** Disable liquid flowing based on regions */
+    *//** Disable liquid flowing based on regions *//*
     @EventHandler
     public void onFlow(BlockFromToEvent event) {
         if (MapNodes.getCurrentGame().getRegions().size() == 0) return;
@@ -142,7 +142,7 @@ public class RegionListener implements Listener {
         event.setCancelled(region.getFlags().getLiquidFlow());
     }
 
-    /** Disallow entity damage based on regions */
+    *//** Disallow entity damage based on regions *//*
     @EventHandler(ignoreCancelled = true)
     public void onEntityDamage(EntityDamageEvent event) {
         if (MapNodes.getCurrentGame().getRegions().size() == 0) return;
@@ -161,7 +161,7 @@ public class RegionListener implements Listener {
         event.setCancelled(region.getFlags().getNoDamage().contains(event.getCause()));
     }
 
-    /** Disallow creature spawning based on regions */
+    *//** Disallow creature spawning based on regions *//*
     @EventHandler(ignoreCancelled = true)
     public void onCreatureSpawn(CreatureSpawnEvent event) {
         if (MapNodes.getCurrentGame().getRegions().size() == 0) return;
@@ -180,7 +180,7 @@ public class RegionListener implements Listener {
         event.setCancelled(region.getFlags().getEnabledMobs().contains(event.getEntityType()));
     }
 
-    /** Player drops only some items is specific in regions */
+    *//** Player drops only some items is specific in regions *//*
     @EventHandler(ignoreCancelled = true)
     public void onPlayerInvDrop(PlayerDeathEvent event) {
         if (MapNodes.getCurrentGame().getRegions().size() == 0) return;
@@ -207,7 +207,7 @@ public class RegionListener implements Listener {
 
     // TNT Listeners //
 
-    /** If a tnt is place should be ignite it */
+    *//** If a tnt is place should be ignite it *//*
     @EventHandler(ignoreCancelled = true)
     public void onTnt(BlockPlaceEvent event) {
         if (event.getBlock().getType() != Material.TNT) return;
@@ -244,7 +244,7 @@ public class RegionListener implements Listener {
         }, 4 * 20);
     }
 
-    /** Set the yield and blocks of the tnt. */
+    *//** Set the yield and blocks of the tnt. *//*
     @EventHandler(priority=EventPriority.HIGH)
     public void onTnt(EntityExplodeEvent event) {
         if (MapNodes.getCurrentGame().getRegions().size() == 0) return;
@@ -272,7 +272,7 @@ public class RegionListener implements Listener {
     public static List<Vector> chests = new ArrayList<>();
     private static final Random rand = new Random((long) Math.sqrt(System.currentTimeMillis()));
 
-    /** Spawn random items into empty chests. */
+    *//** Spawn random items into empty chests. *//*
     @EventHandler
     public void onChest(PlayerInteractEvent event) {
         if (MapNodes.getCurrentGame().getRegions().size() == 0) return;
@@ -316,7 +316,7 @@ public class RegionListener implements Listener {
         }
     }
 
-    /** Spawn random items into empty chests. */
+    *//** Spawn random items into empty chests. *//*
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onChest(BlockPlaceEvent event) {
         if (MapNodes.getCurrentGame().getRegions().size() == 0) return;
@@ -335,5 +335,5 @@ public class RegionListener implements Listener {
         if (event.getBlock().getState() instanceof Chest) {
             chests.add(event.getBlock().getLocation().toVector());
         }
-    }
+    }*/
 }

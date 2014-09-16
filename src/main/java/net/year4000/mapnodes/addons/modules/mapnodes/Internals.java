@@ -18,8 +18,7 @@ import net.year4000.mapnodes.listeners.*;
         GameListener.class,
         MapNodesListener.class,
         WorldListener.class,
-        SpectatorListener.class,
-        RegionListener.class
+        SpectatorListener.class
     }
 )
 public class Internals extends Addon {
