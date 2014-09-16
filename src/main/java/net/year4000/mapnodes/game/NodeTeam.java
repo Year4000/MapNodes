@@ -21,6 +21,7 @@ import net.year4000.utilities.bukkit.MessageUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.Location;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 
 import java.util.*;
@@ -191,5 +192,28 @@ public class NodeTeam implements GameTeam, Validator {
         teams.stream().filter(NodeTeam::isUseScoreboard).forEach(t -> lines.add(t.prettyPrint()));
 
         return lines;
+    }
+
+    /** Get a random spawn, it may not be safe for a player */
+    public Location getRandomSpawn() {
+        return  spawns.get(new Random().nextInt(spawns.size()));
+    }
+
+    /** Try and get a safe random spawn or end with a random spawn that may not be safe */
+    public Location getSafeRandomSpawn() {
+        List<Location> list = new ArrayList<>(spawns);
+        Collections.shuffle(list);
+
+        for (Location spawn : list) {
+            boolean currentBlock = spawn.getBlock().getType().isTransparent();
+            boolean standBlock = spawn.getBlock().getRelative(BlockFace.DOWN).getType().isSolid();
+            boolean headBlock = spawn.getBlock().getRelative(BlockFace.UP).getType().isTransparent();
+
+            if (currentBlock && standBlock && headBlock) {
+                return spawn;
+            }
+        }
+
+        return getRandomSpawn();
     }
 }

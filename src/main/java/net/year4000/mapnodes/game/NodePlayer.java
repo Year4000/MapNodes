@@ -17,6 +17,7 @@ import net.year4000.mapnodes.utils.SchedulerUtil;
 import net.year4000.utilities.bukkit.FunEffectsUtil;
 import net.year4000.utilities.bukkit.MessageUtil;
 import net.year4000.utilities.bukkit.bossbar.BossBar;
+import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
@@ -74,8 +75,7 @@ public final class NodePlayer implements GamePlayer {
             this.setImmortal(true);
             this.setKit(team.getKit());
             this.setTeam(team);
-            // todo change to set<spawns>, and spawn type RANDOM, LINEAR
-            this.setSpawn(team.getSpawns().get(0)); // TODO Add logic to spawning ex random, linear
+            this.setSpawn(team.getSafeRandomSpawn());
             this.setMessage(new ArrayList<String>() {{
                 add("&7&m****&a&l Game Started &7&m****"); // TODO proper start message
             }});
@@ -111,7 +111,7 @@ public final class NodePlayer implements GamePlayer {
         player.setScoreboard(scoreboard);
 
         GamePlayerJoinEvent join = new GamePlayerJoinEvent(this) {{
-            this.setSpawn(MapNodes.getCurrentWorld().getSpawnLocation());
+            this.setSpawn(((NodeGame) MapNodes.getCurrentGame()).getConfig().getSafeRandomSpawn());
             this.setMenu(!MapNodes.getCurrentGame().getStage().isEndGame());
         }};
         join.call();

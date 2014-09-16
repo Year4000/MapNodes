@@ -8,10 +8,7 @@ import net.year4000.mapnodes.commands.maps.MapCommands;
 import net.year4000.mapnodes.commands.match.MatchBase;
 import net.year4000.mapnodes.commands.misc.MenuCommands;
 import net.year4000.mapnodes.commands.node.NodeBase;
-import net.year4000.mapnodes.listeners.GameListener;
-import net.year4000.mapnodes.listeners.MapNodesListener;
-import net.year4000.mapnodes.listeners.RegionListener;
-import net.year4000.mapnodes.listeners.WorldListener;
+import net.year4000.mapnodes.listeners.*;
 
 @AddonInfo(
     name = "Internals",
@@ -21,6 +18,7 @@ import net.year4000.mapnodes.listeners.WorldListener;
         GameListener.class,
         MapNodesListener.class,
         WorldListener.class,
+        SpectatorListener.class,
         RegionListener.class
     }
 )

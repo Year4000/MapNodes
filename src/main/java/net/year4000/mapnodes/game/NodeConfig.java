@@ -11,8 +11,14 @@ import net.year4000.mapnodes.utils.*;
 import net.year4000.mapnodes.utils.typewrappers.LocationList;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
@@ -51,7 +57,6 @@ public final class NodeConfig implements GameConfig, Validator {
     @Since(1.0)
     private LocationList<Location> spawn = new LocationList<>();
 
-
     @Override
     public void validate() throws InvalidJsonException {
         checkArgument(0 <= difficulty && difficulty <= 3, Msg.util("settings.game.difficulty"));
@@ -61,5 +66,32 @@ public final class NodeConfig implements GameConfig, Validator {
         checkArgument(0 <= worldHeight && worldHeight <= 256, Msg.util("settings.game.worldHeight"));
 
         checkArgument(spawn.size() > 0, Msg.util("settings.game.spawn"));
+    }
+
+    /*//--------------------------------------------//
+         Upper Json Settings / Bellow Instance Code
+    *///--------------------------------------------//
+
+    /** Get a random spawn, it may not be safe for a player */
+    public Location getRandomSpawn() {
+        return  spawn.get(new Random().nextInt(spawn.size()));
+    }
+
+    /** Try and get a safe random spawn or end with a random spawn that may not be safe */
+    public Location getSafeRandomSpawn() {
+        List<Location> list = new ArrayList<>(spawn);
+        Collections.shuffle(list);
+
+        for (Location spawn : list) {
+            boolean currentBlock = spawn.getBlock().getType().isTransparent();
+            boolean standBlock = spawn.getBlock().getRelative(BlockFace.DOWN).getType().isSolid();
+            boolean headBlock = spawn.getBlock().getRelative(BlockFace.UP).getType().isTransparent();
+
+            if (currentBlock && standBlock && headBlock) {
+                return spawn;
+            }
+        }
+
+        return getRandomSpawn();
     }
 }
