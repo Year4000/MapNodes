@@ -1,7 +1,18 @@
 package net.year4000.mapnodes.game.regions;
 
 public enum EventTypes {
-    ENTER("enter")
+    ENTER("enter"),
+    EXIT("exit"),
+    BUILD("build"),
+    DESTROY("destroy"),
+    CHEST("chest"),
+    CREATURE_SPAWN("creature_spawn"),
+    KILL_PLAYER("kill_player"),
+    PVP("pvp"),
+    TNT("tnt"),
+    BOW("bow"),
+    BLOCK_DROP("block_drop"),
+    PLAYER_DROP("player_drop"),
     ;
 
     private String name;

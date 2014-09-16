@@ -1,4 +1,4 @@
-package net.year4000.mapnodes.game.regions.events;
+package net.year4000.mapnodes.game.regions;
 
 import com.google.gson.annotations.SerializedName;
 import lombok.Data;
@@ -10,7 +10,7 @@ import org.bukkit.Sound;
 import java.util.List;
 
 @Data
-public abstract class BaseRegionEvent {
+public abstract class RegionEvent {
     private Integer weight = null;
 
     private boolean allow = false;

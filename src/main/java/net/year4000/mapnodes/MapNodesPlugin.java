@@ -12,7 +12,7 @@ import net.year4000.mapnodes.game.Node;
 import net.year4000.mapnodes.game.WorldManager;
 import net.year4000.mapnodes.game.NodeModeFactory;
 import net.year4000.mapnodes.game.regions.EventManager;
-import net.year4000.mapnodes.game.regions.events.EnterEvent;
+import net.year4000.mapnodes.game.regions.events.*;
 import net.year4000.mapnodes.game.regions.types.*;
 import net.year4000.mapnodes.game.regions.RegionManager;
 import net.year4000.mapnodes.gamemodes.arrowtag.ArrowTag;
@@ -60,7 +60,18 @@ public class MapNodesPlugin extends BukkitPlugin implements Plugin {
 
         // Register event types
         EventManager.get()
-            .add(EnterEvent.class)
+            .add(Enter.class)
+            .add(Exit.class)
+            .add(Build.class)
+            .add(net.year4000.mapnodes.game.regions.events.Destroy.class)
+            .add(Bow.class)
+            .add(Chest.class)
+            .add(TNT.class)
+            .add(PVP.class)
+            .add(CreatureSpawn.class)
+            .add(PlayerDrop.class)
+            .add(BlockDrop.class)
+            .add(KillPlayer.class)
             .build();
 
         // Register game modes that MapNodes can support
