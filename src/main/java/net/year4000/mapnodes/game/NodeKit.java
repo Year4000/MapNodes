@@ -108,13 +108,19 @@ public class NodeKit implements GameKit, GameValidator {
     }
 
     /** Reset the player to default settings */
-    public static void reset(Player player) {
-        SchedulerUtil.runSync(() -> {
+    public static void reset(GamePlayer gamePlayer) {
+        Player player = gamePlayer.getPlayer();
+
+        gamePlayer.getPlayerTasks().add(SchedulerUtil.runSync(() -> {
             player.getActivePotionEffects().forEach(potion -> player.removePotionEffect(potion.getType()));
+
+            // Clear Items
+            player.getInventory().setArmorContents(new ItemStack[4]);
+            player.getInventory().setContents(new ItemStack[35]);
 
             // noinspection deprecation
             player.updateInventory();
-        });
+        }));
 
         player.setTotalExperience(0);
         player.setLevel(0);
@@ -129,7 +135,7 @@ public class NodeKit implements GameKit, GameValidator {
     /** Give this kit to the player */
     public void giveKit(GamePlayer player) {
         Player rawPlayer = player.getPlayer();
-        reset(rawPlayer);
+        reset(player);
 
         player.getPlayerTasks().add(SchedulerUtil.runSync(() -> {
             rawPlayer.getInventory().setContents(items.toArray(new ItemStack[items.size()]));
