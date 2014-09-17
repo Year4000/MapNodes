@@ -20,7 +20,7 @@ public class NodeModeFactory {
     private static NodeModeFactory inst;
     private Set<Class<? extends GameMode>> rawGameModes = new HashSet<>();
     private Map<GameModeInfo, Class<? extends GameMode>> loadedGameModes = new HashMap<>();
-    private Map<GameMode, ListenerBuilder> enabledListeners = new HashMap<>();
+    private Map<GameModeInfo, ListenerBuilder> enabledListeners = new HashMap<>();
     private boolean built = false;
 
     public static NodeModeFactory get() {
@@ -106,7 +106,7 @@ public class NodeModeFactory {
 
             builder.addAll(configName.listeners());
             builder.register();
-            enabledListeners.put(mode, builder);
+            enabledListeners.put(configName, builder);
         } catch (NullPointerException e) {
             MapNodesPlugin.log(e, false);
         }
@@ -114,6 +114,12 @@ public class NodeModeFactory {
 
     /** disable the current listeners for the game mode */
     public void unregisterListeners(GameMode mode) {
-        enabledListeners.get(mode).unregister();
+        try {
+            GameModeInfo configName = mode.getClass().getAnnotation(GameModeInfo.class);
+
+            enabledListeners.get(configName).unregister();
+        } catch (NullPointerException e) {
+            MapNodesPlugin.log(e, false);
+        }
     }
 }
