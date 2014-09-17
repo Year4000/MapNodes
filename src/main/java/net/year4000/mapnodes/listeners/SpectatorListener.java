@@ -127,11 +127,11 @@ public class SpectatorListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.MONITOR)
+/*    @EventHandler(priority = EventPriority.MONITOR)
     public void playerDamage(PlayerEvent event) {
         GamePlayer player = MapNodes.getCurrentGame().getPlayer(event.getPlayer());
         ((NodePlayer) player).updateInventory();
-    }
+    }*/
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void openInv(PlayerInteractEntityEvent event) {
