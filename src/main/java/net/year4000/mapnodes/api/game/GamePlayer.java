@@ -1,6 +1,7 @@
 package net.year4000.mapnodes.api.game;
 
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.util.List;
@@ -21,4 +22,6 @@ public interface GamePlayer {
     public List<BukkitTask> getPlayerTasks();
 
     public String getPlayerColor();
+
+    public Inventory getInventory();
 }

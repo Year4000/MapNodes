@@ -47,7 +47,7 @@ public class MapBook extends Addon implements Listener {
         gm.getSpectating().forEach(player -> {
             Inventory inv = player.getPlayer().getInventory();
 
-            inv.setItem(8, book(player));
+            inv.setItem(3, book(player));
         });
     }
 
@@ -56,7 +56,7 @@ public class MapBook extends Addon implements Listener {
         e.getGame().getSpectating().forEach(player -> {
             Inventory inv = player.getPlayer().getInventory();
 
-            inv.setItem(8, book(player));
+            inv.setItem(3, book(player));
         });
     }
 
@@ -66,7 +66,7 @@ public class MapBook extends Addon implements Listener {
         GameManager gm = MapNodes.getCurrentGame();
 
         // Book
-        kit.getItems().set(8, book(e.getPlayer()));
+        kit.getItems().set(3, book(e.getPlayer()));
 
         // Map icon
         if (NodeFactory.get().getCurrentGame().getMatch().getIcon() != null) {
@@ -82,7 +82,7 @@ public class MapBook extends Addon implements Listener {
             short damage = view.getId();
             ItemStack item = ItemUtil.makeItem("map", 1, damage);
             item.setItemMeta(ItemUtil.addMeta(item, "{'display':{'name':'&3" + gm.getMap().getName() + "'}}"));
-            kit.getItems().set(7, item);
+            kit.getItems().set(2, item);
         }
     }
 }

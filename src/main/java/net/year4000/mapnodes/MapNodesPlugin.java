@@ -117,10 +117,8 @@ public class MapNodesPlugin extends BukkitPlugin implements Plugin {
         addons.builder()
             .add(Internals.class)
             .add(GameMenu.class)
-            .add(PlayerMenu.class)
             .add(GameServers.class)
             .add(MapBook.class)
-            .add(OpenInventories.class)
             .add(DeathMessages.class)
             .register();
     }

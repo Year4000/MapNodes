@@ -1,15 +1,25 @@
 package net.year4000.mapnodes.listeners;
 
 import net.year4000.mapnodes.api.MapNodes;
+import net.year4000.mapnodes.api.game.GameManager;
 import net.year4000.mapnodes.api.game.GamePlayer;
 import net.year4000.mapnodes.game.NodeGame;
+import net.year4000.mapnodes.game.NodePlayer;
+import net.year4000.mapnodes.utils.SchedulerUtil;
+import org.bukkit.Bukkit;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.*;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityInteractEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryEvent;
+import org.bukkit.event.inventory.InventoryInteractEvent;
 import org.bukkit.event.player.*;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
 
 public class SpectatorListener implements Listener {
     /** Stop the event if the player is not playing the game */
@@ -83,6 +93,68 @@ public class SpectatorListener implements Listener {
         if (!MapNodes.getCurrentGame().getPlayer(event.getPlayer()).isPlaying()) {
             event.getPlayer().setFireTicks(0);
             event.getPlayer().setFoodLevel(20);
+        }
+    }
+
+    // Open Player's Inventory //
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void playerDamage(EntityDamageEvent event) {
+        if (event.getEntity() instanceof Player) {
+            GamePlayer player = MapNodes.getCurrentGame().getPlayer((Player) event.getEntity());
+            ((NodePlayer) player).updateInventory();
+        }
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void playerDamage(InventoryInteractEvent event) {
+        if (event.getWhoClicked() instanceof Player) {
+            GamePlayer player = MapNodes.getCurrentGame().getPlayer((Player) event.getWhoClicked());
+            ((NodePlayer) player).updateInventory();
+        }
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void playerDamage(PlayerEvent event) {
+        GamePlayer player = MapNodes.getCurrentGame().getPlayer(event.getPlayer());
+        ((NodePlayer) player).updateInventory();
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void openInv(PlayerInteractEntityEvent event) {
+        GameManager gm = MapNodes.getCurrentGame();
+        GamePlayer gPlayer = gm.getPlayer(event.getPlayer());
+
+        if (gPlayer.isSpectator()) {
+            if (event.getRightClicked() instanceof Player) {
+                GamePlayer rightClicked = gm.getPlayer((Player) event.getRightClicked());
+
+                if (!rightClicked.isSpectator()) {
+                    gPlayer.getPlayer().openInventory(rightClicked.getInventory());
+                }
+            }
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void openInv(PlayerInteractEvent event) {
+        GameManager gm = MapNodes.getCurrentGame();
+        GamePlayer gPlayer = gm.getPlayer(event.getPlayer());
+
+        if (gPlayer.isSpectator() && event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+            Block block = event.getClickedBlock();
+
+            if (block.getState() instanceof InventoryHolder) {
+                SchedulerUtil.runSync(() -> {
+                    Inventory inv = ((InventoryHolder) block.getState()).getInventory();
+
+                    // Create a fake inventory so the chest don't really open
+                    Inventory fake = Bukkit.createInventory(null, inv.getSize(), inv.getTitle());
+                    fake.setContents(inv.getContents());
+
+                    gPlayer.getPlayer().openInventory(fake);
+                });
+            }
         }
     }
 }

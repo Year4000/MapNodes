@@ -17,9 +17,15 @@ import net.year4000.mapnodes.utils.SchedulerUtil;
 import net.year4000.utilities.bukkit.FunEffectsUtil;
 import net.year4000.utilities.bukkit.MessageUtil;
 import net.year4000.utilities.bukkit.bossbar.BossBar;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
@@ -45,6 +51,9 @@ public final class NodePlayer implements GamePlayer {
     private boolean spectator;
     private boolean playing;
     private boolean entering;
+
+    private static final int INV_SIZE = 45;
+    private Inventory inventory = Bukkit.createInventory(null, INV_SIZE, getPlayerColor());
 
     /** Constructs a game player */
     public NodePlayer(Player player) {
@@ -222,6 +231,66 @@ public final class NodePlayer implements GamePlayer {
                 playerTasks.addAll(join.run());
             }
         }
+
+        // Update player's inventory
+        inventory = Bukkit.createInventory(null, INV_SIZE, getPlayerColor());
+    }
+
+    /** Create an inventory of the player stats. */
+    public void updateInventory() {
+        ItemStack[] items = new ItemStack[INV_SIZE];
+        Player player = getPlayer();
+        PlayerInventory pinv = player.getInventory();
+
+        // Armor
+        items[0] = pinv.getHelmet();
+        items[1] = pinv.getChestplate();
+        items[2] = pinv.getLeggings();
+        items[3] = pinv.getBoots();
+
+        // Health and Food
+        items[8] = getHunger();
+        items[7] = getHealth();
+
+        // Items
+        for (int i = 0; i < 36; i++) {
+            // Hot Bar
+            if (i < 9) {
+                boolean empty = pinv.getItem(i) == null;
+                items[(45-9) + i] = empty ? new ItemStack(Material.AIR) : pinv.getItem(i);
+            }
+            // Backpack
+            else {
+                boolean empty = pinv.getItem(i) == null;
+                items[i] = empty ? new ItemStack(Material.AIR) : pinv.getItem(i);
+            }
+        }
+
+        inventory.setContents(items);
+    }
+
+    /** Get the heal for the player. */
+    private ItemStack getHealth() {
+        int health = (int) player.getHealth();
+
+        ItemStack level =  new ItemStack(Material.SPECKLED_MELON, health);
+        ItemMeta meta = level.getItemMeta();
+        meta.setDisplayName(MessageUtil.message(Msg.locale(player, "inv.health")));
+        level.setItemMeta(meta);
+
+        return level;
+    }
+
+    /** Get the hunger for the player. */
+    private ItemStack getHunger() {
+        int hunger = player.getFoodLevel();
+
+        ItemStack level =  new ItemStack(Material.COOKED_BEEF, hunger);
+        ItemMeta meta = level.getItemMeta();
+        meta.setDisplayName(MessageUtil.message(Msg.locale(player, "inv.hunger")));
+        level.setItemMeta(meta);
+
+        return level;
     }
 
     /** Send a message with out grabing the player's instance first */
