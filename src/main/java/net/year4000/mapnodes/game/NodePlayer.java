@@ -11,14 +11,13 @@ import net.year4000.mapnodes.api.game.GamePlayer;
 import net.year4000.mapnodes.api.game.GameTeam;
 import net.year4000.mapnodes.clocks.Clocker;
 import net.year4000.mapnodes.messages.Msg;
-import net.year4000.mapnodes.utils.MathUtil;
 import net.year4000.mapnodes.utils.Common;
+import net.year4000.mapnodes.utils.MathUtil;
 import net.year4000.mapnodes.utils.SchedulerUtil;
 import net.year4000.utilities.bukkit.FunEffectsUtil;
 import net.year4000.utilities.bukkit.MessageUtil;
 import net.year4000.utilities.bukkit.bossbar.BossBar;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -30,7 +29,10 @@ import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static net.year4000.mapnodes.utils.MathUtil.percent;

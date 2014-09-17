@@ -7,11 +7,10 @@ import lombok.NoArgsConstructor;
 import net.year4000.mapnodes.api.game.GameConfig;
 import net.year4000.mapnodes.exceptions.InvalidJsonException;
 import net.year4000.mapnodes.messages.Msg;
-import net.year4000.mapnodes.utils.*;
+import net.year4000.mapnodes.utils.Validator;
 import net.year4000.mapnodes.utils.typewrappers.LocationList;
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 
 import java.net.URL;

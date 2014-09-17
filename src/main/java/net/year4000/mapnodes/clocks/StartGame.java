@@ -1,17 +1,15 @@
 package net.year4000.mapnodes.clocks;
 
 import net.year4000.mapnodes.MapNodesPlugin;
-import net.year4000.mapnodes.Settings;
 import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.game.GameMap;
 import net.year4000.mapnodes.game.NodeGame;
 import net.year4000.mapnodes.game.NodeStage;
 import net.year4000.mapnodes.messages.Message;
 import net.year4000.mapnodes.messages.Msg;
-import net.year4000.mapnodes.utils.MathUtil;
 import net.year4000.mapnodes.utils.Common;
+import net.year4000.mapnodes.utils.MathUtil;
 import net.year4000.utilities.bukkit.FunEffectsUtil;
-import net.year4000.utilities.bukkit.MessageUtil;
 import net.year4000.utilities.bukkit.bossbar.BossBar;
 import org.bukkit.Sound;
 

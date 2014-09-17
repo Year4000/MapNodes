@@ -5,7 +5,6 @@ import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.listeners.ListenerBuilder;
 import net.year4000.mapnodes.messages.Msg;
 
-
 import java.util.*;
 
 public class AddonBuilder {

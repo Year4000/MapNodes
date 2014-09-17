@@ -1,9 +1,7 @@
 package net.year4000.mapnodes.game;
 
-import net.year4000.mapnodes.api.MapNodes;
 import org.bukkit.Bukkit;
 import org.bukkit.scoreboard.ScoreboardManager;
-import org.bukkit.scoreboard.Team;
 
 public final class ScoreboardFactory {
     public static final ScoreboardManager manager = Bukkit.getScoreboardManager();

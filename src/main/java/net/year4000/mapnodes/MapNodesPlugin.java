@@ -13,12 +13,12 @@ import net.year4000.mapnodes.commands.match.MatchBase;
 import net.year4000.mapnodes.commands.misc.MenuCommands;
 import net.year4000.mapnodes.commands.node.NodeBase;
 import net.year4000.mapnodes.game.Node;
-import net.year4000.mapnodes.game.WorldManager;
 import net.year4000.mapnodes.game.NodeModeFactory;
+import net.year4000.mapnodes.game.WorldManager;
 import net.year4000.mapnodes.game.regions.EventManager;
+import net.year4000.mapnodes.game.regions.RegionManager;
 import net.year4000.mapnodes.game.regions.events.*;
 import net.year4000.mapnodes.game.regions.types.*;
-import net.year4000.mapnodes.game.regions.RegionManager;
 import net.year4000.mapnodes.gamemodes.arrowtag.ArrowTag;
 import net.year4000.mapnodes.gamemodes.bomber.Bomber;
 import net.year4000.mapnodes.gamemodes.capture.Capture;
@@ -37,6 +37,7 @@ import net.year4000.utilities.bukkit.BukkitPlugin;
 import net.year4000.utilities.bukkit.MessageUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
+
 import java.util.List;
 
 @Getter

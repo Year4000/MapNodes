@@ -1,32 +1,6 @@
 package net.year4000.mapnodes.listeners;
 
-import net.year4000.mapnodes.api.MapNodes;
-import net.year4000.mapnodes.api.game.GameRegion;
-import net.year4000.mapnodes.game.NodeRegion;
-import net.year4000.mapnodes.game.regions.types.Point;
-import net.year4000.mapnodes.utils.ChestUtil;
-import net.year4000.mapnodes.utils.SchedulerUtil;
-import org.bukkit.Material;
-import org.bukkit.block.Chest;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.TNTPrimed;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.*;
-import org.bukkit.event.entity.CreatureSpawnEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityExplodeEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.util.Vector;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 
 public class RegionListener implements Listener {
 /*    *//** Disable movement based on regions *//*

@@ -5,7 +5,6 @@ import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
 import net.minecraft.util.org.apache.commons.io.FileUtils;
 import net.year4000.mapnodes.MapNodesPlugin;
-import net.year4000.mapnodes.Settings;
 import net.year4000.mapnodes.api.game.GameConfig;
 import net.year4000.mapnodes.exceptions.WorldLoadException;
 import net.year4000.mapnodes.map.MapFolder;
@@ -16,8 +15,6 @@ import org.bukkit.block.Block;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Date;
 
 import static com.google.common.base.Preconditions.checkArgument;
 

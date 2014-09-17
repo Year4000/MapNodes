@@ -1,7 +1,6 @@
 package net.year4000.mapnodes.commands.mapnodes;
 
 import net.year4000.mapnodes.MapNodesPlugin;
-import net.year4000.mapnodes.Settings;
 import net.year4000.mapnodes.addons.AddonInfo;
 import net.year4000.mapnodes.messages.MessageManager;
 import net.year4000.mapnodes.messages.Msg;

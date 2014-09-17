@@ -2,9 +2,9 @@ package net.year4000.mapnodes.commands.match;
 
 import com.google.common.annotations.Beta;
 import net.year4000.mapnodes.api.MapNodes;
+import net.year4000.mapnodes.api.events.game.GameWinEvent;
 import net.year4000.mapnodes.api.events.player.GamePlayerWinEvent;
 import net.year4000.mapnodes.api.events.team.GameTeamWinEvent;
-import net.year4000.mapnodes.api.events.game.GameWinEvent;
 import net.year4000.mapnodes.api.game.GamePlayer;
 import net.year4000.mapnodes.api.game.GameTeam;
 import net.year4000.mapnodes.clocks.StartGame;

@@ -1,6 +1,8 @@
 package net.year4000.mapnodes.api.events.player;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import net.year4000.mapnodes.api.events.EventPlus;
 import net.year4000.mapnodes.api.game.GamePlayer;
 import org.bukkit.Location;
