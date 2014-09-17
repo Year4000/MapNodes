@@ -21,6 +21,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
+import java.rmi.UnexpectedException;
 
 public class MatchManager implements Validator {
     private final String name;
@@ -79,8 +80,11 @@ public class MatchManager implements Validator {
     }
 
     /** Register the map with world spawns */
-    public void register() {
-        // todo check if the map still exists, as we are re pulling the data
+    public void register() throws UnexpectedException {
+        if (!mapFile.exists()) {
+            throw new UnexpectedException("Map lost in transient");
+        }
+
         try {
             game = GsonUtil.createGson(node.getWorld().getWorld()).fromJson(loadMap(), NodeGame.class);
 

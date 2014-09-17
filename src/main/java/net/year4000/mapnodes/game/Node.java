@@ -13,6 +13,8 @@ import net.year4000.mapnodes.utils.SchedulerUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import java.rmi.UnexpectedException;
+
 @Getter
 public class Node {
     /** The node's id */
@@ -37,12 +39,11 @@ public class Node {
     public void register() {
         try {
             initWorld();
-        } catch (WorldLoadException e) {
+            match.register();
+        } catch (WorldLoadException | UnexpectedException e) {
             MapNodesPlugin.debug(e.getMessage());
             NodeFactory.get().loadNextQueued();
         }
-
-        match.register();
     }
 
     /** Unregister this node */
