@@ -3,10 +3,15 @@ package net.year4000.mapnodes;
 import lombok.Getter;
 import net.year4000.mapnodes.addons.Addons;
 import net.year4000.mapnodes.addons.modules.misc.DeathMessages;
-import net.year4000.mapnodes.addons.modules.mapnodes.Internals;
 import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.Plugin;
 import net.year4000.mapnodes.api.game.GameManager;
+import net.year4000.mapnodes.commands.CommandBuilder;
+import net.year4000.mapnodes.commands.mapnodes.MapNodesBase;
+import net.year4000.mapnodes.commands.maps.MapCommands;
+import net.year4000.mapnodes.commands.match.MatchBase;
+import net.year4000.mapnodes.commands.misc.MenuCommands;
+import net.year4000.mapnodes.commands.node.NodeBase;
 import net.year4000.mapnodes.game.Node;
 import net.year4000.mapnodes.game.WorldManager;
 import net.year4000.mapnodes.game.NodeModeFactory;
@@ -24,6 +29,7 @@ import net.year4000.mapnodes.gamemodes.juggernaut.Juggernaut;
 import net.year4000.mapnodes.gamemodes.magewars.MageWars;
 import net.year4000.mapnodes.gamemodes.paintball.PaintBall;
 import net.year4000.mapnodes.gamemodes.skywars.Skywars;
+import net.year4000.mapnodes.listeners.*;
 import net.year4000.mapnodes.map.MapFactory;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.utilities.LogUtil;
@@ -111,10 +117,26 @@ public class MapNodesPlugin extends BukkitPlugin implements Plugin {
             node.getMatch().getGame().getMap().getVersion()
         )));
 
+        // Register built in listeners
+        new ListenerBuilder()
+            .add(GameListener.class)
+            .add(MapNodesListener.class)
+            .add(WorldListener.class)
+            .add(SpectatorListener.class)
+            .register();
+
+        // Register built in commands
+        new CommandBuilder()
+            .add(MapNodesBase.class)
+            .add(MapCommands.class)
+            .add(MatchBase.class)
+            .add(MenuCommands.class)
+            .add(NodeBase.class)
+            .register();
+
         // Addons (The internal system that loads addons)
         // The order is the dependency list
         addons.builder()
-            .add(Internals.class)
             .add(DeathMessages.class)
             .register();
     }
