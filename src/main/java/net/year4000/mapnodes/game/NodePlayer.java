@@ -55,7 +55,7 @@ public final class NodePlayer implements GamePlayer {
     private boolean entering;
 
     private static final int INV_SIZE = 45;
-    private Inventory inventory = Bukkit.createInventory(null, INV_SIZE, getPlayerColor());
+    private Inventory inventory;
 
     /** Constructs a game player */
     public NodePlayer(Player player) {
@@ -120,6 +120,7 @@ public final class NodePlayer implements GamePlayer {
 
         // scoreboard
         player.setScoreboard(scoreboard);
+        inventory = Bukkit.createInventory(null, INV_SIZE, getPlayerColor());
 
         GamePlayerJoinEvent join = new GamePlayerJoinEvent(this) {{
             this.setSpawn(((NodeGame) MapNodes.getCurrentGame()).getConfig().getSafeRandomSpawn());

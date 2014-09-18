@@ -2,6 +2,7 @@ package net.year4000.mapnodes.utils;
 
 import net.year4000.utilities.ChatColor;
 import net.year4000.utilities.bukkit.MessageUtil;
+import org.bukkit.Location;
 
 public final class Common {
     private Common() {
@@ -89,5 +90,16 @@ public final class Common {
         }
 
         return shortMsg + (length > size ? "..." : "");
+    }
+
+    /** Center the location and maintain pitch and yaw */
+    public static Location center(Location location) {
+        Location centered = location.clone();
+
+        centered.setX(location.getBlockX() + 0.5);
+        centered.setY(location.getBlockY() + 0.5);
+        centered.setZ(location.getBlockZ() + 0.5);
+
+        return centered;
     }
 }

@@ -63,6 +63,7 @@ public abstract class Clocker {
         public void run() {
             if (index == 0) {
                 runLast(index);
+                task.cancel();
             }
             else if (index == time) {
                 runFirst(index);

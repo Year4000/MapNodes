@@ -211,7 +211,7 @@ public class SpectatorListener implements Listener {
         // Book
         kit.getItems().set(3, book(e.getPlayer()));
         // Servers
-        kit.getItems().set(4, ItemUtil.makeItem("nether_star", "{'display':{'name':'&aGame Servers'}}"));
+        kit.getItems().set(8, ItemUtil.makeItem("nether_star", "{'display':{'name':'&aGame Servers'}}"));
         // Game Menu
         kit.getItems().set(0, ItemUtil.makeItem("eye_of_ender", "{'display':{'name':'&6Game Menu'}}"));
 

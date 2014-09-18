@@ -6,6 +6,7 @@ import net.year4000.mapnodes.api.game.GameManager;
 import net.year4000.mapnodes.api.game.GamePlayer;
 import net.year4000.mapnodes.game.MatchManager;
 import net.year4000.mapnodes.game.NodeGame;
+import net.year4000.mapnodes.utils.Common;
 import net.year4000.mapnodes.utils.SchedulerUtil;
 import net.year4000.utilities.bukkit.FunEffectsUtil;
 import net.year4000.utilities.bukkit.LocationUtil;
@@ -21,13 +22,13 @@ import org.bukkit.event.player.*;
 import org.bukkit.event.server.ServerListPingEvent;
 
 public final class MapNodesListener implements Listener {
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onJoin(PlayerJoinEvent event) {
         event.setJoinMessage(null);
         ((NodeGame) MapNodes.getCurrentGame()).join(event.getPlayer());
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onQuit(PlayerQuitEvent event) {
         event.setQuitMessage(null);
         ((NodeGame) MapNodes.getCurrentGame()).quit(event.getPlayer());
@@ -35,7 +36,7 @@ public final class MapNodesListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onRespawn(PlayerRespawnEvent event) {
-        event.setRespawnLocation(LocationUtil.center(event.getRespawnLocation().clone()));
+        event.setRespawnLocation(Common.center(event.getRespawnLocation()));
 
         MapNodes.getCurrentGame().getPlayer(event.getPlayer()).getPlayerTasks().add(SchedulerUtil.runSync(() -> {
             FunEffectsUtil.playSound(event.getPlayer(), Sound.ENDERMAN_TELEPORT);
@@ -47,7 +48,7 @@ public final class MapNodesListener implements Listener {
     public void onTeleport(PlayerTeleportEvent event) {
         if (event.getCause() != PlayerTeleportEvent.TeleportCause.PLUGIN) return;
 
-        event.setTo(LocationUtil.center(event.getTo().clone()));
+        event.setTo(Common.center(event.getTo()));
 
         MapNodes.getCurrentGame().getPlayer(event.getPlayer()).getPlayerTasks().add(SchedulerUtil.runSync(() -> {
             FunEffectsUtil.playSound(event.getPlayer(), Sound.ENDERMAN_TELEPORT);
