@@ -35,9 +35,15 @@ import net.year4000.mapnodes.messages.Msg;
 import net.year4000.utilities.LogUtil;
 import net.year4000.utilities.bukkit.BukkitPlugin;
 import net.year4000.utilities.bukkit.MessageUtil;
+import net.year4000.utilities.bukkit.commands.*;
+import net.year4000.utilities.bukkit.locale.MessageLocale;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 @Getter
@@ -173,5 +179,50 @@ public class MapNodesPlugin extends BukkitPlugin implements Plugin {
     @Override
     public World getCurrentWorld() {
         return NodeFactory.get().getCurrentGame().getWorld().getWorld();
+    }
+
+    // TEMP UNTIL UTILITIES UPDATE //
+
+    private final BukkitCommandsManager commands = new BukkitCommandsManager();
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public boolean onCommand(CommandSender sender, Command cmd, String commandName, String[] args) {
+        List<String> msg = new ArrayList<>();
+
+        MessageLocale locale = new MessageLocale(sender);
+
+        try {
+            commands.execute(cmd.getName(), args, sender, sender);
+        } catch (CommandPermissionsException e) {
+            msg.add(locale.get("error.cmd.permission"));
+        } catch (MissingNestedCommandException e) {
+            msg.add(locale.get("error.cmd.usage", e.getUsage()));
+        } catch (CommandUsageException e) {
+            msg.add(ChatColor.RED + e.getMessage());
+            msg.add(locale.get("error.cmd.usage", e.getUsage()));
+        } catch (WrappedCommandException e) {
+            if (e.getCause() instanceof NumberFormatException) {
+                msg.add(locale.get("error.cmd.number"));
+            }
+            else {
+                msg.add(locale.get("error.cmd.error"));
+                e.printStackTrace();
+            }
+        } catch (CommandException e) {
+            msg.add(ChatColor.RED + e.getMessage());
+        } finally {
+            Iterator<String> line = msg.listIterator();
+
+            if (line.hasNext()) {
+                sender.sendMessage(MessageUtil.message(" &7[&e!&7] &e") + line.next());
+
+                while (line.hasNext()) {
+                    sender.sendMessage(line.next());
+                }
+            }
+        }
+
+        return true;
     }
 }
