@@ -165,7 +165,7 @@ public class NodeKit implements GameKit, Validator {
     }
 
     /** Immortal starter kit */
-    public static List<BukkitTask> immortal(Player player) {
+    public static BukkitTask immortal(Player player) {
         Clocker immortal = new Clocker(MathUtil.ticks(10)) {
             Set<PotionEffectType> types = ImmutableSet.of(
                 PotionEffectType.DAMAGE_RESISTANCE,

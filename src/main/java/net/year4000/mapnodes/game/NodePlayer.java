@@ -104,7 +104,7 @@ public final class NodePlayer implements GamePlayer {
 
         // God buffer mode
         if (start.isImmortal()) {
-            playerTasks.addAll(NodeKit.immortal(player));
+            playerTasks.add(NodeKit.immortal(player));
         }
 
         // game start message
@@ -230,7 +230,7 @@ public final class NodePlayer implements GamePlayer {
                         ((NodePlayer) gamePlayer).start();
                     }
                 };
-                playerTasks.addAll(join.run());
+                playerTasks.add(join.run());
             }
         }
 

@@ -15,8 +15,7 @@ public abstract class Clocker {
 
     /** Run a clock for x amount of time. */
     public Clocker(int time) {
-        this.time = time;
-        this.offset = 0;
+        this(time, 0);
     }
 
     /** Run a clock for x amount of time after x amount of time. */
@@ -25,13 +24,17 @@ public abstract class Clocker {
         this.offset = offset;
     }
 
-    public List<BukkitTask> run() {
-        List<BukkitTask> tasks = new ArrayList<>();
+    public BukkitTask run() {
+        Clock clock = new Clock(time);
+        clock.task = SchedulerUtil.repeatSync(clock, offset);
+
+        return clock.task;
+/*        List<BukkitTask> tasks = new ArrayList<>();
             for (int i = time; i >= 0; i--) {
                 tasks.add(SchedulerUtil.runSync(new Clock(i), offset));
                 offset++;
             }
-        return tasks;
+        return tasks;*/
     }
 
     /** Simple math formula to convert ticks to secs. */
@@ -50,6 +53,7 @@ public abstract class Clocker {
 
     public class Clock implements Runnable {
         private int index;
+        public BukkitTask task;
 
         protected Clock(int index) {
             this.index = index;
@@ -66,6 +70,8 @@ public abstract class Clocker {
             else {
                 runTock(index);
             }
+
+            index--;
         }
     }
 }

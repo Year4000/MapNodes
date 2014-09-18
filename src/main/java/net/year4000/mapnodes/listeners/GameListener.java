@@ -22,7 +22,7 @@ public final class GameListener implements Listener {
             ((NodeKit) player.getTeam().getKit()).giveKit(player);
 
             // God buffer mode
-            player.getPlayerTasks().addAll(NodeKit.immortal(event.getPlayer()));
+            player.getPlayerTasks().add(NodeKit.immortal(event.getPlayer()));
         }
     }
 
