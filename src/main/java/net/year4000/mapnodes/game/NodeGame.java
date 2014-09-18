@@ -17,13 +17,24 @@ import net.year4000.mapnodes.api.game.modes.GameModeConfig;
 import net.year4000.mapnodes.clocks.NextNode;
 import net.year4000.mapnodes.clocks.RestartServer;
 import net.year4000.mapnodes.exceptions.InvalidJsonException;
+import net.year4000.mapnodes.game.regions.Region;
 import net.year4000.mapnodes.game.regions.RegionEvents;
+import net.year4000.mapnodes.game.system.Spectator;
 import net.year4000.mapnodes.messages.Message;
+import net.year4000.mapnodes.messages.MessageManager;
 import net.year4000.mapnodes.messages.Msg;
+import net.year4000.mapnodes.utils.Common;
 import net.year4000.mapnodes.utils.SchedulerUtil;
 import net.year4000.mapnodes.utils.Validator;
 import net.year4000.mapnodes.utils.typewrappers.GameSet;
+import net.year4000.utilities.bukkit.BukkitUtil;
+import net.year4000.utilities.bukkit.ItemUtil;
+import net.year4000.utilities.bukkit.MessageUtil;
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitTask;
 
 import javax.annotation.Nullable;
@@ -115,6 +126,90 @@ public final class NodeGame implements GameManager, Validator {
     private transient Map<UUID, GamePlayer> players = new ConcurrentHashMap<>();
     private transient NodeStage stage = NodeStage.WAITING;
     private transient BukkitTask gameClock;
+    private transient Map<Locale, Inventory> teamChooser = new HashMap<>();
+
+    /** Init things that happen before load is playable */
+    public void preGameInit() {
+        for (Locale locale : MessageManager.get().getLocales().keySet()) {
+            teamChooser.put(locale, createTeamChooserMenu(locale));
+        }
+
+        // Run heavy resource tasks
+        regions.values().parallelStream().forEach(region -> region.getZoneSet().forEach(Region::getPoints));
+    }
+
+    /** Create the menu in locale */
+    private Inventory createTeamChooserMenu(Locale locale) {
+        Inventory inv = Bukkit.createInventory(null, BukkitUtil.invBase(teams.size()), Msg.locale(locale.toString(), "team.menu.title"));
+        updateTeamChooserMenu(locale, inv);
+        return inv;
+    }
+
+    /** Update the team chooser menu for all locales */
+    public void updateTeamChooserMenu() {
+        teamChooser.forEach(this::updateTeamChooserMenu);
+    }
+
+    /** Update the team chooser when a player join a new team */
+    private void updateTeamChooserMenu(Locale locale, Inventory inv) {
+        ItemStack[] items = new ItemStack[BukkitUtil.invBase(this.teams.size())];
+        ItemStack rand = new ItemStack(Material.NETHER_STAR);
+        int teams = 1;
+
+        rand.setItemMeta(ItemUtil.addMeta(rand, String.format(
+            "{display:{name:\"%s\",lore:[\"%s&7/&6%s\",\"%s\"]}}",
+            Msg.locale(locale.toString(), "team.menu.join.random"),
+            Common.colorCapacity((int) getPlaying().count(), getMaxPlayers()),
+            getMaxPlayers(),
+            Msg.locale(locale.toString(), "team.menu.join")
+        )));
+        items[0] = rand;
+
+        for (GameTeam team : this.teams.values()) {
+            int position = team instanceof Spectator ? BukkitUtil.invBase(this.teams.size()) - 1 : teams;
+            items[position] = ((NodeTeam) team).getTeamIcon(locale);
+            teams++;
+        }
+
+        SchedulerUtil.runSync(() -> inv.setContents(items));
+    }
+
+    /** Open the menu if they can */
+    public void openTeamChooserMenu(GamePlayer player) {
+        Locale locale = new Locale(player.getPlayer().getLocale());
+        Inventory menu = MessageManager.get().isLocale(player.getPlayer().getLocale()) ? teamChooser.get(locale) : teamChooser.get(new Locale(Message.DEFAULT_LOCALE));
+
+        if (!stage.isEndGame()) {
+            player.getPlayer().openInventory(menu);
+        }
+        else {
+            player.sendMessage(Msg.NOTICE + Msg.locale(player, "team.menu.not_now"));
+        }
+    }
+
+    public GameTeam getTeam(Locale locale, String name) {
+        // Random get lowest team
+        if (name.equalsIgnoreCase(Msg.locale(locale.toString(), "team.menu.join.random"))) {
+            return teams.values().stream()
+                .filter(team -> !(team instanceof Spectator))
+                .sorted((left, right) -> left.getPlayers().size() < right.getPlayers().size() ? -1 : 1)
+                .collect(Collectors.toList())
+                .get(0);
+        }
+        // Get by name
+        else {
+            List<NodeTeam> stream = teams.values().stream()
+                .filter(team -> team.getDisplayName().equalsIgnoreCase(name))
+                .collect(Collectors.toList());
+
+            if (stream.size() == 0) {
+                return getTeam(locale, Msg.locale(locale.toString(), "team.menu.join.random"));
+            }
+            else {
+                return stream.get(0);
+            }
+        }
+    }
 
     /** Get the locale wanted or try to default to en_US or use any locale */
     public String defaultLocale(String key) {

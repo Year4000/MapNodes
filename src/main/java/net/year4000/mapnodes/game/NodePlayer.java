@@ -135,7 +135,7 @@ public final class NodePlayer implements GamePlayer {
 
             // start menu
             if (join.isMenu()) {
-                // TODO open inventory
+                ((NodeGame) MapNodes.getCurrentGame()).openTeamChooserMenu(this);
             }
         }, 20L));
     }
@@ -237,6 +237,8 @@ public final class NodePlayer implements GamePlayer {
 
         // Update player's inventory
         inventory = Bukkit.createInventory(null, INV_SIZE, getPlayerColor());
+        // Update team menu
+        ((NodeGame) MapNodes.getCurrentGame()).updateTeamChooserMenu();
     }
 
     /** Create an inventory of the player stats. */

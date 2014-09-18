@@ -1,11 +1,13 @@
 package net.year4000.mapnodes.messages;
 
 import net.year4000.mapnodes.api.game.GamePlayer;
+import net.year4000.utilities.bukkit.MessageUtil;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class Msg {
     private static System util = new System();
+    public static String NOTICE = MessageUtil.message(" &7[&e!&7] &e");
 
     /** Load the git log key */
     public static String git(String key) {

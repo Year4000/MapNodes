@@ -9,7 +9,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-public class SpectatorKit extends NodeKit {
+public class SpectatorKit extends NodeKit implements Spectator {
     public SpectatorKit() {
         setFly(true);
 

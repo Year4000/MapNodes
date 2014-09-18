@@ -6,6 +6,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.*;
+import org.bukkit.event.entity.CreatureSpawnEvent;
 
 public final class WorldListener implements Listener {
     /** Return true | false if the map is running. */
@@ -86,5 +87,10 @@ public final class WorldListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onMapPlaying(EntityBlockFormEvent event) {
         event.setCancelled(isMapPlaying(event.getBlock().getWorld()));
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    public void onMapPlaying(CreatureSpawnEvent event) {
+        event.setCancelled(isMapPlaying(event.getEntity().getWorld()));
     }
 }

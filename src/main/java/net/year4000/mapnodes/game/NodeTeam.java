@@ -12,17 +12,21 @@ import net.year4000.mapnodes.api.game.GameKit;
 import net.year4000.mapnodes.api.game.GamePlayer;
 import net.year4000.mapnodes.api.game.GameTeam;
 import net.year4000.mapnodes.exceptions.InvalidJsonException;
+import net.year4000.mapnodes.game.system.Spectator;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.Common;
 import net.year4000.mapnodes.utils.Validator;
 import net.year4000.mapnodes.utils.typewrappers.LocationList;
 import net.year4000.utilities.bukkit.BukkitUtil;
+import net.year4000.utilities.bukkit.ItemUtil;
 import net.year4000.utilities.bukkit.MessageUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
 
@@ -215,5 +219,31 @@ public class NodeTeam implements GameTeam, Validator {
         }
 
         return getRandomSpawn();
+    }
+
+    /** Get the icon for this team */
+    public ItemStack getTeamIcon(Locale locale) {
+        ItemStack i = new ItemStack(Material.LEATHER_CHESTPLATE);
+
+        if (this instanceof Spectator) {
+            i.setItemMeta(ItemUtil.addMeta(i, String.format(
+                "{display: {name: '%s', color: '%s', lore: ['%s']}}",
+                getDisplayName(),
+                getColor().name().toLowerCase(),
+                Msg.locale(locale.toString(), "team.menu.join")
+            )));
+        }
+        else {
+            i.setItemMeta(ItemUtil.addMeta(i, String.format(
+                "{display: {name: '%s', color: '%s', lore: ['%s&7/&6%s', '%s']}}",
+                getDisplayName(),
+                getColor().name().toLowerCase(),
+                Common.colorCapacity(players.size(), size),
+                size,
+                Msg.locale(locale.toString(), "team.menu.join")
+            )));
+        }
+
+        return  i;
     }
 }
