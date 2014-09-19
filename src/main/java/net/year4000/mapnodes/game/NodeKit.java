@@ -132,11 +132,11 @@ public class NodeKit implements GameKit, Validator {
         reset(player);
 
         player.getPlayerTasks().add(SchedulerUtil.runSync(() -> {
-            rawPlayer.getInventory().setContents(items.toArray(new ItemStack[items.size()]));
+            rawPlayer.getInventory().setContents(this.items.toArray(new ItemStack[this.items.size()]));
 
             // Color the armor
-            List<ItemStack> items = new ArrayList<>(armor);
-            items.forEach(item -> {
+            List<ItemStack> items = new ArrayList<>();
+            armor.forEach(item -> {
                 item = item.clone();
                 if (item.getItemMeta() instanceof LeatherArmorMeta) {
                     LeatherArmorMeta meta = (LeatherArmorMeta) item.getItemMeta();
@@ -146,6 +146,7 @@ public class NodeKit implements GameKit, Validator {
                         meta.setColor(player.getTeam().getRawColor());
                         item.setItemMeta(meta);
                     }
+                    items.add(item);
                 }
             });
 
