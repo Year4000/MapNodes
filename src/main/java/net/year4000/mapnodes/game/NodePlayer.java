@@ -83,7 +83,6 @@ public final class NodePlayer implements GamePlayer {
         start.call();
 
         game.getScoreboardFactory().setTeam(this, (NodeTeam) start.getTeam());
-        //scoreboard.getTeam(start.getTeam().getName()).addPlayer(player);
 
         // team start
         ((NodeTeam) start.getTeam()).start(this);
@@ -103,6 +102,11 @@ public final class NodePlayer implements GamePlayer {
         if (start.getMessage() != null) {
             start.getMessage().forEach(this::sendMessage);
         }
+
+        // Player Settings
+        player.setCollidesWithEntities(true);
+        updateHiddenSpectator();
+        updateInventory();
     }
 
     public void join() {
@@ -142,7 +146,6 @@ public final class NodePlayer implements GamePlayer {
         BossBar.removeBar(player);
         // Update team menu
         game.updateTeamChooserMenu();
-        game.getScoreboardFactory().purgeScoreboard(this);
     }
 
     public void joinTeam(GameTeam gameTeam) {
@@ -168,14 +171,13 @@ public final class NodePlayer implements GamePlayer {
 
             // Auto join spectator team
             game.getScoreboardFactory().setTeam(this, team);
-            //scoreboard.getTeam(team.getName()).addPlayer(player);
 
             // Kit
             ((NodeKit) joinSpectator.getKit()).giveKit(this);
 
             // Spectator Settings
             player.setCollidesWithEntities(false);
-            //updateHiddenSpectator();
+            updateHiddenSpectator();
         }
         // join new team
         else {
@@ -203,10 +205,6 @@ public final class NodePlayer implements GamePlayer {
             entering = true;
             team = (NodeTeam) joinTeam.getTo();
             team.join(this, joinTeam.isDisplay());
-
-            // Player Settings
-            player.setCollidesWithEntities(true);
-            //updateHiddenSpectator();
 
             if (joinTeam.isJoining()) {
                 GamePlayer gamePlayer = this;
@@ -258,7 +256,7 @@ public final class NodePlayer implements GamePlayer {
     public void updateHiddenSpectator() {
         game.getPlayers().parallel().forEach(gPlayer -> {
             game.getPlayers().parallel().forEach(player -> {
-                if (!player.isPlaying() && !gPlayer.isPlaying()) {
+                if ((player.isSpectator() || player.isEntering()) && gPlayer.isPlaying()) {
                     gPlayer.getPlayer().hidePlayer(player.getPlayer());
                 }
                 else {

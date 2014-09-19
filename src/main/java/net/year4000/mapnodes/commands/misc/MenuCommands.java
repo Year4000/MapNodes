@@ -50,12 +50,9 @@ public final class MenuCommands {
         desc = "Spectate the game."
     )
     public static void spectator(CommandContext args, CommandSender sender) throws CommandException {
-        NodeGame ng = (NodeGame) MapNodes.getCurrentGame();
-
         try {
-            ng.quit((Player)sender);
-            ng.join((Player)sender);
-
+            // todo check if things before setting to spectator
+            ((NodePlayer) MapNodes.getCurrentGame().getPlayer((Player) sender)).join();
         } catch (Exception e) {
             throw new CommandException(e.getMessage());
         }

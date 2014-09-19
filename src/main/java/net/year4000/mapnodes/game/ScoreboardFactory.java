@@ -8,14 +8,10 @@ import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
 import org.bukkit.scoreboard.Team;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
 @AllArgsConstructor
 public class ScoreboardFactory {
     private static final ScoreboardManager manager = Bukkit.getScoreboardManager();
     private final NodeGame game;
-    private final Map<NodePlayer, NodeTeam> playersCurrentState = new ConcurrentHashMap<>();
 
     /** Create a scoreboard for the player */
     public Scoreboard createScoreboard(NodePlayer player) {
@@ -45,22 +41,9 @@ public class ScoreboardFactory {
             ((NodePlayer) player).getScoreboard().getTeams().stream()
                 .filter(team -> team.getName().equals(nodeTeam.getName()))
                 .forEach(team -> team.addPlayer(nodePlayer.getPlayer()));
+
+            nodePlayer.getScoreboard().getTeam(player.getTeam().getName()).addPlayer(player.getPlayer());
+
         });
-
-        // Set player to know about other players
-        if (!playersCurrentState.containsKey(nodePlayer)) {
-            SchedulerUtil.runSync(() -> playersCurrentState.forEach((gamePlayer, gameTeam) -> {
-                if (gamePlayer != nodePlayer) {
-                    nodePlayer.getScoreboard().getTeam(gameTeam.getName()).addPlayer(gamePlayer.getPlayer());
-                }
-            }), 10L);
-        }
-
-        playersCurrentState.put(nodePlayer, nodeTeam);
-    }
-
-    /** Remove player's instance to help with ghost players */
-    public void purgeScoreboard(NodePlayer player) {
-        playersCurrentState.remove(player);
     }
 }
