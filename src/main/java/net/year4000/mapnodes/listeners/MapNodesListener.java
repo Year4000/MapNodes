@@ -1,12 +1,20 @@
 package net.year4000.mapnodes.listeners;
 
+import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.NodeFactory;
 import net.year4000.mapnodes.api.MapNodes;
+import net.year4000.mapnodes.api.events.game.GameClockEvent;
+import net.year4000.mapnodes.api.events.player.GamePlayerJoinTeamEvent;
 import net.year4000.mapnodes.api.game.GameManager;
 import net.year4000.mapnodes.api.game.GamePlayer;
+import net.year4000.mapnodes.clocks.NextNode;
+import net.year4000.mapnodes.clocks.StartGame;
 import net.year4000.mapnodes.game.MatchManager;
 import net.year4000.mapnodes.game.NodeGame;
+import net.year4000.mapnodes.game.system.Spectator;
+import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.Common;
+import net.year4000.mapnodes.utils.MathUtil;
 import net.year4000.mapnodes.utils.SchedulerUtil;
 import net.year4000.utilities.bukkit.FunEffectsUtil;
 import net.year4000.utilities.bukkit.LocationUtil;
@@ -89,5 +97,47 @@ public final class MapNodesListener implements Listener {
         loc.setPitch(0);
 
         player.setCompassTarget(loc);
+    }
+
+    /** No players stop the game unless in debug mode */
+    @EventHandler
+    public void onClock(GameClockEvent event) {
+        NodeGame game = ((NodeGame) MapNodes.getCurrentGame());
+
+        if (game.getPlayers().count() == 0L && !MapNodesPlugin.getInst().getLog().isDebug()) {
+            game.stop();
+        }
+    }
+
+    int lastSize = 0;
+
+    /** Start the game and when another player join reduce the time */
+    @EventHandler
+    public void onClock(GamePlayerJoinTeamEvent event) {
+        if (event.getTo() instanceof Spectator) return;
+        if (!MapNodes.getCurrentGame().getStage().isPreGame()) return;
+
+        SchedulerUtil.runAsync(() -> {
+            NodeGame game = ((NodeGame) MapNodes.getCurrentGame());
+            int size = (int) game.getTeams().values().stream().filter(team -> !(team instanceof Spectator)).filter(team -> team.getPlayers().size() > 0).count();
+            boolean biggerThanLast = lastSize < size;
+            lastSize = size;
+            boolean correctSize = size > game.getTeams().size();
+            //boolean correctSize = size > 0;
+
+            if (correctSize) {
+                if (game.getStage().isStarting()) {
+                    if (game.getStartClock().getClock().getIndex() > MathUtil.ticks(30) && biggerThanLast) {
+                        game.getStartClock().reduceTime(10); // 10 secs
+
+                        // Announcer to players that time was reduce
+                        game.getEntering().forEach(p -> p.sendMessage(Msg.locale(p, "clocks.start.reduce")));
+                    }
+                } else {
+                    new StartGame(240).run(); // 2 mins
+                }
+            }
+        }, ((NodeGame) MapNodes.getCurrentGame()).getStage().isStarting() ? 0L : 40L);
+
     }
 }

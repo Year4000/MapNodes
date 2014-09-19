@@ -10,7 +10,7 @@ public final class Common {
     }
 
     /** Color numbers based on its percent */
-    private static boolean toggle = false;
+    private static int toggle = 0;
 
     public static String colorNumber(int current, int total) {
         double percent = ((double)current / (double)total) * 100;
@@ -20,8 +20,8 @@ public final class Common {
 
         // danger dark red
         if (percent < 10) {
-            toggle = !toggle;
-            color = toggle ? ChatColor.DARK_RED : ChatColor.RED;
+            toggle++;
+            color = toggle % 5 == 0 ? ChatColor.DARK_RED : ChatColor.RED;
         }
         // danger red
         else if (percent < 20) {

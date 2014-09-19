@@ -200,7 +200,7 @@ public class NodeTeam implements GameTeam, Validator {
 
     /** Get a random spawn, it may not be safe for a player */
     public Location getRandomSpawn() {
-        return  spawns.get(new Random().nextInt(spawns.size()));
+        return spawns == null || spawns.size() == 0 ? MapNodes.getCurrentWorld().getSpawnLocation() : spawns.get(new Random().nextInt(spawns.size()));
     }
 
     /** Try and get a safe random spawn or end with a random spawn that may not be safe */

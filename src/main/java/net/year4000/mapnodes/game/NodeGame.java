@@ -6,6 +6,7 @@ import com.google.gson.annotations.Since;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import net.year4000.mapnodes.NodeFactory;
+import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.events.game.GameClockEvent;
 import net.year4000.mapnodes.api.events.game.GameStartEvent;
 import net.year4000.mapnodes.api.events.game.GameStopEvent;
@@ -16,6 +17,7 @@ import net.year4000.mapnodes.api.game.modes.GameMode;
 import net.year4000.mapnodes.api.game.modes.GameModeConfig;
 import net.year4000.mapnodes.clocks.NextNode;
 import net.year4000.mapnodes.clocks.RestartServer;
+import net.year4000.mapnodes.clocks.StartGame;
 import net.year4000.mapnodes.exceptions.InvalidJsonException;
 import net.year4000.mapnodes.game.regions.Region;
 import net.year4000.mapnodes.game.regions.RegionEvents;
@@ -35,10 +37,17 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.map.MapCanvas;
+import org.bukkit.map.MapPalette;
+import org.bukkit.map.MapRenderer;
+import org.bukkit.map.MapView;
 import org.bukkit.scheduler.BukkitTask;
+import org.bukkit.util.CachedServerIcon;
 
 import javax.annotation.Nullable;
+import java.awt.*;
 import java.util.*;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -126,6 +135,7 @@ public final class NodeGame implements GameManager, Validator {
     private transient Map<UUID, GamePlayer> players = new ConcurrentHashMap<>();
     private transient NodeStage stage = NodeStage.WAITING;
     private transient BukkitTask gameClock;
+    private transient StartGame startClock;
     private transient Map<Locale, Inventory> teamChooser = new HashMap<>();
 
     /** Init things that happen before load is playable */
@@ -152,21 +162,22 @@ public final class NodeGame implements GameManager, Validator {
 
     /** Update the team chooser when a player join a new team */
     private void updateTeamChooserMenu(Locale locale, Inventory inv) {
-        ItemStack[] items = new ItemStack[BukkitUtil.invBase(this.teams.size())];
+        int base = BukkitUtil.invBase(this.teams.size() + 1);
+        ItemStack[] items = new ItemStack[base];
         ItemStack rand = new ItemStack(Material.NETHER_STAR);
         int teams = 1;
 
         rand.setItemMeta(ItemUtil.addMeta(rand, String.format(
             "{display:{name:\"%s\",lore:[\"%s&7/&6%s\",\"%s\"]}}",
             Msg.locale(locale.toString(), "team.menu.join.random"),
-            Common.colorCapacity((int) getPlaying().count(), getMaxPlayers()),
+            Common.colorCapacity((int) getPlaying().count() + (int) getEntering().count(), getMaxPlayers()),
             getMaxPlayers(),
             Msg.locale(locale.toString(), "team.menu.join")
         )));
         items[0] = rand;
 
         for (GameTeam team : this.teams.values()) {
-            int position = team instanceof Spectator ? BukkitUtil.invBase(this.teams.size()) - 1 : teams;
+            int position = team instanceof Spectator ? base - 1 : teams;
             items[position] = ((NodeTeam) team).getTeamIcon(locale);
             teams++;
         }
@@ -272,7 +283,7 @@ public final class NodeGame implements GameManager, Validator {
     public int getMaxPlayers() {
         int count = 0;
 
-        for (GameTeam team : teams.values()) {
+        for (GameTeam team : teams.values().stream().filter(t -> !(t instanceof Spectator)).collect(Collectors.toList())) {
             count += team.getSize();
         }
 

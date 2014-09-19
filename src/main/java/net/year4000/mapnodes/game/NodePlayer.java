@@ -10,6 +10,7 @@ import net.year4000.mapnodes.api.game.GameMap;
 import net.year4000.mapnodes.api.game.GamePlayer;
 import net.year4000.mapnodes.api.game.GameTeam;
 import net.year4000.mapnodes.clocks.Clocker;
+import net.year4000.mapnodes.game.system.Spectator;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.Common;
 import net.year4000.mapnodes.utils.MathUtil;
@@ -20,6 +21,7 @@ import net.year4000.utilities.bukkit.bossbar.BossBar;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -129,15 +131,15 @@ public final class NodePlayer implements GamePlayer {
         join.call();
 
         // run a tick later to allow player to login
-        playerTasks.add(SchedulerUtil.runAsync(() -> {
-            player.teleport(join.getSpawn());
-            player.setBedSpawnLocation(join.getSpawn(), true);
+        player.teleport(join.getSpawn());
+        player.setBedSpawnLocation(join.getSpawn(), true);
 
-            // start menu
+        // start menu
+        playerTasks.add(SchedulerUtil.runAsync(() -> {
             if (join.isMenu()) {
                 ((NodeGame) MapNodes.getCurrentGame()).openTeamChooserMenu(this);
             }
-        }, 20L));
+        }, 10L));
     }
 
     public void leave() {
@@ -150,12 +152,17 @@ public final class NodePlayer implements GamePlayer {
         // Cancel tasks
         playerTasks.stream().forEach(BukkitTask::cancel);
         BossBar.removeBar(player);
-        //NodeKit.reset(player);
+        // Update team menu
+        ((NodeGame) MapNodes.getCurrentGame()).updateTeamChooserMenu();
     }
 
     public void joinTeam(GameTeam gameTeam) {
         // Init team join spectator
         if (team == null || gameTeam == null) {
+            if (team != null) {
+                leave();
+            }
+
             spectator = true;
             entering = false;
 
@@ -175,6 +182,11 @@ public final class NodePlayer implements GamePlayer {
         }
         // join new team
         else {
+            if (gameTeam instanceof Spectator) {
+                joinTeam(null);
+                return;
+            }
+
             GamePlayerJoinTeamEvent joinTeam = new GamePlayerJoinTeamEvent(this, team) {{
                 this.setTo(gameTeam);
                 this.setJoining(MapNodes.getCurrentGame().getStage().isPlaying());
@@ -236,9 +248,19 @@ public final class NodePlayer implements GamePlayer {
         }
 
         // Update player's inventory
-        inventory = Bukkit.createInventory(null, INV_SIZE, getPlayerColor());
+        reopenPlayerInventory();
         // Update team menu
         ((NodeGame) MapNodes.getCurrentGame()).updateTeamChooserMenu();
+    }
+
+    /** Reopen player's inventory when they switch teams */
+    public void reopenPlayerInventory() {
+        if (inventory != null) {
+            List<HumanEntity> viewers = inventory.getViewers();
+            viewers.forEach(HumanEntity::closeInventory);
+            inventory = Bukkit.createInventory(null, INV_SIZE, getPlayerColor());
+            viewers.forEach(e -> e.openInventory(inventory));
+        }
     }
 
     /** Create an inventory of the player stats. */

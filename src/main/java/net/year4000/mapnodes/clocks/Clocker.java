@@ -1,6 +1,7 @@
 package net.year4000.mapnodes.clocks;
 
 import lombok.Getter;
+import net.year4000.mapnodes.utils.MathUtil;
 import net.year4000.mapnodes.utils.SchedulerUtil;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -11,7 +12,9 @@ import java.util.List;
 public abstract class Clocker {
     private int offset;
     @Getter
-    private final int time;
+    private int time;
+    @Getter
+    private Clock clock;
 
     /** Run a clock for x amount of time. */
     public Clocker(int time) {
@@ -25,16 +28,10 @@ public abstract class Clocker {
     }
 
     public BukkitTask run() {
-        Clock clock = new Clock(time);
+        clock = new Clock(time);
         clock.task = SchedulerUtil.repeatSync(clock, offset);
 
         return clock.task;
-/*        List<BukkitTask> tasks = new ArrayList<>();
-            for (int i = time; i >= 0; i--) {
-                tasks.add(SchedulerUtil.runSync(new Clock(i), offset));
-                offset++;
-            }
-        return tasks;*/
     }
 
     /** Simple math formula to convert ticks to secs. */
@@ -51,7 +48,16 @@ public abstract class Clocker {
     /** Code to be ran on the last clock tick. */
     public void runLast(int position) {};
 
+    public void reduceTime(int time) {
+        clock.index -= MathUtil.ticks(time);
+    }
+
+    public void increaseTime(int time) {
+        clock.index += MathUtil.ticks(time);
+    }
+
     public class Clock implements Runnable {
+        @Getter
         private int index;
         public BukkitTask task;
 
@@ -61,7 +67,7 @@ public abstract class Clocker {
 
         @Override
         public void run() {
-            if (index == 0) {
+            if (index <= 0) {
                 runLast(index);
                 task.cancel();
             }

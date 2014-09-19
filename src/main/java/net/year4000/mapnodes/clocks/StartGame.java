@@ -37,6 +37,7 @@ public class StartGame extends Clocker {
 
     public void runFirst(int position) {
         ((NodeGame)MapNodes.getCurrentGame()).setStage(NodeStage.STARTING);
+        ((NodeGame)MapNodes.getCurrentGame()).setStartClock(this);
         GameMap map = MapNodes.getCurrentGame().getMap();
 
         MapNodesPlugin.log(Msg.util("clocks.start.first", map.getName(), String.valueOf(sec(position) - 1)));

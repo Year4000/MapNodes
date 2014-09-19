@@ -4,6 +4,7 @@ import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
 import lombok.Getter;
 import net.year4000.mapnodes.MapNodesPlugin;
+import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.exceptions.InvalidJsonException;
 import net.year4000.mapnodes.game.system.SpectatorKit;
 import net.year4000.mapnodes.game.system.SpectatorTeam;
@@ -13,6 +14,11 @@ import net.year4000.mapnodes.utils.GsonUtil;
 import net.year4000.mapnodes.utils.Validator;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
+import org.bukkit.entity.Player;
+import org.bukkit.map.MapCanvas;
+import org.bukkit.map.MapPalette;
+import org.bukkit.map.MapRenderer;
+import org.bukkit.map.MapView;
 import org.bukkit.util.CachedServerIcon;
 
 import javax.imageio.ImageIO;
@@ -29,8 +35,9 @@ public class MatchManager implements Validator {
     private final File mapFile;
     @Getter
     private CachedServerIcon icon;
-    @Getter
     private Image iconImage;
+    @Getter
+    private MapView mapView;
     @Getter
     private NodeGame game;
 
@@ -87,9 +94,18 @@ public class MatchManager implements Validator {
 
         try {
             game = GsonUtil.createGson(node.getWorld().getWorld()).fromJson(loadMap(), NodeGame.class);
+            // Render map's icon for map view
+            mapView = Bukkit.createMap(node.getWorld().getWorld());
+            mapView.addRenderer(new MapRenderer() {
+                @Override
+                public void render(MapView mapView, MapCanvas mapCanvas, Player player) {
+                    mapView.setCenterX(Integer.MAX_VALUE);
+                    mapView.setCenterZ(Integer.MAX_VALUE);
+                    mapCanvas.drawImage(0, 0, MapPalette.resizeImage(iconImage));
+                }
+            });
 
-            // todo check kits and handle them better to prevent bugs
-            // register external team and kit
+            // register system team and kit
             if (game.getTeams().containsKey("spectator")) {
                 game.getTeams().remove("spectator");
             }

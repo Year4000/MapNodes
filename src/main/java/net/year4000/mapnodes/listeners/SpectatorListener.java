@@ -197,9 +197,9 @@ public class SpectatorListener implements Listener {
         SchedulerUtil.runSync(() -> gm.getSpectating().parallel().forEach(player -> {
             Inventory inv = player.getPlayer().getInventory();
 
-            inv.setItem(3, book(player));
+            inv.setItem(2, book(player));
             player.getPlayer().updateInventory();
-        }));
+        }), 5L);
     }
 
     @EventHandler
@@ -208,28 +208,20 @@ public class SpectatorListener implements Listener {
         GameManager gm = MapNodes.getCurrentGame();
 
         // Book
-        kit.getItems().set(3, book(e.getPlayer()));
+        kit.getItems().set(2, book(e.getPlayer()));
         // Servers
         kit.getItems().set(8, ItemUtil.makeItem("nether_star", "{'display':{'name':'" + Msg.locale(e.getPlayer(), "items.servers_menu") + "'}}"));
         // Game Menu
         kit.getItems().set(0, ItemUtil.makeItem("eye_of_ender", "{'display':{'name':'" + Msg.locale(e.getPlayer(), "team.menu.item") + "'}}"));
 
         // Map icon
-        if (NodeFactory.get().getCurrentGame().getMatch().getIcon() != null) {
-            MapView view = Bukkit.createMap(MapNodes.getCurrentWorld());
-            view.addRenderer(new MapRenderer() {
-                @Override
-                public void render(MapView mapView, MapCanvas mapCanvas, Player player) {
-                    mapView.setCenterX(Integer.MAX_VALUE);
-                    mapView.setCenterZ(Integer.MAX_VALUE);
-                    mapCanvas.drawImage(0,0, MapPalette.resizeImage(NodeFactory.get().getCurrentGame().getMatch().getIconImage()));
-                }
-            });
+        /*if (NodeFactory.get().getCurrentGame().getMatch().getIcon() != null) {
+            MapView view = NodeFactory.get().getCurrentGame().getMatch().getMapView();
             short damage = view.getId();
             ItemStack item = ItemUtil.makeItem("map", 1, damage);
             item.setItemMeta(ItemUtil.addMeta(item, "{'display':{'name':'&3" + gm.getMap().getName() + "'}}"));
-            kit.getItems().set(2, item);
-        }
+            kit.getItems().set(3, item);
+        }*/
     }
 
     // Team picker GUI //
