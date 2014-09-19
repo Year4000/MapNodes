@@ -11,6 +11,7 @@ import net.year4000.mapnodes.exceptions.InvalidJsonException;
 import net.year4000.mapnodes.game.regions.Region;
 import net.year4000.mapnodes.game.regions.RegionEvents;
 import net.year4000.mapnodes.game.regions.types.Point;
+import net.year4000.mapnodes.utils.AssignNodeGame;
 import net.year4000.mapnodes.utils.Validator;
 import net.year4000.mapnodes.utils.typewrappers.RegionList;
 import org.bukkit.entity.Player;
@@ -23,7 +24,7 @@ import java.util.Set;
 import static com.google.common.base.Preconditions.checkArgument;
 
 @Data
-public final class NodeRegion implements GameRegion, Validator {
+public final class NodeRegion implements GameRegion, Validator, AssignNodeGame {
     /** The teams this region apply to option if just used for zones */
     @Since(1.0)
     private List<String> apply = new ArrayList<>();
@@ -48,16 +49,22 @@ public final class NodeRegion implements GameRegion, Validator {
          Upper Json Settings / Bellow Instance Code
     *///--------------------------------------------//
 
+    private transient NodeGame game;
     @Setter(AccessLevel.NONE)
     private transient String id;
     private transient Set<Region> zoneSet = new HashSet<>();
+
+    /** Assign the game to this region */
+    public void assignNodeGame(NodeGame game) {
+        this.game = game;
+    }
 
     /** Get the id of this class and cache it */
     public String getId() {
         if (id == null) {
             NodeRegion thisObject = this;
 
-            MapNodes.getCurrentGame().getRegions().forEach((string, object) -> {
+            game.getRegions().forEach((string, object) -> {
                 if (object.equals(thisObject)) {
                     id = string;
                 }

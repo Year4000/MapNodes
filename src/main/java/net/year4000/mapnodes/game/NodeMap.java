@@ -7,6 +7,7 @@ import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.game.GameMap;
 import net.year4000.mapnodes.exceptions.InvalidJsonException;
 import net.year4000.mapnodes.messages.Msg;
+import net.year4000.mapnodes.utils.AssignNodeGame;
 import net.year4000.mapnodes.utils.Common;
 import net.year4000.mapnodes.utils.Validator;
 import net.year4000.utilities.bukkit.MessageUtil;
@@ -20,7 +21,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 @Data
 @NoArgsConstructor
 /** Details about the current map. */
-public final class NodeMap implements GameMap, Validator {
+public final class NodeMap implements GameMap, Validator, AssignNodeGame {
     /** The name of the current map. */
     @Since(1.0)
     private String name = null;
@@ -52,6 +53,13 @@ public final class NodeMap implements GameMap, Validator {
          Upper Json Settings / Bellow Instance Code
     *///--------------------------------------------//
 
+    private transient NodeGame game;
+
+    /** Assign the game to this region */
+    public void assignNodeGame(NodeGame game) {
+        this.game = game;
+    }
+
     /** Get main author */
     public String getMainAuthor() {
         return authors.get(0);
@@ -66,13 +74,13 @@ public final class NodeMap implements GameMap, Validator {
 
     /** Get the description in your own locale */
     public String getDescription(String locale) {
-        return MapNodes.getCurrentGame().locale(locale, description);
+        return game.locale(locale, description);
     }
 
     /** Get multi line description */
     public List<String> getMultiLineDescription(String locale) {
         List<String> lines = new ArrayList<>();
-        String[] spited = MapNodes.getCurrentGame().locale(locale, description).split(" ");
+        String[] spited = game.locale(locale, description).split(" ");
 
         String line = "";
         int counter = 0;

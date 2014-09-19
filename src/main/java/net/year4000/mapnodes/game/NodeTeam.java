@@ -14,6 +14,7 @@ import net.year4000.mapnodes.api.game.GameTeam;
 import net.year4000.mapnodes.exceptions.InvalidJsonException;
 import net.year4000.mapnodes.game.system.Spectator;
 import net.year4000.mapnodes.messages.Msg;
+import net.year4000.mapnodes.utils.AssignNodeGame;
 import net.year4000.mapnodes.utils.Common;
 import net.year4000.mapnodes.utils.Validator;
 import net.year4000.mapnodes.utils.typewrappers.LocationList;
@@ -34,7 +35,7 @@ import java.util.*;
 @Data
 @NoArgsConstructor
 /** Manges the teams. */
-public class NodeTeam implements GameTeam, Validator {
+public class NodeTeam implements GameTeam, Validator, AssignNodeGame {
     /** The name of the team. */
     @Since(1.0)
     private String name = null;
@@ -85,18 +86,24 @@ public class NodeTeam implements GameTeam, Validator {
          Upper Json Settings / Bellow Instance Code
     *///--------------------------------------------//
 
+    private transient NodeGame game;
     @Setter(AccessLevel.NONE)
     private transient String id;
     private transient static final String TEAM_FORMAT = "%s%s &7(%s&8/&6%d&7)";
     private transient List<GamePlayer> players = new ArrayList<>();
     private transient Queue<GamePlayer> queue = new PriorityQueue<>();
 
+    /** Assign the game to this region */
+    public void assignNodeGame(NodeGame game) {
+        this.game = game;
+    }
+
     /** Get the id of this class and cache it */
     public String getId() {
         if (id == null) {
             NodeTeam thisObject = this;
 
-            MapNodes.getCurrentGame().getTeams().forEach((string, object) -> {
+            game.getTeams().forEach((string, object) -> {
                 if (object.equals(thisObject)) {
                     id = string;
                 }

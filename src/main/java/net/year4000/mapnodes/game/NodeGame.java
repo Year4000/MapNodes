@@ -25,6 +25,7 @@ import net.year4000.mapnodes.game.system.Spectator;
 import net.year4000.mapnodes.messages.Message;
 import net.year4000.mapnodes.messages.MessageManager;
 import net.year4000.mapnodes.messages.Msg;
+import net.year4000.mapnodes.utils.AssignNodeGame;
 import net.year4000.mapnodes.utils.Common;
 import net.year4000.mapnodes.utils.SchedulerUtil;
 import net.year4000.mapnodes.utils.Validator;
@@ -143,6 +144,13 @@ public final class NodeGame implements GameManager, Validator {
         for (Locale locale : MessageManager.get().getLocales().keySet()) {
             teamChooser.put(locale, createTeamChooserMenu(locale));
         }
+
+        // Assign this game to child objects
+        map.assignNodeGame(this);
+        teams.values().forEach(team -> team.assignNodeGame(this));
+        regions.values().forEach(team -> team.assignNodeGame(this));
+        kits.values().forEach(team -> team.assignNodeGame(this));
+        classes.values().forEach(team -> team.assignNodeGame(this));
 
         // Run heavy resource tasks
         regions.values().parallelStream().forEach(region -> region.getZoneSet().forEach(Region::getPoints));
@@ -271,7 +279,7 @@ public final class NodeGame implements GameManager, Validator {
     }
 
     public void join(Player player) {
-        players.put(player.getUniqueId(), new NodePlayer(player));
+        players.put(player.getUniqueId(), new NodePlayer(this, player));
         ((NodePlayer) getPlayer(player)).join();
     }
 
@@ -307,9 +315,10 @@ public final class NodeGame implements GameManager, Validator {
 
         // Close spectator inventories
         start.getGame().getSpectating().forEach(player -> player.getPlayer().closeInventory());
+        start.getGame().getEntering().forEach(player -> player.getPlayer().closeInventory());
         start.getGame().getEntering().forEach(player -> ((NodePlayer) player).start());
 
-        gameClock = SchedulerUtil.repeatAsync(() -> new GameClockEvent(this).call(), 20);
+        gameClock = SchedulerUtil.repeatAsync(() -> new GameClockEvent(this).call(), 20L);
     }
 
     /** Stop the game and cycle to the next with default time */

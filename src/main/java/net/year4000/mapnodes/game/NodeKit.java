@@ -12,6 +12,7 @@ import net.year4000.mapnodes.api.game.GamePlayer;
 import net.year4000.mapnodes.clocks.Clocker;
 import net.year4000.mapnodes.exceptions.InvalidJsonException;
 import net.year4000.mapnodes.messages.Msg;
+import net.year4000.mapnodes.utils.AssignNodeGame;
 import net.year4000.mapnodes.utils.MathUtil;
 import net.year4000.mapnodes.utils.SchedulerUtil;
 import net.year4000.mapnodes.utils.Validator;
@@ -34,7 +35,7 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 /** Manage the items and effects that are given to the player. */
-public class NodeKit implements GameKit, Validator {
+public class NodeKit implements GameKit, Validator, AssignNodeGame {
     /** The items to put in the player's inventory. */
     @Since(1.0)
     private PlayerInventoryList<ItemStack> items = new PlayerInventoryList<>();
@@ -82,16 +83,22 @@ public class NodeKit implements GameKit, Validator {
          Upper Json Settings / Bellow Instance Code
     *///--------------------------------------------//
 
+    private transient NodeGame game;
     @Setter(AccessLevel.NONE)
     private transient String id;
     private transient static final String DEFAULT_LEATHER = "A06540";
+
+    /** Assign the game to this region */
+    public void assignNodeGame(NodeGame game) {
+        this.game = game;
+    }
 
     /** Get the id of this class and cache it */
     public String getId() {
         if (id == null) {
             NodeKit thisObject = this;
 
-            MapNodes.getCurrentGame().getKits().forEach((string, object) -> {
+            game.getKits().forEach((string, object) -> {
                 if (object.equals(thisObject)) {
                     id = string;
                 }

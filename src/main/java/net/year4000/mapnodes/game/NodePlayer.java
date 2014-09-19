@@ -43,7 +43,8 @@ import static net.year4000.mapnodes.utils.MathUtil.ticks;
 @Data
 public final class NodePlayer implements GamePlayer {
     // internals
-    private Player player;
+    private final NodeGame game;
+    private final Player player;
     private NodeTeam team;
     private List<BukkitTask> playerTasks = new ArrayList<>();
 
@@ -56,7 +57,8 @@ public final class NodePlayer implements GamePlayer {
     private Inventory inventory;
 
     /** Constructs a game player */
-    public NodePlayer(Player player) {
+    public NodePlayer(NodeGame game, Player player) {
+        this.game = game;
         this.player = player;
     }
 
@@ -103,8 +105,8 @@ public final class NodePlayer implements GamePlayer {
         inventory = Bukkit.createInventory(null, INV_SIZE, getPlayerColor());
 
         GamePlayerJoinEvent join = new GamePlayerJoinEvent(this) {{
-            this.setSpawn(((NodeGame) MapNodes.getCurrentGame()).getConfig().getSafeRandomSpawn());
-            this.setMenu(!MapNodes.getCurrentGame().getStage().isEndGame());
+            this.setSpawn(game.getConfig().getSafeRandomSpawn());
+            this.setMenu(!game.getStage().isEndGame());
         }};
         join.call();
 
@@ -115,7 +117,7 @@ public final class NodePlayer implements GamePlayer {
         // start menu
         playerTasks.add(SchedulerUtil.runAsync(() -> {
             if (join.isMenu()) {
-                ((NodeGame) MapNodes.getCurrentGame()).openTeamChooserMenu(this);
+                game.openTeamChooserMenu(this);
             }
         }, 10L));
     }
@@ -131,7 +133,7 @@ public final class NodePlayer implements GamePlayer {
         playerTasks.stream().forEach(BukkitTask::cancel);
         BossBar.removeBar(player);
         // Update team menu
-        ((NodeGame) MapNodes.getCurrentGame()).updateTeamChooserMenu();
+        game.updateTeamChooserMenu();
     }
 
     public void joinTeam(GameTeam gameTeam) {
@@ -145,7 +147,7 @@ public final class NodePlayer implements GamePlayer {
             entering = false;
 
             // Join
-            GameTeam spectatorTeam = MapNodes.getCurrentGame().getTeams().get("spectator");
+            GameTeam spectatorTeam = game.getTeams().get("spectator");
             GamePlayerJoinSpectatorEvent joinSpectator = new GamePlayerJoinSpectatorEvent(this, spectatorTeam) {{
                 this.setDisplay(false);
                 this.setKit(spectatorTeam.getKit());
@@ -167,7 +169,7 @@ public final class NodePlayer implements GamePlayer {
 
             GamePlayerJoinTeamEvent joinTeam = new GamePlayerJoinTeamEvent(this, team) {{
                 this.setTo(gameTeam);
-                this.setJoining(MapNodes.getCurrentGame().getStage().isPlaying());
+                this.setJoining(game.getStage().isPlaying());
                 this.setDisplay(true);
             }};
             joinTeam.call();
@@ -202,7 +204,7 @@ public final class NodePlayer implements GamePlayer {
                     }
 
                     public void runTock(int position) {
-                        GameMap map = MapNodes.getCurrentGame().getMap();
+                        GameMap map = game.getMap();
 
                         if (Arrays.asList(ticks).contains(position)) {
                             FunEffectsUtil.playSound(player, Sound.NOTE_PLING);
@@ -228,7 +230,7 @@ public final class NodePlayer implements GamePlayer {
         // Update player's inventory
         reopenPlayerInventory();
         // Update team menu
-        ((NodeGame) MapNodes.getCurrentGame()).updateTeamChooserMenu();
+        game.updateTeamChooserMenu();
     }
 
     /** Reopen player's inventory when they switch teams */
