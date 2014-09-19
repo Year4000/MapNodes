@@ -295,7 +295,7 @@ public final class NodePlayer implements GamePlayer {
             }
 
             inventory.setContents(items);
-        }));
+        }, 5L));
     }
 
     /** Get the heal for the player. */
