@@ -265,35 +265,37 @@ public final class NodePlayer implements GamePlayer {
 
     /** Create an inventory of the player stats. */
     public void updateInventory() {
-        ItemStack[] items = new ItemStack[INV_SIZE];
-        Player player = getPlayer();
-        PlayerInventory pinv = player.getInventory();
+        playerTasks.add(SchedulerUtil.runSync(() -> {
+            ItemStack[] items = new ItemStack[INV_SIZE];
+            Player player = getPlayer();
+            PlayerInventory pinv = player.getInventory();
 
-        // Armor
-        items[0] = pinv.getHelmet();
-        items[1] = pinv.getChestplate();
-        items[2] = pinv.getLeggings();
-        items[3] = pinv.getBoots();
+            // Armor
+            items[0] = pinv.getHelmet();
+            items[1] = pinv.getChestplate();
+            items[2] = pinv.getLeggings();
+            items[3] = pinv.getBoots();
 
-        // Health and Food
-        items[8] = getHunger();
-        items[7] = getHealth();
+            // Health and Food
+            items[8] = getHunger();
+            items[7] = getHealth();
 
-        // Items
-        for (int i = 0; i < 36; i++) {
-            // Hot Bar
-            if (i < 9) {
-                boolean empty = pinv.getItem(i) == null;
-                items[(45-9) + i] = empty ? new ItemStack(Material.AIR) : pinv.getItem(i);
+            // Items
+            for (int i = 0; i < 36; i++) {
+                // Hot Bar
+                if (i < 9) {
+                    boolean empty = pinv.getItem(i) == null;
+                    items[(45-9) + i] = empty ? new ItemStack(Material.AIR) : pinv.getItem(i);
+                }
+                // Backpack
+                else {
+                    boolean empty = pinv.getItem(i) == null;
+                    items[i] = empty ? new ItemStack(Material.AIR) : pinv.getItem(i);
+                }
             }
-            // Backpack
-            else {
-                boolean empty = pinv.getItem(i) == null;
-                items[i] = empty ? new ItemStack(Material.AIR) : pinv.getItem(i);
-            }
-        }
 
-        inventory.setContents(items);
+            inventory.setContents(items);
+        }));
     }
 
     /** Get the heal for the player. */

@@ -137,6 +137,7 @@ public class NodeKit implements GameKit, Validator {
             // Color the armor
             List<ItemStack> items = new ArrayList<>(armor);
             items.forEach(item -> {
+                item = item.clone();
                 if (item.getItemMeta() instanceof LeatherArmorMeta) {
                     LeatherArmorMeta meta = (LeatherArmorMeta) item.getItemMeta();
 

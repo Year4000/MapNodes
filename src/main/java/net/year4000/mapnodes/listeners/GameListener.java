@@ -7,6 +7,7 @@ import net.year4000.mapnodes.api.events.game.GameWinEvent;
 import net.year4000.mapnodes.api.game.GamePlayer;
 import net.year4000.mapnodes.game.NodeGame;
 import net.year4000.mapnodes.game.NodeKit;
+import net.year4000.mapnodes.game.NodePlayer;
 import net.year4000.mapnodes.messages.Msg;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -20,6 +21,7 @@ public final class GameListener implements Listener {
 
         if (player.isPlaying()) {
             ((NodeKit) player.getTeam().getKit()).giveKit(player);
+            ((NodePlayer) player).updateInventory();
 
             // God buffer mode
             player.getPlayerTasks().add(NodeKit.immortal(event.getPlayer()));
