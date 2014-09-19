@@ -48,6 +48,9 @@ public final class NodePlayer implements GamePlayer {
     private NodeTeam team;
     private List<BukkitTask> playerTasks = new ArrayList<>();
 
+    // scoreboard
+    private Scoreboard scoreboard;
+
     // player flags (set by methods bellow)
     private boolean spectator;
     private boolean playing;
@@ -60,6 +63,8 @@ public final class NodePlayer implements GamePlayer {
     public NodePlayer(NodeGame game, Player player) {
         this.game = game;
         this.player = player;
+        scoreboard = game.getScoreboardFactory().createScoreboard(this);
+        player.setScoreboard(scoreboard);
     }
 
     public void start() {
@@ -76,6 +81,9 @@ public final class NodePlayer implements GamePlayer {
             }});
         }};
         start.call();
+
+        game.getScoreboardFactory().setTeam(this, (NodeTeam) start.getTeam());
+        //scoreboard.getTeam(start.getTeam().getName()).addPlayer(player);
 
         // team start
         ((NodeTeam) start.getTeam()).start(this);
@@ -134,6 +142,7 @@ public final class NodePlayer implements GamePlayer {
         BossBar.removeBar(player);
         // Update team menu
         game.updateTeamChooserMenu();
+        game.getScoreboardFactory().purgeScoreboard(this);
     }
 
     public void joinTeam(GameTeam gameTeam) {
@@ -157,8 +166,16 @@ public final class NodePlayer implements GamePlayer {
             team.join(this, joinSpectator.isDisplay());
             team.start(this);
 
+            // Auto join spectator team
+            game.getScoreboardFactory().setTeam(this, team);
+            //scoreboard.getTeam(team.getName()).addPlayer(player);
+
             // Kit
             ((NodeKit) joinSpectator.getKit()).giveKit(this);
+
+            // Spectator Settings
+            player.setCollidesWithEntities(false);
+            //updateHiddenSpectator();
         }
         // join new team
         else {
@@ -186,6 +203,10 @@ public final class NodePlayer implements GamePlayer {
             entering = true;
             team = (NodeTeam) joinTeam.getTo();
             team.join(this, joinTeam.isDisplay());
+
+            // Player Settings
+            player.setCollidesWithEntities(true);
+            //updateHiddenSpectator();
 
             if (joinTeam.isJoining()) {
                 GamePlayer gamePlayer = this;
@@ -231,6 +252,20 @@ public final class NodePlayer implements GamePlayer {
         reopenPlayerInventory();
         // Update team menu
         game.updateTeamChooserMenu();
+    }
+
+    /** Manage how the players see each other. */
+    public void updateHiddenSpectator() {
+        game.getPlayers().parallel().forEach(gPlayer -> {
+            game.getPlayers().parallel().forEach(player -> {
+                if (!player.isPlaying() && !gPlayer.isPlaying()) {
+                    gPlayer.getPlayer().hidePlayer(player.getPlayer());
+                }
+                else {
+                    gPlayer.getPlayer().showPlayer(player.getPlayer());
+                }
+            });
+        });
     }
 
     /** Reopen player's inventory when they switch teams */

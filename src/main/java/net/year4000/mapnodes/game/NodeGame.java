@@ -138,9 +138,13 @@ public final class NodeGame implements GameManager, Validator {
     private transient BukkitTask gameClock;
     private transient StartGame startClock;
     private transient Map<Locale, Inventory> teamChooser = new HashMap<>();
+    private transient ScoreboardFactory scoreboardFactory;
 
     /** Init things that happen before load is playable */
     public void preGameInit() {
+        scoreboardFactory = new ScoreboardFactory(this);
+
+        // Create GUI for all locales
         for (Locale locale : MessageManager.get().getLocales().keySet()) {
             teamChooser.put(locale, createTeamChooserMenu(locale));
         }
@@ -276,6 +280,10 @@ public final class NodeGame implements GameManager, Validator {
 
     public GamePlayer getPlayer(Player player) {
         return players.get(player.getUniqueId());
+    }
+
+    public Stream<NodeTeam> getPlayingTeams() {
+        return teams.values().stream().filter(team -> !(team instanceof Spectator));
     }
 
     public void join(Player player) {
