@@ -277,8 +277,8 @@ public final class NodePlayer implements GamePlayer {
             items[3] = pinv.getBoots();
 
             // Health and Food
-            items[8] = getHunger();
-            items[7] = getHealth();
+            items[8] = player.isDead() ? new ItemStack(Material.AIR) : getHunger();
+            items[7] = player.isDead() ? new ItemStack(Material.AIR) : getHealth();
 
             // Items
             for (int i = 0; i < 36; i++) {
