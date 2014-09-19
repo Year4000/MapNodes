@@ -122,7 +122,7 @@ public final class MapNodesListener implements Listener {
             int size = (int) game.getTeams().values().stream().filter(team -> !(team instanceof Spectator)).filter(team -> team.getPlayers().size() > 0).count();
             boolean biggerThanLast = lastSize < size;
             lastSize = size;
-            boolean correctSize = size > game.getTeams().size();
+            boolean correctSize = size >= game.getTeams().size();
             //boolean correctSize = size > 0;
 
             if (correctSize) {
