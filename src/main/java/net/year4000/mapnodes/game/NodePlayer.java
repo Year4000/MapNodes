@@ -47,10 +47,6 @@ public final class NodePlayer implements GamePlayer {
     private NodeTeam team;
     private List<BukkitTask> playerTasks = new ArrayList<>();
 
-    // scoreboard things
-    private Scoreboard scoreboard;
-    private Map<String, Team> teams = new ConcurrentHashMap<>();
-
     // player flags (set by methods bellow)
     private boolean spectator;
     private boolean playing;
@@ -62,22 +58,6 @@ public final class NodePlayer implements GamePlayer {
     /** Constructs a game player */
     public NodePlayer(Player player) {
         this.player = player;
-
-        // scoreboard init
-        scoreboard = ScoreboardFactory.manager.getNewScoreboard();
-
-        // TODO Better scoreboards
-        /*playerTasks.add(SchedulerUtil.runAsync(() -> {
-            MapNodes.getCurrentGame().getTeams().values().parallelStream().forEach(team -> {
-                Team sbTeam = scoreboard.registerNewTeam(team.getName());
-                sbTeam.setAllowFriendlyFire(team.isAllowFriendlyFire());
-                sbTeam.setCanSeeFriendlyInvisibles(team.isCanSeeFriendlyInvisibles());
-                sbTeam.setDisplayName(team.getName());
-                sbTeam.setPrefix(team.getColor().toString());
-                sbTeam.setSuffix(MessageUtil.replaceColors("&r"));
-                teams.put(team.getName(), sbTeam);
-            });
-        }));*/
     }
 
     public void start() {
@@ -120,8 +100,6 @@ public final class NodePlayer implements GamePlayer {
 
         joinTeam(null);
 
-        // scoreboard
-        player.setScoreboard(scoreboard);
         inventory = Bukkit.createInventory(null, INV_SIZE, getPlayerColor());
 
         GamePlayerJoinEvent join = new GamePlayerJoinEvent(this) {{

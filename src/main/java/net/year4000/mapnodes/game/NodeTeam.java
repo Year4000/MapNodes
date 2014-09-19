@@ -130,8 +130,6 @@ public class NodeTeam implements GameTeam, Validator {
 
     /** Leave the team */
     public void leave(GamePlayer player) {
-        ScoreboardFactory.updateTeams();
-
         // leave team
         if (players.remove(player) || queue.remove(player)) {
             MapNodesPlugin.debug(player.getPlayer().getName() + " left " + name);
@@ -145,16 +143,11 @@ public class NodeTeam implements GameTeam, Validator {
 
     /** Start the team for the player */
     public void start(GamePlayer player) {
-        //NodeKit.reset(player.getPlayer());
-        ScoreboardFactory.updateTeams();
-
-
-        /*if (players.contains(player)) {
-            ScoreboardFactory.updateTeams();
+        if (players.contains(player)) {
         }
         else {
-            LogUtil.debug(player.getPlayer().getName() + " not starting!");
-        }*/
+            MapNodesPlugin.debug(player.getPlayer().getName() + " not starting!");
+        }
     }
 
     /** Get the number of players */
