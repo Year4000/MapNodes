@@ -74,9 +74,6 @@ public final class NodePlayer implements GamePlayer {
             this.setKit(team.getKit());
             this.setTeam(team);
             this.setSpawn(team.getSafeRandomSpawn());
-            this.setMessage(new ArrayList<String>() {{
-                add("&7&m****&a&l Game Started &7&m****"); // TODO proper start message
-            }});
         }};
         start.call();
 
@@ -97,9 +94,21 @@ public final class NodePlayer implements GamePlayer {
             playerTasks.add(NodeKit.immortal(player));
         }
 
-        // game start message
+        // Game start message
+        // todo handel start messages better
         if (start.getMessage() != null) {
-            start.getMessage().forEach(this::sendMessage);
+            if (start.getMessage().size() > 0) {
+                sendMessage("&7&m****************************************");
+                start.getMessage().forEach(this::sendMessage);
+                sendMessage("&7&m****************************************");
+            }
+            else {
+                sendMessage("&7&m****************************************");
+                sendMessage(game.getMap().getName());
+                sendMessage("");
+                start.getMessage().forEach(this::sendMessage);
+                sendMessage("&7&m****************************************");
+            }
         }
 
         // Player Settings
