@@ -1,7 +1,6 @@
 package net.year4000.mapnodes.game;
 
 import lombok.Data;
-import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.events.player.GamePlayerJoinEvent;
 import net.year4000.mapnodes.api.events.player.GamePlayerJoinSpectatorEvent;
 import net.year4000.mapnodes.api.events.player.GamePlayerJoinTeamEvent;
@@ -28,14 +27,12 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitTask;
+import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
-import org.bukkit.scoreboard.Team;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 import static net.year4000.mapnodes.utils.MathUtil.percent;
 import static net.year4000.mapnodes.utils.MathUtil.ticks;
@@ -50,6 +47,7 @@ public final class NodePlayer implements GamePlayer {
 
     // scoreboard
     private Scoreboard scoreboard;
+    private Objective playerSidebar;
 
     // player flags (set by methods bellow)
     private boolean spectator;
@@ -83,6 +81,7 @@ public final class NodePlayer implements GamePlayer {
         start.call();
 
         game.getScoreboardFactory().setTeam(this, (NodeTeam) start.getTeam());
+        game.getScoreboardFactory().setGameSidebar(this);
 
         // team start
         ((NodeTeam) start.getTeam()).start(this);
@@ -171,6 +170,7 @@ public final class NodePlayer implements GamePlayer {
 
             // Auto join spectator team
             game.getScoreboardFactory().setTeam(this, team);
+            game.getScoreboardFactory().setPersonalSidebar(this);
 
             // Kit
             ((NodeKit) joinSpectator.getKit()).giveKit(this);
@@ -205,6 +205,7 @@ public final class NodePlayer implements GamePlayer {
             entering = true;
             team = (NodeTeam) joinTeam.getTo();
             team.join(this, joinTeam.isDisplay());
+            game.getScoreboardFactory().setPersonalSidebar(this);
 
             if (joinTeam.isJoining()) {
                 GamePlayer gamePlayer = this;

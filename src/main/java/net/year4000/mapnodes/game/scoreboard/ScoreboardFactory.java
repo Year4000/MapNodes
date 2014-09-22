@@ -1,7 +1,10 @@
-package net.year4000.mapnodes.game;
+package net.year4000.mapnodes.game.scoreboard;
 
 import lombok.AllArgsConstructor;
-import net.year4000.mapnodes.utils.SchedulerUtil;
+import net.year4000.mapnodes.game.NodeGame;
+import net.year4000.mapnodes.game.NodePlayer;
+import net.year4000.mapnodes.game.NodeTeam;
+import net.year4000.mapnodes.messages.Msg;
 import net.year4000.utilities.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.scoreboard.Scoreboard;
@@ -45,5 +48,33 @@ public class ScoreboardFactory {
             nodePlayer.getScoreboard().getTeam(player.getTeam().getName()).addPlayer(player.getPlayer());
 
         });
+    }
+
+    public void setPersonalSidebar(NodePlayer nodePlayer) {
+        String queue = nodePlayer.getTeam().getQueue().contains(nodePlayer) ? Msg.locale(nodePlayer, "team.queue") : "";
+        SidebarManager side = new SidebarManager()
+            .addLine(Msg.locale(nodePlayer, "team.name"))
+            .addLine("  " + nodePlayer.getTeam().getDisplayName() + " " + queue)
+            ;
+
+        side.buildSidebar(nodePlayer.getScoreboard(), "&3&l   [&b&lYear4000&3&l]   ");
+    }
+
+    public void setGameSidebar(NodePlayer nodePlayer) {
+        // TODO Get data from current game
+        SidebarManager side = new SidebarManager()
+            .addLine("&cRed Score&7:", 34)
+            .addLine("&bBlue Score&7:", 23)
+            .addBlank()
+            .addLine("&cRed Towers&7:")
+            .addLine("  &6Right Tower")
+            .addLine("  &6Left Tower")
+            .addBlank()
+            .addLine("&bBlue Towers&7:")
+            .addLine("  &6Left Tower")
+            .addLine("  &6Right Tower")
+            ;
+
+        side.buildSidebar(nodePlayer.getScoreboard(), "&b" + nodePlayer.getGame().getMap().getName());
     }
 }

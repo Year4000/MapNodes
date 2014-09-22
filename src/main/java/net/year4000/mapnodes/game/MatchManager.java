@@ -4,7 +4,6 @@ import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
 import lombok.Getter;
 import net.year4000.mapnodes.MapNodesPlugin;
-import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.exceptions.InvalidJsonException;
 import net.year4000.mapnodes.game.system.SpectatorKit;
 import net.year4000.mapnodes.game.system.SpectatorTeam;

@@ -1,5 +1,7 @@
 package net.year4000.mapnodes;
 
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Iterables;
 import lombok.Getter;
 import net.year4000.mapnodes.addons.Addons;
 import net.year4000.mapnodes.addons.modules.misc.DeathMessages;
@@ -14,6 +16,7 @@ import net.year4000.mapnodes.commands.misc.MenuCommands;
 import net.year4000.mapnodes.commands.node.NodeBase;
 import net.year4000.mapnodes.game.Node;
 import net.year4000.mapnodes.game.NodeModeFactory;
+import net.year4000.mapnodes.game.NodePlayer;
 import net.year4000.mapnodes.game.WorldManager;
 import net.year4000.mapnodes.game.regions.EventManager;
 import net.year4000.mapnodes.game.regions.RegionManager;
@@ -32,13 +35,18 @@ import net.year4000.mapnodes.gamemodes.skywars.Skywars;
 import net.year4000.mapnodes.listeners.*;
 import net.year4000.mapnodes.map.MapFactory;
 import net.year4000.mapnodes.messages.Msg;
+import net.year4000.mapnodes.utils.SchedulerUtil;
 import net.year4000.utilities.LogUtil;
 import net.year4000.utilities.bukkit.BukkitPlugin;
 import net.year4000.utilities.bukkit.MessageUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
+import org.bukkit.scoreboard.DisplaySlot;
 
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Stream;
 
 @Getter
 public class MapNodesPlugin extends BukkitPlugin implements Plugin {
@@ -46,6 +54,12 @@ public class MapNodesPlugin extends BukkitPlugin implements Plugin {
     private static MapNodesPlugin inst = null;
     private Addons addons = new Addons();
     private boolean enable = true;
+
+    // Fancy Title
+    private Set<String> shimmer = ImmutableSet.of("3", "b", "8", "7", "2", "a", "4", "c", "5", "d", "6", "e", "1", "9");
+    private final String NAME = "Year4000";
+    private Iterable<String> forever = Iterables.cycle(shimmer);
+    private Iterator<String> color = forever.iterator();
 
     @Override
     public void onLoad() {
@@ -140,6 +154,14 @@ public class MapNodesPlugin extends BukkitPlugin implements Plugin {
         addons.builder()
             .add(DeathMessages.class)
             .register();
+
+        SchedulerUtil.repeatSync(() -> {
+            String b = "&" + color.next() + "&l";
+            String name = MessageUtil.replaceColors(b + "   [&" + color.next() + "&l" + NAME + b + "]   ");
+
+            Stream.concat(MapNodes.getCurrentGame().getSpectating(), MapNodes.getCurrentGame().getEntering())
+                .forEach(player -> ((NodePlayer) player).getScoreboard().getObjective(DisplaySlot.SIDEBAR).setDisplayName(name));
+        }, 20L);
     }
 
     @Override

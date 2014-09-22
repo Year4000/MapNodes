@@ -5,9 +5,6 @@ import net.year4000.mapnodes.utils.MathUtil;
 import net.year4000.mapnodes.utils.SchedulerUtil;
 import org.bukkit.scheduler.BukkitTask;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /** Clocker to allow easy code for clocks. */
 public abstract class Clocker {
     private int offset;

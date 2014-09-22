@@ -3,7 +3,6 @@ package net.year4000.mapnodes.game;
 import com.google.gson.annotations.Since;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.game.GameMap;
 import net.year4000.mapnodes.exceptions.InvalidJsonException;
 import net.year4000.mapnodes.messages.Msg;

@@ -2,7 +2,6 @@ package net.year4000.mapnodes.commands.misc;
 
 import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.game.GameManager;
-import net.year4000.mapnodes.game.NodeGame;
 import net.year4000.mapnodes.game.NodePlayer;
 import net.year4000.utilities.bukkit.commands.Command;
 import net.year4000.utilities.bukkit.commands.CommandContext;
