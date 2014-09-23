@@ -88,7 +88,7 @@ public class MatchManager implements Validator {
     /** Register the map with world spawns */
     public void register() throws UnexpectedException {
         if (!mapFile.exists()) {
-            throw new UnexpectedException("Map lost in transient");
+            throw new UnexpectedException(Msg.util("error.map.lost"));
         }
 
         try {

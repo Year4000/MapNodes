@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import net.year4000.mapnodes.NodeFactory;
 import net.year4000.mapnodes.api.events.game.GameClockEvent;
+import net.year4000.mapnodes.api.events.game.GameLoadEvent;
 import net.year4000.mapnodes.api.events.game.GameStartEvent;
 import net.year4000.mapnodes.api.events.game.GameStopEvent;
 import net.year4000.mapnodes.api.game.GameManager;
@@ -134,11 +135,16 @@ public final class NodeGame implements GameManager, Validator {
     private transient ScoreboardFactory scoreboardFactory;
     private transient Map<String, SidebarGoal> sidebarGoals = new HashMap<>();
     private transient List<Operations> startControls = new CopyOnWriteArrayList<>();
-    private transient List<Operations> stopControls = new CopyOnWriteArrayList<>();
 
     /** Init things that happen before load is playable */
-    public void preGameInit() {
+    public void load() {
         scoreboardFactory = new ScoreboardFactory(this);
+
+        // Register game mode listeners
+        gameModes.forEach(m -> NodeModeFactory.get().registerListeners(m));
+
+        // Call the game load event
+        new GameLoadEvent(this).call();
 
         // Create GUI for all locales
         for (Locale locale : MessageManager.get().getLocales().keySet()) {
@@ -163,15 +169,6 @@ public final class NodeGame implements GameManager, Validator {
             });
         }
     }
-
-    // START Start / Stop Operations //
-
-    /** Should the game start depending all start operations are true */
-    public boolean shouldStart() {
-        return startControls.parallelStream().filter(Operations::handle).count() > 0L;
-    }
-
-    // END Start / Stop Opperations //
 
     // START Sidebar Things //
 
@@ -345,20 +342,23 @@ public final class NodeGame implements GameManager, Validator {
         players.remove(player.getUniqueId());
     }
 
+    /** Should the game start depending all start operations are true */
+    public boolean shouldStart() {
+        return startControls.parallelStream().filter(Operations::handle).count() > 0L;
+    }
+
     /** Start the game */
     public void start() {
         stage = NodeStage.PLAYING;
 
-        // Register game mode listeners
-        gameModes.forEach(m -> NodeModeFactory.get().registerListeners(m));
+        GameStartEvent start = new GameStartEvent(this);
+        start.call();
+
         // Register region events
         regions.values().stream()
             .map(NodeRegion::getEvents)
             .filter(e -> e != null)
             .forEach(RegionEvents::registerEvents);
-
-        GameStartEvent start = new GameStartEvent(this);
-        start.call();
 
         // Close spectator inventories
         start.getGame().getSpectating().forEach(player -> player.getPlayer().closeInventory());
@@ -386,14 +386,16 @@ public final class NodeGame implements GameManager, Validator {
 
         stop.getGame().getPlaying().forEach(p -> ((NodePlayer) p).joinTeam(null));
 
-        // Unregister game mode listeners
-        gameModes.forEach(m -> NodeModeFactory.get().unregisterListeners(m));
         // Unregister region events
         regions.values().stream()
             .map(NodeRegion::getEvents)
             .filter(e -> e != null)
             .forEach(RegionEvents::unregisterEvents);
 
+        // Unregister game mode listeners
+        gameModes.forEach(m -> NodeModeFactory.get().unregisterListeners(m));
+
+        // Cycle game or restart server
         if (NodeFactory.get().isQueuedGames()) {
             if (time != null) {
                 new NextNode(time).run();
