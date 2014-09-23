@@ -154,7 +154,24 @@ public final class NodeGame implements GameManager, Validator {
 
         // Run heavy resource tasks
         regions.values().parallelStream().forEach(region -> region.getZoneSet().forEach(Region::getPoints));
+
+        // If startControls are empty add a default one
+        if (startControls.size() == 0) {
+            startControls.add(() -> {
+                int size = (int) teams.values().stream().filter(team -> !(team instanceof Spectator)).filter(team -> team.getPlayers().size() > 0).count();
+                return size >= (int) teams.values().stream().filter(team -> !(team instanceof Spectator)).count();
+            });
+        }
     }
+
+    // START Start / Stop Operations //
+
+    /** Should the game start depending all start operations are true */
+    public boolean shouldStart() {
+        return startControls.parallelStream().filter(Operations::handle).count() > 0L;
+    }
+
+    // END Start / Stop Opperations //
 
     // START Sidebar Things //
 
