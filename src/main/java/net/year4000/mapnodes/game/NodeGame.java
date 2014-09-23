@@ -21,6 +21,7 @@ import net.year4000.mapnodes.exceptions.InvalidJsonException;
 import net.year4000.mapnodes.game.regions.Region;
 import net.year4000.mapnodes.game.regions.RegionEvents;
 import net.year4000.mapnodes.game.scoreboard.ScoreboardFactory;
+import net.year4000.mapnodes.game.scoreboard.SidebarGoal;
 import net.year4000.mapnodes.game.system.Spectator;
 import net.year4000.mapnodes.messages.Message;
 import net.year4000.mapnodes.messages.MessageManager;
@@ -41,6 +42,7 @@ import org.bukkit.scheduler.BukkitTask;
 import javax.annotation.Nullable;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -130,6 +132,9 @@ public final class NodeGame implements GameManager, Validator {
     private transient StartGame startClock;
     private transient Map<Locale, Inventory> teamChooser = new HashMap<>();
     private transient ScoreboardFactory scoreboardFactory;
+    private transient Map<String, SidebarGoal> sidebarGoals = new HashMap<>();
+    private transient List<Operations> startControls = new CopyOnWriteArrayList<>();
+    private transient List<Operations> stopControls = new CopyOnWriteArrayList<>();
 
     /** Init things that happen before load is playable */
     public void preGameInit() {
@@ -150,6 +155,20 @@ public final class NodeGame implements GameManager, Validator {
         // Run heavy resource tasks
         regions.values().parallelStream().forEach(region -> region.getZoneSet().forEach(Region::getPoints));
     }
+
+    // START Sidebar Things //
+
+    // todo Sidebar methods
+
+    // END Sidebar Things //
+
+    // START Class GUI //
+
+    // todo Class GUIs
+
+    // END Class GUI //
+
+    // START Team GUI //
 
     /** Create the menu in locale */
     private Inventory createTeamChooserMenu(Locale locale) {
@@ -201,29 +220,9 @@ public final class NodeGame implements GameManager, Validator {
         }
     }
 
-    public GameTeam getTeam(Locale locale, String name) {
-        // Random get lowest team
-        if (name.equalsIgnoreCase(Msg.locale(locale.toString(), "team.menu.join.random"))) {
-            return teams.values().stream()
-                .filter(team -> !(team instanceof Spectator))
-                .sorted((left, right) -> left.getPlayers().size() < right.getPlayers().size() ? -1 : 1)
-                .collect(Collectors.toList())
-                .get(0);
-        }
-        // Get by name
-        else {
-            List<NodeTeam> stream = teams.values().stream()
-                .filter(team -> team.getDisplayName().equalsIgnoreCase(name))
-                .collect(Collectors.toList());
+    // END Team GUI //
 
-            if (stream.size() == 0) {
-                return getTeam(locale, Msg.locale(locale.toString(), "team.menu.join.random"));
-            }
-            else {
-                return stream.get(0);
-            }
-        }
-    }
+    // START Mini Locale Manager //
 
     /** Get the locale wanted or try to default to en_US or use any locale */
     public String defaultLocale(String key) {
@@ -253,6 +252,10 @@ public final class NodeGame implements GameManager, Validator {
         }
     }
 
+    // END Mini Locale Manager //
+
+    // START Game Components Handlers //
+
     public Stream<GamePlayer> getPlayers() {
         return players.values().stream();
     }
@@ -277,14 +280,28 @@ public final class NodeGame implements GameManager, Validator {
         return teams.values().stream().filter(team -> !(team instanceof Spectator));
     }
 
-    public void join(Player player) {
-        players.put(player.getUniqueId(), new NodePlayer(this, player));
-        ((NodePlayer) getPlayer(player)).join();
-    }
+    public GameTeam getTeam(Locale locale, String name) {
+        // Random get lowest team
+        if (name.equalsIgnoreCase(Msg.locale(locale.toString(), "team.menu.join.random"))) {
+            return teams.values().stream()
+                .filter(team -> !(team instanceof Spectator))
+                .sorted((left, right) -> left.getPlayers().size() < right.getPlayers().size() ? -1 : 1)
+                .collect(Collectors.toList())
+                .get(0);
+        }
+        // Get by name
+        else {
+            List<NodeTeam> stream = teams.values().stream()
+                .filter(team -> team.getDisplayName().equalsIgnoreCase(name))
+                .collect(Collectors.toList());
 
-    public void quit(Player player) {
-        ((NodePlayer) getPlayer(player)).leave();
-        players.remove(player.getUniqueId());
+            if (stream.size() == 0) {
+                return getTeam(locale, Msg.locale(locale.toString(), "team.menu.join.random"));
+            }
+            else {
+                return stream.get(0);
+            }
+        }
     }
 
     public int getMaxPlayers() {
@@ -295,6 +312,20 @@ public final class NodeGame implements GameManager, Validator {
         }
 
         return count;
+    }
+
+    // END Game Components Handlers //
+
+    // START Game Controls //
+
+    public void join(Player player) {
+        players.put(player.getUniqueId(), new NodePlayer(this, player));
+        ((NodePlayer) getPlayer(player)).join();
+    }
+
+    public void quit(Player player) {
+        ((NodePlayer) getPlayer(player)).leave();
+        players.remove(player.getUniqueId());
     }
 
     /** Start the game */
@@ -363,6 +394,8 @@ public final class NodeGame implements GameManager, Validator {
             }
         }
     }
+
+    // STOP Game Controls //
 
     /** Get the pages for a book with the map's info */
     public List<String> getBookPages(Player player) {
