@@ -5,6 +5,7 @@ import net.year4000.mapnodes.api.utils.Operations;
 import net.year4000.mapnodes.game.NodeKit;
 import net.year4000.mapnodes.game.NodeRegion;
 import net.year4000.mapnodes.game.NodeTeam;
+import net.year4000.mapnodes.game.scoreboard.SidebarGoal;
 import org.bukkit.entity.Player;
 
 import java.util.Locale;
@@ -52,5 +53,9 @@ public interface GameManager {
     public String locale(String locale, String key);
 
     public void addStartControl(Operations operation);
+
+    public SidebarGoal addDynamicGoal(String id, String display, int score);
+
+    public SidebarGoal addStaticGoal(String id, String display);
 
 }

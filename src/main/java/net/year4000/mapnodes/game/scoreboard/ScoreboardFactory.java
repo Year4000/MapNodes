@@ -61,19 +61,25 @@ public class ScoreboardFactory {
     }
 
     public void setGameSidebar(NodePlayer nodePlayer) {
-        // TODO Get data from current game
-        SidebarManager side = new SidebarManager()
-            .addLine("&cRed Score&7:", 34)
-            .addLine("&bBlue Score&7:", 23)
-            .addBlank()
-            .addLine("&cRed Towers&7:")
-            .addLine("  &6Right Tower")
-            .addLine("  &6Left Tower")
-            .addBlank()
-            .addLine("&bBlue Towers&7:")
-            .addLine("  &6Left Tower")
-            .addLine("  &6Right Tower")
-            ;
+        SidebarManager side = new SidebarManager();
+
+        nodePlayer.getGame().getSidebarGoals().values().forEach(goal -> {
+            if (goal.getType() == SidebarGoal.GoalType.DYNAMIC) {
+                side.addLine(goal.getDisplay(), goal.getScore());
+            }
+            else if (goal.getType() == SidebarGoal.GoalType.STATIC) {
+                if (goal.getDisplay().equals("")) {
+                    side.addBlank();
+                }
+                else {
+                    side.addLine(goal.getDisplay());
+                }
+            }
+            else {
+                throw new UnsupportedOperationException(goal.getType().name() + " is not a valid goal type.");
+            }
+        });
+
 
         side.buildSidebar(nodePlayer.getScoreboard(), "&b" + nodePlayer.getGame().getMap().getName());
     }

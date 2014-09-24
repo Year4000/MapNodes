@@ -178,7 +178,15 @@ public final class NodeGame implements GameManager, Validator {
 
     // START Sidebar Things //
 
-    // todo Sidebar methods
+    /** Add a dynamic goal to the scoreboard */
+    public SidebarGoal addDynamicGoal(String id, String display, int score) {
+        return sidebarGoals.put(id, new SidebarGoal(SidebarGoal.GoalType.DYNAMIC, display, score));
+    }
+
+    /** Add a static foal to the scoreboard */
+    public SidebarGoal addStaticGoal(String id, String display) {
+        return sidebarGoals.put(id, new SidebarGoal(SidebarGoal.GoalType.STATIC, display, null));
+    }
 
     // END Sidebar Things //
 
