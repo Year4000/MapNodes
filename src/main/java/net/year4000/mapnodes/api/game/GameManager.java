@@ -1,6 +1,7 @@
 package net.year4000.mapnodes.api.game;
 
 import net.year4000.mapnodes.api.game.modes.GameMode;
+import net.year4000.mapnodes.api.utils.Operations;
 import net.year4000.mapnodes.game.NodeKit;
 import net.year4000.mapnodes.game.NodeRegion;
 import net.year4000.mapnodes.game.NodeTeam;
@@ -49,4 +50,7 @@ public interface GameManager {
     public String locale(Locale locale, String key);
 
     public String locale(String locale, String key);
+
+    public void addStartControl(Operations operation);
+
 }
