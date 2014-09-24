@@ -27,12 +27,13 @@ public class DeathmatchListener implements Listener {
     @EventHandler
     public void onLoad(GameLoadEvent event) {
         gameMode.setUpGoals();
+        event.getGame().addStartControl(() -> true);
     }
 
     @EventHandler
     public void onLoad(GameStartEvent event) {
         gameMode.setStartTime(System.currentTimeMillis());
-        gameMode.setEndTime(System.currentTimeMillis() + (gameModeConfig.getTimeLimit() * 60000));
+        gameMode.setEndTime((System.currentTimeMillis() + 1000) + (gameModeConfig.getTimeLimit() * 60000));
     }
 
     @EventHandler
