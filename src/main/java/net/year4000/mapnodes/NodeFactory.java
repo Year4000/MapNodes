@@ -80,9 +80,10 @@ public class NodeFactory {
         }
 
         Node newNode = queueNodes.poll();
+        currentNode = newNode;
+
         newNode.register();
 
-        currentNode = newNode;
         return currentNode;
     }
 

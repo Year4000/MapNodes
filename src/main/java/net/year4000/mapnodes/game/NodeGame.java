@@ -15,6 +15,7 @@ import net.year4000.mapnodes.api.game.GamePlayer;
 import net.year4000.mapnodes.api.game.GameTeam;
 import net.year4000.mapnodes.api.game.modes.GameMode;
 import net.year4000.mapnodes.api.game.modes.GameModeConfig;
+import net.year4000.mapnodes.api.utils.Operations;
 import net.year4000.mapnodes.clocks.NextNode;
 import net.year4000.mapnodes.clocks.RestartServer;
 import net.year4000.mapnodes.clocks.StartGame;
@@ -140,6 +141,13 @@ public final class NodeGame implements GameManager, Validator {
     public void load() {
         scoreboardFactory = new ScoreboardFactory(this);
 
+        // Assign this game to child objects
+        map.assignNodeGame(this);
+        teams.values().forEach(team -> team.assignNodeGame(this));
+        regions.values().forEach(team -> team.assignNodeGame(this));
+        kits.values().forEach(team -> team.assignNodeGame(this));
+        classes.values().forEach(team -> team.assignNodeGame(this));
+
         // Register game mode listeners
         gameModes.forEach(m -> NodeModeFactory.get().registerListeners(m));
 
@@ -151,13 +159,6 @@ public final class NodeGame implements GameManager, Validator {
             teamChooser.put(locale, createTeamChooserMenu(locale));
         }
 
-        // Assign this game to child objects
-        map.assignNodeGame(this);
-        teams.values().forEach(team -> team.assignNodeGame(this));
-        regions.values().forEach(team -> team.assignNodeGame(this));
-        kits.values().forEach(team -> team.assignNodeGame(this));
-        classes.values().forEach(team -> team.assignNodeGame(this));
-
         // Run heavy resource tasks
         regions.values().parallelStream().forEach(region -> region.getZoneSet().forEach(Region::getPoints));
 
@@ -168,6 +169,11 @@ public final class NodeGame implements GameManager, Validator {
                 return size >= (int) teams.values().stream().filter(team -> !(team instanceof Spectator)).count();
             });
         }
+    }
+
+    /** Add start control operation */
+    public void addStartControl(Operations operation) {
+        startControls.add(operation);
     }
 
     // START Sidebar Things //
