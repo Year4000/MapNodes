@@ -173,7 +173,9 @@ public class MapNodesPlugin extends BukkitPlugin implements Plugin {
                 log(p.getPlayer().getName() + " " + Msg.locale(p, "clocks.restart.last"));
             });
 
-            NodeFactory.get().getCurrentGame().unregister();
+            if (NodeFactory.get().getAllGames().size() != 0) {
+                NodeFactory.get().getCurrentGame().unregister();
+            }
 
             addons.builder().unregister();
         }
