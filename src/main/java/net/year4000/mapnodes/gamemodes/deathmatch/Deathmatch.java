@@ -15,6 +15,7 @@ import net.year4000.mapnodes.game.NodeGame;
 import net.year4000.mapnodes.game.NodePlayer;
 import net.year4000.mapnodes.game.NodeTeam;
 import net.year4000.mapnodes.gamemodes.GameModeTemplate;
+import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.MathUtil;
 import net.year4000.utilities.bukkit.MessageUtil;
 import net.year4000.utilities.bukkit.bossbar.BossBar;
@@ -53,7 +54,7 @@ public class Deathmatch extends GameModeTemplate implements GameMode {
         DateTime display = new DateTime(getEndTime()).minus(System.currentTimeMillis());
 
         event.getGame().getPlaying().map(GamePlayer::getPlayer).forEach(player -> {
-            BossBar.setMessage(player, MessageUtil.message("&aTime Left&7: &a%s&7:&a%s", display.toString("mm"), display.toString("ss")), MathUtil.percent((int) Math.abs(getEndTime() - getStartTime()), (int) Math.abs(getEndTime() - System.currentTimeMillis())));
+            BossBar.setMessage(player, Msg.locale(player, "clock.time_left", display.toString("mm"), display.toString("ss")), MathUtil.percent((int) Math.abs(getEndTime() - getStartTime()), (int) Math.abs(getEndTime() - System.currentTimeMillis())));
         });
 
         if ((display.toString("mm") + display.toString("ss")).equals("0000")) {
