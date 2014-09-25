@@ -58,7 +58,7 @@ public class Deathmatch extends GameModeTemplate implements GameMode {
         });
 
         if ((display.toString("mm") + display.toString("ss")).equals("0000")) {
-            new GameTeamWinEvent(winner) {{ game = MapNodes.getCurrentGame(); }}.call();
+            new GameTeamWinEvent(MapNodes.getCurrentGame(), winner).call();
         }
     }
 

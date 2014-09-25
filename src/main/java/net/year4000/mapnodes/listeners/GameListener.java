@@ -9,10 +9,13 @@ import net.year4000.mapnodes.game.NodeGame;
 import net.year4000.mapnodes.game.NodeKit;
 import net.year4000.mapnodes.game.NodePlayer;
 import net.year4000.mapnodes.messages.Msg;
+import net.year4000.mapnodes.utils.Common;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
+
+import java.util.stream.Stream;
 
 public final class GameListener implements Listener {
     @EventHandler
@@ -30,6 +33,33 @@ public final class GameListener implements Listener {
 
     @EventHandler
     public void onWin(GameWinEvent event) {
+        final int size = 45;
+        // Send messages to players before game end
+        // Spectator Messages
+        Stream.concat(event.getGame().getSpectating(), event.getGame().getEntering()).forEach(player -> {
+            player.sendMessage("");
+            player.sendMessage(Common.textLine(Msg.locale(player, "game.end"), 40, '*'));
+            player.sendMessage(Common.textLine(Msg.locale(player, "game.end.winner", event.getWinnerText()), size, ' ', "", "&a"));
+            player.sendMessage("&7&m******************************************");
+            player.sendMessage("");
+        });
+
+        // Game Player Messages
+        event.getGame().getPlaying().forEach(player -> {
+            player.sendMessage("");
+            player.sendMessage(Common.textLine(Msg.locale(player, "game.end"), 40, '*'));
+            player.sendMessage(Common.textLine(Msg.locale(player, "game.end.winner", event.getWinnerText()), size, ' ', "", "&a"));
+
+            if (event.getMessage().size() > 0) {
+                player.sendMessage("");
+                event.getMessage().forEach(string -> player.sendMessage(Common.textLine(string, size, ' ', "", "&a&o")));;
+            }
+
+            player.sendMessage("&7&m******************************************");
+            player.sendMessage("");
+        });
+
+        // Stop the game
         ((NodeGame) MapNodes.getCurrentGame()).stop();
     }
 

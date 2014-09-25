@@ -102,4 +102,21 @@ public final class Common {
 
         return centered;
     }
+
+    /** Center text between lines */
+    public static String textLine(String text, int size, char delimiter) {
+        return textLine(text, size, delimiter, "&7&m", "&a");
+    }
+
+        /** Center text between lines */
+    public static String textLine(String text, int size, char delimiter, String lineColor, String textColor) {
+        int padding = Math.abs(MessageUtil.stripColors(text).length() - size) / 2;
+        StringBuilder side = new StringBuilder();
+
+        for (int i = 0; i < padding; i++) {
+            side.append(delimiter);
+        }
+
+        return MessageUtil.message("%s%s%s %s %s%s", lineColor, side, textColor, text, lineColor, side);
+    }
 }

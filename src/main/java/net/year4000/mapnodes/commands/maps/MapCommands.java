@@ -40,14 +40,14 @@ public class MapCommands {
                     return Msg.locale(sender, "cmd.maps.current",
                         game.getMap().getName(),
                         Common.formatSeparators(game.getMap().getVersion(), ChatColor.GREEN, ChatColor.DARK_GRAY),
-                        author(sender, game.getMap())
+                        game.getMap().author(sender)
                     );
                 }
                 return Msg.locale(sender, "cmd.maps.queued",
                     String.valueOf(index),
                     game.getMap().getName(),
                     Common.formatSeparators(game.getMap().getVersion(), ChatColor.GREEN, ChatColor.DARK_GRAY),
-                    author(sender, game.getMap())
+                    game.getMap().author(sender)
                 );
             }
         }.display(
@@ -87,18 +87,7 @@ public class MapCommands {
             format,
             game.getMap().getName(),
             Common.formatSeparators(game.getMap().getVersion(), ChatColor.GREEN, ChatColor.DARK_GRAY),
-            author(sender, game.getMap())
+            game.getMap().author(sender)
         );
-    }
-
-    /** Fancy authors display */
-    private static String author(CommandSender sender, GameMap map) {
-        if (map.hasOtherAuthors()) {
-            int size = map.getOtherAuthors().size();
-
-            return Msg.locale(sender, "map.authors", map.getMainAuthor(), String.valueOf(size));
-        }
-
-        return Msg.locale(sender, "map.author", map.getMainAuthor());
     }
 }

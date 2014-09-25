@@ -9,7 +9,9 @@ import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.AssignNodeGame;
 import net.year4000.mapnodes.utils.Common;
 import net.year4000.mapnodes.utils.Validator;
+import net.year4000.utilities.ChatColor;
 import net.year4000.utilities.bukkit.MessageUtil;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -64,6 +66,11 @@ public final class NodeMap implements GameMap, Validator, AssignNodeGame {
         return authors.get(0);
     }
 
+    /** Map title includes map name and map version */
+    public String title() {
+        return  ChatColor.GREEN + name + " " + Common.formatSeparators(version, ChatColor.GRAY, ChatColor.DARK_GRAY);
+    }
+
     /** Get other authors */
     public List<String> getOtherAuthors() {
         List<String> others = new ArrayList<>(authors);
@@ -78,23 +85,29 @@ public final class NodeMap implements GameMap, Validator, AssignNodeGame {
 
     /** Get multi line description */
     public List<String> getMultiLineDescription(String locale) {
+        return  getMultiLineDescription(locale, 6);
+    }
+
+    public List<String> getMultiLineDescription(String locale, int size) {
         List<String> lines = new ArrayList<>();
         String[] spited = game.locale(locale, description).split(" ");
 
         String line = "";
         int counter = 0;
+
         for (String word : spited) {
             counter ++;
             boolean last = spited.length == counter;
 
             line += word + " ";
 
-            if (counter > 6 || last) {
+            if (counter > size || last) {
                 lines.add(line);
                 line = "";
                 counter = 0;
             }
         }
+
         lines.add(line);
 
         return lines;
@@ -119,5 +132,27 @@ public final class NodeMap implements GameMap, Validator, AssignNodeGame {
         lines.add(MessageUtil.message("\n\n&0%s", getShortDescription(45)));
 
         return lines;
+    }
+
+    /** Fancy authors display */
+    public String author(String locale) {
+        if (hasOtherAuthors()) {
+            int size = getOtherAuthors().size();
+
+            return Msg.locale(locale, "map.authors", getMainAuthor(), String.valueOf(size));
+        }
+
+        return Msg.locale(locale, "map.author", getMainAuthor());
+    }
+
+    /** Fancy authors display */
+    public String author(CommandSender sender) {
+        if (hasOtherAuthors()) {
+            int size = getOtherAuthors().size();
+
+            return Msg.locale(sender, "map.authors", getMainAuthor(), String.valueOf(size));
+        }
+
+        return Msg.locale(sender, "map.author", getMainAuthor());
     }
 }

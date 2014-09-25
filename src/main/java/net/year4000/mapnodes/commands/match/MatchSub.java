@@ -94,10 +94,10 @@ public final class MatchSub {
                 GamePlayer player = MapNodes.getCurrentGame().getPlaying()
                     .filter(p -> p.getPlayer().getName().equalsIgnoreCase(args.getFlag('p')))
                     .collect(Collectors.toList()).get(0);
-                new GamePlayerWinEvent(player).call();
+                new GamePlayerWinEvent(MapNodes.getCurrentGame(), player).call();
             } else if (args.hasFlag('t')) {
                 GameTeam team = MapNodes.getCurrentGame().getTeams().get(args.getFlag('t'));
-                new GameTeamWinEvent(team).call();
+                new GameTeamWinEvent(MapNodes.getCurrentGame(), team).call();
             } else {
                 new GameWinEvent().call();
             }

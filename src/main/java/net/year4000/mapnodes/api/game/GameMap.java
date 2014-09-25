@@ -1,5 +1,7 @@
 package net.year4000.mapnodes.api.game;
 
+import org.bukkit.command.CommandSender;
+
 import java.util.List;
 
 public interface GameMap {
@@ -51,4 +53,8 @@ public interface GameMap {
      * @return true More than one author.
      */
     public boolean hasOtherAuthors();
+
+    public String author(String locale);
+
+    public String author(CommandSender sender);
 }

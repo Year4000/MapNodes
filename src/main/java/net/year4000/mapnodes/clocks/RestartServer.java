@@ -7,6 +7,7 @@ import net.year4000.mapnodes.game.NodeStage;
 import net.year4000.mapnodes.messages.Message;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.Common;
+import net.year4000.mapnodes.utils.MathUtil;
 import net.year4000.mapnodes.utils.SchedulerUtil;
 import net.year4000.utilities.bukkit.FunEffectsUtil;
 import net.year4000.utilities.bukkit.bossbar.BossBar;
@@ -32,7 +33,7 @@ public class RestartServer extends Clocker {
     }
 
     public RestartServer(int time) {
-        super(MapNodesPlugin.getInst().getLog().isDebug() ? 10 : time);
+        super(MathUtil.ticks(MapNodesPlugin.getInst().getLog().isDebug() ? 10 : time));
     }
 
     public void runFirst(int position) {

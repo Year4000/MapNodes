@@ -18,6 +18,7 @@ import net.year4000.utilities.bukkit.FunEffectsUtil;
 import net.year4000.utilities.bukkit.MessageUtil;
 import net.year4000.utilities.bukkit.bossbar.BossBar;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.HumanEntity;
@@ -95,20 +96,22 @@ public final class NodePlayer implements GamePlayer {
         }
 
         // Game start message
-        // todo handel start messages better
         if (start.getMessage() != null) {
+            final int size = 45;
+            sendMessage("");
+            sendMessage(Common.textLine(game.getMap().title(), 40, '*'));
+
+            sendMessage(Common.textLine(Msg.locale(player, "map.created") + game.getMap().author(player.getLocale()), size, ' ', "", "&7&o"));
+            game.getMap().getMultiLineDescription(player.getLocale(), 7)
+                .forEach(string -> sendMessage(Common.textLine(string, size, ' ', "", "&a&o")));
+
             if (start.getMessage().size() > 0) {
-                sendMessage("&7&m****************************************");
-                start.getMessage().forEach(this::sendMessage);
-                sendMessage("&7&m****************************************");
-            }
-            else {
-                sendMessage("&7&m****************************************");
-                sendMessage(game.getMap().getName());
                 sendMessage("");
-                start.getMessage().forEach(this::sendMessage);
-                sendMessage("&7&m****************************************");
+                start.getMessage().forEach(string -> sendMessage(Common.textLine(string, size, ' ', "", "&a&o")));
             }
+
+            sendMessage("&7&m******************************************");
+            sendMessage("");
         }
 
         // Player Settings
@@ -348,6 +351,11 @@ public final class NodePlayer implements GamePlayer {
     /** Send a message with out grabing the player's instance first */
     public void sendMessage(String message, Object... args) {
         player.sendMessage(MessageUtil.message(message, args));
+    }
+
+    /** Send a message with out grabing the player's instance first */
+    public void sendMessage(List<String> messages) {
+        messages.forEach(this::sendMessage);
     }
 
     /** Get the player's color according to the team */
