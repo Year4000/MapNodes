@@ -13,6 +13,7 @@ import net.year4000.mapnodes.api.game.modes.GameMode;
 import net.year4000.mapnodes.api.game.modes.GameModeInfo;
 import net.year4000.mapnodes.game.NodeGame;
 import net.year4000.mapnodes.game.NodePlayer;
+import net.year4000.mapnodes.game.NodeTeam;
 import net.year4000.mapnodes.gamemodes.GameModeTemplate;
 import net.year4000.mapnodes.utils.MathUtil;
 import net.year4000.utilities.bukkit.MessageUtil;
@@ -33,7 +34,7 @@ public class Deathmatch extends GameModeTemplate implements GameMode {
     private long endTime;
 
     public void setUpGoals() {
-        MapNodes.getCurrentGame().getPlayingTeams().forEach(team -> MapNodes.getCurrentGame().addDynamicGoal(team.getId(), team.getDisplayName(), 0));
+        ((NodeGame) MapNodes.getCurrentGame()).getPlayingTeams().forEach(team -> MapNodes.getCurrentGame().addDynamicGoal(team.getId(), team.getDisplayName(), 0));
     }
 
     private DeathmatchConfig gameModeConfig = (DeathmatchConfig) getConfig();
@@ -75,7 +76,7 @@ public class Deathmatch extends GameModeTemplate implements GameMode {
 
         winner = player.getTeam();
 
-        ((NodeGame) MapNodes.getCurrentGame()).getSidebarGoals().get(player.getTeam().getId()).setScore(((NodeGame) MapNodes.getCurrentGame()).getSidebarGoals().get(player.getTeam().getId()).getScore() + 1);
+        ((NodeGame) MapNodes.getCurrentGame()).getSidebarGoals().get(((NodeTeam) player.getTeam()).getId()).setScore(((NodeGame) MapNodes.getCurrentGame()).getSidebarGoals().get(((NodeTeam) player.getTeam()).getId()).getScore() + 1);
         MapNodes.getCurrentGame().getPlaying().forEach(p -> (((NodeGame) MapNodes.getCurrentGame()).getScoreboardFactory()).setGameSidebar((NodePlayer) p));
     }
 }

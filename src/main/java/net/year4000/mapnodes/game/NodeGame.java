@@ -10,7 +10,9 @@ import net.year4000.mapnodes.api.events.game.GameClockEvent;
 import net.year4000.mapnodes.api.events.game.GameLoadEvent;
 import net.year4000.mapnodes.api.events.game.GameStartEvent;
 import net.year4000.mapnodes.api.events.game.GameStopEvent;
-import net.year4000.mapnodes.api.game.*;
+import net.year4000.mapnodes.api.game.GameManager;
+import net.year4000.mapnodes.api.game.GamePlayer;
+import net.year4000.mapnodes.api.game.GameTeam;
 import net.year4000.mapnodes.api.game.modes.GameMode;
 import net.year4000.mapnodes.api.game.modes.GameModeConfig;
 import net.year4000.mapnodes.api.utils.Operations;
@@ -71,19 +73,19 @@ public final class NodeGame implements GameManager, Validator {
 
     /** Manage the items and effects that are given to the player. */
     @Since(1.0)
-    private Map<String, GameKit> kits = new ConcurrentHashMap<>();
+    private Map<String, NodeKit> kits = new ConcurrentHashMap<>();
 
     /** Manage the regions and zones that can apply effects. */
     @Since(1.0)
-    private Map<String, GameRegion> regions = new ConcurrentHashMap<>();
+    private Map<String, NodeRegion> regions = new ConcurrentHashMap<>();
 
     /** Manages the teams. */
     @Since(1.0)
-    private Map<String, GameTeam> teams = new ConcurrentHashMap<>();
+    private Map<String, NodeTeam> teams = new ConcurrentHashMap<>();
 
     /** Classes to pick from on top of your team. */
     @Since(1.0)
-    private Map<String, GameClass> classes = new ConcurrentHashMap<>();
+    private Map<String, NodeClass> classes = new ConcurrentHashMap<>();
 
     @Override
     public void validate() throws InvalidJsonException {
@@ -111,13 +113,13 @@ public final class NodeGame implements GameManager, Validator {
         checkArgument(teams.size() != 0, Msg.util("settings.team"));
 
         // Validate components
-        for (GameTeam team : teams.values()) {
-            ((NodeTeam) team).validate();
+        for (NodeTeam team : teams.values()) {
+            team.validate();
         }
 
         // Validate components
-        for (GameClass clazz : classes.values()) {
-            ((NodeClass) clazz).validate();
+        for (NodeClass clazz : classes.values()) {
+            clazz.validate();
         }
     }
 
@@ -141,10 +143,10 @@ public final class NodeGame implements GameManager, Validator {
 
         // Assign this game to child objects
         map.assignNodeGame(this);
-        teams.values().forEach(team -> ((NodeTeam) team).assignNodeGame(this));
-        regions.values().forEach(region -> ((NodeRegion) region).assignNodeGame(this));
-        kits.values().forEach(kit -> ((NodeKit) kit).assignNodeGame(this));
-        classes.values().forEach(clazz -> ((NodeClass) clazz).assignNodeGame(this));
+        teams.values().forEach(team -> team.assignNodeGame(this));
+        regions.values().forEach(team -> team.assignNodeGame(this));
+        kits.values().forEach(team -> team.assignNodeGame(this));
+        classes.values().forEach(team -> team.assignNodeGame(this));
 
         // Register game mode listeners
         gameModes.forEach(m -> NodeModeFactory.get().registerListeners(m));
@@ -158,13 +160,13 @@ public final class NodeGame implements GameManager, Validator {
         }
 
         // Run heavy resource tasks
-        regions.values().parallelStream().forEach(region -> ((NodeRegion) region).getZoneSet().forEach(Region::getPoints));
+        regions.values().parallelStream().forEach(region -> region.getZoneSet().forEach(Region::getPoints));
 
         // If startControls are empty add a default one
         if (startControls.size() == 0) {
             startControls.add(() -> {
-                int size = (int) getPlayingTeams().filter(team -> team.getPlayers().size() > 0).count();
-                return size >= (int) getPlayingTeams().count();
+                int size = (int) teams.values().stream().filter(team -> !(team instanceof Spectator)).filter(team -> team.getPlayers().size() > 0).count();
+                return size >= (int) teams.values().stream().filter(team -> !(team instanceof Spectator)).count();
             });
         }
     }
@@ -177,13 +179,13 @@ public final class NodeGame implements GameManager, Validator {
     // START Sidebar Things //
 
     /** Add a dynamic goal to the scoreboard */
-    public void addDynamicGoal(String id, String display, int score) {
-        sidebarGoals.put(id, new SidebarGoal(SidebarGoal.GoalType.DYNAMIC, display, score));
+    public SidebarGoal addDynamicGoal(String id, String display, int score) {
+        return sidebarGoals.put(id, new SidebarGoal(SidebarGoal.GoalType.DYNAMIC, display, score));
     }
 
     /** Add a static foal to the scoreboard */
-    public void addStaticGoal(String id, String display) {
-        sidebarGoals.put(id, new SidebarGoal(SidebarGoal.GoalType.STATIC, display, null));
+    public SidebarGoal addStaticGoal(String id, String display) {
+        return sidebarGoals.put(id, new SidebarGoal(SidebarGoal.GoalType.STATIC, display, null));
     }
 
     // END Sidebar Things //
@@ -302,21 +304,22 @@ public final class NodeGame implements GameManager, Validator {
         return players.get(player.getUniqueId());
     }
 
-    public Stream<GameTeam> getPlayingTeams() {
+    public Stream<NodeTeam> getPlayingTeams() {
         return teams.values().stream().filter(team -> !(team instanceof Spectator));
     }
 
     public GameTeam getTeam(Locale locale, String name) {
         // Random get lowest team
         if (name.equalsIgnoreCase(Msg.locale(locale.toString(), "team.menu.join.random"))) {
-            return getPlayingTeams()
+            return teams.values().stream()
+                .filter(team -> !(team instanceof Spectator))
                 .sorted((left, right) -> left.getPlayers().size() < right.getPlayers().size() ? -1 : 1)
                 .collect(Collectors.toList())
                 .get(0);
         }
         // Get by name
         else {
-            List<GameTeam> stream = teams.values().stream()
+            List<NodeTeam> stream = teams.values().stream()
                 .filter(team -> team.getDisplayName().equalsIgnoreCase(name))
                 .collect(Collectors.toList());
 
@@ -367,7 +370,7 @@ public final class NodeGame implements GameManager, Validator {
 
         // Register region events
         regions.values().stream()
-            .map(r -> ((NodeRegion) r).getEvents())
+            .map(NodeRegion::getEvents)
             .filter(e -> e != null)
             .forEach(RegionEvents::registerEvents);
 
@@ -399,7 +402,7 @@ public final class NodeGame implements GameManager, Validator {
 
         // Unregister region events
         regions.values().stream()
-            .map(r -> ((NodeRegion) r).getEvents())
+            .map(NodeRegion::getEvents)
             .filter(e -> e != null)
             .forEach(RegionEvents::unregisterEvents);
 
