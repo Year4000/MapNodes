@@ -1,5 +1,6 @@
 package net.year4000.mapnodes.game.scoreboard;
 
+import net.year4000.mapnodes.utils.SchedulerUtil;
 import net.year4000.utilities.bukkit.MessageUtil;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
@@ -67,7 +68,11 @@ public class SidebarManager {
         // Add dynamic scores that don't depend on statics
         for (Object[] lines : dynamicScores) {
             Score score = objective.getScore(MessageUtil.replaceColors((String) lines[0]));
-            score.setScore((Integer) lines[1]);
+            // Set default score to fix Bukkit / Minecraft cant start with 0
+            score.setScore(1);
+
+            // Apply true score a tick later
+            SchedulerUtil.runSync(() -> score.setScore((Integer) lines[1]));
         }
 
         return objective;
