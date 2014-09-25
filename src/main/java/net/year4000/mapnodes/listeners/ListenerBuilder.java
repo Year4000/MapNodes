@@ -1,6 +1,7 @@
 package net.year4000.mapnodes.listeners;
 
 import net.year4000.mapnodes.MapNodesPlugin;
+import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.messages.Msg;
 import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
@@ -12,6 +13,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class ListenerBuilder {
+    private static final PluginManager manager = Bukkit.getPluginManager();
     private List<Class<?>> listeners = new ArrayList<>();
     private List<Listener> registered = new ArrayList<>();
 
@@ -28,9 +30,14 @@ public class ListenerBuilder {
         return this;
     }
 
+    /** Register a listener when the instance is all ready created */
+    public void registerInstance(Listener listener) {
+        manager.registerEvents(listener, MapNodesPlugin.getInst());
+        registered.add(listener);
+    }
+
     /** Register the listeners */
     public void register() {
-        PluginManager manager = Bukkit.getPluginManager();
         listeners.forEach(listener -> {
             try {
                 MapNodesPlugin.debug(Msg.util("debug.listener.register", listener.getSimpleName()));

@@ -20,5 +20,5 @@ public @interface GameModeInfo {
     public Class<? extends GameModeConfig> config();
 
     /** The listeners for this game mode */
-    public Class<? extends Listener>[] listeners();
+    public Class<? extends Listener>[] listeners() default {};
 }

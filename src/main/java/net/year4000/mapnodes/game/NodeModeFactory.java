@@ -7,6 +7,7 @@ import net.year4000.mapnodes.api.game.modes.GameModeConfig;
 import net.year4000.mapnodes.api.game.modes.GameModeConfigName;
 import net.year4000.mapnodes.api.game.modes.GameModeInfo;
 import net.year4000.mapnodes.listeners.ListenerBuilder;
+import org.bukkit.event.EventHandler;
 
 import java.security.InvalidParameterException;
 import java.util.HashMap;
@@ -104,6 +105,11 @@ public class NodeModeFactory {
             GameModeInfo configName = mode.getClass().getAnnotation(GameModeInfo.class);
             ListenerBuilder builder = new ListenerBuilder();
 
+            // If main game mode class has EventHandlers load that instance as a listener
+            if (mode.getClass().getAnnotationsByType(EventHandler.class).length > 0) {
+                builder.registerInstance(mode);
+            }
+
             builder.addAll(configName.listeners());
             builder.register();
             enabledListeners.put(configName, builder);
@@ -115,9 +121,9 @@ public class NodeModeFactory {
     /** disable the current listeners for the game mode */
     public void unregisterListeners(GameMode mode) {
         try {
-            GameModeInfo configName = mode.getClass().getAnnotation(GameModeInfo.class);
+            GameModeInfo modeInfo = mode.getClass().getAnnotation(GameModeInfo.class);
 
-            enabledListeners.get(configName).unregister();
+            enabledListeners.get(modeInfo).unregister();
         } catch (NullPointerException e) {
             MapNodesPlugin.log(e, false);
         }
