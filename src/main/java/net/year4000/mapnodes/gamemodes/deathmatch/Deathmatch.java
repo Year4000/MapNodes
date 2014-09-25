@@ -21,6 +21,6 @@ public class Deathmatch extends GameModeTemplate implements GameMode {
     private long endTime;
 
     public void setUpGoals() {
-        MapNodes.getCurrentGame().getTeams().values().forEach(team -> MapNodes.getCurrentGame().addDynamicGoal(team.getId(), team.getDisplayName(), 0));
+        MapNodes.getCurrentGame().getPlayingTeams().forEach(team -> MapNodes.getCurrentGame().addDynamicGoal(team.getId(), team.getDisplayName(), 0));
     }
 }

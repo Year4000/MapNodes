@@ -30,6 +30,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
+import java.util.stream.Stream;
 
 
 @Data
@@ -190,10 +191,9 @@ public class NodeTeam implements GameTeam, Validator, AssignNodeGame {
     /** Get the book page for this map */
     public static List<String> getBookPage(Player player) {
         List<String> lines = new ArrayList<>();
-        Collection<NodeTeam> teams = MapNodes.getCurrentGame().getTeams().values();
 
         lines.add(MessageUtil.message("&b&l%s&7:\n", Msg.locale(player, "map.teams")));
-        teams.stream().filter(NodeTeam::isUseScoreboard).forEach(t -> lines.add(t.prettyPrint()));
+        MapNodes.getCurrentGame().getPlayingTeams().forEach(t -> lines.add(((NodeTeam) t).prettyPrint()));
 
         return lines;
     }

@@ -2,10 +2,6 @@ package net.year4000.mapnodes.api.game;
 
 import net.year4000.mapnodes.api.game.modes.GameMode;
 import net.year4000.mapnodes.api.utils.Operations;
-import net.year4000.mapnodes.game.NodeKit;
-import net.year4000.mapnodes.game.NodeRegion;
-import net.year4000.mapnodes.game.NodeTeam;
-import net.year4000.mapnodes.game.scoreboard.SidebarGoal;
 import org.bukkit.entity.Player;
 
 import java.util.Locale;
@@ -26,11 +22,11 @@ public interface GameManager {
      */
     public GameConfig getConfig();
 
-    public Map<String, NodeKit> getKits();
+    public Map<String, GameKit> getKits();
 
-    public Map<String, NodeTeam> getTeams();
+    public Map<String, GameTeam> getTeams();
 
-    public Map<String, NodeRegion> getRegions();
+    public Map<String, GameRegion> getRegions();
 
     public Stream<GamePlayer> getPlayers();
 
@@ -48,14 +44,20 @@ public interface GameManager {
 
     public GameStage getStage();
 
+    public String defaultLocale(String key);
+
     public String locale(Locale locale, String key);
 
     public String locale(String locale, String key);
 
     public void addStartControl(Operations operation);
 
-    public SidebarGoal addDynamicGoal(String id, String display, int score);
+    public void addDynamicGoal(String id, String display, int score);
 
-    public SidebarGoal addStaticGoal(String id, String display);
+    public void addStaticGoal(String id, String display);
+
+    public void openTeamChooserMenu(GamePlayer player);
+
+    public Stream<GameTeam> getPlayingTeams();
 
 }

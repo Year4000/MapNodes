@@ -60,7 +60,7 @@ public class DeathmatchListener implements Listener {
 
         winner = player.getTeam();
 
-        ((NodeGame) MapNodes.getCurrentGame()).getSidebarGoals().get(((NodeTeam) player.getTeam()).getId()).setScore(((NodeGame) MapNodes.getCurrentGame()).getSidebarGoals().get(((NodeTeam) player.getTeam()).getId()).getScore() + 1);
+        ((NodeGame) MapNodes.getCurrentGame()).getSidebarGoals().get(player.getTeam().getId()).setScore(((NodeGame) MapNodes.getCurrentGame()).getSidebarGoals().get(player.getTeam().getId()).getScore() + 1);
         MapNodes.getCurrentGame().getPlaying().forEach(p -> (((NodeGame) MapNodes.getCurrentGame()).getScoreboardFactory()).setGameSidebar((NodePlayer) p));
     }
 }
