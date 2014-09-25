@@ -32,6 +32,7 @@ public class ListenerBuilder {
 
     /** Register a listener when the instance is all ready created */
     public void registerInstance(Listener listener) {
+        MapNodesPlugin.debug(Msg.util("debug.listener.register", listener.getClass().getSimpleName()));
         manager.registerEvents(listener, MapNodesPlugin.getInst());
         registered.add(listener);
     }

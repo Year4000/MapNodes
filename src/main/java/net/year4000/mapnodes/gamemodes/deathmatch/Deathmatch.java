@@ -30,19 +30,15 @@ import org.joda.time.DateTime;
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class Deathmatch extends GameModeTemplate implements GameMode {
+    private DeathmatchConfig gameModeConfig;
+    private GameTeam winner;
     private long startTime;
     private long endTime;
 
-    public void setUpGoals() {
-        ((NodeGame) MapNodes.getCurrentGame()).getPlayingTeams().forEach(team -> MapNodes.getCurrentGame().addDynamicGoal(team.getId(), team.getDisplayName(), 0));
-    }
-
-    private DeathmatchConfig gameModeConfig = (DeathmatchConfig) getConfig();
-    private GameTeam winner;
-
     @EventHandler
     public void onLoad(GameLoadEvent event) {
-        setUpGoals();
+        gameModeConfig = (DeathmatchConfig) getConfig();
+        ((NodeGame) MapNodes.getCurrentGame()).getPlayingTeams().forEach(team -> MapNodes.getCurrentGame().addDynamicGoal(team.getId(), team.getDisplayName(), 0));
         event.getGame().addStartControl(() -> true);
     }
 

@@ -4,6 +4,6 @@ import lombok.Data;
 import net.year4000.mapnodes.api.game.modes.GameModeConfig;
 
 @Data
-public class GameModeTemplate {
+public abstract class GameModeTemplate {
     private GameModeConfig config;
 }

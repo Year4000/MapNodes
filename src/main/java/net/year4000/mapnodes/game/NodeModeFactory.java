@@ -10,10 +10,7 @@ import net.year4000.mapnodes.listeners.ListenerBuilder;
 import org.bukkit.event.EventHandler;
 
 import java.security.InvalidParameterException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
@@ -51,21 +48,23 @@ public class NodeModeFactory {
     }
 
     /** get new instance of GameMode from the assigned config */
-    public GameMode getFromConfig(Class<? extends GameModeConfig> name) {
+    public GameMode getFromConfig(GameModeConfig name) {
         checkArgument(built);
 
         // loop through all registered game modes and return game mode instance
         for (Map.Entry<GameModeInfo, Class<? extends GameMode>> mode : loadedGameModes.entrySet()) {
-            if (mode.getKey().config() == name) {
+            if (mode.getKey().config() == name.getClass()) {
                 try {
-                    return mode.getValue().newInstance();
+                    GameMode gameMode = mode.getValue().newInstance();
+                    gameMode.setConfig(name);
+                    return gameMode;
                 } catch (InstantiationException | IllegalAccessException e) {
                     MapNodesPlugin.log(e, false);
                 }
             }
         }
 
-        throw new InvalidParameterException(name + " is not a valid game mode type.");
+        throw new InvalidParameterException(name.getClass() + " is not a valid game mode type.");
     }
 
     /** Get the true game mode config type for gson to handle the GameModeConfig interface */
@@ -106,7 +105,7 @@ public class NodeModeFactory {
             ListenerBuilder builder = new ListenerBuilder();
 
             // If main game mode class has EventHandlers load that instance as a listener
-            if (mode.getClass().getAnnotationsByType(EventHandler.class).length > 0) {
+            if (Arrays.asList(mode.getClass().getMethods()).parallelStream().filter(m -> m.getAnnotation(EventHandler.class) != null).count() > 0L) {
                 builder.registerInstance(mode);
             }
 
