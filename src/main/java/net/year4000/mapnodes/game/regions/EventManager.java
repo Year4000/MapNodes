@@ -13,8 +13,8 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 public final class EventManager {
     private static EventManager inst;
-    private Set<Class<? extends Listener>> rawEventTypes = new HashSet<>();
-    private Map<EventType, Class<? extends Listener>> eventTypes = new HashMap<>();
+    private Set<Class<? extends RegionListener>> rawEventTypes = new HashSet<>();
+    private Map<EventType, Class<? extends RegionListener>> eventTypes = new HashMap<>();
     private boolean built = false;
 
     public static EventManager get() {
@@ -25,7 +25,7 @@ public final class EventManager {
         return inst;
     }
 
-    public EventManager add(Class<? extends Listener> type) {
+    public EventManager add(Class<? extends RegionListener> type) {
         rawEventTypes.add(type);
         return this;
     }
@@ -42,7 +42,7 @@ public final class EventManager {
         built = true;
     }
 
-    public Class<? extends Listener> getRegionType(String name) {
+    public Class<? extends RegionListener> getRegionType(String name) {
         checkArgument(built); // Make sure we are built
 
         for (EventType type : eventTypes.keySet()) {

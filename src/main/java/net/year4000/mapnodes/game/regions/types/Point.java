@@ -11,6 +11,7 @@ import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.Validator;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.util.BlockVector;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +31,10 @@ public class Point implements Region, Validator {
 
     public Point(Integer x, Integer y, Integer z) {
         this(x, y, z, null, null);
+    }
+
+    public Point(BlockVector vector) {
+        this(vector.getBlockX(), vector.getBlockY(), vector.getBlockZ(), null, null);
     }
 
     @Override

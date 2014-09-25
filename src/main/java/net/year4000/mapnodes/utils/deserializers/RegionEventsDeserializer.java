@@ -6,6 +6,7 @@ import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.game.regions.EventManager;
 import net.year4000.mapnodes.game.regions.EventTypes;
 import net.year4000.mapnodes.game.regions.RegionEvents;
+import net.year4000.mapnodes.game.regions.RegionListener;
 import net.year4000.mapnodes.utils.GsonUtil;
 import org.bukkit.event.Listener;
 
@@ -19,7 +20,7 @@ public class RegionEventsDeserializer implements JsonDeserializer<RegionEvents> 
         RegionEvents events = new RegionEvents();
 
         map.forEach((name, object) -> {
-            Listener listener = GsonUtil.GSON.fromJson(object, EventManager.get().getRegionType(name));
+            RegionListener listener = GsonUtil.GSON.fromJson(object, EventManager.get().getRegionType(name));
             // MapNodesPlugin.debug("Loading region event: " + listener.getClass().getSimpleName());
             events.addEvent(listener, EventTypes.getFromName(name));
         });

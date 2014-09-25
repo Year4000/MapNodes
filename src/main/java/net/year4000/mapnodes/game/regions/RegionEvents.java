@@ -1,6 +1,7 @@
 package net.year4000.mapnodes.game.regions;
 
 import net.year4000.mapnodes.MapNodesPlugin;
+import net.year4000.mapnodes.game.NodeRegion;
 import net.year4000.mapnodes.messages.Msg;
 import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
@@ -10,10 +11,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RegionEvents {
-    private List<Listener> events = new ArrayList<>();
+    private List<RegionListener> events = new ArrayList<>();
     private List<EventTypes> enabledTypes = new ArrayList<>();
 
-    public void addEvent(Listener listener, EventTypes eventType) {
+    public void addEvent(RegionListener listener, EventTypes eventType) {
         events.add(listener);
         enabledTypes.add(eventType);
     }
@@ -30,5 +31,10 @@ public class RegionEvents {
             MapNodesPlugin.debug(Msg.util("debug.listener.unregister", listener.getClass().getSimpleName()));
             HandlerList.unregisterAll(listener);
         });
+    }
+
+    /** Assign region to listener events */
+    public void assignRegion(NodeRegion region) {
+        events.forEach(event -> event.setRegion(region));
     }
 }
