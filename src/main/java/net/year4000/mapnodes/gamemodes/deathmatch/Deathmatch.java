@@ -1,5 +1,6 @@
 package net.year4000.mapnodes.gamemodes.deathmatch;
 
+import com.google.common.base.Joiner;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import net.year4000.mapnodes.api.MapNodes;
@@ -17,11 +18,17 @@ import net.year4000.mapnodes.game.NodeTeam;
 import net.year4000.mapnodes.gamemodes.GameModeTemplate;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.MathUtil;
+import net.year4000.utilities.bukkit.FunEffectsUtil;
 import net.year4000.utilities.bukkit.MessageUtil;
 import net.year4000.utilities.bukkit.bossbar.BossBar;
+import org.bukkit.Sound;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.joda.time.DateTime;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @GameModeInfo(
     name = "Deathmatch",
@@ -32,6 +39,7 @@ import org.joda.time.DateTime;
 @EqualsAndHashCode(callSuper = true)
 public class Deathmatch extends GameModeTemplate implements GameMode {
     private DeathmatchConfig gameModeConfig;
+    private Map<String, Integer> scores = new HashMap<>();
     private GameTeam winner;
     private long startTime;
     private long endTime;
@@ -39,8 +47,10 @@ public class Deathmatch extends GameModeTemplate implements GameMode {
     @EventHandler
     public void onLoad(GameLoadEvent event) {
         gameModeConfig = (DeathmatchConfig) getConfig();
-        ((NodeGame) MapNodes.getCurrentGame()).getPlayingTeams().forEach(team -> MapNodes.getCurrentGame().addDynamicGoal(team.getId(), team.getDisplayName(), 0));
-        event.getGame().addStartControl(() -> true);
+        ((NodeGame) event.getGame()).getPlayingTeams().forEach(team -> {
+            scores.put(team.getId(), 0);
+            event.getGame().addDynamicGoal(team.getId(), team.getDisplayName(), 0);
+        });
     }
 
     @EventHandler
@@ -58,22 +68,38 @@ public class Deathmatch extends GameModeTemplate implements GameMode {
         });
 
         if ((display.toString("mm") + display.toString("ss")).equals("0000")) {
-            new GameTeamWinEvent(MapNodes.getCurrentGame(), winner).call();
+            new GameTeamWinEvent(event.getGame(), winner) {{
+                if (winner == null) {
+                    winnerText = Joiner.on(", ").join(((NodeGame) event.getGame()).getPlayingTeams().map(NodeTeam::getDisplayName).collect(Collectors.toList()));
+                }
+            }}.call();
         }
-    }
-
-    @EventHandler
-    public void gameWin(GameTeamWinEvent event) {
-        event.getGame().getPlayers().forEach(p -> p.sendMessage("Winner %s !", event.getWinner().getName()));
     }
 
     @EventHandler
     public void onDeath(PlayerDeathEvent event) {
         GamePlayer player = MapNodes.getCurrentGame().getPlayer(event.getEntity());
 
-        winner = player.getTeam();
+        if (event.getEntity().getKiller() != null) {
+            GamePlayer killer = MapNodes.getCurrentGame().getPlayer(event.getEntity().getKiller());
 
-        ((NodeGame) MapNodes.getCurrentGame()).getSidebarGoals().get(((NodeTeam) player.getTeam()).getId()).setScore(((NodeGame) MapNodes.getCurrentGame()).getSidebarGoals().get(((NodeTeam) player.getTeam()).getId()).getScore() + 1);
-        MapNodes.getCurrentGame().getPlaying().forEach(p -> (((NodeGame) MapNodes.getCurrentGame()).getScoreboardFactory()).setGameSidebar((NodePlayer) p));
+            if (!player.getTeam().getName().equals(killer.getTeam().getName())) {
+                addPoint((NodeGame) MapNodes.getCurrentGame(), killer.getTeam());
+                FunEffectsUtil.playSound(killer.getPlayer(), Sound.FIREWORK_LAUNCH);
+            }
+        }
+    }
+
+    /** Add a point to a team and set the winner */
+    public void addPoint(NodeGame game, GameTeam team) {
+        int newScore = scores.get(((NodeTeam) team).getId()) + 1;
+        scores.put(((NodeTeam) team).getId(), newScore);
+        game.getSidebarGoals().get(((NodeTeam) team).getId()).setScore(scores.get(((NodeTeam) team).getId()));
+        game.getPlaying().forEach(p -> (game.getScoreboardFactory()).setGameSidebar((NodePlayer) p));
+
+        // If game team new score is higher than all set as winner
+        if (newScore > scores.values().stream().sorted().collect(Collectors.toList()).get(0)) {
+            winner = team;
+        }
     }
 }

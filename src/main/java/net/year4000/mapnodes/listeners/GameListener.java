@@ -8,6 +8,7 @@ import net.year4000.mapnodes.api.game.GamePlayer;
 import net.year4000.mapnodes.game.NodeGame;
 import net.year4000.mapnodes.game.NodeKit;
 import net.year4000.mapnodes.game.NodePlayer;
+import net.year4000.mapnodes.game.NodeTeam;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.Common;
 import org.bukkit.event.EventHandler;
@@ -28,6 +29,8 @@ public final class GameListener implements Listener {
 
             // God buffer mode
             player.getPlayerTasks().add(NodeKit.immortal(event.getPlayer()));
+
+            event.setRespawnLocation(((NodeTeam) player.getTeam()).getSafeRandomSpawn());
         }
     }
 

@@ -13,7 +13,7 @@ public class GameTeamWinEvent extends GameWinEvent {
 
     public GameTeamWinEvent(GameManager game, GameTeam winner) {
         this.winner = winner;
-        this.winnerText = winner.getColor().toString() + winner.getName();
+        this.winnerText = winner == null ? "" : winner.getColor().toString() + winner.getName();
         this.game = game;
     }
 }
