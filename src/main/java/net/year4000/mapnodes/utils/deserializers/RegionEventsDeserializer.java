@@ -20,7 +20,7 @@ public class RegionEventsDeserializer implements JsonDeserializer<RegionEvents> 
 
         map.forEach((name, object) -> {
             Listener listener = GsonUtil.GSON.fromJson(object, EventManager.get().getRegionType(name));
-            MapNodesPlugin.debug("Loading region event: " + listener.getClass().getSimpleName());
+            // MapNodesPlugin.debug("Loading region event: " + listener.getClass().getSimpleName());
             events.addEvent(listener, EventTypes.getFromName(name));
         });
 
