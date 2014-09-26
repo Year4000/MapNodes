@@ -382,7 +382,7 @@ public final class NodeGame implements GameManager, Validator {
             .forEach(RegionEvents::registerEvents);
 
         // Assign the events reference the the region they belong to
-        regions.values().stream().forEach(region -> region.getEvents().assignRegion(region));
+        regions.values().stream().filter(region -> region.getEvents() != null).forEach(region -> region.getEvents().assignRegion(region));
 
         // Close spectator inventories
         start.getGame().getSpectating().forEach(player -> player.getPlayer().closeInventory());
