@@ -89,7 +89,12 @@ public final class Common {
             shortMsg = shortMsg.substring(0, --last);
         }
 
-        return shortMsg + (length > size ? "..." : "");
+        if (length > size) {
+            return shortMsg.substring(0, shortMsg.length() - 3) + "...";
+        }
+        else {
+            return shortMsg;
+        }
     }
 
     /** Center the location and maintain pitch and yaw */

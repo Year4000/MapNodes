@@ -5,6 +5,7 @@ import net.year4000.mapnodes.game.NodeGame;
 import net.year4000.mapnodes.game.NodePlayer;
 import net.year4000.mapnodes.game.NodeTeam;
 import net.year4000.mapnodes.messages.Msg;
+import net.year4000.mapnodes.utils.Common;
 import net.year4000.utilities.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.scoreboard.Scoreboard;
@@ -101,7 +102,8 @@ public class ScoreboardFactory {
             }
         });
 
-
-        side.buildSidebar(nodePlayer.getScoreboard(), "&b" + nodePlayer.getGame().getMap().getName());
+        // 22 is 32 - 10 the number comes from the padding of the map name
+        String shortMapName = Common.shortMessage(22, nodePlayer.getGame().getMap().getName());
+        side.buildSidebar(nodePlayer.getScoreboard(), "    &b" + shortMapName + "    ");
     }
 }
