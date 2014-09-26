@@ -70,6 +70,8 @@ public final class GameListener implements Listener {
     public void onClock(GameClockEvent event) {
         // If not in debug mode check if their are still players.
         if (!MapNodesPlugin.getInst().getLog().isDebug()) {
+            // See if we should handle stop cases like this
+            // ((NodeGame) event.getGame()).getStartControls().stream().filter(c -> !c.handle()).count() == ((NodeGame) event.getGame()).getStartControls().size()
             if (event.getGame().getPlaying().count() == 0) {
                 ((NodeGame) event.getGame()).stop();
             }
