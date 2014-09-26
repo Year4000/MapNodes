@@ -108,7 +108,7 @@ public final class Common {
         return textLine(text, size, delimiter, "&7&m", "&a");
     }
 
-        /** Center text between lines */
+    /** Center text between lines */
     public static String textLine(String text, int size, char delimiter, String lineColor, String textColor) {
         int padding = Math.abs(MessageUtil.stripColors(text).length() - size) / 2;
         StringBuilder side = new StringBuilder();
@@ -118,5 +118,15 @@ public final class Common {
         }
 
         return MessageUtil.message("%s%s%s %s %s%s", lineColor, side, textColor, text, lineColor, side);
+    }
+
+    /** Hard truncate the string at the end to the specific size */
+    public static String truncate(String text, int size) {
+        return text.substring(0, text.length() > size ? size : text.length());
+    }
+
+    /** Hard truncate the string at the start to the specific size */
+    public static String shrink(String text, int size) {
+        return text.substring(text.length() > size ? size - text.length() : 0, text.length());
     }
 }

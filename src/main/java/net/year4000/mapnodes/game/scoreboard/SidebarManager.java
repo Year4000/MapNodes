@@ -1,5 +1,6 @@
 package net.year4000.mapnodes.game.scoreboard;
 
+import net.year4000.mapnodes.utils.Common;
 import net.year4000.mapnodes.utils.SchedulerUtil;
 import net.year4000.utilities.bukkit.MessageUtil;
 import org.bukkit.scoreboard.DisplaySlot;
@@ -57,17 +58,17 @@ public class SidebarManager {
         // Register it
         Objective objective = scoreboard.registerNewObjective(id, "dummy");
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
-        scoreboard.getObjective(DisplaySlot.SIDEBAR).setDisplayName(MessageUtil.replaceColors(title));
+        scoreboard.getObjective(DisplaySlot.SIDEBAR).setDisplayName(Common.truncate(MessageUtil.replaceColors(title), 32));
 
         // Add static scores that are the order they are in the list
         for (int i = 0; i < staticScores.size(); i++) {
-            Score score = objective.getScore(MessageUtil.replaceColors(staticScores.get(i)));
+            Score score = objective.getScore(Common.truncate(MessageUtil.replaceColors(staticScores.get(i)), 16));
             score.setScore(-(i + 1));
         }
 
         // Add dynamic scores that don't depend on statics
         for (Object[] lines : dynamicScores) {
-            Score score = objective.getScore(MessageUtil.replaceColors((String) lines[0]));
+            Score score = objective.getScore(Common.truncate(MessageUtil.replaceColors((String) lines[0]), 16));
             int scoreInput = (Integer) lines[1];
 
             // Set default score to fix Bukkit / Minecraft cant start with 0
