@@ -4,6 +4,7 @@ import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.NodeFactory;
 import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.events.game.GameClockEvent;
+import net.year4000.mapnodes.api.events.player.GamePlayerJoinSpectatorEvent;
 import net.year4000.mapnodes.api.events.player.GamePlayerJoinTeamEvent;
 import net.year4000.mapnodes.api.game.GameManager;
 import net.year4000.mapnodes.api.game.GamePlayer;
@@ -14,6 +15,7 @@ import net.year4000.mapnodes.game.system.Spectator;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.Common;
 import net.year4000.mapnodes.utils.MathUtil;
+import net.year4000.mapnodes.utils.PacketHacks;
 import net.year4000.mapnodes.utils.SchedulerUtil;
 import net.year4000.utilities.bukkit.FunEffectsUtil;
 import net.year4000.utilities.bukkit.MessageUtil;
@@ -135,5 +137,13 @@ public final class MapNodesListener implements Listener {
             }
         }, ((NodeGame) MapNodes.getCurrentGame()).getStage().isStarting() ? 0L : 40L);
 
+    }
+
+    /** Force player respawn when joining spectators */
+    @EventHandler
+    public void forceRespawn(GamePlayerJoinSpectatorEvent event) {
+        if (event.getPlayer().getPlayer().isDead()) {
+            PacketHacks.respawnPlayer(event.getPlayer().getPlayer());
+        }
     }
 }
