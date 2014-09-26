@@ -50,7 +50,7 @@ public class NextNode extends Clocker {
         ));
 
         // Load and register map in its own thread
-        NodeFactory.get().peekNextQueued().register();
+        SchedulerUtil.runAsync(() -> NodeFactory.get().peekNextQueued().register());
     }
 
     public void runTock(int position) {

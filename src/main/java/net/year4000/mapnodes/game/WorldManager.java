@@ -48,7 +48,6 @@ public class WorldManager {
         }
 
         try {
-            worldFile.setRunInThread(true);
             worldFile.extractAll(location.getPath());
             MapNodesPlugin.debug(Msg.util("debug.world.unzip", worldName));
         } catch (ZipException e) {

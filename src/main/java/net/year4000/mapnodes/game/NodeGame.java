@@ -371,6 +371,10 @@ public final class NodeGame implements GameManager, Validator {
 
     /** Start the game */
     public void start() {
+        if (stage == NodeStage.PLAYING) {
+            return;
+        }
+
         stage = NodeStage.PLAYING;
 
         GameStartEvent start = new GameStartEvent(this);
@@ -401,6 +405,10 @@ public final class NodeGame implements GameManager, Validator {
 
     /** Stop the game anc cycle to the next with a time */
     public void stop(@Nullable Integer time) {
+        if (stage == NodeStage.ENDING) {
+            return;
+        }
+
         stage = NodeStage.ENDING;
 
         if (gameClock != null) {
