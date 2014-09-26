@@ -3,6 +3,7 @@ package net.year4000.mapnodes.commands.misc;
 import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.game.GameManager;
 import net.year4000.mapnodes.game.NodePlayer;
+import net.year4000.mapnodes.messages.Msg;
 import net.year4000.utilities.bukkit.commands.Command;
 import net.year4000.utilities.bukkit.commands.CommandContext;
 import net.year4000.utilities.bukkit.commands.CommandException;
@@ -21,7 +22,13 @@ public final class MenuCommands {
         GameManager gm = MapNodes.getCurrentGame();
 
         try {
-            ((NodePlayer) gm.getPlayer((Player) sender)).joinTeam(gm.getTeams().get(args.getString(0)));
+            NodePlayer player = ((NodePlayer) gm.getPlayer((Player) sender));
+
+            if (player.isPlaying()) {
+                throw new CommandException(Msg.locale(sender, "team.join.only_spectator"));
+            }
+
+            player.joinTeam(gm.getTeams().get(args.getString(0)));
         } catch (Exception e) {
             throw new CommandException(e.getMessage());
         }
@@ -38,7 +45,6 @@ public final class MenuCommands {
         GameManager gm = MapNodes.getCurrentGame();
 
         try {
-            ((NodePlayer) gm.getPlayer((Player) sender)).joinTeam(gm.getTeams().get(args.getString(0)));
         } catch (Exception e) {
             throw new CommandException(e.getMessage());
         }
@@ -50,7 +56,6 @@ public final class MenuCommands {
     )
     public static void spectator(CommandContext args, CommandSender sender) throws CommandException {
         try {
-            // todo check if things before setting to spectator
             ((NodePlayer) MapNodes.getCurrentGame().getPlayer((Player) sender)).join();
         } catch (Exception e) {
             throw new CommandException(e.getMessage());
