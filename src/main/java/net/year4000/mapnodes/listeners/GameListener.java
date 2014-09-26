@@ -12,6 +12,7 @@ import net.year4000.mapnodes.game.NodeTeam;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.Common;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
@@ -34,7 +35,7 @@ public final class GameListener implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onWin(GameWinEvent event) {
         final int size = 45;
         // Send messages to players before game end
