@@ -26,6 +26,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.CreatureSpawnEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.event.server.ServerListPingEvent;
 
@@ -145,5 +147,16 @@ public final class MapNodesListener implements Listener {
         if (event.getPlayer().getPlayer().isDead()) {
             PacketHacks.respawnPlayer(event.getPlayer().getPlayer());
         }
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void onCreatureSpawn(CreatureSpawnEvent event) {
+        event.setCancelled(true);
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void onCreatureSpawn(PlayerDeathEvent event) {
+        // TODO Make sure sure this will work with player drops in regions later
+        event.getDrops().clear();
     }
 }
