@@ -12,10 +12,20 @@ import static com.google.common.base.Preconditions.checkArgument;
 @GameModeConfigName("deathmatch")
 public class DeathmatchConfig implements GameModeConfig {
     @SerializedName("time_limit")
-    private int timeLimit = 60;
+    private Integer timeLimit = null;
+
+    @SerializedName("max_score")
+    private Integer maxScore = null;
 
     @Override
     public void validate() throws InvalidJsonException {
-        checkArgument(timeLimit > 0);
+        if (timeLimit != null) {
+            checkArgument(timeLimit > 0);
+            checkArgument(maxScore != null);
+        }
+
+        if (maxScore != null) {
+            checkArgument(maxScore > 0);
+        }
     }
 }

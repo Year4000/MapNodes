@@ -49,6 +49,11 @@ public class Deathmatch extends GameModeTemplate implements GameMode {
     @EventHandler
     public void onLoad(GameLoadEvent event) {
         gameModeConfig = (DeathmatchConfig) getConfig();
+        // Add max if map has max score
+        if (gameModeConfig.getMaxScore() != null) {
+            event.getGame().addDynamicGoal("max-score", "&c-- &6MAX &c--", gameModeConfig.getMaxScore());
+        }
+
         ((NodeGame) event.getGame()).getPlayingTeams().forEach(team -> {
             scores.put(team.getId(), 0);
             event.getGame().addDynamicGoal(team.getId(), team.getDisplayName(), 0);
@@ -57,24 +62,28 @@ public class Deathmatch extends GameModeTemplate implements GameMode {
 
     @EventHandler
     public void onLoad(GameStartEvent event) {
-        setEndTime((System.currentTimeMillis() + 1000) + (gameModeConfig.getTimeLimit() * 60000));
+        if (gameModeConfig.getTimeLimit() != null) {
+            setEndTime((System.currentTimeMillis() + 1000) + (gameModeConfig.getTimeLimit() * 60000));
+        }
     }
 
     @EventHandler
     public void gameClock(GameClockEvent event) {
-        NodeGame nodeGame = (NodeGame) event.getGame();
-        DateTime display = new DateTime(getEndTime()).minus(System.currentTimeMillis());
+        if (gameModeConfig.getTimeLimit() != null) {
+            NodeGame nodeGame = (NodeGame) event.getGame();
+            DateTime display = new DateTime(getEndTime()).minus(System.currentTimeMillis());
 
-        nodeGame.getPlaying().map(GamePlayer::getPlayer).forEach(player -> {
-            BossBar.setMessage(player, Msg.locale(player, "clock.time_left", display.toString("mm"), display.toString("ss")), MathUtil.percent((int) Math.abs(getEndTime() - nodeGame.getStartTime()), (int) Math.abs(getEndTime() - System.currentTimeMillis())));
-        });
+            nodeGame.getPlaying().map(GamePlayer::getPlayer).forEach(player -> {
+                BossBar.setMessage(player, Msg.locale(player, "clock.time_left", display.toString("mm"), display.toString("ss")), MathUtil.percent((int) Math.abs(getEndTime() - nodeGame.getStartTime()), (int) Math.abs(getEndTime() - System.currentTimeMillis())));
+            });
 
-        if ((display.toString("mm") + display.toString("ss")).equals("0000")) {
-            new GameTeamWinEvent(event.getGame(), winner) {{
-                if (winner == null) {
-                    winnerText = Joiner.on("&7, ").join(nodeGame.getPlayingTeams().map(NodeTeam::getDisplayName).collect(Collectors.toList()));
-                }
-            }}.call();
+            if ((display.toString("mm") + display.toString("ss")).equals("0000")) {
+                new GameTeamWinEvent(event.getGame(), winner) {{
+                    if (winner == null) {
+                        winnerText = Joiner.on("&7, ").join(nodeGame.getPlayingTeams().map(NodeTeam::getDisplayName).collect(Collectors.toList()));
+                    }
+                }}.call();
+            }
         }
     }
 
@@ -110,6 +119,13 @@ public class Deathmatch extends GameModeTemplate implements GameMode {
         if (newScore > scores.values().stream().sorted().collect(Collectors.toList()).get(0)) {
             winner = team;
             winnerScore = newScore;
+
+            // If max score is set check to see if the game should end
+            if (gameModeConfig.getMaxScore() != null) {
+                if (winnerScore >= gameModeConfig.getMaxScore()) {
+                    new GameTeamWinEvent(game, winner).call();
+                }
+            }
         }
     }
 }
