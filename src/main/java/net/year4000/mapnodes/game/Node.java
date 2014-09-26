@@ -5,6 +5,7 @@ import lombok.Getter;
 import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.NodeFactory;
 import net.year4000.mapnodes.api.MapNodes;
+import net.year4000.mapnodes.clocks.RestartServer;
 import net.year4000.mapnodes.exceptions.InvalidJsonException;
 import net.year4000.mapnodes.exceptions.WorldLoadException;
 import net.year4000.mapnodes.map.MapFolder;
@@ -42,8 +43,19 @@ public class Node {
             match.register();
             match.getGame().load();
         } catch (WorldLoadException | UnexpectedException e) {
-            MapNodesPlugin.debug(e.getMessage());
-            NodeFactory.get().loadNextQueued();
+            MapNodesPlugin.debug(e, false);
+
+            if (match.getGame().getStopClock() != null) {
+                match.getGame().getStopClock().cancel();
+            }
+
+            // Handle failed maps better to fix exceptions
+            if (NodeFactory.get().isQueuedGames()) {
+                NodeFactory.get().loadNextQueued();
+            }
+            else {
+                new RestartServer(10).run();
+            }
         }
     }
 

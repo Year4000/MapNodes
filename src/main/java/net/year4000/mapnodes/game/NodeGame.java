@@ -133,6 +133,7 @@ public final class NodeGame implements GameManager, Validator {
     private transient NodeStage stage = NodeStage.WAITING;
     private transient BukkitTask gameClock;
     private transient StartGame startClock;
+    private transient BukkitTask stopClock;
     private transient Map<Locale, Inventory> teamChooser = new HashMap<>();
     private transient ScoreboardFactory scoreboardFactory;
     private transient Map<String, SidebarGoal> sidebarGoals = new HashMap<>();
@@ -428,18 +429,18 @@ public final class NodeGame implements GameManager, Validator {
         // Cycle game or restart server
         if (NodeFactory.get().isQueuedGames()) {
             if (time != null) {
-                new NextNode(time).run();
+                stopClock = new NextNode(time).run();
             }
             else {
-                new NextNode().run();
+                stopClock = new NextNode().run();
             }
         }
         else {
             if (time != null) {
-                new RestartServer(time).run();
+                stopClock = new RestartServer(time).run();
             }
             else {
-                new RestartServer().run();
+                stopClock = new RestartServer().run();
             }
         }
     }

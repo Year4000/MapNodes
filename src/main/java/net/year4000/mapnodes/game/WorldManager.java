@@ -3,6 +3,7 @@ package net.year4000.mapnodes.game;
 import lombok.Getter;
 import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
+import net.lingala.zip4j.model.UnzipParameters;
 import net.minecraft.util.org.apache.commons.io.FileUtils;
 import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.api.game.GameConfig;
@@ -47,6 +48,7 @@ public class WorldManager {
         }
 
         try {
+            worldFile.setRunInThread(true);
             worldFile.extractAll(location.getPath());
             MapNodesPlugin.debug(Msg.util("debug.world.unzip", worldName));
         } catch (ZipException e) {
