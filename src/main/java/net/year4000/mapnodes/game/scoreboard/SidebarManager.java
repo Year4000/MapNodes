@@ -68,11 +68,18 @@ public class SidebarManager {
         // Add dynamic scores that don't depend on statics
         for (Object[] lines : dynamicScores) {
             Score score = objective.getScore(MessageUtil.replaceColors((String) lines[0]));
-            // Set default score to fix Bukkit / Minecraft cant start with 0
-            score.setScore(1);
+            int scoreInput = (Integer) lines[1];
 
-            // Apply true score a tick later
-            SchedulerUtil.runSync(() -> score.setScore((Integer) lines[1]));
+            // Set default score to fix Bukkit / Minecraft cant start with 0
+            if (scoreInput == 0) {
+                score.setScore(1);
+                // Apply true score a tick later
+                SchedulerUtil.runSync(() -> score.setScore(scoreInput), 1L);
+            }
+            // Handle score normally
+            else {
+                score.setScore(scoreInput);
+            }
         }
 
         return objective;
