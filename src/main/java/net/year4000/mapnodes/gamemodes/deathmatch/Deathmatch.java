@@ -7,6 +7,7 @@ import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.events.game.GameClockEvent;
 import net.year4000.mapnodes.api.events.game.GameLoadEvent;
 import net.year4000.mapnodes.api.events.game.GameStartEvent;
+import net.year4000.mapnodes.api.events.game.GameWinEvent;
 import net.year4000.mapnodes.api.events.team.GameTeamWinEvent;
 import net.year4000.mapnodes.api.game.GamePlayer;
 import net.year4000.mapnodes.api.game.GameTeam;
@@ -17,6 +18,7 @@ import net.year4000.mapnodes.game.NodePlayer;
 import net.year4000.mapnodes.game.NodeTeam;
 import net.year4000.mapnodes.gamemodes.GameModeTemplate;
 import net.year4000.mapnodes.messages.Msg;
+import net.year4000.mapnodes.utils.Common;
 import net.year4000.mapnodes.utils.MathUtil;
 import net.year4000.utilities.bukkit.FunEffectsUtil;
 import net.year4000.utilities.bukkit.MessageUtil;
@@ -41,7 +43,7 @@ public class Deathmatch extends GameModeTemplate implements GameMode {
     private DeathmatchConfig gameModeConfig;
     private Map<String, Integer> scores = new HashMap<>();
     private GameTeam winner;
-    private long startTime;
+    private int winnerScore;
     private long endTime;
 
     @EventHandler
@@ -55,25 +57,32 @@ public class Deathmatch extends GameModeTemplate implements GameMode {
 
     @EventHandler
     public void onLoad(GameStartEvent event) {
-        setStartTime(System.currentTimeMillis());
         setEndTime((System.currentTimeMillis() + 1000) + (gameModeConfig.getTimeLimit() * 60000));
     }
 
     @EventHandler
     public void gameClock(GameClockEvent event) {
+        NodeGame nodeGame = (NodeGame) event.getGame();
         DateTime display = new DateTime(getEndTime()).minus(System.currentTimeMillis());
 
-        event.getGame().getPlaying().map(GamePlayer::getPlayer).forEach(player -> {
-            BossBar.setMessage(player, Msg.locale(player, "clock.time_left", display.toString("mm"), display.toString("ss")), MathUtil.percent((int) Math.abs(getEndTime() - getStartTime()), (int) Math.abs(getEndTime() - System.currentTimeMillis())));
+        nodeGame.getPlaying().map(GamePlayer::getPlayer).forEach(player -> {
+            BossBar.setMessage(player, Msg.locale(player, "clock.time_left", display.toString("mm"), display.toString("ss")), MathUtil.percent((int) Math.abs(getEndTime() - nodeGame.getStartTime()), (int) Math.abs(getEndTime() - System.currentTimeMillis())));
         });
 
         if ((display.toString("mm") + display.toString("ss")).equals("0000")) {
             new GameTeamWinEvent(event.getGame(), winner) {{
                 if (winner == null) {
-                    winnerText = Joiner.on(", ").join(((NodeGame) event.getGame()).getPlayingTeams().map(NodeTeam::getDisplayName).collect(Collectors.toList()));
+                    winnerText = Joiner.on("&7, ").join(nodeGame.getPlayingTeams().map(NodeTeam::getDisplayName).collect(Collectors.toList()));
                 }
             }}.call();
         }
+    }
+
+    @EventHandler
+    public void onGameEnd(GameWinEvent event) {
+        scores.forEach((team, score) -> {
+            event.getMessage().add(event.getGame().getTeams().get(team).getDisplayName() + "&7: " + Common.colorNumber(score, winnerScore));
+        });
     }
 
     @EventHandler
@@ -100,6 +109,7 @@ public class Deathmatch extends GameModeTemplate implements GameMode {
         // If game team new score is higher than all set as winner
         if (newScore > scores.values().stream().sorted().collect(Collectors.toList()).get(0)) {
             winner = team;
+            winnerScore = newScore;
         }
     }
 }
