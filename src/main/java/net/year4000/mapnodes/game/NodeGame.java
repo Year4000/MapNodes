@@ -138,6 +138,7 @@ public final class NodeGame implements GameManager, Validator {
     private transient ScoreboardFactory scoreboardFactory;
     private transient Map<String, SidebarGoal> sidebarGoals = new HashMap<>();
     private transient List<Operations> startControls = new CopyOnWriteArrayList<>();
+    private transient long startTime;
 
     /** Init things that happen before load is playable */
     public void load() {
@@ -390,6 +391,7 @@ public final class NodeGame implements GameManager, Validator {
         start.getGame().getEntering().forEach(player -> ((NodePlayer) player).start());
 
         gameClock = SchedulerUtil.repeatAsync(() -> new GameClockEvent(this).call(), 20L);
+        startTime = System.currentTimeMillis();
     }
 
     /** Stop the game and cycle to the next with default time */

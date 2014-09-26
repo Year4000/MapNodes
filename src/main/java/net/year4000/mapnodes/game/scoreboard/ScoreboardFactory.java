@@ -10,6 +10,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
 import org.bukkit.scoreboard.Team;
+import org.joda.time.DateTime;
 
 @AllArgsConstructor
 public class ScoreboardFactory {
@@ -51,13 +52,33 @@ public class ScoreboardFactory {
     }
 
     public void setPersonalSidebar(NodePlayer nodePlayer) {
-        String queue = nodePlayer.getTeam().getQueue().contains(nodePlayer) ? Msg.locale(nodePlayer, "team.queue") : "";
-        SidebarManager side = new SidebarManager()
-            .addLine(Msg.locale(nodePlayer, "team.name"))
-            .addLine("  " + nodePlayer.getTeam().getDisplayName() + " " + queue)
-            ;
+        setPersonalSidebar(nodePlayer, "&3&l   [&b&lYear4000&3&l]   ");
+    }
 
-        side.buildSidebar(nodePlayer.getScoreboard(), "&3&l   [&b&lYear4000&3&l]   ");
+    public void setPersonalSidebar(NodePlayer nodePlayer, String header) {
+        NodeGame game = nodePlayer.getGame();
+        String queue = nodePlayer.getTeam().getQueue().contains(nodePlayer) ? Msg.locale(nodePlayer, "team.queue") : "";
+        SidebarManager side = new SidebarManager();
+
+        // When game is running show game time length
+        if (game.getStage().isPlaying()) {
+            DateTime display = new DateTime(System.currentTimeMillis()).minus(game.getStartTime());
+            String time = String.format(" &a%s:%s", display.toString("mm"), display.toString("ss"));
+            side.addLine(Msg.locale(nodePlayer, "game.time") + time);
+            side.addBlank();
+        }
+
+        // Team Selection
+        side.addLine(Msg.locale(nodePlayer, "team.name"))
+        .addLine("  " + nodePlayer.getTeam().getDisplayName() + " " + queue);
+
+        // When the map has classes
+        if (game.getClasses().size() > 0) {
+            side.addLine(Msg.locale(nodePlayer, "class.name"));
+            //side.addLine("  " + nodePlayer.getClazz().getDisplayName());
+        }
+
+        side.buildSidebar(nodePlayer.getScoreboard(), header);
     }
 
     public void setGameSidebar(NodePlayer nodePlayer) {

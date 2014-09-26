@@ -14,10 +14,7 @@ import net.year4000.mapnodes.commands.maps.MapCommands;
 import net.year4000.mapnodes.commands.match.MatchBase;
 import net.year4000.mapnodes.commands.misc.MenuCommands;
 import net.year4000.mapnodes.commands.node.NodeBase;
-import net.year4000.mapnodes.game.Node;
-import net.year4000.mapnodes.game.NodeModeFactory;
-import net.year4000.mapnodes.game.NodePlayer;
-import net.year4000.mapnodes.game.WorldManager;
+import net.year4000.mapnodes.game.*;
 import net.year4000.mapnodes.game.regions.EventManager;
 import net.year4000.mapnodes.game.regions.RegionManager;
 import net.year4000.mapnodes.game.regions.events.*;
@@ -41,7 +38,6 @@ import net.year4000.utilities.bukkit.BukkitPlugin;
 import net.year4000.utilities.bukkit.MessageUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
-import org.bukkit.scoreboard.DisplaySlot;
 
 import java.util.Iterator;
 import java.util.List;
@@ -155,12 +151,13 @@ public class MapNodesPlugin extends BukkitPlugin implements Plugin {
             .add(DeathMessages.class)
             .register();
 
-        SchedulerUtil.repeatSync(() -> {
+        SchedulerUtil.repeatAsync(() -> {
             String b = "&" + color.next() + "&l";
-            String name = MessageUtil.replaceColors(b + "   [&" + color.next() + "&l" + NAME + b + "]   ");
+            String name = b + "   [&" + color.next() + "&l" + NAME + b + "]   ";
 
             Stream.concat(MapNodes.getCurrentGame().getSpectating(), MapNodes.getCurrentGame().getEntering())
-                .forEach(player -> ((NodePlayer) player).getScoreboard().getObjective(DisplaySlot.SIDEBAR).setDisplayName(name));
+                .parallel()
+                .forEach(player -> ((NodeGame) MapNodes.getCurrentGame()).getScoreboardFactory().setPersonalSidebar((NodePlayer) player, name));
         }, 20L);
     }
 
