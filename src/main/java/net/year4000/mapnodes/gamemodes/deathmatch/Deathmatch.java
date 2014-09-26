@@ -10,12 +10,15 @@ import net.year4000.mapnodes.api.events.game.GameStartEvent;
 import net.year4000.mapnodes.api.events.game.GameWinEvent;
 import net.year4000.mapnodes.api.events.team.GameTeamWinEvent;
 import net.year4000.mapnodes.api.game.GamePlayer;
+import net.year4000.mapnodes.api.game.GameRegion;
 import net.year4000.mapnodes.api.game.GameTeam;
 import net.year4000.mapnodes.api.game.modes.GameMode;
 import net.year4000.mapnodes.api.game.modes.GameModeInfo;
 import net.year4000.mapnodes.game.NodeGame;
 import net.year4000.mapnodes.game.NodePlayer;
+import net.year4000.mapnodes.game.NodeRegion;
 import net.year4000.mapnodes.game.NodeTeam;
+import net.year4000.mapnodes.game.regions.types.Point;
 import net.year4000.mapnodes.gamemodes.GameModeTemplate;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.Common;
@@ -24,11 +27,16 @@ import net.year4000.utilities.bukkit.FunEffectsUtil;
 import net.year4000.utilities.bukkit.MessageUtil;
 import net.year4000.utilities.bukkit.bossbar.BossBar;
 import org.bukkit.Sound;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.util.Vector;
 import org.joda.time.DateTime;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -74,7 +82,7 @@ public class Deathmatch extends GameModeTemplate implements GameMode {
             DateTime display = new DateTime(getEndTime()).minus(System.currentTimeMillis());
 
             nodeGame.getPlaying().map(GamePlayer::getPlayer).forEach(player -> {
-                BossBar.setMessage(player, Msg.locale(player, "clock.time_left", display.toString("mm"), display.toString("ss")), MathUtil.percent((int) Math.abs(getEndTime() - nodeGame.getStartTime()), (int) Math.abs(getEndTime() - System.currentTimeMillis())));
+                BossBar.setMessage(player, Msg.locale(player, "deathmatch.clocks.time_left", display.toString("mm"), display.toString("ss")), MathUtil.percent((int) Math.abs(getEndTime() - nodeGame.getStartTime()), (int) Math.abs(getEndTime() - System.currentTimeMillis())));
             });
 
             if ((display.toString("mm") + display.toString("ss")).equals("0000")) {
@@ -108,9 +116,42 @@ public class Deathmatch extends GameModeTemplate implements GameMode {
         }
     }
 
-    /** Add a point to a team and set the winner */
+    @EventHandler
+    public void onMove(PlayerMoveEvent event) {
+        if (gameModeConfig.getPointBoxes().size() == 0) return;
+
+        Vector v = event.getTo().toVector();
+
+        // Skip check if not a new block
+        if (event.getFrom().toVector().toBlockVector().equals(v.toBlockVector())) return;
+
+        Point point = new Point(v.getBlockX(), v.getBlockY(), v.getBlockZ());
+        GamePlayer player = MapNodes.getCurrentGame().getPlayer(event.getPlayer());
+
+        // Add team point
+        MapNodes.getCurrentGame().getRegions().values().forEach(region -> {
+            gameModeConfig.getPointBoxes().stream()
+                .filter(pointRegion -> pointRegion.getChallenger().equals(((NodeTeam) player.getTeam()).getId()))
+                .filter(pointRegion -> pointRegion.getRegion().equals(region.getId()))
+                .forEach(pointRegion -> {
+                    if (region.inZone(point)) {
+                        addPoint((NodeGame) MapNodes.getCurrentGame(), player.getTeam(), pointRegion.getScore());
+                        event.setTo(((NodeTeam) player.getTeam()).getSafeRandomSpawn());
+                        player.sendMessage(Msg.locale(player, "deathmatch.scored", player.getPlayerColor(), String.valueOf(pointRegion.getScore()), ((NodeTeam) player.getTeam()).getDisplayName()));
+                    }
+                });
+        });
+
+    }
+
+    /** Add one point to the team */
     public void addPoint(NodeGame game, GameTeam team) {
-        int newScore = scores.get(((NodeTeam) team).getId()) + 1;
+        addPoint(game, team, 1);
+    }
+
+    /** Add the amount of points to a team and set the winner */
+    public void addPoint(NodeGame game, GameTeam team, int amount) {
+        int newScore = scores.get(((NodeTeam) team).getId()) + amount;
         scores.put(((NodeTeam) team).getId(), newScore);
         game.getSidebarGoals().get(((NodeTeam) team).getId()).setScore(scores.get(((NodeTeam) team).getId()));
         game.getPlaying().forEach(p -> (game.getScoreboardFactory()).setGameSidebar((NodePlayer) p));
