@@ -29,6 +29,7 @@ import net.year4000.mapnodes.messages.Message;
 import net.year4000.mapnodes.messages.MessageManager;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.Common;
+import net.year4000.mapnodes.utils.PacketHacks;
 import net.year4000.mapnodes.utils.SchedulerUtil;
 import net.year4000.mapnodes.utils.Validator;
 import net.year4000.mapnodes.utils.typewrappers.GameSet;
@@ -347,6 +348,11 @@ public final class NodeGame implements GameManager, Validator {
     // START Game Controls //
 
     public void join(Player player) {
+        // If player is dead force a respawn
+        if (player.isDead()) {
+            PacketHacks.respawnPlayer(player);
+        }
+
         players.put(player.getUniqueId(), new NodePlayer(this, player));
         ((NodePlayer) getPlayer(player)).join();
     }
@@ -401,7 +407,10 @@ public final class NodeGame implements GameManager, Validator {
         GameStopEvent stop = new GameStopEvent(this);
         stop.call();
 
-        stop.getGame().getPlaying().forEach(p -> ((NodePlayer) p).joinTeam(null));
+        stop.getGame().getPlaying().forEach(p -> {
+            ((NodePlayer) p).joinTeam(null);
+            PacketHacks.respawnPlayer(p.getPlayer());
+        });
 
         // Unregister region events
         regions.values().stream()
