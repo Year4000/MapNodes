@@ -348,13 +348,13 @@ public final class NodeGame implements GameManager, Validator {
     // START Game Controls //
 
     public void join(Player player) {
+        players.put(player.getUniqueId(), new NodePlayer(this, player));
+        ((NodePlayer) getPlayer(player)).join();
+
         // If player is dead force a respawn
         if (player.isDead()) {
             PacketHacks.respawnPlayer(player);
         }
-
-        players.put(player.getUniqueId(), new NodePlayer(this, player));
-        ((NodePlayer) getPlayer(player)).join();
     }
 
     public void quit(Player player) {
@@ -407,9 +407,13 @@ public final class NodeGame implements GameManager, Validator {
         GameStopEvent stop = new GameStopEvent(this);
         stop.call();
 
-        stop.getGame().getPlaying().forEach(p -> {
-            ((NodePlayer) p).joinTeam(null);
-            PacketHacks.respawnPlayer(p.getPlayer());
+        stop.getGame().getPlaying().forEach(player -> {
+            // If player is dead force a respawn
+            if (player.getPlayer().isDead()) {
+                PacketHacks.respawnPlayer(player.getPlayer());
+            }
+
+            ((NodePlayer) player).joinTeam(null);
         });
 
         // Unregister region events
