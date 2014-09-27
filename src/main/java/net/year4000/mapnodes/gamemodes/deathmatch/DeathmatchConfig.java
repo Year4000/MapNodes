@@ -5,6 +5,7 @@ import lombok.Data;
 import net.year4000.mapnodes.api.game.modes.GameModeConfig;
 import net.year4000.mapnodes.api.game.modes.GameModeConfigName;
 import net.year4000.mapnodes.exceptions.InvalidJsonException;
+import net.year4000.mapnodes.messages.Msg;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,12 +31,12 @@ public class DeathmatchConfig implements GameModeConfig {
     @Override
     public void validate() throws InvalidJsonException {
         if (timeLimit != null) {
-            checkArgument(timeLimit > 0);
-            checkArgument(maxScore != null);
+            checkArgument(timeLimit > 0, Msg.util("deathmatch.error.time_limit"));
+            checkArgument(maxScore != null, Msg.util("deathmatch.error.max_score_null"));
         }
 
         if (maxScore != null) {
-            checkArgument(maxScore > 0);
+            checkArgument(maxScore > 0, Msg.util("deathmatch.error.max_score"));
         }
     }
 
