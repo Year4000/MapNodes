@@ -23,6 +23,7 @@ import net.year4000.mapnodes.gamemodes.GameModeTemplate;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.Common;
 import net.year4000.mapnodes.utils.MathUtil;
+import net.year4000.mapnodes.utils.SchedulerUtil;
 import net.year4000.utilities.bukkit.FunEffectsUtil;
 import net.year4000.utilities.bukkit.MessageUtil;
 import net.year4000.utilities.bukkit.bossbar.BossBar;
@@ -164,7 +165,11 @@ public class Deathmatch extends GameModeTemplate implements GameMode {
             // If max score is set check to see if the game should end
             if (gameModeConfig.getMaxScore() != null) {
                 if (winnerScore >= gameModeConfig.getMaxScore()) {
-                    new GameTeamWinEvent(game, winner).call();
+                    SchedulerUtil.runSync(() -> {
+                        if (game.getStage().isPlaying()) {
+                            new GameTeamWinEvent(game, winner).call();
+                        }
+                    }, 5L);
                 }
             }
         }
