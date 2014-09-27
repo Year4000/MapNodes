@@ -144,7 +144,6 @@ public class Deathmatch extends GameModeTemplate implements GameMode {
                     }
                 });
         });
-
     }
 
     /** Add one point to the team */
