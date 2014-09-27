@@ -20,6 +20,10 @@ public class DeathmatchConfig implements GameModeConfig {
     @SerializedName("max_score")
     private Integer maxScore = null;
 
+    @SerializedName("kill_point")
+    private int killPoint = 1;
+
+
     @SerializedName("point_boxes")
     private List<GamePointRegions> pointBoxes = new ArrayList<>();
 
@@ -40,6 +44,6 @@ public class DeathmatchConfig implements GameModeConfig {
         private String owner;
         private String challenger;
         private String region;
-        private int score = 1;
+        private int point = 1;
     }
 }

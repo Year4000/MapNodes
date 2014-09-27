@@ -136,9 +136,9 @@ public class Deathmatch extends GameModeTemplate implements GameMode {
                 .filter(pointRegion -> pointRegion.getRegion().equals(region.getId()))
                 .forEach(pointRegion -> {
                     if (region.inZone(point)) {
-                        addPoint((NodeGame) MapNodes.getCurrentGame(), player.getTeam(), pointRegion.getScore());
+                        addPoint((NodeGame) MapNodes.getCurrentGame(), player.getTeam(), pointRegion.getPoint());
                         event.setTo(((NodeTeam) player.getTeam()).getSafeRandomSpawn());
-                        player.sendMessage(Msg.locale(player, "deathmatch.scored", player.getPlayerColor(), String.valueOf(pointRegion.getScore()), ((NodeTeam) player.getTeam()).getDisplayName()));
+                        player.sendMessage(Msg.locale(player, "deathmatch.scored", player.getPlayerColor(), String.valueOf(pointRegion.getPoint()), ((NodeTeam) player.getTeam()).getDisplayName()));
                     }
                 });
         });
@@ -147,7 +147,7 @@ public class Deathmatch extends GameModeTemplate implements GameMode {
 
     /** Add one point to the team */
     public void addPoint(NodeGame game, GameTeam team) {
-        addPoint(game, team, 1);
+        addPoint(game, team, gameModeConfig.getKillPoint());
     }
 
     /** Add the amount of points to a team and set the winner */
