@@ -119,7 +119,7 @@ public class Deathmatch extends GameModeTemplate implements GameMode {
 
     @EventHandler
     public void onMove(PlayerMoveEvent event) {
-        if (gameModeConfig.getPointBoxes().size() == 0) return;
+        if (gameModeConfig.getPointBoxes().size() == 0 || !MapNodes.getCurrentGame().getStage().isPlaying()) return;
 
         Vector v = event.getTo().toVector();
 
@@ -128,6 +128,8 @@ public class Deathmatch extends GameModeTemplate implements GameMode {
 
         Point point = new Point(v.getBlockX(), v.getBlockY(), v.getBlockZ());
         GamePlayer player = MapNodes.getCurrentGame().getPlayer(event.getPlayer());
+
+        if (!player.isPlaying()) return;
 
         // Add team point
         MapNodes.getCurrentGame().getRegions().values().forEach(region -> {
