@@ -3,8 +3,7 @@ package net.year4000.mapnodes.game;
 import com.google.common.base.Joiner;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.annotations.Since;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import net.year4000.mapnodes.NodeFactory;
 import net.year4000.mapnodes.api.events.game.GameClockEvent;
 import net.year4000.mapnodes.api.events.game.GameLoadEvent;
@@ -52,7 +51,8 @@ import java.util.stream.Stream;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 public final class NodeGame implements GameManager, Validator {
     /** Details about the current map. */
