@@ -6,12 +6,15 @@ import net.year4000.mapnodes.game.NodePlayer;
 import net.year4000.mapnodes.game.NodeTeam;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.Common;
+import net.year4000.mapnodes.utils.TimeUtil;
 import net.year4000.utilities.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
 import org.bukkit.scoreboard.Team;
 import org.joda.time.DateTime;
+
+import java.util.concurrent.TimeUnit;
 
 @AllArgsConstructor
 public class ScoreboardFactory {
@@ -63,8 +66,8 @@ public class ScoreboardFactory {
 
         // When game is running show game time length
         if (game.getStage().isPlaying()) {
-            DateTime display = new DateTime(System.currentTimeMillis()).minus(game.getStartTime());
-            String time = String.format(" &a%s:%s", display.toString("mm"), display.toString("ss"));
+            long currentTime = System.currentTimeMillis() - game.getStartTime();
+            String time = (new TimeUtil(currentTime, TimeUnit.MILLISECONDS)).prettyOutput();
             side.addLine(Msg.locale(nodePlayer, "game.time") + time);
             side.addBlank();
         }

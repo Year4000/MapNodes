@@ -9,11 +9,13 @@ import net.year4000.mapnodes.messages.Message;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.Common;
 import net.year4000.mapnodes.utils.MathUtil;
+import net.year4000.mapnodes.utils.TimeUtil;
 import net.year4000.utilities.bukkit.FunEffectsUtil;
 import net.year4000.utilities.bukkit.bossbar.BossBar;
 import org.bukkit.Sound;
 
 import java.util.Arrays;
+import java.util.concurrent.TimeUnit;
 
 import static net.year4000.mapnodes.utils.MathUtil.percent;
 import static net.year4000.mapnodes.utils.MathUtil.ticks;
@@ -55,9 +57,13 @@ public class StartGame extends Clocker {
                 FunEffectsUtil.playSound(player.getPlayer(), Sound.NOTE_PLING);
             }
 
+            int pos = sec(position);
+            String color = Common.colorCapacity(pos, sec(getTime()));
+            String time = color + (new TimeUtil(pos, TimeUnit.SECONDS)).prettyOutput("&7:" + color);
+
             BossBar.setMessage(
                 player.getPlayer(),
-                Msg.locale(player, "clocks.start.tock", map.getName(), Common.colorNumber(sec(position), sec(getTime()))),
+                Msg.locale(player, "clocks.start.tock", map.getName(), time),
                 percent(getTime(), position)
             );
         });

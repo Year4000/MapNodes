@@ -24,6 +24,7 @@ import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.Common;
 import net.year4000.mapnodes.utils.MathUtil;
 import net.year4000.mapnodes.utils.SchedulerUtil;
+import net.year4000.mapnodes.utils.TimeUtil;
 import net.year4000.utilities.bukkit.FunEffectsUtil;
 import net.year4000.utilities.bukkit.MessageUtil;
 import net.year4000.utilities.bukkit.bossbar.BossBar;
@@ -39,6 +40,7 @@ import org.joda.time.DateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @GameModeInfo(
@@ -80,13 +82,14 @@ public class Deathmatch extends GameModeTemplate implements GameMode {
     public void gameClock(GameClockEvent event) {
         if (gameModeConfig.getTimeLimit() != null) {
             NodeGame nodeGame = (NodeGame) event.getGame();
-            DateTime display = new DateTime(getEndTime()).minus(System.currentTimeMillis());
+            long currentTime = endTime - System.currentTimeMillis();
+            String time = (new TimeUtil(currentTime, TimeUnit.MILLISECONDS)).prettyOutput();
 
             nodeGame.getPlaying().map(GamePlayer::getPlayer).forEach(player -> {
-                BossBar.setMessage(player, Msg.locale(player, "deathmatch.clocks.time_left", display.toString("mm"), display.toString("ss")), MathUtil.percent((int) Math.abs(getEndTime() - nodeGame.getStartTime()), (int) Math.abs(getEndTime() - System.currentTimeMillis())));
+                BossBar.setMessage(player, Msg.locale(player, "deathmatch.clocks.time_left", time), MathUtil.percent((int) Math.abs(getEndTime() - nodeGame.getStartTime()), (int) Math.abs(getEndTime() - System.currentTimeMillis())));
             });
 
-            if ((display.toString("mm") + display.toString("ss")).equals("0000")) {
+            if (currentTime <= 0L) {
                 new GameTeamWinEvent(event.getGame(), winner) {{
                     if (winner == null) {
                         winnerText = Joiner.on("&7, ").join(nodeGame.getPlayingTeams().map(NodeTeam::getDisplayName).collect(Collectors.toList()));
