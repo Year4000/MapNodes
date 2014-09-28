@@ -1,5 +1,6 @@
 package net.year4000.mapnodes.listeners;
 
+import lombok.EqualsAndHashCode;
 import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.events.game.GameClockEvent;
@@ -19,6 +20,7 @@ import org.bukkit.event.player.PlayerRespawnEvent;
 
 import java.util.stream.Stream;
 
+@EqualsAndHashCode
 public final class GameListener implements Listener {
     @EventHandler
     public void respawn(PlayerRespawnEvent event) {

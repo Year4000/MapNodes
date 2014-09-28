@@ -8,14 +8,12 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginManager;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public class ListenerBuilder {
     private static final PluginManager manager = Bukkit.getPluginManager();
     private List<Class<?>> listeners = new ArrayList<>();
-    private List<Listener> registered = new ArrayList<>();
+    private Set<Listener> registered = new HashSet<>();
 
     /** Add a class to this listener builder */
     public ListenerBuilder add(Class<?> commandClass) {

@@ -1,5 +1,6 @@
 package net.year4000.mapnodes.listeners;
 
+import lombok.EqualsAndHashCode;
 import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.events.player.GamePlayerJoinSpectatorEvent;
@@ -34,6 +35,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.Locale;
 
+@EqualsAndHashCode
 public class SpectatorListener implements Listener {
     /** Stop the event if the player is not playing the game */
     private void stopEvent(Cancellable event, Player player) {

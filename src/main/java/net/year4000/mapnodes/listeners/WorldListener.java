@@ -1,5 +1,6 @@
 package net.year4000.mapnodes.listeners;
 
+import lombok.EqualsAndHashCode;
 import net.year4000.mapnodes.api.MapNodes;
 import org.bukkit.World;
 import org.bukkit.event.EventHandler;
@@ -8,6 +9,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.*;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 
+@EqualsAndHashCode
 public final class WorldListener implements Listener {
     /** Return true | false if the map is running. */
     private boolean isMapPlaying(World world) {
