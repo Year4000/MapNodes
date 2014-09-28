@@ -10,6 +10,7 @@ import net.year4000.mapnodes.api.events.game.GameStopEvent;
 import net.year4000.mapnodes.api.events.game.GameWinEvent;
 import net.year4000.mapnodes.api.events.player.*;
 import net.year4000.mapnodes.api.events.team.GameTeamWinEvent;
+import net.year4000.mapnodes.api.game.GamePlayer;
 import net.year4000.mapnodes.api.game.modes.GameMode;
 import net.year4000.mapnodes.api.game.modes.GameModeInfo;
 import net.year4000.mapnodes.game.NodeGame;
@@ -29,6 +30,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 @GameModeInfo(
@@ -51,6 +53,7 @@ public class Skywars extends GameModeTemplate implements GameMode {
         gameModeConfig = (SkywarsConfig) getConfig();
         game = (NodeGame) event.getGame();
         team = game.getTeams().get(gameModeConfig.getPlayersTeam());
+        team.setAllowFriendlyFire(true); // Force enable so players can kill each other
 
         // Add requirements | Their must be at least 2 players to start Skywars
         game.getStartControls().add(() -> team.getPlayers().size() >= 2);
@@ -114,6 +117,14 @@ public class Skywars extends GameModeTemplate implements GameMode {
         deadPlayer(event.getPlayer());
     }
 
+    /** When players leave count that as a death */
+    @EventHandler
+    public void onSwitchTeam(GamePlayerJoinTeamEvent event) {
+        if (event.getFrom() instanceof Spectator) return;
+
+        deadPlayer(event.getPlayer().getPlayer());
+    }
+
     /** Handle the dead player */
     public void deadPlayer(Player name) {
         if (alive.remove(name.getName())) {
@@ -128,7 +139,11 @@ public class Skywars extends GameModeTemplate implements GameMode {
         if (alive.size() == 1) {
             SchedulerUtil.runSync(() -> {
                 if (game.getStage().isPlaying()) {
-                    new GamePlayerWinEvent(game, game.getPlaying().iterator().next()).call();
+                    try {
+                        new GamePlayerWinEvent(game, game.getPlaying().iterator().next()).call();
+                    } catch (NoSuchElementException e) {
+                        game.stop();
+                    }
                 }
             }, 20L);
         }
