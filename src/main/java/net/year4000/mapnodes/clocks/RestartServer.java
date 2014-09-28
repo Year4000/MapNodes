@@ -53,7 +53,7 @@ public class RestartServer extends Clocker {
             }
 
             int pos = sec(position);
-            String color = Common.colorCapacity(pos, sec(getTime()));
+            String color = Common.chatColorNumber(pos, sec(getTime()));
             String time = color + (new TimeUtil(pos, TimeUnit.SECONDS)).prettyOutput("&7:" + color);
 
             BossBar.setMessage(

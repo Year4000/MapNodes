@@ -13,6 +13,10 @@ public final class Common {
     private static int toggle = 0;
 
     public static String colorNumber(int current, int total) {
+        return MessageUtil.replaceColors(chatColorNumber(current, total) + current);
+    }
+
+    public static String chatColorNumber(int current, int total) {
         double percent = ((double)current / (double)total) * 100;
         ChatColor color;
 
@@ -36,7 +40,7 @@ public final class Common {
             color = ChatColor.GREEN;
         }
 
-        return MessageUtil.replaceColors(color.toString() + current);
+        return color.toString();
     }
 
     /** Color numbers based on its capacity */
