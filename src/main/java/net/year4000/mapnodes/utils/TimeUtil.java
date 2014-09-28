@@ -63,14 +63,4 @@ public class TimeUtil {
         amount -= unit.convert(numberMinutes, minutes);
         numberSeconds = seconds.convert(amount, unit);
     }
-
-    public static void main(String[] args) {
-
-        for(int i = 0; i < 9999999; i++) {
-
-            TimeUtil test = new TimeUtil(i, TimeUnit.SECONDS);
-            System.out.println(test.rawOutput()+" IS NOT " + test.prettyOutput() + " ALSO NOT " + test.rawOutput("/") + " OR " + test.prettyOutput("#"));
-
-        }
-    }
 }
