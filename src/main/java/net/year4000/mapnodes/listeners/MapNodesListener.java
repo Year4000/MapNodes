@@ -133,7 +133,7 @@ public final class MapNodesListener implements Listener {
                         // Announcer to players that time was reduce
                         game.getEntering().forEach(p -> p.sendMessage(Msg.locale(p, "clocks.start.reduce")));
                     }
-                } else {
+                } else if (game.getStage().isWaiting()) {
                     new StartGame(240).run(); // 2 mins
                 }
             }
