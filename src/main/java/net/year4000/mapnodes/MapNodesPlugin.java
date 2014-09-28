@@ -152,10 +152,10 @@ public class MapNodesPlugin extends BukkitPlugin implements Plugin {
             .register();
 
         SchedulerUtil.repeatAsync(() -> {
-            String b = "&" + color.next() + "&l";
-            String name = b + "   [&" + color.next() + "&l" + NAME + b + "]   ";
-
             if (!MapNodes.getCurrentGame().getStage().isEnded()) {
+                String b = "&" + color.next() + "&l";
+                String name = b + "   [&" + color.next() + "&l" + NAME + b + "]   ";
+
                 Stream.concat(MapNodes.getCurrentGame().getSpectating(), MapNodes.getCurrentGame().getEntering())
                     .parallel()
                     .forEach(player -> ((NodeGame) MapNodes.getCurrentGame()).getScoreboardFactory().setPersonalSidebar((NodePlayer) player, name));
