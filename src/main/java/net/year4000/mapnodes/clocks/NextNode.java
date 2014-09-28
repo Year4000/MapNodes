@@ -57,15 +57,15 @@ public class NextNode extends Clocker {
 
     public void runTock(int position) {
         GameMap map = NodeFactory.get().peekNextQueued().getMatch().getGame().getMap();
+        int pos = sec(position);
+        String color = Common.chatColorNumber(pos, sec(getTime()));
+        String time = color + (new TimeUtil(pos, TimeUnit.SECONDS)).prettyOutput("&7:" + color);
+
 
         MapNodes.getCurrentGame().getPlayers().parallel().forEach(player -> {
             if (Arrays.asList(ticks).contains(position)) {
                 FunEffectsUtil.playSound(player.getPlayer(), Sound.NOTE_PLING);
             }
-
-            int pos = sec(position);
-            String color = Common.chatColorNumber(pos, sec(getTime()));
-            String time = color + (new TimeUtil(pos, TimeUnit.SECONDS)).prettyOutput("&7:" + color);
 
             BossBar.setMessage(
                 player.getPlayer(),
