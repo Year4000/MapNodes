@@ -5,6 +5,7 @@ import lombok.EqualsAndHashCode;
 import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.events.game.GameLoadEvent;
 import net.year4000.mapnodes.api.events.game.GameStartEvent;
+import net.year4000.mapnodes.api.events.game.GameStopEvent;
 import net.year4000.mapnodes.api.events.game.GameWinEvent;
 import net.year4000.mapnodes.api.events.player.*;
 import net.year4000.mapnodes.api.events.team.GameTeamWinEvent;
@@ -103,19 +104,6 @@ public class Skywars extends GameModeTemplate implements GameMode {
     @EventHandler
     public void onDeath(PlayerDeathEvent event) {
         deadPlayer(event.getEntity());
-
-        if (alive.size() == 1) {
-            SchedulerUtil.runSync(() -> {
-                if (game.getStage().isPlaying()) {
-                    new GamePlayerWinEvent(game, game.getPlaying().iterator().next()).call();
-                }
-            }, 5L);
-        }
-        else if (alive.size() == 0) {
-            if (game.getStage().isPlaying()) {
-                game.stop();
-            }
-        }
     }
 
     /** When players leave count that as a death */
@@ -132,6 +120,19 @@ public class Skywars extends GameModeTemplate implements GameMode {
 
             if (game.getPlayer(name) != null) {
                 ((NodePlayer) game.getPlayer(name)).joinTeam(null);
+            }
+        }
+
+        if (alive.size() == 1) {
+            SchedulerUtil.runSync(() -> {
+                if (game.getStage().isPlaying()) {
+                    new GamePlayerWinEvent(game, game.getPlaying().iterator().next()).call();
+                }
+            }, 20L);
+        }
+        else if (alive.size() == 0) {
+            if (game.getStage().isPlaying()) {
+                game.stop();
             }
         }
     }
