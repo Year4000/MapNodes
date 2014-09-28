@@ -14,6 +14,7 @@ import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.Common;
 import net.year4000.mapnodes.utils.MathUtil;
 import net.year4000.mapnodes.utils.SchedulerUtil;
+import net.year4000.mapnodes.utils.TimeUtil;
 import net.year4000.utilities.bukkit.FunEffectsUtil;
 import net.year4000.utilities.bukkit.MessageUtil;
 import net.year4000.utilities.bukkit.bossbar.BossBar;
@@ -34,6 +35,7 @@ import org.bukkit.scoreboard.Scoreboard;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import static net.year4000.mapnodes.utils.MathUtil.percent;
 import static net.year4000.mapnodes.utils.MathUtil.ticks;
@@ -242,9 +244,13 @@ public final class NodePlayer implements GamePlayer {
                             FunEffectsUtil.playSound(player, Sound.NOTE_PLING);
                         }
 
+                        int currentTime = sec(position);
+                        String color = Common.chatColorNumber(currentTime, (int) sec(getTime()));
+                        String time = color + (new TimeUtil(currentTime, TimeUnit.MILLISECONDS)).prettyOutput("&7:" + color);
+
                         BossBar.setMessage(
                             player,
-                            Msg.locale(player, "clocks.join.tock", map.getName(), Common.colorNumber(sec(position), sec(getTime()))),
+                            Msg.locale(player, "clocks.join.tock", map.getName(), time),
                             percent(getTime(), position)
                         );
                     }

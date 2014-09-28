@@ -83,7 +83,8 @@ public class Deathmatch extends GameModeTemplate implements GameMode {
         if (gameModeConfig.getTimeLimit() != null) {
             NodeGame nodeGame = (NodeGame) event.getGame();
             long currentTime = endTime - System.currentTimeMillis();
-            String time = (new TimeUtil(currentTime, TimeUnit.MILLISECONDS)).prettyOutput();
+            String color = Common.chatColorNumber((int) System.currentTimeMillis(), (int) endTime);
+            String time = color + (new TimeUtil(currentTime, TimeUnit.MILLISECONDS)).prettyOutput("&7:" + color);
 
             nodeGame.getPlaying().map(GamePlayer::getPlayer).forEach(player -> {
                 BossBar.setMessage(player, Msg.locale(player, "deathmatch.clocks.time_left", time), MathUtil.percent((int) Math.abs(getEndTime() - nodeGame.getStartTime()), (int) Math.abs(getEndTime() - System.currentTimeMillis())));
