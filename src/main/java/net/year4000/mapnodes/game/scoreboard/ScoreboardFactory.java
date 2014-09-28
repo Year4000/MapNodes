@@ -68,7 +68,7 @@ public class ScoreboardFactory {
         if (game.getStage().isPlaying()) {
             long currentTime = System.currentTimeMillis() - game.getStartTime();
             String time = (new TimeUtil(currentTime, TimeUnit.MILLISECONDS)).prettyOutput();
-            side.addLine(Msg.locale(nodePlayer, "game.time") + time);
+            side.addLine(Msg.locale(nodePlayer, "game.time", time));
             side.addBlank();
         }
 
@@ -90,14 +90,14 @@ public class ScoreboardFactory {
 
         nodePlayer.getGame().getSidebarGoals().values().forEach(goal -> {
             if (goal.getType() == SidebarGoal.GoalType.DYNAMIC) {
-                side.addLine(goal.getDisplay(), goal.getScore());
+                side.addLine(Msg.locale(nodePlayer, goal.getDisplay()), goal.getScore());
             }
             else if (goal.getType() == SidebarGoal.GoalType.STATIC) {
                 if (goal.getDisplay().equals("")) {
                     side.addBlank();
                 }
                 else {
-                    side.addLine(goal.getDisplay());
+                    side.addLine(Msg.locale(nodePlayer, goal.getDisplay()));
                 }
             }
             else {
