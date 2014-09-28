@@ -32,11 +32,11 @@ public class NextNode extends Clocker {
     };
 
     public NextNode() {
-        this(20);
+        this(30);
     }
 
     public NextNode(int time) {
-        super(MathUtil.ticks(MapNodesPlugin.getInst().getLog().isDebug() ? 10 : time));
+        super(MathUtil.ticks(MapNodesPlugin.getInst().getLog().isDebug() ? 20 : time));
     }
 
     public void runFirst(int position) {
@@ -54,50 +54,40 @@ public class NextNode extends Clocker {
     }
 
     public void runTock(int position) {
-        try {
-            GameMap map = NodeFactory.get().peekNextQueued().getMatch().getGame().getMap();
+        GameMap map = NodeFactory.get().peekNextQueued().getMatch().getGame().getMap();
 
-            MapNodes.getCurrentGame().getPlayers().parallel().forEach(player -> {
-                if (Arrays.asList(ticks).contains(position)) {
-                    FunEffectsUtil.playSound(player.getPlayer(), Sound.NOTE_PLING);
-                }
+        MapNodes.getCurrentGame().getPlayers().parallel().forEach(player -> {
+            if (Arrays.asList(ticks).contains(position)) {
+                FunEffectsUtil.playSound(player.getPlayer(), Sound.NOTE_PLING);
+            }
 
-                BossBar.setMessage(
-                    player.getPlayer(),
-                    Msg.locale(player, "clocks.next.tock", map.getName(), Common.colorNumber(sec(position), sec(getTime()))),
-                    percent(getTime(), position)
-                );
-            });
-        } catch (NullPointerException e) {
-            MapNodesPlugin.log(e, false);
-            this.getClock().task.cancel();
-        }
+            BossBar.setMessage(
+                player.getPlayer(),
+                Msg.locale(player, "clocks.next.tock", map.getName(), Common.colorNumber(sec(position), sec(getTime()))),
+                percent(getTime(), position)
+            );
+        });
     }
 
     public void runLast(int position) {
-        try {
-            GameMap map = NodeFactory.get().peekNextQueued().getMatch().getGame().getMap();
+        GameMap map = NodeFactory.get().peekNextQueued().getMatch().getGame().getMap();
 
-            MapNodesPlugin.log(Msg.locale(Message.DEFAULT_LOCALE, "clocks.next.last", map.getName()));
+        MapNodesPlugin.log(Msg.locale(Message.DEFAULT_LOCALE, "clocks.next.last", map.getName()));
 
-            Deque<Player> move = new ArrayDeque<>();
+        Deque<Player> move = new ArrayDeque<>();
 
-            MapNodes.getCurrentGame().getPlayers().parallel().forEach(player -> {
-                FunEffectsUtil.playSound(player.getPlayer(), Sound.NOTE_BASS);
-                BossBar.setMessage(
-                    player.getPlayer(),
-                    Msg.locale(player, "clocks.next.last", map.getName()),
-                    1
-                );
-                move.add(player.getPlayer());
-            });
+        MapNodes.getCurrentGame().getPlayers().parallel().forEach(player -> {
+            FunEffectsUtil.playSound(player.getPlayer(), Sound.NOTE_BASS);
+            BossBar.setMessage(
+                player.getPlayer(),
+                Msg.locale(player, "clocks.next.last", map.getName()),
+                1
+            );
+            move.add(player.getPlayer());
+        });
 
-            Node next = NodeFactory.get().loadNextQueued();
+        Node next = NodeFactory.get().loadNextQueued();
 
-            move.parallelStream().forEach(player -> next.getMatch().getGame().join(player));
-        } catch (NullPointerException e) {
-            MapNodesPlugin.log(e, false);
-            this.getClock().task.cancel();
-        }
+        move.stream().forEach(player -> next.getMatch().getGame().join(player));
     }
 }
