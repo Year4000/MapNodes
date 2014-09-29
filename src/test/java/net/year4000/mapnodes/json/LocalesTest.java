@@ -5,7 +5,7 @@ import junit.framework.Assert;
 import net.year4000.mapnodes.game.NodeGame;
 import org.junit.Test;
 
-public class LocalesTest {
+public final class LocalesTest {
     private static final Gson GSON = new Gson();
     private static final String KEY = "hello";
     private static final String NOT_KEY = "This is not a key";
