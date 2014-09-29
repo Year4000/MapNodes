@@ -28,10 +28,15 @@ public class NodeFactory {
 
     private NodeFactory() {
         MapFactory.getMaps(Settings.get().getLoadMaps()).forEach(world -> {
-            try {
-                addMap(world);
-            } catch (InvalidJsonException | WorldLoadException e) {
-                MapNodesPlugin.log(e, true);
+            if (!world.isDisabled()) {
+                try {
+                    addMap(world);
+                } catch (InvalidJsonException | WorldLoadException e) {
+                    MapNodesPlugin.log(e, true);
+                }
+            }
+            else {
+                MapNodesPlugin.debug(Msg.util("debug.world.disabled", world.getName()));
             }
         });
     }
