@@ -46,7 +46,8 @@ public class TimeUtil {
         StringBuilder builder = new StringBuilder();
 
         builder = numberHours < 1 ? builder : builder.append(numberHours).append(separator);
-        builder.append(numberMinutes).append(separator);
+        builder = numberMinutes < 10 && numberHours > 0 ? builder.append("0").append(numberMinutes) : builder.append(numberMinutes);
+        builder.append(separator);
         builder = numberSeconds >= 10 ? builder.append(numberSeconds) : builder.append("0").append(numberSeconds);
 
         return builder.toString();
