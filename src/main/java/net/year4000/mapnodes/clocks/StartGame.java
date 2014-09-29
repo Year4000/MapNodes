@@ -21,6 +21,7 @@ import static net.year4000.mapnodes.utils.MathUtil.percent;
 import static net.year4000.mapnodes.utils.MathUtil.ticks;
 
 public class StartGame extends Clocker {
+    private static boolean running = false;
     private Integer[] ticks = {
         ticks(5),
         ticks(4),
@@ -38,6 +39,11 @@ public class StartGame extends Clocker {
     }
 
     public void runFirst(int position) {
+        if (running) {
+            getClock().task.cancel();
+        }
+
+        running = true;
         ((NodeGame)MapNodes.getCurrentGame()).setStage(NodeStage.STARTING);
         ((NodeGame)MapNodes.getCurrentGame()).setStartClock(this);
         GameMap map = MapNodes.getCurrentGame().getMap();
@@ -77,5 +83,6 @@ public class StartGame extends Clocker {
         });
 
         ((NodeGame)MapNodes.getCurrentGame()).start();
+        running = false;
     }
 }

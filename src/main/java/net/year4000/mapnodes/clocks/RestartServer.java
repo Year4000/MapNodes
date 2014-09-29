@@ -22,6 +22,7 @@ import static net.year4000.mapnodes.utils.MathUtil.percent;
 import static net.year4000.mapnodes.utils.MathUtil.ticks;
 
 public class RestartServer extends Clocker {
+    private static boolean running = false;
     private Integer[] ticks = {
         ticks(5),
         ticks(4),
@@ -39,6 +40,11 @@ public class RestartServer extends Clocker {
     }
 
     public void runFirst(int position) {
+        if (running) {
+            getClock().task.cancel();
+        }
+
+        running = true;
         MapNodesPlugin.log(Msg.util("clocks.restart.first", String.valueOf(sec(position) - 1)));
         MapNodes.getCurrentGame().getPlayers().parallel().forEach(player -> FunEffectsUtil.playSound(
             player.getPlayer(),
@@ -75,5 +81,6 @@ public class RestartServer extends Clocker {
         ((NodeGame)MapNodes.getCurrentGame()).setStage(NodeStage.ENDED);
 
         SchedulerUtil.runSync(() -> Bukkit.getPluginManager().disablePlugin(MapNodesPlugin.getInst()), 2);
+        running = false;
     }
 }

@@ -25,6 +25,7 @@ import static net.year4000.mapnodes.utils.MathUtil.percent;
 import static net.year4000.mapnodes.utils.MathUtil.ticks;
 
 public class NextNode extends Clocker {
+    private static boolean running = false;
     private Integer[] ticks = {
         ticks(5),
         ticks(4),
@@ -42,6 +43,11 @@ public class NextNode extends Clocker {
     }
 
     public void runFirst(int position) {
+        if (running) {
+            getClock().task.cancel();
+        }
+
+        running = true;
         GameMap map = NodeFactory.get().peekNextQueued().getMatch().getGame().getMap();
 
         MapNodesPlugin.log(Msg.util("clocks.next.first", map.getName(), String.valueOf(sec(position) - 1)));
@@ -95,5 +101,6 @@ public class NextNode extends Clocker {
         Node next = NodeFactory.get().loadNextQueued();
 
         move.stream().forEach(player -> next.getMatch().getGame().join(player));
+        running = false;
     }
 }
