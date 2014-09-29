@@ -25,7 +25,7 @@ public final class Common {
         // danger dark red
         if (percent < 10) {
             toggle++;
-            color = toggle % 5 == 0 ? ChatColor.DARK_RED : ChatColor.RED;
+            color = toggle % 10 == 0 ? ChatColor.DARK_RED : ChatColor.RED;
         }
         // danger red
         else if (percent < 20) {
