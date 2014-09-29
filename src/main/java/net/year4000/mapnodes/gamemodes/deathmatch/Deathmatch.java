@@ -44,6 +44,7 @@ import java.util.stream.Collectors;
 public class Deathmatch extends GameModeTemplate implements GameMode {
     private transient DeathmatchConfig gameModeConfig;
     private transient Map<String, Integer> scores = new HashMap<>();
+    private transient NodeGame game;
     private transient GameTeam winner;
     private transient int winnerScore;
     private transient long endTime;
@@ -51,14 +52,16 @@ public class Deathmatch extends GameModeTemplate implements GameMode {
     @EventHandler
     public void onLoad(GameLoadEvent event) {
         gameModeConfig = (DeathmatchConfig) getConfig();
+        game = (NodeGame) event.getGame();
+
         // Add max if map has max score
         if (gameModeConfig.getMaxScore() != null) {
-            event.getGame().addDynamicGoal("max-score", "&c-- &6MAX &c--", gameModeConfig.getMaxScore());
+            game.addDynamicGoal("max-score", "&c-- &6MAX &c--", gameModeConfig.getMaxScore());
         }
 
-        ((NodeGame) event.getGame()).getPlayingTeams().forEach(team -> {
+        game.getPlayingTeams().forEach(team -> {
             scores.put(team.getId(), 0);
-            event.getGame().addDynamicGoal(team.getId(), team.getDisplayName(), 0);
+            game.addDynamicGoal(team.getId(), team.getDisplayName(), 0);
         });
     }
 
@@ -74,21 +77,22 @@ public class Deathmatch extends GameModeTemplate implements GameMode {
         if (!event.getGame().getStage().isPlaying()) return;
 
         if (gameModeConfig.getTimeLimit() != null) {
-            NodeGame nodeGame = (NodeGame) event.getGame();
             long currentTime = endTime - System.currentTimeMillis();
             String color = Common.chatColorNumber((int) System.currentTimeMillis(), (int) endTime);
             String time = color + (new TimeUtil(currentTime, TimeUnit.MILLISECONDS)).prettyOutput("&7:" + color);
 
-            nodeGame.getPlaying().map(GamePlayer::getPlayer).forEach(player -> {
-                BossBar.setMessage(player, Msg.locale(player, "deathmatch.clocks.time_left", time), MathUtil.percent((int) Math.abs(endTime - nodeGame.getStartTime()), (int) Math.abs(endTime - System.currentTimeMillis())));
+            game.getPlaying().map(GamePlayer::getPlayer).forEach(player -> {
+                BossBar.setMessage(player, Msg.locale(player, "deathmatch.clocks.time_left", time), MathUtil.percent((int) Math.abs(endTime - game.getStartTime()), (int) Math.abs(endTime - System.currentTimeMillis())));
             });
 
             if (currentTime <= 0L) {
-                new GameTeamWinEvent(event.getGame(), winner) {{
-                    if (winner == null) {
-                        winnerText = Joiner.on("&7, ").join(nodeGame.getPlayingTeams().map(NodeTeam::getDisplayName).collect(Collectors.toList()));
-                    }
-                }}.call();
+                GameTeamWinEvent win = new GameTeamWinEvent(game, winner);
+
+                if (win.getWinner() == null) {
+                    win.setWinnerText(Joiner.on("&7, ").join(game.getPlayingTeams().map(NodeTeam::getDisplayName).collect(Collectors.toList())));
+                }
+
+                win.call();
             }
         }
     }
@@ -96,19 +100,19 @@ public class Deathmatch extends GameModeTemplate implements GameMode {
     @EventHandler
     public void onGameEnd(GameWinEvent event) {
         scores.forEach((team, score) -> {
-            event.getMessage().add(event.getGame().getTeams().get(team).getDisplayName() + "&7: " + Common.colorNumber(score, winnerScore));
+            event.getMessage().add(game.getTeams().get(team).getDisplayName() + "&7: " + Common.colorNumber(score, winnerScore));
         });
     }
 
     @EventHandler
     public void onDeath(PlayerDeathEvent event) {
-        GamePlayer player = MapNodes.getCurrentGame().getPlayer(event.getEntity());
+        GamePlayer player = game.getPlayer(event.getEntity());
 
         if (event.getEntity().getKiller() != null) {
-            GamePlayer killer = MapNodes.getCurrentGame().getPlayer(event.getEntity().getKiller());
+            GamePlayer killer = game.getPlayer(event.getEntity().getKiller());
 
             if (!player.getTeam().getName().equals(killer.getTeam().getName())) {
-                addPoint((NodeGame) MapNodes.getCurrentGame(), killer.getTeam());
+                addPoint(game, killer.getTeam());
                 FunEffectsUtil.playSound(killer.getPlayer(), Sound.FIREWORK_LAUNCH);
             }
         }
@@ -116,7 +120,7 @@ public class Deathmatch extends GameModeTemplate implements GameMode {
 
     @EventHandler
     public void onMove(PlayerMoveEvent event) {
-        if (gameModeConfig.getPointBoxes().size() == 0 || !MapNodes.getCurrentGame().getStage().isPlaying()) return;
+        if (gameModeConfig.getPointBoxes().size() == 0 || !game.getStage().isPlaying()) return;
 
         Vector v = event.getTo().toVector();
 
@@ -124,18 +128,18 @@ public class Deathmatch extends GameModeTemplate implements GameMode {
         if (event.getFrom().toVector().toBlockVector().equals(v.toBlockVector())) return;
 
         Point point = new Point(v.getBlockX(), v.getBlockY(), v.getBlockZ());
-        GamePlayer player = MapNodes.getCurrentGame().getPlayer(event.getPlayer());
+        GamePlayer player = game.getPlayer(event.getPlayer());
 
         if (!player.isPlaying()) return;
 
         // Add team point
-        MapNodes.getCurrentGame().getRegions().values().forEach(region -> {
+        game.getRegions().values().forEach(region -> {
             gameModeConfig.getPointBoxes().stream()
                 .filter(pointRegion -> pointRegion.getChallenger().equals(((NodeTeam) player.getTeam()).getId()))
                 .filter(pointRegion -> pointRegion.getRegion().equals(region.getId()))
                 .forEach(pointRegion -> {
                     if (region.inZone(point)) {
-                        addPoint((NodeGame) MapNodes.getCurrentGame(), player.getTeam(), pointRegion.getPoint());
+                        addPoint(game, player.getTeam(), pointRegion.getPoint());
                         event.setTo(((NodeTeam) player.getTeam()).getSafeRandomSpawn());
                         player.sendMessage(Msg.locale(player, "deathmatch.scored", player.getPlayerColor(), String.valueOf(pointRegion.getPoint()), ((NodeTeam) player.getTeam()).getDisplayName()));
                     }
