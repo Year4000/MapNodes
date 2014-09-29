@@ -71,6 +71,8 @@ public class Deathmatch extends GameModeTemplate implements GameMode {
 
     @EventHandler
     public void gameClock(GameClockEvent event) {
+        if (!event.getGame().getStage().isPlaying()) return;
+
         if (gameModeConfig.getTimeLimit() != null) {
             NodeGame nodeGame = (NodeGame) event.getGame();
             long currentTime = endTime - System.currentTimeMillis();

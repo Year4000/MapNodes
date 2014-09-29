@@ -129,15 +129,13 @@ public class Skywars extends GameModeTemplate implements GameMode {
         }
 
         if (alive.size() == 1) {
-            SchedulerUtil.runSync(() -> {
-                if (game.getStage().isPlaying()) {
-                    try {
-                        new GamePlayerWinEvent(game, game.getPlaying().iterator().next()).call();
-                    } catch (NoSuchElementException e) {
-                        game.stop();
-                    }
+            if (game.getStage().isPlaying()) {
+                try {
+                    new GamePlayerWinEvent(game, game.getPlaying().iterator().next()).call();
+                } catch (NoSuchElementException e) {
+                    game.stop();
                 }
-            }, 20L);
+            }
         }
         else if (alive.size() == 0) {
             if (game.getStage().isPlaying()) {
