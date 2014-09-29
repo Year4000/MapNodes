@@ -2,6 +2,9 @@ package net.year4000.mapnodes.listeners;
 
 import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.api.MapNodes;
+import net.year4000.mapnodes.api.events.game.*;
+import net.year4000.mapnodes.api.events.player.GamePlayerWinEvent;
+import net.year4000.mapnodes.api.events.team.GameTeamWinEvent;
 import net.year4000.mapnodes.messages.Msg;
 import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;

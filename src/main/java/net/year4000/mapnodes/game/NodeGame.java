@@ -28,7 +28,6 @@ import net.year4000.mapnodes.messages.Message;
 import net.year4000.mapnodes.messages.MessageManager;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.Common;
-import net.year4000.mapnodes.utils.PacketHacks;
 import net.year4000.mapnodes.utils.SchedulerUtil;
 import net.year4000.mapnodes.utils.Validator;
 import net.year4000.mapnodes.utils.typewrappers.GameSet;

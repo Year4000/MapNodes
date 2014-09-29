@@ -1,16 +1,10 @@
 package net.year4000.mapnodes.gamemodes.skywars;
 
-import lombok.Data;
 import lombok.EqualsAndHashCode;
-import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.events.game.GameLoadEvent;
 import net.year4000.mapnodes.api.events.game.GameStartEvent;
-import net.year4000.mapnodes.api.events.game.GameStopEvent;
-import net.year4000.mapnodes.api.events.game.GameWinEvent;
 import net.year4000.mapnodes.api.events.player.*;
-import net.year4000.mapnodes.api.events.team.GameTeamWinEvent;
-import net.year4000.mapnodes.api.game.GamePlayer;
 import net.year4000.mapnodes.api.game.modes.GameMode;
 import net.year4000.mapnodes.api.game.modes.GameModeInfo;
 import net.year4000.mapnodes.game.NodeGame;
@@ -24,7 +18,6 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.util.ArrayList;
@@ -38,15 +31,14 @@ import java.util.stream.Collectors;
     version = "1.0",
     config = SkywarsConfig.class
 )
-@Data
 @EqualsAndHashCode(callSuper = false)
 public class Skywars extends GameModeTemplate implements GameMode {
-    private SkywarsConfig gameModeConfig;
-    private NodeGame game;
-    private NodeTeam team;
-    private Iterator<Location> spawns;
-    private List<String> alive = new ArrayList<>();
-    private List<String> dead = new ArrayList<>();
+    private transient SkywarsConfig gameModeConfig;
+    private transient NodeGame game;
+    private transient NodeTeam team;
+    private transient Iterator<Location> spawns;
+    private transient List<String> alive = new ArrayList<>();
+    private transient List<String> dead = new ArrayList<>();
 
     @EventHandler
     public void onLoad(GameLoadEvent event) {

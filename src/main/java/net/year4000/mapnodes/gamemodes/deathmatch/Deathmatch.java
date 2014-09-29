@@ -1,7 +1,6 @@
 package net.year4000.mapnodes.gamemodes.deathmatch;
 
 import com.google.common.base.Joiner;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
 import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.events.game.GameClockEvent;
@@ -10,13 +9,11 @@ import net.year4000.mapnodes.api.events.game.GameStartEvent;
 import net.year4000.mapnodes.api.events.game.GameWinEvent;
 import net.year4000.mapnodes.api.events.team.GameTeamWinEvent;
 import net.year4000.mapnodes.api.game.GamePlayer;
-import net.year4000.mapnodes.api.game.GameRegion;
 import net.year4000.mapnodes.api.game.GameTeam;
 import net.year4000.mapnodes.api.game.modes.GameMode;
 import net.year4000.mapnodes.api.game.modes.GameModeInfo;
 import net.year4000.mapnodes.game.NodeGame;
 import net.year4000.mapnodes.game.NodePlayer;
-import net.year4000.mapnodes.game.NodeRegion;
 import net.year4000.mapnodes.game.NodeTeam;
 import net.year4000.mapnodes.game.regions.types.Point;
 import net.year4000.mapnodes.gamemodes.GameModeTemplate;
@@ -26,19 +23,14 @@ import net.year4000.mapnodes.utils.MathUtil;
 import net.year4000.mapnodes.utils.SchedulerUtil;
 import net.year4000.mapnodes.utils.TimeUtil;
 import net.year4000.utilities.bukkit.FunEffectsUtil;
-import net.year4000.utilities.bukkit.MessageUtil;
 import net.year4000.utilities.bukkit.bossbar.BossBar;
 import org.bukkit.Sound;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.util.Vector;
-import org.joda.time.DateTime;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -48,14 +40,13 @@ import java.util.stream.Collectors;
     version = "1.0",
     config = DeathmatchConfig.class
 )
-@Data
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = false)
 public class Deathmatch extends GameModeTemplate implements GameMode {
-    private DeathmatchConfig gameModeConfig;
-    private Map<String, Integer> scores = new HashMap<>();
-    private GameTeam winner;
-    private int winnerScore;
-    private long endTime;
+    private transient DeathmatchConfig gameModeConfig;
+    private transient Map<String, Integer> scores = new HashMap<>();
+    private transient GameTeam winner;
+    private transient int winnerScore;
+    private transient long endTime;
 
     @EventHandler
     public void onLoad(GameLoadEvent event) {
@@ -74,7 +65,7 @@ public class Deathmatch extends GameModeTemplate implements GameMode {
     @EventHandler
     public void onLoad(GameStartEvent event) {
         if (gameModeConfig.getTimeLimit() != null) {
-            setEndTime((System.currentTimeMillis() + 1000) + (gameModeConfig.getTimeLimit() * 60000));
+            endTime = (System.currentTimeMillis() + 1000) + (gameModeConfig.getTimeLimit() * 60000);
         }
     }
 
@@ -87,7 +78,7 @@ public class Deathmatch extends GameModeTemplate implements GameMode {
             String time = color + (new TimeUtil(currentTime, TimeUnit.MILLISECONDS)).prettyOutput("&7:" + color);
 
             nodeGame.getPlaying().map(GamePlayer::getPlayer).forEach(player -> {
-                BossBar.setMessage(player, Msg.locale(player, "deathmatch.clocks.time_left", time), MathUtil.percent((int) Math.abs(getEndTime() - nodeGame.getStartTime()), (int) Math.abs(getEndTime() - System.currentTimeMillis())));
+                BossBar.setMessage(player, Msg.locale(player, "deathmatch.clocks.time_left", time), MathUtil.percent((int) Math.abs(endTime - nodeGame.getStartTime()), (int) Math.abs(endTime - System.currentTimeMillis())));
             });
 
             if (currentTime <= 0L) {
