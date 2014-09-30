@@ -135,7 +135,7 @@ public final class NodeGame implements GameManager, Validator {
     private transient BukkitTask stopClock;
     private transient Map<Locale, Inventory> teamChooser = new HashMap<>();
     private transient ScoreboardFactory scoreboardFactory;
-    private transient Map<String, SidebarGoal> sidebarGoals = new HashMap<>();
+    private transient Map<String, SidebarGoal> sidebarGoals = new LinkedHashMap<>();
     private transient List<Operations> startControls = new CopyOnWriteArrayList<>();
     private transient long startTime;
 
