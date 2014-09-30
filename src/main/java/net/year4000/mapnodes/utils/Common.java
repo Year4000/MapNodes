@@ -138,4 +138,24 @@ public final class Common {
     public static String shrink(String text, int size) {
         return text.substring(text.length() > size ? size - text.length() : 0, text.length());
     }
+
+    /** Converts string to upper case camel from underscore spaced string */
+    public static String toUpperSpacedCamel(String string) {
+        char[] text = string.toLowerCase().toCharArray();
+        boolean upper = true;
+
+        for (int i = 0; i < text.length; i++) {
+            if (upper) {
+                text[i] = Character.toUpperCase(text[i]);
+                upper = false;
+            }
+
+            if (text[i] == '_') {
+                upper = true;
+                text[i] = ' ';
+            }
+        }
+
+        return new String(text);
+    }
 }
