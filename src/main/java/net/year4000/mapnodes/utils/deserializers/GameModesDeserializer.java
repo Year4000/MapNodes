@@ -22,7 +22,7 @@ public class GameModesDeserializer implements JsonDeserializer<GameSet<GameMode>
         // loop through each element and create a new instance of the game mode
         modes.forEach((name, config) -> {
             // Create config class from registered name
-            GameModeConfig gameModeConfig = GsonUtil.GSON.fromJson(config, NodeModeFactory.get().getGameModeConfig(name));
+            GameModeConfig gameModeConfig = GsonUtil.createGson().fromJson(config, NodeModeFactory.get().getGameModeConfig(name));
             GameMode gameMode = NodeModeFactory.get().getFromConfig(gameModeConfig);
 
             newSet.add(gameMode);
