@@ -1,6 +1,7 @@
 package net.year4000.mapnodes.game.regions;
 
 public enum EventTypes {
+    CUSTOM("custom"),
     ENTER("enter"),
     EXIT("exit"),
     BUILD("build"),
