@@ -1,6 +1,5 @@
 package net.year4000.mapnodes.utils.deserializers;
 
-
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
