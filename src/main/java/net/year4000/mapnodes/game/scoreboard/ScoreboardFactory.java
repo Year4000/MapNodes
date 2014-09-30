@@ -60,6 +60,12 @@ public class ScoreboardFactory {
     }
 
     public void setPersonalSidebar(NodePlayer nodePlayer, String header) {
+        // When game has ended only show game sidebar
+        if (game.getStage().isEndGame()) {
+            setGameSidebar(nodePlayer);
+            return;
+        }
+
         NodeGame game = nodePlayer.getGame();
         String queue = nodePlayer.getTeam().getQueue().contains(nodePlayer) ? Msg.locale(nodePlayer, "team.queue") : "";
         SidebarManager side = new SidebarManager();
