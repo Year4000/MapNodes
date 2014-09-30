@@ -245,8 +245,8 @@ public final class NodePlayer implements GamePlayer {
                         }
 
                         int currentTime = sec(position);
-                        String color = Common.chatColorNumber(currentTime, (int) sec(getTime()));
-                        String time = color + (new TimeUtil(currentTime, TimeUnit.MILLISECONDS)).prettyOutput("&7:" + color);
+                        String color = Common.chatColorNumber(currentTime, sec(getTime()));
+                        String time = color + (new TimeUtil(currentTime, TimeUnit.SECONDS)).prettyOutput("&7:" + color);
 
                         BossBar.setMessage(
                             player,
