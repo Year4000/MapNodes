@@ -61,7 +61,7 @@ public class CaptureConfig implements GameModeConfig {
 
             // Only change if clay is set and not wool
             if (wool == null && clay != null) {
-                block = Material.HARD_CLAY;
+                block = Material.STAINED_CLAY;
                 prefix = clay;
                 name = Common.toUpperSpacedCamel(clay.name());
                 data = Capture.CHAT_COLOR_DATA_MAP.get(clay);
