@@ -15,15 +15,16 @@ import java.util.Map;
 public class RegionListDeserializer implements JsonDeserializer<List<Region>> {
     @Override
     public List<Region> deserialize(JsonElement element, Type type, JsonDeserializationContext context) throws JsonParseException {
+        Gson gson = GsonUtil.createGson();
         List<Region> newList = new RegionList<>();
 
         for (JsonElement rawRegion : element.getAsJsonArray()) {
             // Create a hashmap with one element to act like {"": {}}
-            Map<String, JsonObject> map = GsonUtil.GSON.fromJson(rawRegion, new TypeToken<Map<String, JsonObject>>(){}.getType());
+            Map<String, JsonObject> map = gson.fromJson(rawRegion, new TypeToken<Map<String, JsonObject>>(){}.getType());
 
             map.forEach((key, value) -> {
                 try {
-                    newList.add(GsonUtil.GSON.fromJson(value, RegionManager.get().getRegionType(key)));
+                    newList.add(gson.fromJson(value, RegionManager.get().getRegionType(key)));
                 } catch (Exception e) {
                     MapNodesPlugin.log(e, true);
                 }

@@ -1,10 +1,10 @@
 package net.year4000.mapnodes.game.kits;
 
-import com.google.gson.Gson;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import net.year4000.mapnodes.exceptions.InvalidJsonException;
 import net.year4000.mapnodes.messages.Msg;
+import net.year4000.mapnodes.utils.GsonUtil;
 import net.year4000.mapnodes.utils.Validator;
 import net.year4000.utilities.bukkit.ItemUtil;
 import net.year4000.utilities.bukkit.items.NBT;
@@ -41,15 +41,13 @@ public class Item implements Validator {
          Upper Json Settings / Bellow Instance Code
     *///--------------------------------------------//
 
-    private transient static final Gson gson = new Gson();
-
     /** Create the item based on this class */
     public ItemStack create() {
         ItemStack itemStack = new ItemStack(item, amount, damage);
 
         // Only add nbt if the items has nbt
         if (nbt != null) {
-            itemStack.setItemMeta(ItemUtil.addMeta(itemStack, gson.toJson(nbt)));
+            itemStack.setItemMeta(ItemUtil.addMeta(itemStack, GsonUtil.GSON.toJson(nbt)));
         }
 
         return itemStack;

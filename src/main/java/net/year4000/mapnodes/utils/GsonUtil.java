@@ -46,6 +46,7 @@ public final class GsonUtil {
             .registerTypeAdapter(GameSet.class, new GameModesDeserializer())
             .registerTypeAdapter(RegionList.class, new RegionListDeserializer())
             .registerTypeAdapter(RegionEvents.class, new RegionEventsDeserializer())
+            .registerTypeAdapter(ItemStackList.class, new ItemListDeserializer())
             ;
     }
 }

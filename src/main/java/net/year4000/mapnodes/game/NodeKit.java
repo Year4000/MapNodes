@@ -144,6 +144,7 @@ public class NodeKit implements GameKit, Validator, AssignNodeGame {
             List<ItemStack> items = new ArrayList<>();
             armor.forEach(item -> {
                 item = item.clone();
+
                 if (item.getItemMeta() instanceof LeatherArmorMeta) {
                     LeatherArmorMeta meta = (LeatherArmorMeta) item.getItemMeta();
 
@@ -152,8 +153,9 @@ public class NodeKit implements GameKit, Validator, AssignNodeGame {
                         meta.setColor(player.getTeam().getRawColor());
                         item.setItemMeta(meta);
                     }
-                    items.add(item);
                 }
+
+                items.add(item);
             });
 
             rawPlayer.getInventory().setArmorContents(items.toArray(new ItemStack[items.size()]));

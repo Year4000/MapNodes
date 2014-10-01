@@ -16,11 +16,12 @@ import java.util.Map;
 public class RegionEventsDeserializer implements JsonDeserializer<RegionEvents> {
     @Override
     public RegionEvents deserialize(JsonElement element, Type type, JsonDeserializationContext context) throws JsonParseException {
-        Map<String, JsonObject> map = GsonUtil.GSON.fromJson(element, new TypeToken<Map<String, JsonObject>>(){}.getType());
+        Gson gson = GsonUtil.createGson();
+        Map<String, JsonObject> map = gson.fromJson(element, new TypeToken<Map<String, JsonObject>>(){}.getType());
         RegionEvents events = new RegionEvents();
 
         map.forEach((name, object) -> {
-            RegionListener listener = GsonUtil.GSON.fromJson(object, EventManager.get().getRegionType(name));
+            RegionListener listener = gson.fromJson(object, EventManager.get().getRegionType(name));
             // MapNodesPlugin.debug("Loading region event: " + listener.getClass().getSimpleName());
             events.addEvent(listener, EventTypes.getFromName(name));
         });
