@@ -81,7 +81,7 @@ public final class NodePlayer implements GamePlayer {
             this.setImmortal(true);
             this.setKit(team.getKit());
             this.setTeam(team);
-            this.setSpawn(team.getSafeRandomSpawn());
+            this.setSpawn(team.getSpawns().getSafeRandomSpawn());
         }};
         start.call();
 

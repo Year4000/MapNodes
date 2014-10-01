@@ -25,10 +25,6 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 @Data
 public final class NodeRegion implements GameRegion, Validator, AssignNodeGame {
-    /** The teams this region apply to option if just used for zones */
-    @Since(1.0)
-    private List<String> apply = new ArrayList<>();
-
     /** The flags for this region optional if just used for zones */
     @Since(1.0)
     private RegionEvents events = null;
@@ -86,11 +82,5 @@ public final class NodeRegion implements GameRegion, Validator, AssignNodeGame {
     /** Is the point in the region */
     public boolean inZone(Point point) {
         return getZones().stream().filter(z -> z.inRegion(point)).count() > 0;
-    }
-
-    /** Does the region apply to the current player */
-    public static boolean applyToPlayer(Player player, NodeRegion region) {
-        String team = MapNodes.getCurrentGame().getPlayer(player).getTeam().getName().toLowerCase();
-        return region.getApply().stream().filter(apply -> apply.toLowerCase().equals(team)).count() > 0L;
     }
 }

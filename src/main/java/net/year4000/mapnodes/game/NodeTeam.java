@@ -198,29 +198,6 @@ public class NodeTeam implements GameTeam, Validator, AssignNodeGame {
         return lines;
     }
 
-    /** Get a random spawn, it may not be safe for a player */
-    public Location getRandomSpawn() {
-        return spawns == null || spawns.size() == 0 ? MapNodes.getCurrentWorld().getSpawnLocation() : spawns.get(new Random().nextInt(spawns.size()));
-    }
-
-    /** Try and get a safe random spawn or end with a random spawn that may not be safe */
-    public Location getSafeRandomSpawn() {
-        List<Location> list = new ArrayList<>(spawns);
-        Collections.shuffle(list);
-
-        for (Location spawn : list) {
-            boolean currentBlock = spawn.getBlock().getType().isTransparent();
-            boolean standBlock = spawn.getBlock().getRelative(BlockFace.DOWN).getType().isSolid();
-            boolean headBlock = spawn.getBlock().getRelative(BlockFace.UP).getType().isTransparent();
-
-            if (currentBlock && standBlock && headBlock) {
-                return spawn;
-            }
-        }
-
-        return getRandomSpawn();
-    }
-
     /** Get the icon for this team */
     public ItemStack getTeamIcon(Locale locale) {
         ItemStack i = new ItemStack(Material.LEATHER_CHESTPLATE);
