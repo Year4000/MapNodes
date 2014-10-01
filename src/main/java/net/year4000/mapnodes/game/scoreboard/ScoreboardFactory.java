@@ -12,7 +12,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
 import org.bukkit.scoreboard.Team;
-import org.joda.time.DateTime;
 
 import java.util.concurrent.TimeUnit;
 
@@ -67,7 +66,14 @@ public class ScoreboardFactory {
         }
 
         NodeGame game = nodePlayer.getGame();
-        String queue = nodePlayer.getTeam().getQueue().contains(nodePlayer) ? Msg.locale(nodePlayer, "team.queue") : "";
+        String queue;
+        if (nodePlayer.getPendingTeam() != null) {
+            queue = nodePlayer.getPendingTeam().getQueue().contains(nodePlayer) ? Msg.locale(nodePlayer, "team.queue") : "";
+
+        }
+        else {
+            queue = nodePlayer.getTeam().getQueue().contains(nodePlayer) ? Msg.locale(nodePlayer, "team.queue") : "";
+        }
         SidebarManager side = new SidebarManager();
 
         // When game is running show game time length
@@ -79,8 +85,13 @@ public class ScoreboardFactory {
         }
 
         // Team Selection
-        side.addLine(Msg.locale(nodePlayer, "team.name"))
-        .addLine("  " + nodePlayer.getTeam().getDisplayName() + " " + queue);
+        side.addLine(Msg.locale(nodePlayer, "team.name"));
+        if (nodePlayer.getPendingTeam() != null) {
+            side.addLine("  " + nodePlayer.getPendingTeam().getDisplayName() + " " + queue);
+        }
+        else {
+            side.addLine("  " + nodePlayer.getTeam().getDisplayName() + " " + queue);
+        }
 
         // When the map has classes
         if (game.getClasses().size() > 0) {
@@ -96,14 +107,14 @@ public class ScoreboardFactory {
 
         nodePlayer.getGame().getSidebarGoals().values().forEach(goal -> {
             if (goal.getType() == SidebarGoal.GoalType.DYNAMIC) {
-                side.addLine(Msg.locale(nodePlayer, goal.getDisplay()), goal.getScore());
+                side.addLine(Msg.locale(nodePlayer, goal.getTeamDisplay(nodePlayer)), goal.getScore());
             }
             else if (goal.getType() == SidebarGoal.GoalType.STATIC) {
                 if (goal.getDisplay().equals("")) {
                     side.addBlank();
                 }
                 else {
-                    side.addLine(Msg.locale(nodePlayer, goal.getDisplay()));
+                    side.addLine(Msg.locale(nodePlayer, goal.getTeamDisplay(nodePlayer)));
                 }
             }
             else {

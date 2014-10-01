@@ -94,7 +94,7 @@ public class Capture extends GameModeTemplate implements GameMode {
             }
 
             NodeTeam nodeTeam = game.getTeams().get(team);
-            game.addStaticGoal(team, nodeTeam.getDisplayName() + " Captures");
+            game.addStaticGoal(team, team, nodeTeam.getDisplayName() + " Goals");
 
             list.forEach(capture -> game.addStaticGoal(getCaptureID(nodeTeam, capture), " " + getCaptureDisplay(capture)));
         }

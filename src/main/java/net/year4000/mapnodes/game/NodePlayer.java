@@ -19,7 +19,6 @@ import net.year4000.utilities.bukkit.FunEffectsUtil;
 import net.year4000.utilities.bukkit.MessageUtil;
 import net.year4000.utilities.bukkit.bossbar.BossBar;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.HumanEntity;
@@ -46,6 +45,7 @@ public final class NodePlayer implements GamePlayer {
     private final NodeGame game;
     private final Player player;
     private NodeTeam team;
+    private NodeTeam pendingTeam;
     private List<BukkitTask> playerTasks = new ArrayList<>();
 
     // scoreboard
@@ -69,6 +69,11 @@ public final class NodePlayer implements GamePlayer {
     }
 
     public void start() {
+        if (pendingTeam != null) {
+            team = pendingTeam;
+            pendingTeam = null;
+        }
+
         playing = true;
         entering = false;
 
@@ -217,8 +222,8 @@ public final class NodePlayer implements GamePlayer {
 
             spectator = false;
             entering = true;
-            team = (NodeTeam) joinTeam.getTo();
-            team.join(this, joinTeam.isDisplay());
+            pendingTeam = (NodeTeam) joinTeam.getTo();
+            pendingTeam.join(this, joinTeam.isDisplay());
             game.getScoreboardFactory().setPersonalSidebar(this);
 
             if (joinTeam.isJoining()) {
