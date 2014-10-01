@@ -1,8 +1,7 @@
 package net.year4000.mapnodes.game.regions.events;
 
 import com.google.common.collect.Iterables;
-import net.year4000.mapnodes.MapNodesPlugin;
-import net.year4000.mapnodes.api.game.GamePlayer;
+import com.google.gson.annotations.SerializedName;
 import net.year4000.mapnodes.game.regions.EventType;
 import net.year4000.mapnodes.game.regions.EventTypes;
 import net.year4000.mapnodes.game.regions.RegionEvent;
@@ -11,26 +10,31 @@ import net.year4000.mapnodes.game.regions.types.Point;
 import net.year4000.mapnodes.utils.ChestUtil;
 import net.year4000.mapnodes.utils.SchedulerUtil;
 import net.year4000.mapnodes.utils.typewrappers.ItemStackList;
+import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.DoubleChestInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.BlockVector;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 @EventType(EventTypes.CHEST)
 public class Chest extends RegionEvent implements RegionListener {
     private static final Random rand = new Random(System.currentTimeMillis());
-    private transient List<BlockVector> chests = new ArrayList<>();
+    private transient List<BlockVector> chests = new CopyOnWriteArrayList<>();
     private ItemStackList<ItemStack> items = new ItemStackList<>();
+    @SerializedName("keep_filled")
+    private boolean keepFilled = false;
     private boolean fill = false;
     private int amount = 0;
     private boolean scatter = false;
@@ -39,9 +43,9 @@ public class Chest extends RegionEvent implements RegionListener {
     @EventHandler
     public void onChest(PlayerInteractEvent event) {
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-            BlockVector location = event.getClickedBlock().getLocation().toVector().toBlockVector();
+            final BlockVector location = event.getClickedBlock().getLocation().toVector().toBlockVector();
 
-            if (!region.inZone(new Point(location))) return;
+            if (!region.inZone(new Point(location)) && !chests.contains(location)) return;
 
             /*items.forEach(i -> MapNodesPlugin.log(i.toString()));
             MapNodesPlugin.log("ITEMS: " + items.size());
@@ -62,8 +66,31 @@ public class Chest extends RegionEvent implements RegionListener {
             }
 
             // If empty add to array list and add items to chest
-            if (ChestUtil.isEmpty(chest) && !chests.contains(location)) {
+            if (ChestUtil.isEmpty(chest)) {
                 chests.add(location);
+
+                // Remove chest from location when no viewers are looking
+                if (keepFilled) {
+                    class ChestLoop implements Runnable {
+                        private BukkitTask task;
+
+                        public ChestLoop() {
+                            task = SchedulerUtil.repeatAsync(this, 20L * 5L);
+                        }
+
+                        @Override
+                        public void run() {
+                            if (chest.getViewers().size() == 0) {
+                                chests.remove(location);
+                                chest.setContents(new ItemStack[chest.getSize()]);
+                                task.cancel();
+                            }
+                        }
+                    }
+
+                    new ChestLoop();
+                }
+
                 ItemStack[] chestContents = new ItemStack[chest.getSize()];
                 Iterator<ItemStack> itemIterator = Iterables.cycle(items).iterator();
 
