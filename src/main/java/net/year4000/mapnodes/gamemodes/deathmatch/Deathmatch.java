@@ -140,7 +140,7 @@ public class Deathmatch extends GameModeTemplate implements GameMode {
                 .forEach(pointRegion -> {
                     if (region.inZone(point)) {
                         addPoint(game, player.getTeam(), pointRegion.getPoint());
-                        event.setTo(((NodeTeam) player.getTeam()).getSafeRandomSpawn());
+                        event.setTo(((NodeTeam) player.getTeam()).getSpawns().getSafeRandomSpawn());
 
                         game.getPlaying().forEach(p -> {
                             p.sendMessage(Msg.locale(p, "deathmatch.scored", player.getPlayerColor(), String.valueOf(pointRegion.getPoint()), ((NodeTeam) player.getTeam()).getDisplayName()));

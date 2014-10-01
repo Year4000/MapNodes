@@ -33,7 +33,7 @@ public final class GameListener implements Listener {
             // God buffer mode
             player.getPlayerTasks().add(NodeKit.immortal(event.getPlayer()));
 
-            event.setRespawnLocation(((NodeTeam) player.getTeam()).getSafeRandomSpawn());
+            event.setRespawnLocation(((NodeTeam) player.getTeam()).getSpawns().getSafeRandomSpawn());
         }
     }
 
