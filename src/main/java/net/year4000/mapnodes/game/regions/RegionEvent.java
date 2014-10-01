@@ -79,6 +79,6 @@ public abstract class RegionEvent {
         String translatedMessage = ((NodePlayer) player).getGame().locale(player.getPlayer().getLocale(), message);
         // Translate by MapNodes
         translatedMessage = Msg.locale(player, translatedMessage);
-        player.sendMessage(translatedMessage);
+        player.sendMessage(Msg.util("global.warring", "&e" + translatedMessage));
     }
 }
