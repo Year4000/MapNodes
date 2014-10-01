@@ -2,6 +2,7 @@ package net.year4000.mapnodes.game.regions;
 
 public enum RegionTypes {
     CHUNK("chunk"),
+    CUBE("cube"),
     CUBOID("cuboid"),
     CYLINDER("cylinder"),
     GLOBAL("global"),

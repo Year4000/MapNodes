@@ -67,6 +67,7 @@ public class MapNodesPlugin extends BukkitPlugin implements Plugin {
         RegionManager.get()
             .add(Point.class)
             .add(Cuboid.class)
+            .add(Cube.class)
             .add(net.year4000.mapnodes.game.regions.types.Void.class)
             .add(Global.class)
             .add(Sphere.class)

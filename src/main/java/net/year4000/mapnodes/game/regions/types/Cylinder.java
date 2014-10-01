@@ -55,6 +55,7 @@ public class Cylinder implements Region, Validator {
             int cy = center.getY();
             int cz = center.getZ();
 
+            // todo fix this is not looping as a cylinder but as a cube
             for (int x = cx - radius; x <= cx + radius; x++) {
                 for (int z = cz - radius; z <= cz + radius; z++) {
                     for (int y = cy; y < cy + height; y++) {

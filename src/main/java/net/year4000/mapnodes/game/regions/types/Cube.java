@@ -6,7 +6,6 @@ import net.year4000.mapnodes.exceptions.InvalidJsonException;
 import net.year4000.mapnodes.game.regions.Region;
 import net.year4000.mapnodes.game.regions.RegionType;
 import net.year4000.mapnodes.game.regions.RegionTypes;
-import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.Validator;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -19,12 +18,11 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 @Data
 @NoArgsConstructor
-@RegionType(RegionTypes.CHUNK)
-public class Chunk implements Region, Validator {
-    private static final int CHUNK_SIZE = 16;
-    private static final int CHUNK_HEIGHT = 256;
-    private Integer x = null;
-    private Integer z = null;
+@RegionType(RegionTypes.CUBE)
+public class Cube implements Region, Validator {
+    private Point center = null;
+    private Integer radius = null;
+    private Integer height = null;
     private transient Integer yaw;
     private transient Integer pitch;
 
@@ -34,9 +32,10 @@ public class Chunk implements Region, Validator {
 
     @Override
     public void validate() throws InvalidJsonException {
-        checkArgument(x != null, Msg.util("settings.region", "x"));
-
-        checkArgument(z != null, Msg.util("settings.region", "z"));
+        checkArgument(center != null);
+        center.validate();
+        checkArgument(radius != null && radius != 0);
+        checkArgument(height != null && height != 0);
     }
 
     @Override
@@ -52,15 +51,13 @@ public class Chunk implements Region, Validator {
     public List<Point> getPoints() {
         if (cachedPoints == null) {
             List<Point> locations = new ArrayList<>();
+            int cx = center.getX();
+            int cy = center.getY();
+            int cz = center.getZ();
 
-            int minX = this.x * CHUNK_SIZE;
-            int minZ = this.z * CHUNK_SIZE;
-            int maxX = (this.x * CHUNK_SIZE) + CHUNK_SIZE;
-            int maxZ = (this.z * CHUNK_SIZE) + CHUNK_SIZE;
-
-            for (int y = 0; y <= CHUNK_HEIGHT; y++) {
-                for (int x = minX; x <= maxX; x++) {
-                    for (int z = minZ; z <= maxZ; z++) {
+            for (int x = cx - radius; x <= cx + radius; x++) {
+                for (int z = cz - radius; z <= cz + radius; z++) {
+                    for (int y = cy; y < cy + height; y++) {
                         locations.add(new Point(x, y, z, yaw, pitch));
                     }
                 }
