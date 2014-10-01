@@ -30,8 +30,8 @@ public class Enter extends RegionEvent implements RegionListener {
             if (!isAllow()) {
                 player.getPlayer().teleport(event.getFrom());
             }
-        }
 
-        runGlobalEventTasks(player);
+            runGlobalEventTasks(player);
+        }
     }
 }
