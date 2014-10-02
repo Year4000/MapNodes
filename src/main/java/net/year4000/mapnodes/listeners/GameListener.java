@@ -90,7 +90,7 @@ public final class GameListener implements Listener {
             int y = event.getBlockPlaced().getY();
 
             if (y >= height) {
-                event.getPlayer().sendMessage(Msg.locale(event.getPlayer(), "region.deny.height", String.valueOf(y)));
+                event.getPlayer().sendMessage(Msg.util("global.warring", Msg.locale(event.getPlayer(), "region.deny.height", String.valueOf(y))));
                 event.setCancelled(true);
             }
         }
