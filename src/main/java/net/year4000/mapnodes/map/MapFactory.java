@@ -11,6 +11,8 @@ import javax.annotation.Nullable;
 import java.io.File;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -70,7 +72,8 @@ public class MapFactory {
 
     /** A shuffle list of allowed maps */
     public static List<MapFolder> getMaps(int number) {
-        List<MapFolder> maps = new ArrayList<>(folders.values());
+        Stream<MapFolder> enabledFolders = folders.values().parallelStream().filter(m -> !m.isDisabled());
+        List<MapFolder> maps = new ArrayList<>(enabledFolders.collect(Collectors.toList()));
         Collections.shuffle(maps);
         Iterator<MapFolder> mapFolderIterator = Iterables.cycle(maps).iterator();
 
