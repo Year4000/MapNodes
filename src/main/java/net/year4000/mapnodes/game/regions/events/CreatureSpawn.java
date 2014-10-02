@@ -18,10 +18,12 @@ public class CreatureSpawn extends RegionEvent implements RegionListener {
     public void onCreatureSpawn(CreatureSpawnEvent event) {
         if (!region.inZone(new Point(event.getLocation().toVector().toBlockVector()))) return;
 
-        if (isAllow() && creatures.contains(event.getEntityType()) || !isAllow() && !creatures.contains(event.getEntityType())) {
+        EntityType entityType = event.getEntityType();
+
+        if (isAllow() && creatures.contains(entityType) || !isAllow() && !creatures.contains(entityType)) {
             event.setCancelled(false);
         }
-        else if (!isAllow() && creatures.contains(event.getEntityType())) {
+        else if (!isAllow() && creatures.contains(entityType)) {
             event.setCancelled(true);
         }
     }
