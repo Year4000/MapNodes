@@ -123,6 +123,7 @@ public class NodeModeFactory {
             GameModeInfo modeInfo = mode.getClass().getAnnotation(GameModeInfo.class);
 
             enabledListeners.get(modeInfo).unregister();
+            enabledListeners.remove(modeInfo);
         } catch (NullPointerException e) {
             MapNodesPlugin.log(e, false);
         }
