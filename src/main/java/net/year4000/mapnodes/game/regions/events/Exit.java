@@ -21,9 +21,7 @@ public class Exit extends RegionEvent implements RegionListener {
 
         Point point = new Point(vector);
 
-        if (!region.inZone(point)) return;
-
-        if (region.inZone(new Point(event.getTo().toVector().toBlockVector()))) return;
+        if (!region.inZone(point) || region.inZone(new Point(event.getTo().toVector().toBlockVector()))) return;
 
         GamePlayer player = region.getGame().getPlayer(event.getPlayer());
 
