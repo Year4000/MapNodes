@@ -159,6 +159,10 @@ public final class NodePlayer implements GamePlayer {
             team.leave(this);
         }
 
+        if (pendingTeam != null) {
+            pendingTeam.leave(this);
+        }
+
         // Cancel tasks
         playerTasks.stream().forEach(BukkitTask::cancel);
         BossBar.removeBar(player);
