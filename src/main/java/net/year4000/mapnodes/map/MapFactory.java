@@ -1,5 +1,6 @@
 package net.year4000.mapnodes.map;
 
+import com.google.common.collect.Iterables;
 import lombok.Getter;
 import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.Settings;
@@ -8,10 +9,7 @@ import net.year4000.mapnodes.messages.Msg;
 
 import javax.annotation.Nullable;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -74,10 +72,11 @@ public class MapFactory {
     public static List<MapFolder> getMaps(int number) {
         List<MapFolder> maps = new ArrayList<>(folders.values());
         Collections.shuffle(maps);
+        Iterator<MapFolder> mapFolderIterator = Iterables.cycle(maps).iterator();
 
         return new ArrayList<MapFolder>() {{
-            for (int i = 0; i < (number > maps.size() ? maps.size() : number); i++) {
-                add(maps.get(i));
+            for (int i = 0; i < number; i++) {
+                add(mapFolderIterator.next());
             }
         }};
     }
