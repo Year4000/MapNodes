@@ -40,7 +40,7 @@ public final class NodeConfig implements GameConfig, Validator {
 
     /** The Environment of the world. */
     @Since(1.0)
-    private World.Environment environment = World.Environment.NORMAL;
+    private World.Environment environment = World.Environment.NORMAL; //todo custom deserializer
 
     /** The height of the world. */
     @Since(1.0)
