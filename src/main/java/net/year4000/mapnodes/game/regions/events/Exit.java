@@ -30,7 +30,7 @@ public class Exit extends RegionEvent implements RegionListener {
         // Should we deny entrance
         if (applyToPlayer(player)) {
             if (!isAllow()) {
-                player.getPlayer().teleport(event.getFrom());
+                event.setTo(event.getFrom());
             }
 
             runGlobalEventTasks(player);
