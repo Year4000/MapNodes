@@ -84,7 +84,7 @@ public class MapNodesPlugin extends BukkitPlugin implements Plugin {
             .add(Bow.class)
             .add(Chest.class)
             .add(TNT.class)
-            .add(PVP.class)
+            .add(EntityDamage.class)
             .add(CreatureSpawn.class)
             .add(PlayerDrop.class)
             .add(BlockDrop.class)
