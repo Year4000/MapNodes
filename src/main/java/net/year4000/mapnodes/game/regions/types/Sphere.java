@@ -53,12 +53,14 @@ public class Sphere implements Region, Validator {
             int cy = center.getY();
             int cz = center.getZ();
 
-            // todo fix this is not looping as a sphere but as a cube
-            for (int x = cx - radius; x <= cx + radius; x++) {
-                for (int z = cz - radius; z <= cz + radius; z++) {
-                    for (int y = cy - radius; y < cy + radius; y++) {
-                        locations.add(new Point(x, y, z, yaw, pitch));
-                    }
+            // parametric equations for sphere are: z = r*cos(); x = sqrt(r^2 - z^2)*cos(); y = sqrt(r^2 - z^2)*sin()
+            for (int i = 0-radius; i <= radius; i++) {
+                for (int j = 0; j <= 360; j++) {
+                    int z = (int) (radius * Math.cos(Math.toRadians(j)));
+                    int x = (int) (Math.sqrt(Math.pow(radius,2) - Math.pow(z, 2)) * Math.cos(Math.toRadians(j)));
+                    int y = (int) (Math.sqrt(Math.pow(radius,2) - Math.pow(z, 2)) * Math.sin(Math.toRadians(j)));
+                    System.out.println((int) Math.cos(Math.toRadians(j)));
+                    locations.add(new Point(cx+x, cy+y, cz+z, yaw, pitch));
                 }
             }
 
