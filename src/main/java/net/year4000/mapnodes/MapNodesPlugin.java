@@ -93,15 +93,9 @@ public class MapNodesPlugin extends BukkitPlugin implements Plugin {
 
         // Register game modes that MapNodes can support
         NodeModeFactory.get()
-            .add(ArrowTag.class)
-            .add(Bomber.class)
             .add(Capture.class)
             .add(Deathmatch.class)
             .add(Destroy.class)
-            .add(EndTimes.class)
-            .add(Juggernaut.class)
-            .add(MageWars.class)
-            .add(PaintBall.class)
             .add(Skywars.class)
             .build();
 
