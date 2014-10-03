@@ -60,9 +60,12 @@ public class Capture extends GameModeTemplate implements GameMode {
     private transient CaptureConfig gameModeConfig;
     private transient Map<String, List<CaptureConfig.BlockCapture>> captures = new HashMap<>();
     private transient NodeGame game;
+    private transient boolean loaded = false;
 
     @EventHandler
     public void onLoad(GameLoadEvent event) {
+        if (loaded) return;
+
         game = (NodeGame) event.getGame();
         gameModeConfig = (CaptureConfig) getConfig();
         gameModeConfig.validate(); // This will assign the var maps
@@ -98,12 +101,13 @@ public class Capture extends GameModeTemplate implements GameMode {
 
             list.forEach(capture -> game.addStaticGoal(getCaptureID(nodeTeam, capture), " " + getCaptureDisplay(capture)));
         }
+
+        loaded = true;
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onBlockPlace(BlockPlaceEvent event) {
         if (!MapNodes.getCurrentGame().getStage().isPlaying()) return;
-
 
         GamePlayer player = game.getPlayer(event.getPlayer());
         NodeTeam team = ((NodeTeam) player.getTeam());
@@ -116,8 +120,6 @@ public class Capture extends GameModeTemplate implements GameMode {
                 event.setCancelled(true);
             }
         }));
-
-        if (event.isCancelled()) return;
 
         for (CaptureConfig.BlockCapture capture : captures.get(team.getId())) {
             NodeRegion region = game.getRegions().get(capture.getRegion());
@@ -138,6 +140,8 @@ public class Capture extends GameModeTemplate implements GameMode {
                 }
 
                 capture.setDone(true);
+                event.setCancelled(false);
+                event.getBlockPlaced().setTypeIdAndData(capture.getBlock().getId(), event.getBlockPlaced().getData(), true);
                 game.getSidebarGoals().get(getCaptureID(team, capture)).setDisplay(" " + getCaptureDisplay(capture));
                 game.getPlayers().forEach(p -> {
                     p.sendMessage(Msg.locale(p, "capture.placed", player.getPlayerColor(), team.getDisplayName()));
@@ -149,7 +153,7 @@ public class Capture extends GameModeTemplate implements GameMode {
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     public void onBlockBreak(BlockBreakEvent event) {
         if (!MapNodes.getCurrentGame().getStage().isPlaying()) return;
 

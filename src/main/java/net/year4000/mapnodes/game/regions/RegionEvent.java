@@ -8,6 +8,7 @@ import lombok.Setter;
 import net.year4000.mapnodes.api.game.GamePlayer;
 import net.year4000.mapnodes.game.NodePlayer;
 import net.year4000.mapnodes.game.NodeRegion;
+import net.year4000.mapnodes.game.NodeTeam;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.typewrappers.ItemStackList;
 import net.year4000.mapnodes.utils.typewrappers.LocationList;
@@ -57,7 +58,7 @@ public abstract class RegionEvent {
 
     /** Does the region apply to the current player */
     public boolean applyToPlayer(GamePlayer player) {
-        return apply.size() == 0 || apply.contains(player.getTeam().getName().toLowerCase());
+        return apply.size() == 0 || apply.contains(((NodeTeam) player.getTeam()).getId().toLowerCase());
     }
 
     /** Run global events tasks */
@@ -68,13 +69,15 @@ public abstract class RegionEvent {
 
     /** Teleport the player to a random safe location */
     public void teleportPlayer(GamePlayer player) {
-        if (teleport.size() > 0) {
-            player.getPlayer().teleport(teleport.getSafeRandomSpawn());
-        }
+        if (teleport.size() == 0) return;
+
+        player.getPlayer().teleport(teleport.getSafeRandomSpawn());
     }
 
     /** Send the message to the player */
     public void sendMessage(GamePlayer player) {
+        if (message == null || message.equals("")) return;
+
         // Translate by map first
         String translatedMessage = ((NodePlayer) player).getGame().locale(player.getPlayer().getLocale(), message);
         // Translate by MapNodes
