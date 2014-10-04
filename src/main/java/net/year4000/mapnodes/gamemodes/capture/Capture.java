@@ -6,6 +6,7 @@ import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.events.game.GameLoadEvent;
 import net.year4000.mapnodes.api.events.game.GameStartEvent;
+import net.year4000.mapnodes.api.events.game.GameStopEvent;
 import net.year4000.mapnodes.api.events.team.GameTeamWinEvent;
 import net.year4000.mapnodes.api.game.GamePlayer;
 import net.year4000.mapnodes.api.game.modes.GameMode;
@@ -102,13 +103,16 @@ public class Capture extends GameModeTemplate implements GameMode {
 
             list.forEach(capture -> game.addStaticGoal(getCaptureID(nodeTeam, capture), " " + getCaptureDisplay(capture)));
         }
+    }
 
+    @EventHandler
+    public void onEnd(GameStopEvent event) {
         loaded = true;
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onBlockPlace(BlockPlaceEvent event) {
-        if (!MapNodes.getCurrentGame().getStage().isPlaying()) return;
+        if (loaded || !MapNodes.getCurrentGame().getStage().isPlaying()) return;
 
         GamePlayer player = game.getPlayer(event.getPlayer());
         NodeTeam team = ((NodeTeam) player.getTeam());
@@ -155,7 +159,7 @@ public class Capture extends GameModeTemplate implements GameMode {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     public void onBlockBreak(BlockBreakEvent event) {
-        if (!MapNodes.getCurrentGame().getStage().isPlaying()) return;
+        if (loaded || !MapNodes.getCurrentGame().getStage().isPlaying()) return;
 
         Point point = new Point(event.getBlock().getLocation().toVector().toBlockVector());
 
