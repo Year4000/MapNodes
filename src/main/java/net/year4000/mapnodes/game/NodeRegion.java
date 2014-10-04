@@ -25,6 +25,11 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 @Data
 public final class NodeRegion implements GameRegion, Validator, AssignNodeGame {
+    /** Region weight */
+    public NodeRegion() {
+        addEvent();
+    }
+
     /** The flags for this region optional if just used for zones */
     @Since(1.0)
     private RegionEvents events = null;
@@ -45,6 +50,8 @@ public final class NodeRegion implements GameRegion, Validator, AssignNodeGame {
          Upper Json Settings / Bellow Instance Code
     *///--------------------------------------------//
 
+    private transient int weight = 0;
+    private static transient int totalWeight = 0;
     private transient NodeGame game;
     @Setter(AccessLevel.NONE)
     private transient String id;
@@ -68,6 +75,12 @@ public final class NodeRegion implements GameRegion, Validator, AssignNodeGame {
         }
 
         return id;
+    }
+
+    /** Make this event tracked by the event system and give it weight */
+    public void addEvent() {
+        totalWeight += 10;
+        weight = totalWeight;
     }
 
     /** Get the zone set with zone caching from conversion */

@@ -30,9 +30,9 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 @EventType(EventTypes.CHEST)
 public class Chest extends RegionEvent implements RegionListener {
-    private static final Random rand = new Random(System.currentTimeMillis());
-    private transient List<BlockVector> chests = new CopyOnWriteArrayList<>();
-    private transient List<BlockVector> placedChests = new CopyOnWriteArrayList<>();
+    private static transient final Random rand = new Random(System.currentTimeMillis());
+    private static transient final List<BlockVector> chests = new CopyOnWriteArrayList<>();
+    private static transient final List<BlockVector> placedChests = new CopyOnWriteArrayList<>();
     private ItemStackList<ItemStack> items = new ItemStackList<>();
     @SerializedName("keep_filled")
     private boolean keepFilled = false;
@@ -44,9 +44,11 @@ public class Chest extends RegionEvent implements RegionListener {
     @EventHandler
     public void onChest(PlayerInteractEvent event) {
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+
             final BlockVector location = event.getClickedBlock().getLocation().toVector().toBlockVector();
 
-            if (!region.inZone(new Point(location)) && !chests.contains(location) && !placedChests.contains(location)) return;
+            if (!shouldRunEvent(new Point(location)) || (chests.contains(location) && placedChests.contains(location))) return;
+
 
             /*items.forEach(i -> MapNodesPlugin.log(i.toString()));
             MapNodesPlugin.log("ITEMS: " + items.size());
@@ -120,7 +122,7 @@ public class Chest extends RegionEvent implements RegionListener {
 
                 // MapNodesPlugin.log("CHEST END SIZE: " + chestContents.length);
 
-                SchedulerUtil.runSync(() -> chest.setContents(chestContents));
+                SchedulerUtil.runSync(() -> chest.setContents(chestContents), 2L);
             }
         }
     }

@@ -9,6 +9,7 @@ import net.year4000.mapnodes.api.game.GamePlayer;
 import net.year4000.mapnodes.game.NodePlayer;
 import net.year4000.mapnodes.game.NodeRegion;
 import net.year4000.mapnodes.game.NodeTeam;
+import net.year4000.mapnodes.game.regions.types.Point;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.typewrappers.ItemStackList;
 import net.year4000.mapnodes.utils.typewrappers.LocationList;
@@ -18,6 +19,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -55,6 +57,16 @@ public abstract class RegionEvent {
     /** The teams this region apply to option if just used for zones */
     @Since(1.0)
     private List<String> apply = new ArrayList<>();
+
+    /** Should this event run based on the internal weight system */
+    public boolean shouldRunEvent(Point point) {
+        List<NodeRegion> regions = region.getGame().getRegions().values().stream()
+            .filter(r -> r.inZone(point))
+            .sorted((r, l) -> r.getWeight() < l.getWeight() ? 1 : -1)
+            .collect(Collectors.toList());
+
+        return regions.get(0).equals(region);
+    }
 
     /** Does the region apply to the current player */
     public boolean applyToPlayer(GamePlayer player) {
