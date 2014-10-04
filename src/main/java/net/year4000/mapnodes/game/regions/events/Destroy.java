@@ -9,7 +9,6 @@ import net.year4000.mapnodes.game.regions.types.Point;
 import net.year4000.mapnodes.utils.typewrappers.MaterialList;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 
 import java.util.Arrays;

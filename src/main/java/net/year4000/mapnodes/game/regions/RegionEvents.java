@@ -5,7 +5,6 @@ import net.year4000.mapnodes.game.NodeRegion;
 import net.year4000.mapnodes.messages.Msg;
 import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
-import org.bukkit.event.Listener;
 
 import java.util.ArrayList;
 import java.util.List;

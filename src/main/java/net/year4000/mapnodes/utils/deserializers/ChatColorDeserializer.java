@@ -10,7 +10,7 @@ import org.bukkit.ChatColor;
 
 import java.lang.reflect.Type;
 
-public class ChatColorDeserializer  implements JsonDeserializer<ChatColor> {
+public class ChatColorDeserializer implements JsonDeserializer<ChatColor> {
     @Override
     public ChatColor deserialize(JsonElement element, Type type, JsonDeserializationContext context) throws JsonParseException {
         String name = element.getAsString();

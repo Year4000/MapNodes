@@ -13,7 +13,6 @@ import net.year4000.mapnodes.game.NodeTeam;
 import net.year4000.mapnodes.game.system.Spectator;
 import net.year4000.mapnodes.gamemodes.GameModeTemplate;
 import net.year4000.mapnodes.messages.Msg;
-import net.year4000.mapnodes.utils.SchedulerUtil;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

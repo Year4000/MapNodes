@@ -3,7 +3,6 @@ package net.year4000.mapnodes.commands.maps;
 import net.year4000.mapnodes.NodeFactory;
 import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.game.GameManager;
-import net.year4000.mapnodes.api.game.GameMap;
 import net.year4000.mapnodes.game.Node;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.Common;

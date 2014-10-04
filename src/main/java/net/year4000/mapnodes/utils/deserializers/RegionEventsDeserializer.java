@@ -2,13 +2,11 @@ package net.year4000.mapnodes.utils.deserializers;
 
 import com.google.common.reflect.TypeToken;
 import com.google.gson.*;
-import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.game.regions.EventManager;
 import net.year4000.mapnodes.game.regions.EventTypes;
 import net.year4000.mapnodes.game.regions.RegionEvents;
 import net.year4000.mapnodes.game.regions.RegionListener;
 import net.year4000.mapnodes.utils.GsonUtil;
-import org.bukkit.event.Listener;
 
 import java.lang.reflect.Type;
 import java.util.Map;

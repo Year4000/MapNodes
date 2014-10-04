@@ -3,6 +3,7 @@ package net.year4000.mapnodes.utils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import net.year4000.mapnodes.game.regions.RegionEvents;
+import net.year4000.mapnodes.game.regions.types.Point;
 import net.year4000.mapnodes.utils.deserializers.*;
 import net.year4000.mapnodes.utils.typewrappers.*;
 import org.bukkit.ChatColor;
@@ -47,6 +48,7 @@ public final class GsonUtil {
             .registerTypeAdapter(RegionList.class, new RegionListDeserializer())
             .registerTypeAdapter(RegionEvents.class, new RegionEventsDeserializer())
             .registerTypeAdapter(ItemStackList.class, new ItemListDeserializer())
+            .registerTypeAdapter(Point.class, new PointDeserializer())
             ;
     }
 }

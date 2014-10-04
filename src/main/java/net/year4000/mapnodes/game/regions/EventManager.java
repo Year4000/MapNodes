@@ -1,7 +1,6 @@
 package net.year4000.mapnodes.game.regions;
 
 import net.year4000.mapnodes.MapNodesPlugin;
-import org.bukkit.event.Listener;
 
 import java.security.InvalidParameterException;
 import java.util.HashMap;

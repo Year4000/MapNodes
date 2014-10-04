@@ -2,7 +2,6 @@ package net.year4000.mapnodes.game.regions;
 
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.annotations.Since;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import net.year4000.mapnodes.api.game.GamePlayer;

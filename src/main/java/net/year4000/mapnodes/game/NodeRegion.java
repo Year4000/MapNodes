@@ -5,7 +5,6 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
-import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.game.GameRegion;
 import net.year4000.mapnodes.exceptions.InvalidJsonException;
 import net.year4000.mapnodes.game.regions.Region;
@@ -14,11 +13,8 @@ import net.year4000.mapnodes.game.regions.types.Point;
 import net.year4000.mapnodes.utils.AssignNodeGame;
 import net.year4000.mapnodes.utils.Validator;
 import net.year4000.mapnodes.utils.typewrappers.RegionList;
-import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkArgument;
