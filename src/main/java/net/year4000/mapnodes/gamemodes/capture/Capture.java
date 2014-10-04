@@ -17,6 +17,7 @@ import net.year4000.mapnodes.game.NodeTeam;
 import net.year4000.mapnodes.game.regions.types.Point;
 import net.year4000.mapnodes.gamemodes.GameModeTemplate;
 import net.year4000.mapnodes.messages.Msg;
+import net.year4000.mapnodes.utils.SchedulerUtil;
 import net.year4000.utilities.bukkit.FunEffectsUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
@@ -139,16 +140,15 @@ public class Capture extends GameModeTemplate implements GameMode {
                     return;
                 }
 
-                capture.setDone(true);
                 event.setCancelled(false);
-                event.getBlockPlaced().setTypeIdAndData(capture.getBlock().getId(), event.getBlockPlaced().getData(), true);
+                capture.setDone(true);
                 game.getSidebarGoals().get(getCaptureID(team, capture)).setDisplay(" " + getCaptureDisplay(capture));
                 game.getPlayers().forEach(p -> {
                     p.sendMessage(Msg.locale(p, "capture.placed", player.getPlayerColor(), team.getDisplayName()));
                     game.getScoreboardFactory().setGameSidebar((NodePlayer) p);
                     FunEffectsUtil.playSound(p.getPlayer(), Sound.NOTE_PLING);
                 });
-                shouldWin();
+                SchedulerUtil.runSync(this::shouldWin);
             }
         }
     }
