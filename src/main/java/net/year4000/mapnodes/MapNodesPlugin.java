@@ -19,15 +19,9 @@ import net.year4000.mapnodes.game.regions.EventManager;
 import net.year4000.mapnodes.game.regions.RegionManager;
 import net.year4000.mapnodes.game.regions.events.*;
 import net.year4000.mapnodes.game.regions.types.*;
-import net.year4000.mapnodes.gamemodes.arrowtag.ArrowTag;
-import net.year4000.mapnodes.gamemodes.bomber.Bomber;
 import net.year4000.mapnodes.gamemodes.capture.Capture;
 import net.year4000.mapnodes.gamemodes.deathmatch.Deathmatch;
 import net.year4000.mapnodes.gamemodes.destory.Destroy;
-import net.year4000.mapnodes.gamemodes.endtimes.EndTimes;
-import net.year4000.mapnodes.gamemodes.juggernaut.Juggernaut;
-import net.year4000.mapnodes.gamemodes.magewars.MageWars;
-import net.year4000.mapnodes.gamemodes.paintball.PaintBall;
 import net.year4000.mapnodes.gamemodes.skywars.Skywars;
 import net.year4000.mapnodes.listeners.*;
 import net.year4000.mapnodes.map.MapFactory;
@@ -93,15 +87,9 @@ public class MapNodesPlugin extends BukkitPlugin implements Plugin {
 
         // Register game modes that MapNodes can support
         NodeModeFactory.get()
-            .add(ArrowTag.class)
-            .add(Bomber.class)
             .add(Capture.class)
             .add(Deathmatch.class)
             .add(Destroy.class)
-            .add(EndTimes.class)
-            .add(Juggernaut.class)
-            .add(MageWars.class)
-            .add(PaintBall.class)
             .add(Skywars.class)
             .build();
 

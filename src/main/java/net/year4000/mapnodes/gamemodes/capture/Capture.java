@@ -41,7 +41,7 @@ public class Capture extends GameModeTemplate implements GameMode {
         .put(ChatColor.WHITE, 0)
         .put(ChatColor.GOLD, 1)
         .put(ChatColor.LIGHT_PURPLE, 2)
-        .put(ChatColor.BLUE, 3)
+        .put(ChatColor.BLUE, 11)
         .put(ChatColor.AQUA, 3)
         .put(ChatColor.YELLOW, 4)
         .put(ChatColor.GREEN, 5)
