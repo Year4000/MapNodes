@@ -136,7 +136,7 @@ public final class MapNodesListener implements Listener {
                         game.getEntering().forEach(p -> p.sendMessage(Msg.locale(p, "clocks.start.reduce")));
                     }
                 } else if (game.getStage().isWaiting()) {
-                    new StartGame(240).run(); // 2 mins
+                    new StartGame(120).run(); // 2 mins
                 }
             }
         }, ((NodeGame) MapNodes.getCurrentGame()).getStage().isStarting() ? 1L : 40L);
