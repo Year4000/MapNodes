@@ -32,6 +32,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class Chest extends RegionEvent implements RegionListener {
     private static final Random rand = new Random(System.currentTimeMillis());
     private transient List<BlockVector> chests = new CopyOnWriteArrayList<>();
+    private transient List<BlockVector> placedChests = new CopyOnWriteArrayList<>();
     private ItemStackList<ItemStack> items = new ItemStackList<>();
     @SerializedName("keep_filled")
     private boolean keepFilled = false;
@@ -45,7 +46,7 @@ public class Chest extends RegionEvent implements RegionListener {
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
             final BlockVector location = event.getClickedBlock().getLocation().toVector().toBlockVector();
 
-            if (!region.inZone(new Point(location)) && !chests.contains(location)) return;
+            if (!region.inZone(new Point(location)) && !chests.contains(location) && !placedChests.contains(location)) return;
 
             /*items.forEach(i -> MapNodesPlugin.log(i.toString()));
             MapNodesPlugin.log("ITEMS: " + items.size());
@@ -128,7 +129,7 @@ public class Chest extends RegionEvent implements RegionListener {
     @EventHandler(priority= EventPriority.MONITOR)
     public void onChest(BlockPlaceEvent event) {
         if (event.getBlock().getState() instanceof org.bukkit.block.Chest) {
-            chests.add(event.getBlock().getLocation().toVector().toBlockVector());
+            placedChests.add(event.getBlock().getLocation().toVector().toBlockVector());
         }
     }
 }
