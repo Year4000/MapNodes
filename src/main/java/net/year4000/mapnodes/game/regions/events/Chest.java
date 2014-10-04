@@ -47,7 +47,7 @@ public class Chest extends RegionEvent implements RegionListener {
 
             final BlockVector location = event.getClickedBlock().getLocation().toVector().toBlockVector();
 
-            if (!shouldRunEvent(new Point(location)) || (chests.contains(location) && placedChests.contains(location))) return;
+            if (!shouldRunEvent(new Point(location)) || chests.contains(location) || placedChests.contains(location)) return;
 
 
             /*items.forEach(i -> MapNodesPlugin.log(i.toString()));
