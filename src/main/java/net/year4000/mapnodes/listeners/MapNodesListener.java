@@ -123,7 +123,7 @@ public final class MapNodesListener implements Listener {
 
         SchedulerUtil.runAsync(() -> {
             NodeGame game = ((NodeGame) MapNodes.getCurrentGame());
-            int size = (int) game.getPlayingTeams().filter(team -> team.getPlayers().size() > 0).count();
+            int size = (int) game.getEntering().count();
             boolean biggerThanLast = lastSize < size;
             lastSize = size;
 
@@ -139,7 +139,7 @@ public final class MapNodesListener implements Listener {
                     new StartGame(240).run(); // 2 mins
                 }
             }
-        }, ((NodeGame) MapNodes.getCurrentGame()).getStage().isStarting() ? 0L : 40L);
+        }, ((NodeGame) MapNodes.getCurrentGame()).getStage().isStarting() ? 1L : 40L);
 
     }
 
