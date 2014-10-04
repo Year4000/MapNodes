@@ -151,6 +151,7 @@ public class NodeTeam implements GameTeam, Validator, AssignNodeGame {
     /** Start the team for the player */
     public void start(GamePlayer player) {
         if (players.contains(player)) {
+            player.getPlayer().setDisplayName(player.getPlayerColor() + ChatColor.WHITE.toString());
         }
         else {
             MapNodesPlugin.debug(player.getPlayer().getName() + " not starting!");
