@@ -11,7 +11,9 @@ import org.bukkit.Location;
 import org.bukkit.World;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkArgument;
@@ -48,22 +50,48 @@ public class Sphere implements Region, Validator {
     @Override
     public List<Point> getPoints() {
         if (cachedPoints == null) {
-            List<Point> locations = new ArrayList<>();
             int cx = center.getX();
             int cy = center.getY();
             int cz = center.getZ();
+            List<Point> locations;
+            Set<Point> temp = new HashSet<Point>();
 
-            // parametric equations for sphere are: z = r*cos(); x = sqrt(r^2 - z^2)*cos(); y = sqrt(r^2 - z^2)*sin()
-            for (int i = 0-radius; i <= radius; i++) {
-                for (int j = 0; j <= 360; j++) {
-                    int z = (int) (radius * Math.cos(Math.toRadians(j)));
-                    int x = (int) (Math.sqrt(Math.pow(radius,2) - Math.pow(z, 2)) * Math.cos(Math.toRadians(j)));
-                    int y = (int) (Math.sqrt(Math.pow(radius,2) - Math.pow(z, 2)) * Math.sin(Math.toRadians(j)));
-                    System.out.println((int) Math.cos(Math.toRadians(j)));
-                    locations.add(new Point(cx+x, cy+y, cz+z, yaw, pitch));
+            // parametric equations for sphere are:
+            // z = r * cos();
+            // x = sqrt(r^2 - z^2) * cos();
+            // y = sqrt(r^2 - z^2) * sin();
+            for (int i = 0 - radius; i <= radius; i++) {
+                for (int k = 0; k <= 180; k++) {
+                    int z = (int) ((i * Math.cos(Math.toRadians(k))));
+                    for (int j = 0; j <= 360; j++) {
+                        double x = (Math.sqrt(Math.pow(i, 2) - Math.pow(z, 2)) * Math.cos(Math.toRadians(j)));
+                        double y = (Math.sqrt(Math.pow(i, 2) - Math.pow(z, 2)) * Math.sin(Math.toRadians(j)));
+
+                        if (x > 0) {
+                            x += 0.5;
+                        } else {
+                            x -= 0.5;
+                        }
+
+                        if (y > 0) {
+                            y += 0.5;
+                        } else {
+                            y -= 0.5;
+                        }
+
+                        int xInt = (int) x;
+                        int yInt = (int) y;
+                        temp.add(new Point(xInt, yInt, z, yaw, pitch));
+
+                        // todo test as this may not be necessary, also may not be enough.
+                        xInt = (int) (Math.sqrt(Math.pow(i, 2) - Math.pow(z, 2)) * Math.cos(Math.toRadians(j)));
+                        yInt = (int) (Math.sqrt(Math.pow(i, 2) - Math.pow(z, 2)) * Math.sin(Math.toRadians(j)));
+                        temp.add(new Point(xInt, yInt, z, yaw, pitch));
+                    }
                 }
             }
 
+            locations = new ArrayList<Point>(temp);
             cachedPoints = locations;
         }
 
