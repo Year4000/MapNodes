@@ -69,11 +69,11 @@ public class ScoreboardFactory {
         String queue;
         if (nodePlayer.getPendingTeam() != null) {
             queue = nodePlayer.getPendingTeam().getQueue().contains(nodePlayer) ? Msg.locale(nodePlayer, "team.queue") : "";
-
         }
         else {
             queue = nodePlayer.getTeam().getQueue().contains(nodePlayer) ? Msg.locale(nodePlayer, "team.queue") : "";
         }
+
         SidebarManager side = new SidebarManager();
 
         // When game is running show game time length
