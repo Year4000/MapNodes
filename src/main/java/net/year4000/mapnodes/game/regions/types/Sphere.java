@@ -53,8 +53,7 @@ public class Sphere implements Region, Validator {
             int cx = center.getX();
             int cy = center.getY();
             int cz = center.getZ();
-            List<Point> locations;
-            Set<Point> temp = new HashSet<Point>();
+            Set<Point> locations = new HashSet<>();
 
             // parametric equations for sphere are:
             // z = r * cos();
@@ -62,37 +61,39 @@ public class Sphere implements Region, Validator {
             // y = sqrt(r^2 - z^2) * sin();
             for (int i = 0 - radius; i <= radius; i++) {
                 for (int k = 0; k <= 180; k++) {
-                    int z = (int) ((i * Math.cos(Math.toRadians(k))));
+                    int z = (int) (i * Math.cos(Math.toRadians(k)));
+
                     for (int j = 0; j <= 360; j++) {
                         double x = (Math.sqrt(Math.pow(i, 2) - Math.pow(z, 2)) * Math.cos(Math.toRadians(j)));
                         double y = (Math.sqrt(Math.pow(i, 2) - Math.pow(z, 2)) * Math.sin(Math.toRadians(j)));
 
                         if (x > 0) {
                             x += 0.5;
-                        } else {
+                        }
+                        else {
                             x -= 0.5;
                         }
 
                         if (y > 0) {
                             y += 0.5;
-                        } else {
+                        }
+                        else {
                             y -= 0.5;
                         }
 
                         int xInt = (int) x;
                         int yInt = (int) y;
-                        temp.add(new Point(xInt, yInt, z, yaw, pitch));
+                        locations.add(new Point(xInt, yInt, z, yaw, pitch));
 
                         // todo test as this may not be necessary, also may not be enough.
                         xInt = (int) (Math.sqrt(Math.pow(i, 2) - Math.pow(z, 2)) * Math.cos(Math.toRadians(j)));
                         yInt = (int) (Math.sqrt(Math.pow(i, 2) - Math.pow(z, 2)) * Math.sin(Math.toRadians(j)));
-                        temp.add(new Point(xInt, yInt, z, yaw, pitch));
+                        locations.add(new Point(xInt, yInt, z, yaw, pitch));
                     }
                 }
             }
 
-            locations = new ArrayList<Point>(temp);
-            cachedPoints = locations;
+            cachedPoints = new ArrayList<>(locations);
         }
 
         return cachedPoints;
