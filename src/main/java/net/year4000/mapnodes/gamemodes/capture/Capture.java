@@ -106,6 +106,8 @@ public class Capture extends GameModeTemplate implements GameMode {
     @EventHandler
     public void onEnd(GameStopEvent event) {
         loaded = true;
+        captures = new HashMap<>();
+        gameModeConfig = null;
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
