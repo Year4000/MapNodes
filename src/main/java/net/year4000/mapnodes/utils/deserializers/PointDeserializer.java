@@ -5,24 +5,34 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 import net.year4000.mapnodes.game.regions.types.Point;
+import net.year4000.mapnodes.utils.GsonUtil;
 
 import java.lang.reflect.Type;
 
 public class PointDeserializer implements JsonDeserializer<Point> {
     @Override
     public Point deserialize(JsonElement element, Type type, JsonDeserializationContext context) throws JsonParseException {
-        String xyz = element.getAsJsonObject().get("xyz").getAsString();
+        SimplePoint simplePoint = GsonUtil.GSON.fromJson(element, SimplePoint.class);
+        String xyz = simplePoint.xyz;
         String[] xyzPoint = xyz.split(",");
-        int x = element.getAsJsonObject().get("x").getAsInt();
-        int y = element.getAsJsonObject().get("y").getAsInt();
-        int z = element.getAsJsonObject().get("z").getAsInt();
-        int yaw = element.getAsJsonObject().get("yaw").getAsInt();
-        int pitch = element.getAsJsonObject().get("pitch").getAsInt();
 
-        if (xyz.equals("")) {
-            return new Point(x, y, z, yaw, pitch);
+        if (xyz == null || xyz.equals("")) {
+            return new Point(simplePoint.x, simplePoint.y, simplePoint.z, simplePoint.yaw, simplePoint.pitch);
         }
 
-        return new Point(Integer.valueOf(xyzPoint[0]), Integer.valueOf(xyzPoint[1]), Integer.valueOf(xyzPoint[2]), yaw, pitch);
+        return new Point(getPoint(xyzPoint[0]), getPoint(xyzPoint[1]), getPoint(xyzPoint[2]), simplePoint.yaw, simplePoint.pitch);
+    }
+
+    public int getPoint(String point) {
+        return Integer.valueOf(point.replaceAll(" ", ""));
+    }
+
+    public class SimplePoint {
+        public String xyz = null;
+        public int x = 0;
+        public int y = 0;
+        public int z = 0;
+        public Integer yaw = null;
+        public Integer pitch = null;
     }
 }
