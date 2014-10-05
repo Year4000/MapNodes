@@ -11,7 +11,9 @@ import org.bukkit.Location;
 import org.bukkit.World;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkArgument;
@@ -50,21 +52,41 @@ public class Cylinder implements Region, Validator {
     @Override
     public List<Point> getPoints() {
         if (cachedPoints == null) {
-            List<Point> locations = new ArrayList<>();
+            Set<Point> locations = new HashSet<Point>();
             int cx = center.getX();
             int cy = center.getY();
             int cz = center.getZ();
 
-            // todo fix this is not looping as a cylinder but as a cube
-            for (int x = cx - radius; x <= cx + radius; x++) {
-                for (int z = cz - radius; z <= cz + radius; z++) {
-                    for (int y = cy; y < cy + height; y++) {
-                        locations.add(new Point(x, y, z, yaw, pitch));
+            // parametric equations for a cylinder:
+            // x = radius * cos()
+            // z = radius * sin()
+            // y = height
+            for (int y = cy; y <= cy + height; y++) {
+                for (int i = 0 - radius; i <= radius; i++) {
+                    for (int j = 0; j <= 360; j++) {
+                        double x = i * Math.cos(Math.toRadians(j));
+                        double z = i * Math.sin(Math.toRadians(j));
+
+                        if (x > 0) {
+                            x += 0.5;
+                        } else {
+                            x -= 0.5;
+                        }
+
+                        if (z > 0) {
+                            z += 0.5;
+                        } else {
+                            z -= 0.5;
+                        }
+
+                        int xInt = cx + (int) x;
+                        int zInt = cz + (int) z;
+                        locations.add(new Point(xInt, y, zInt, yaw, pitch));
                     }
                 }
             }
 
-            cachedPoints = locations;
+            cachedPoints = new ArrayList<Point>(locations);
         }
 
         return cachedPoints;
