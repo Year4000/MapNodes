@@ -64,7 +64,7 @@ public abstract class RegionEvent {
             .sorted((r, l) -> r.getWeight() < l.getWeight() ? 1 : -1)
             .collect(Collectors.toList());
 
-        return regions.get(0).equals(region);
+        return regions.size() != 0 && regions.get(0).equals(region);
     }
 
     /** Does the region apply to the current player */
