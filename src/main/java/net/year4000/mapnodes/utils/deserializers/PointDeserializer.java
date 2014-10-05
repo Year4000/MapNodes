@@ -14,11 +14,12 @@ public class PointDeserializer implements JsonDeserializer<Point> {
     public Point deserialize(JsonElement element, Type type, JsonDeserializationContext context) throws JsonParseException {
         SimplePoint simplePoint = GsonUtil.GSON.fromJson(element, SimplePoint.class);
         String xyz = simplePoint.xyz;
-        String[] xyzPoint = xyz.split(",");
 
         if (xyz == null || xyz.equals("")) {
             return new Point(simplePoint.x, simplePoint.y, simplePoint.z, simplePoint.yaw, simplePoint.pitch);
         }
+
+        String[] xyzPoint = xyz.split(",");
 
         return new Point(getPoint(xyzPoint[0]), getPoint(xyzPoint[1]), getPoint(xyzPoint[2]), simplePoint.yaw, simplePoint.pitch);
     }
