@@ -81,14 +81,15 @@ public class Sphere implements Region, Validator {
                             y -= 0.5;
                         }
 
-                        int xInt = (int) x;
-                        int yInt = (int) y;
-                        locations.add(new Point(xInt, yInt, z, yaw, pitch));
+                        int xInt = cx + (int) x;
+                        int yInt = cy + (int) y;
+                        int zInt = cz + z;
+                        locations.add(new Point(xInt, yInt, zInt, yaw, pitch));
 
                         // todo test as this may not be necessary, also may not be enough.
-                        xInt = (int) (Math.sqrt(Math.pow(i, 2) - Math.pow(z, 2)) * Math.cos(Math.toRadians(j)));
-                        yInt = (int) (Math.sqrt(Math.pow(i, 2) - Math.pow(z, 2)) * Math.sin(Math.toRadians(j)));
-                        locations.add(new Point(xInt, yInt, z, yaw, pitch));
+                        xInt = cx + (int) (Math.sqrt(Math.pow(i, 2) - Math.pow(z, 2)) * Math.cos(Math.toRadians(j)));
+                        yInt = cy + (int) (Math.sqrt(Math.pow(i, 2) - Math.pow(z, 2)) * Math.sin(Math.toRadians(j)));
+                        locations.add(new Point(xInt, yInt, zInt, yaw, pitch));
                     }
                 }
             }
