@@ -21,8 +21,9 @@ public class Settings extends Config {
             CONFIG_FILE = new File(MapNodesPlugin.getInst().getDataFolder(), "config.yml");
             init();
         } catch (InvalidConfigurationException e) {
-            MapNodesPlugin.debug(e.getMessage());
-            e.printStackTrace();
+            MapNodesPlugin.log(e, true);
+        } catch (NullPointerException e) {
+            // Should only be catch by their is no file by the plugin instance.
         }
     }
 
