@@ -72,7 +72,9 @@ public class NodeFactory {
     /** Get the current node */
     public Node getCurrentGame() {
         if (currentNode == null) {
-            currentNode = loadNextQueued();
+            currentNode = queueNodes.poll();
+            currentNode.register();
+            currentNode.getMatch().getGame().load();
         }
 
         return currentNode;
@@ -87,7 +89,7 @@ public class NodeFactory {
         Node newNode = queueNodes.poll();
         currentNode = newNode;
 
-        newNode.register();
+        newNode.getMatch().getGame().load();
 
         return currentNode;
     }

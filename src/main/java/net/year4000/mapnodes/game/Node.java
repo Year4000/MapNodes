@@ -41,7 +41,6 @@ public class Node {
         try {
             initWorld();
             match.register();
-            match.getGame().load();
         } catch (WorldLoadException | UnexpectedException e) {
             MapNodesPlugin.debug(e, false);
 
