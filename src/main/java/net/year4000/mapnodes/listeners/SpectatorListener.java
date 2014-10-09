@@ -17,6 +17,7 @@ import net.year4000.utilities.bukkit.ItemUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
+import org.bukkit.block.Chest;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.EventHandler;
@@ -185,15 +186,21 @@ public class SpectatorListener implements Listener {
             Block block = event.getClickedBlock();
 
             if (block.getState() instanceof InventoryHolder) {
-                SchedulerUtil.runSync(() -> {
-                    Inventory inv = ((InventoryHolder) block.getState()).getInventory();
+                Inventory inv = ((InventoryHolder) block.getState()).getInventory();
 
-                    // Create a fake inventory so the chest don't really open
-                    Inventory fake = Bukkit.createInventory(null, inv.getSize(), inv.getTitle());
-                    fake.setContents(inv.getContents());
+                if (block.getState() instanceof Chest) {
+                    SchedulerUtil.runSync(() -> {
 
-                    gPlayer.getPlayer().openInventory(fake);
-                });
+                        // Create a fake inventory so the chest don't really open
+                        Inventory fake = Bukkit.createInventory(null, inv.getSize(), inv.getTitle());
+                        fake.setContents(inv.getContents());
+
+                        gPlayer.getPlayer().openInventory(fake);
+                    }, 5L);
+                }
+                else {
+                    gPlayer.getPlayer().openInventory(inv);
+                }
             }
         }
     }
