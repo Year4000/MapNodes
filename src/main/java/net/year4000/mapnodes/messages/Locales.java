@@ -10,6 +10,8 @@ package net.year4000.mapnodes.messages;
  * public static final String KEY_NAME = "key.name";
  */
 public final class Locales {
+    private Locales() {/* Util Class */}
+
     // System
     public static final String NAME = "";
 

@@ -8,12 +8,12 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Properties;
 
-public class Git {
+public final class Git {
     private static final String GIT_PROPERTIES = "/git.properties";
     private static Git inst;
     private Properties git = new Properties();
 
-    public Git() {
+    private Git() {
         try {
             InputStream gitProperties = Git.class.getResourceAsStream(GIT_PROPERTIES);
             git.load(new InputStreamReader(gitProperties, Charsets.UTF_8));
