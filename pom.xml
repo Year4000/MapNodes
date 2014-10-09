@@ -6,13 +6,8 @@
 
     <groupId>net.year4000</groupId>
     <artifactId>mapnodes</artifactId>
-    <packaging>pom</packaging>
     <name>MapNodes</name>
     <version>2.0.0-SNAPSHOT</version>
-
-    <modules>
-        <module>utilities</module>
-    </modules>
 
     <properties>
         <plugin.name>MapNodesPlugin</plugin.name>
