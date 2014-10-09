@@ -170,7 +170,7 @@ public class SpectatorListener implements Listener {
             if (event.getRightClicked() instanceof Player) {
                 GamePlayer rightClicked = gm.getPlayer((Player) event.getRightClicked());
 
-                if (!rightClicked.isSpectator()) {
+                if (rightClicked.isPlaying()) {
                     gPlayer.getPlayer().openInventory(rightClicked.getInventory());
                 }
             }
