@@ -6,6 +6,7 @@ import net.year4000.mapnodes.api.game.modes.GameModeConfig;
 import net.year4000.mapnodes.api.game.modes.GameModeConfigName;
 import net.year4000.mapnodes.exceptions.InvalidJsonException;
 import net.year4000.mapnodes.messages.Msg;
+import net.year4000.mapnodes.utils.TimeDuration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +17,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 @GameModeConfigName("deathmatch")
 public class DeathmatchConfig implements GameModeConfig {
     @SerializedName("time_limit")
-    private Integer timeLimit = null;
+    private TimeDuration timeLimit = null;
 
     @SerializedName("max_score")
     private Integer maxScore = null;
@@ -31,7 +32,7 @@ public class DeathmatchConfig implements GameModeConfig {
     @Override
     public void validate() throws InvalidJsonException {
         if (timeLimit != null) {
-            checkArgument(timeLimit > 0, Msg.util("deathmatch.error.time_limit"));
+            checkArgument(timeLimit.toSecs() > 0, Msg.util("deathmatch.error.time_limit"));
             checkArgument(maxScore != null, Msg.util("deathmatch.error.max_score_null"));
         }
 

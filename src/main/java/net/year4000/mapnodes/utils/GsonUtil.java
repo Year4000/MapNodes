@@ -49,6 +49,7 @@ public final class GsonUtil {
             .registerTypeAdapter(RegionEvents.class, new RegionEventsDeserializer())
             .registerTypeAdapter(ItemStackList.class, new ItemListDeserializer())
             .registerTypeAdapter(Point.class, new PointDeserializer())
+            .registerTypeAdapter(TimeDuration.class, new TimeDurationDeserializer())
             ;
     }
 }

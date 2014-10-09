@@ -3,6 +3,7 @@ package net.year4000.mapnodes.game.kits;
 import com.google.gson.annotations.Since;
 import net.year4000.mapnodes.exceptions.InvalidJsonException;
 import net.year4000.mapnodes.messages.Msg;
+import net.year4000.mapnodes.utils.TimeDuration;
 import net.year4000.mapnodes.utils.Validator;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -14,7 +15,7 @@ public class Effect implements Validator {
 
     /** The time the effect will last in secs. */
     @Since(1.0)
-    private int duration = 60;
+    private TimeDuration duration;
 
     /** The level the effect will have. */
     @Since(1.0)
@@ -29,7 +30,7 @@ public class Effect implements Validator {
 
     @Override
     public void validate() throws InvalidJsonException {
-        if (duration < -1) {
+        if (duration == null) {
             throw new InvalidJsonException(Msg.util("settings.kit.effect.duration"));
         }
 
@@ -43,6 +44,6 @@ public class Effect implements Validator {
     *///--------------------------------------------//
 
     public PotionEffect makeEffect() {
-        return new PotionEffect(name, duration < 0 ? Integer.MAX_VALUE : duration, level, ambient);
+        return new PotionEffect(name, duration.isInfinite() ? Integer.MAX_VALUE : duration.toTicks(), level, ambient);
     }
 }
