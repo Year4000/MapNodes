@@ -1,6 +1,7 @@
 package net.year4000.mapnodes.gamemodes.capture;
 
 import com.google.common.collect.ImmutableMap;
+import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.events.game.GameLoadEvent;
 import net.year4000.mapnodes.api.events.team.GameTeamWinEvent;
 import net.year4000.mapnodes.api.game.GamePlayer;
@@ -17,10 +18,14 @@ import net.year4000.mapnodes.utils.SchedulerUtil;
 import net.year4000.utilities.bukkit.FunEffectsUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryClickedEvent;
+import org.bukkit.event.player.PlayerPickupItemEvent;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -65,6 +70,7 @@ public class Capture extends GameModeTemplate implements GameMode {
 
         // Set up internal tracking of wools
         gameModeConfig.getBlockCaptures().forEach(capture -> {
+            capture.setGrabbed(new ArrayList<>());
             if (captures.containsKey(capture.getChallenger())) {
                 captures.get(capture.getChallenger()).add(capture);
             }
@@ -142,6 +148,68 @@ public class Capture extends GameModeTemplate implements GameMode {
         }
     }
 
+    @EventHandler
+    public void onPickupWool(PlayerPickupItemEvent event) {
+        if (!MapNodes.getCurrentGame().getStage().isPlaying()) return;
+
+        NodePlayer player = (NodePlayer) game.getPlayer(event.getPlayer());
+        NodeTeam team = player.getTeam();
+
+        for (CaptureConfig.BlockCapture capture : captures.get(team.getId())) {
+            // Check material
+            if (event.getItem().getItemStack().getType() != capture.getBlock()) {
+                continue;
+            }
+
+            // Check data
+            if ((int) event.getItem().getItemStack().getData().getData() != capture.getData()) {
+                continue;
+            }
+
+            if (!capture.getGrabbed().contains(player)) {
+                capture.getGrabbed().add(player);
+                game.getSidebarGoals().get(getCaptureID(team, capture)).setDisplay(" " + getCaptureDisplay(capture));
+
+                game.getPlayers().forEach(p -> {
+                    p.sendMessage(Msg.locale(p, "capture.grabed", player.getPlayerColor(), team.getDisplayName()));
+                    game.getScoreboardFactory().setGameSidebar((NodePlayer) p);
+                    FunEffectsUtil.playSound(p.getPlayer(), Sound.NOTE_PLING);
+                });
+            }
+        }
+    }
+
+    @EventHandler
+    public void onPickupWool(InventoryClickEvent event) {
+        if (!MapNodes.getCurrentGame().getStage().isPlaying()) return;
+
+        NodePlayer player = (NodePlayer) game.getPlayer((Player) event.getWhoClicked());
+        NodeTeam team = player.getTeam();
+
+        for (CaptureConfig.BlockCapture capture : captures.get(team.getId())) {
+            // Check material
+            if (event.getCurrentItem().getType() != capture.getBlock()) {
+                continue;
+            }
+
+            // Check data
+            if ((int) event.getCurrentItem().getData().getData() != capture.getData()) {
+                continue;
+            }
+
+            if (!capture.getGrabbed().contains(player)) {
+                capture.getGrabbed().add(player);
+                game.getSidebarGoals().get(getCaptureID(team, capture)).setDisplay(" " + getCaptureDisplay(capture));
+
+                game.getPlayers().forEach(p -> {
+                    p.sendMessage(Msg.locale(p, "capture.grabbed", player.getPlayerColor(), team.getDisplayName()));
+                    game.getScoreboardFactory().setGameSidebar((NodePlayer) p);
+                    FunEffectsUtil.playSound(p.getPlayer(), Sound.NOTE_PLING);
+                });
+            }
+        }
+    }
+
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     public void onBlockBreak(BlockBreakEvent event) {
         Point point = new Point(event.getBlock().getLocation().toVector().toBlockVector());
@@ -173,6 +241,14 @@ public class Capture extends GameModeTemplate implements GameMode {
 
     /** Get the capture display based on the stage */
     private String getCaptureDisplay(CaptureConfig.BlockCapture capture) {
-        return capture.getPrefix().toString() + (!capture.isDone() ? "" : "&m") + capture.getName();
+        String stage = "";
+        if (capture.isDone()) {
+            stage = ChatColor.STRIKETHROUGH.toString();
+        }
+        else if (capture.getGrabbed().size() > 0) {
+            stage = ChatColor.ITALIC.toString();
+        }
+
+        return capture.getPrefix().toString() + stage + capture.getName();
     }
 }

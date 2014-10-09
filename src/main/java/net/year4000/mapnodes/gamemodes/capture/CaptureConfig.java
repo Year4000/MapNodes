@@ -5,12 +5,14 @@ import lombok.Data;
 import net.year4000.mapnodes.api.game.modes.GameModeConfig;
 import net.year4000.mapnodes.api.game.modes.GameModeConfigName;
 import net.year4000.mapnodes.exceptions.InvalidJsonException;
+import net.year4000.mapnodes.game.NodePlayer;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.Common;
 import net.year4000.mapnodes.utils.Validator;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkArgument;
@@ -78,6 +80,7 @@ public class CaptureConfig implements GameModeConfig {
         }
 
         private transient boolean done = false;
+        private transient List<NodePlayer> grabbed = new ArrayList<>();
 
         public void setDone(boolean done) {
             this.done = done;
