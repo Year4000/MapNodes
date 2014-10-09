@@ -45,4 +45,19 @@ public final class Msg {
             return locale(Message.DEFAULT_LOCALE, key, values);
         }
     }
+
+    /** Does the string match the locale or locale key */
+    public static boolean matches(String locale, String compare, String key) {
+        return compare.equalsIgnoreCase(key) || compare.equalsIgnoreCase(locale(locale, key, compare));
+    }
+
+    /** Does the string match the locale or locale key */
+    public static boolean matches(Player player, String compare, String key) {
+        return matches(player.getLocale(), compare, key);
+    }
+
+    /** Does the string match the locale or locale key */
+    public static boolean matches(GamePlayer player, String compare, String key) {
+        return matches(player.getPlayer().getLocale(), compare, key);
+    }
 }

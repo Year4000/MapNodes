@@ -255,7 +255,7 @@ public class SpectatorListener implements Listener {
 
         if (gPlayer.isPlaying()) return;
 
-        if (event.getInventory().getName().equals(Msg.locale(gPlayer, "team.menu.title"))) {
+        if (Msg.matches(gPlayer, event.getInventory().getName(), "team.menu.title")) {
             try {
                 ItemStack item = event.getCurrentItem();
                 String teamName = item.getItemMeta().getDisplayName();
@@ -283,7 +283,7 @@ public class SpectatorListener implements Listener {
             if (player.isPlaying()) return;
 
             try {
-                if (hand.getItemMeta().getDisplayName().equals(Msg.locale(player, "team.menu.item"))) {
+                if (Msg.matches(player, hand.getItemMeta().getDisplayName(), "team.menu.item")) {
                     ((NodeGame) MapNodes.getCurrentGame()).openTeamChooserMenu(player);
                 }
             } catch (NullPointerException e) {
