@@ -251,7 +251,7 @@ public class SpectatorListener implements Listener {
                 FunEffectsUtil.playSound(player, Sound.ITEM_PICKUP);
             } catch (NullPointerException e) {
                 /** Not a valid item */
-                MapNodesPlugin.debug(e, true);
+                // MapNodesPlugin.debug(e, true);
             } finally {
                 player.closeInventory();
                 event.setCancelled(true);
@@ -276,7 +276,7 @@ public class SpectatorListener implements Listener {
                 }
             } catch (NullPointerException e) {
                 /** Not a valid item */
-                MapNodesPlugin.debug(e, true);
+                // MapNodesPlugin.debug(e, true);
             } finally {
                 event.setCancelled(true);
             }
