@@ -153,6 +153,7 @@ public class SpectatorListener implements Listener {
         GamePlayer player = MapNodes.getCurrentGame().getPlayer(event.getPlayer());
         ((NodePlayer) player).updateInventory();
     }
+
     @EventHandler(priority = EventPriority.MONITOR)
     public void updateInventory(PlayerItemBreakEvent event) {
         GamePlayer player = MapNodes.getCurrentGame().getPlayer(event.getPlayer());
@@ -224,7 +225,6 @@ public class SpectatorListener implements Listener {
     @EventHandler
     public void onJoin(GamePlayerJoinSpectatorEvent e) {
         NodeKit kit = (NodeKit) e.getKit();
-        GameManager gm = MapNodes.getCurrentGame();
 
         // Book
         kit.getItems().set(2, book(e.getPlayer()));
@@ -232,15 +232,6 @@ public class SpectatorListener implements Listener {
         kit.getItems().set(8, ItemUtil.makeItem("nether_star", "{'display':{'name':'" + Msg.locale(e.getPlayer(), "items.servers_menu") + "'}}"));
         // Game Menu
         kit.getItems().set(0, ItemUtil.makeItem("eye_of_ender", "{'display':{'name':'" + Msg.locale(e.getPlayer(), "team.menu.item") + "'}}"));
-
-        // Map icon
-        /*if (NodeFactory.get().getCurrentGame().getMatch().getIcon() != null) {
-            MapView view = NodeFactory.get().getCurrentGame().getMatch().getMapView();
-            short damage = view.getId();
-            ItemStack item = ItemUtil.makeItem("map", 1, damage);
-            item.setItemMeta(ItemUtil.addMeta(item, "{'display':{'name':'&3" + gm.getMap().getName() + "'}}"));
-            kit.getItems().set(3, item);
-        }*/
     }
 
     // Team picker GUI //
