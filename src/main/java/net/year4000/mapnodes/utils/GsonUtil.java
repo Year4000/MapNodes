@@ -49,6 +49,7 @@ public final class GsonUtil {
             .registerTypeAdapter(TimeDuration.class, new TimeDurationDeserializer())
             .registerTypeAdapter(Difficulty.class, new DifficultyDeserializer())
             .registerTypeAdapter(WorldTime.class, new WorldTimeDeserializer())
+            .registerTypeAdapter(World.Environment.class, new EnvironmentDeserializer())
             ;
     }
 }
