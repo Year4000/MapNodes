@@ -85,7 +85,7 @@ public class NodeKit implements GameKit, Validator, AssignNodeGame {
     private transient NodeGame game;
     @Setter(AccessLevel.NONE)
     private transient String id;
-    private transient static final String DEFAULT_LEATHER = "A06540";
+    public transient static final String DEFAULT_LEATHER = "A06540";
 
     /** Assign the game to this region */
     public void assignNodeGame(NodeGame game) {

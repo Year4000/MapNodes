@@ -15,14 +15,19 @@ import net.year4000.mapnodes.game.system.Spectator;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.Common;
 import net.year4000.utilities.bukkit.MessageUtil;
+import org.bukkit.Color;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.LeatherArmorMeta;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -114,23 +119,6 @@ public final class GameListener implements Listener {
 
             if (y >= height) {
                 event.getPlayer().sendMessage(Msg.util("global.warring", Msg.locale(event.getPlayer(), "region.deny.height", String.valueOf(y))));
-                event.setCancelled(true);
-            }
-        }
-    }
-
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
-    public void onDamage(EntityDamageEvent event) {
-        // If not a player don't check
-        if (!(event.getEntity() instanceof Player)) return;
-
-        // If playing instant kill when damaged by void
-        if (MapNodes.getCurrentGame().getPlayer((Player) event.getEntity()).isPlaying()) {
-            // If the damage is void reset player
-            if (event.getCause() == EntityDamageEvent.DamageCause.VOID) {
-                EntityDamageEvent death = new EntityDamageEvent(event.getEntity(), EntityDamageEvent.DamageCause.VOID, 0);
-                event.getEntity().setLastDamageCause(death);
-                ((Player) event.getEntity()).setHealth(0);
                 event.setCancelled(true);
             }
         }
