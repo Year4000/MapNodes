@@ -165,7 +165,7 @@ public class SpectatorListener implements Listener {
         GameManager gm = MapNodes.getCurrentGame();
         GamePlayer gPlayer = gm.getPlayer(event.getPlayer());
 
-        if (gPlayer.isSpectator()) {
+        if (!gPlayer.isPlaying()) {
             if (event.getRightClicked() instanceof Player) {
                 GamePlayer rightClicked = gm.getPlayer((Player) event.getRightClicked());
 
@@ -181,7 +181,7 @@ public class SpectatorListener implements Listener {
         GameManager gm = MapNodes.getCurrentGame();
         GamePlayer gPlayer = gm.getPlayer(event.getPlayer());
 
-        if (gPlayer.isSpectator() && event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+        if (!gPlayer.isPlaying() && event.getAction() == Action.RIGHT_CLICK_BLOCK) {
             Block block = event.getClickedBlock();
 
             if (block.getState() instanceof InventoryHolder) {
