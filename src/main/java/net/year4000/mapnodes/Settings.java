@@ -8,6 +8,7 @@ import net.year4000.utilities.config.InvalidConfigurationException;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Data
@@ -24,6 +25,10 @@ public class Settings extends Config {
             MapNodesPlugin.log(e, true);
         } catch (NullPointerException e) {
             // Should only be catch by their is no file by the plugin instance.
+        }
+
+        if (System.getProperty("maps", null) != null) {
+            mapsFolder = Arrays.asList(System.getProperty("maps", null).split("(,|;)"));
         }
     }
 
