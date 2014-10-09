@@ -1,5 +1,6 @@
 package net.year4000.mapnodes.listeners;
 
+import com.google.common.base.Joiner;
 import lombok.EqualsAndHashCode;
 import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.api.MapNodes;
@@ -10,8 +11,10 @@ import net.year4000.mapnodes.game.NodeGame;
 import net.year4000.mapnodes.game.NodeKit;
 import net.year4000.mapnodes.game.NodePlayer;
 import net.year4000.mapnodes.game.NodeTeam;
+import net.year4000.mapnodes.game.system.Spectator;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.Common;
+import net.year4000.utilities.bukkit.MessageUtil;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -20,6 +23,8 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 
+import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @EqualsAndHashCode
@@ -75,10 +80,26 @@ public final class GameListener implements Listener {
     public void onClock(GameClockEvent event) {
         // If not in debug mode check if their are still players.
         if (!MapNodesPlugin.getInst().getLog().isDebug()) {
-            // See if we should handle stop cases like this
-            // ((NodeGame) event.getGame()).getStartControls().stream().filter(c -> !c.handle()).count() == ((NodeGame) event.getGame()).getStartControls().size()
-            if (event.getGame().getPlaying().count() == 0) {
-                ((NodeGame) event.getGame()).stop();
+            // Ensure their is at least one player on each team else just end the game
+            int teamSize = (int) ((NodeGame) event.getGame()).getPlayingTeams().count();
+
+            // Its a custom game mode let the game mode handle early ends
+            if (teamSize == 1) return;
+
+            List<String> left = ((NodeGame) event.getGame()).getPlayingTeams()
+                .filter(team -> team.getPlaying() > 0)
+                .map(NodeTeam::getDisplayName)
+                .collect(Collectors.toList());
+
+            if (left.size() != teamSize) {
+                if (left.size() == 0) {
+                    left.addAll(event.getGame().getTeams().values().stream().filter(t -> t instanceof Spectator).map(NodeTeam::getDisplayName).collect(Collectors.toList()));
+                }
+
+                new GameWinEvent() {{
+                    game = event.getGame();
+                    winnerText = MessageUtil.replaceColors(Joiner.on("&7, ").join(left));
+                }}.call();
             }
         }
     }
