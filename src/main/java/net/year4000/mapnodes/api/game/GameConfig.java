@@ -1,5 +1,7 @@
 package net.year4000.mapnodes.api.game;
 
+import net.year4000.mapnodes.utils.WorldTime;
+import org.bukkit.Difficulty;
 import org.bukkit.Location;
 import org.bukkit.World;
 
@@ -17,13 +19,13 @@ public interface GameConfig {
      * Get the difficulty of the world.
      * @return The difficulty level.
      */
-    public int getDifficulty();
+    public Difficulty getDifficulty();
 
     /**
      * Get the time the world should be locked at.
      * @return The world time.
      */
-    public long getTimeLock();
+    public WorldTime getTimeLock();
 
     /**
      * Should the weather be turned on.

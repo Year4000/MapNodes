@@ -8,7 +8,9 @@ import net.year4000.mapnodes.api.game.GameConfig;
 import net.year4000.mapnodes.exceptions.InvalidJsonException;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.Validator;
+import net.year4000.mapnodes.utils.WorldTime;
 import net.year4000.mapnodes.utils.typewrappers.LocationList;
+import org.bukkit.Difficulty;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.BlockFace;
@@ -27,12 +29,12 @@ import static com.google.common.base.Preconditions.checkArgument;
 public final class NodeConfig implements GameConfig, Validator {
     /** The map's difficulty level. */
     @Since(1.0)
-    private int difficulty = 3; // todo allow support for names easy, normal, hard
+    private Difficulty difficulty = Difficulty.NORMAL;
 
     /** The time that the map should be locked to. */
     @Since(1.0)
     @SerializedName("time_lock")
-    private long timeLock = -1; // todo allow for name's ex dawn, dusk, day, night, midnight, midday
+    private WorldTime timeLock = new WorldTime(-1);
 
     /** Should the weather be forced on. */
     @Since(1.0)
@@ -58,10 +60,6 @@ public final class NodeConfig implements GameConfig, Validator {
 
     @Override
     public void validate() throws InvalidJsonException {
-        checkArgument(0 <= difficulty && difficulty <= 3, Msg.util("settings.game.difficulty"));
-
-        checkArgument(-1 <= timeLock && timeLock <= 23000, Msg.util("settings.game.timeLock"));
-
         checkArgument(0 <= worldHeight && worldHeight <= 256, Msg.util("settings.game.worldHeight"));
 
         checkArgument(spawn.size() > 0, Msg.util("settings.game.spawn"));

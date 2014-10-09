@@ -75,16 +75,16 @@ public class WorldManager {
         world.setAutoSave(false);
 
         // Difficulty
-        world.setDifficulty(Difficulty.getByValue(config.getDifficulty()));
+        world.setDifficulty(config.getDifficulty());
 
         // Weather Rule
         world.setStorm(config.isWeather());
         world.setWeatherDuration(Integer.MAX_VALUE);
 
         // Time Rule
-        world.setTime(config.getTimeLock());
+        world.setTime(config.getTimeLock().getTime());
 
-        if (config.getTimeLock() != -1) {
+        if (config.getTimeLock().getTime() != -1) {
             world.setGameRuleValue("doDaylightCycle", "false");
         }
 

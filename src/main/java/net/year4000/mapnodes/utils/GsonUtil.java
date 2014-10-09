@@ -48,6 +48,7 @@ public final class GsonUtil {
             .registerTypeAdapter(Point.class, new PointDeserializer())
             .registerTypeAdapter(TimeDuration.class, new TimeDurationDeserializer())
             .registerTypeAdapter(Difficulty.class, new DifficultyDeserializer())
+            .registerTypeAdapter(WorldTime.class, new WorldTimeDeserializer())
             ;
     }
 }
