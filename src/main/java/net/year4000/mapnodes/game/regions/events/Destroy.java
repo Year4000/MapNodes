@@ -25,10 +25,10 @@ public class Destroy extends RegionEvent implements RegionListener {
         Material material = event.getBlock().getType();
 
         if (applyToPlayer(player)) {
-            if (isAllow() && blocks.contains(material) || !isAllow() && !blocks.contains(material)) {
+            if ((isAllow() && blocks.contains(material)) || (!isAllow() && !blocks.contains(material))) {
                 event.setCancelled(false);
             }
-            else if (!isAllow() && blocks.contains(material)) {
+            else if ((isAllow() && !blocks.contains(material)) || (!isAllow() && blocks.contains(material))) {
                 event.setCancelled(true);
             }
 

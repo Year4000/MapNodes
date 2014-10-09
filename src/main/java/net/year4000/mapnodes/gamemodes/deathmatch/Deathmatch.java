@@ -65,7 +65,7 @@ public class Deathmatch extends GameModeTemplate implements GameMode {
     @EventHandler
     public void onLoad(GameStartEvent event) {
         if (gameModeConfig.getTimeLimit() != null) {
-            endTime = (System.currentTimeMillis() + 1000) + (gameModeConfig.getTimeLimit().toSecs() * 60000);
+            endTime = (System.currentTimeMillis() + 1000) + (TimeUnit.MILLISECONDS.convert(gameModeConfig.getTimeLimit().toSecs(), TimeUnit.SECONDS));
         }
     }
 

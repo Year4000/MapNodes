@@ -33,6 +33,8 @@ public class DeathmatchConfig implements GameModeConfig {
     public void validate() throws InvalidJsonException {
         if (timeLimit != null) {
             checkArgument(timeLimit.toSecs() > 0, Msg.util("deathmatch.error.time_limit"));
+        }
+        else {
             checkArgument(maxScore != null, Msg.util("deathmatch.error.max_score_null"));
         }
 

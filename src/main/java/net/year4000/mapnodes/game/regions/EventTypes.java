@@ -8,12 +8,12 @@ public enum EventTypes {
     BUILD("build"),
     DESTROY("destroy"),
     CHEST("chest"),
-    CREATURE_SPAWN("creature_spawn"),
+    CREATURE_SPAWN("creature_spawns"),
     KILL_PLAYER("kill_player"),
     TNT("tnt"),
     BOW("bow"),
-    BLOCK_DROP("block_drop"),
-    PLAYER_DROP("player_drop"),
+    BLOCK_DROP("block_drops"),
+    PLAYER_DROP("player_drops"),
     ;
 
     private String name;

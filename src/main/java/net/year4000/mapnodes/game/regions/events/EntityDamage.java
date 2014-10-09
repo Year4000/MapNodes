@@ -21,10 +21,10 @@ public class EntityDamage extends RegionEvent implements RegionListener {
 
         EntityDamageEvent.DamageCause cause = event.getCause();
 
-        if (isAllow() && damageCauses.contains(cause) || !isAllow() && !damageCauses.contains(cause)) {
+        if ((isAllow() && damageCauses.contains(cause)) || (!isAllow() && !damageCauses.contains(cause))) {
             event.setCancelled(false);
         }
-        else if (!isAllow() && damageCauses.contains(cause)) {
+        else if ((isAllow() && !damageCauses.contains(cause)) || (!isAllow() && damageCauses.contains(cause))) {
             event.setCancelled(true);
         }
     }
