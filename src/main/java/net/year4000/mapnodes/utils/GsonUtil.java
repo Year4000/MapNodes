@@ -6,10 +6,7 @@ import net.year4000.mapnodes.game.regions.RegionEvents;
 import net.year4000.mapnodes.game.regions.types.Point;
 import net.year4000.mapnodes.utils.deserializers.*;
 import net.year4000.mapnodes.utils.typewrappers.*;
-import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
-import org.bukkit.Material;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.entity.EntityType;
 import org.bukkit.potion.PotionEffectType;
 
@@ -50,6 +47,7 @@ public final class GsonUtil {
             .registerTypeAdapter(ItemStackList.class, new ItemListDeserializer())
             .registerTypeAdapter(Point.class, new PointDeserializer())
             .registerTypeAdapter(TimeDuration.class, new TimeDurationDeserializer())
+            .registerTypeAdapter(Difficulty.class, new DifficultyDeserializer())
             ;
     }
 }
