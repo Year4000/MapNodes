@@ -78,7 +78,15 @@ public final class MapNodesListener implements Listener {
         Node node = NodeFactory.get().getCurrentGame();
         GameManager gm = node.getGame();
 
-        event.setNumPlayers((int) gm.getPlayers().filter(GamePlayer::isPlaying).count());
+        // Don't show spectators when game is playing
+        if (gm.getStage().isPlaying()) {
+            event.setNumPlayers((int) gm.getPlayers().filter(GamePlayer::isPlaying).count());
+        }
+        // Show all players any time else
+        else {
+            event.setNumPlayers((int) gm.getPlayers().count());
+        }
+
         event.setMaxPlayers(gm.getMaxPlayers());
 
         event.setMotd(MessageUtil.message(
