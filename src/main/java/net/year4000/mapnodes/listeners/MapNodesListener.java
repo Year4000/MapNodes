@@ -10,7 +10,7 @@ import net.year4000.mapnodes.api.events.player.GamePlayerJoinTeamEvent;
 import net.year4000.mapnodes.api.game.GameManager;
 import net.year4000.mapnodes.api.game.GamePlayer;
 import net.year4000.mapnodes.clocks.StartGame;
-import net.year4000.mapnodes.game.MatchManager;
+import net.year4000.mapnodes.game.Node;
 import net.year4000.mapnodes.game.NodeGame;
 import net.year4000.mapnodes.game.system.Spectator;
 import net.year4000.mapnodes.messages.Msg;
@@ -75,8 +75,8 @@ public final class MapNodesListener implements Listener {
 
     @EventHandler
     public void onPing(ServerListPingEvent event) {
-        GameManager gm = MapNodes.getCurrentGame();
-        MatchManager mm = NodeFactory.get().getCurrentGame().getMatch();
+        Node node = NodeFactory.get().getCurrentGame();
+        GameManager gm = node.getGame();
 
         event.setNumPlayers((int) gm.getPlayers().filter(GamePlayer::isPlaying).count());
         event.setMaxPlayers(gm.getMaxPlayers());
@@ -88,8 +88,8 @@ public final class MapNodesListener implements Listener {
             gm.getMap().getName()
         ));
 
-        if (mm.getIcon() != null) {
-            event.setServerIcon(mm.getIcon());
+        if (node.getIcon() != null) {
+            event.setServerIcon(node.getIcon());
         }
     }
 

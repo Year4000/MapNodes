@@ -48,7 +48,7 @@ public class NextNode extends Clocker {
         }
 
         running = true;
-        GameMap map = NodeFactory.get().peekNextQueued().getMatch().getGame().getMap();
+        GameMap map = NodeFactory.get().peekNextQueued().getGame().getMap();
 
         MapNodesPlugin.log(Msg.util("clocks.next.first", map.getName(), String.valueOf(sec(position) - 1)));
 
@@ -62,7 +62,7 @@ public class NextNode extends Clocker {
     }
 
     public void runTock(int position) {
-        GameMap map = NodeFactory.get().peekNextQueued().getMatch().getGame().getMap();
+        GameMap map = NodeFactory.get().peekNextQueued().getGame().getMap();
         int pos = sec(position);
         String color = Common.chatColorNumber(pos, sec(getTime()));
         String time = color + (new TimeUtil(pos, TimeUnit.SECONDS)).prettyOutput("&7:" + color);
@@ -82,7 +82,7 @@ public class NextNode extends Clocker {
     }
 
     public void runLast(int position) {
-        GameMap map = NodeFactory.get().peekNextQueued().getMatch().getGame().getMap();
+        GameMap map = NodeFactory.get().peekNextQueued().getGame().getMap();
 
         MapNodesPlugin.log(Msg.locale(Message.DEFAULT_LOCALE, "clocks.next.last", map.getName()));
 
@@ -100,7 +100,7 @@ public class NextNode extends Clocker {
 
         Node next = NodeFactory.get().loadNextQueued();
 
-        move.stream().forEach(player -> next.getMatch().getGame().join(player));
+        move.stream().forEach(player -> next.getGame().join(player));
         running = false;
     }
 }

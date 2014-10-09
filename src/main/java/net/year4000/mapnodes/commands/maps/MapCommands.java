@@ -32,7 +32,7 @@ public class MapCommands {
 
             @Override
             public String format(Node node, int index) {
-                GameManager game = node.getMatch().getGame();
+                GameManager game = node.getGame();
 
                 // todo only show map name as maps update right before the game starts.
                 if (index == 0) {
@@ -75,7 +75,7 @@ public class MapCommands {
             throw new CommandException(Msg.locale(sender, "cmd.next.none"));
         }
 
-        sender.sendMessage(map(sender, "cmd.next", (GameManager)NodeFactory.get().peekNextQueued().getMatch().getGame()));
+        sender.sendMessage(map(sender, "cmd.next", (GameManager)NodeFactory.get().peekNextQueued().getGame()));
     }
 
     /** The string for the map */

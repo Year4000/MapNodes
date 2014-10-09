@@ -94,7 +94,7 @@ public class MapNodesPlugin extends BukkitPlugin implements Plugin {
             .build();
 
         // Clean out old maps
-        WorldManager.removeStrayMaps();
+        Node.removeStrayMaps();
 
         // Load new maps
         new MapFactory();
@@ -113,8 +113,8 @@ public class MapNodesPlugin extends BukkitPlugin implements Plugin {
 
         // Generate all the games
         maps.forEach(node -> log(Msg.util("debug.map.ready",
-            node.getMatch().getGame().getMap().getName(),
-            node.getMatch().getGame().getMap().getVersion()
+            node.getGame().getMap().getName(),
+            node.getGame().getMap().getVersion()
         )));
 
         // Register built in listeners
@@ -179,11 +179,11 @@ public class MapNodesPlugin extends BukkitPlugin implements Plugin {
 
     @Override
     public GameManager getCurrentGame() {
-        return NodeFactory.get().getCurrentGame().getMatch().getGame();
+        return NodeFactory.get().getCurrentGame().getGame();
     }
 
     @Override
     public World getCurrentWorld() {
-        return NodeFactory.get().getCurrentGame().getWorld().getWorld();
+        return NodeFactory.get().getCurrentGame().getWorld();
     }
 }

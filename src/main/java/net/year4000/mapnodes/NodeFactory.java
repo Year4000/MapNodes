@@ -65,6 +65,7 @@ public class NodeFactory {
                 addAll(queueNodes);
             } catch (NullPointerException e) {
                 MapNodesPlugin.debug(Msg.util("error.world.none"));
+                MapNodesPlugin.debug(e, false);
             }
         }};
     }
@@ -74,7 +75,7 @@ public class NodeFactory {
         if (currentNode == null) {
             currentNode = queueNodes.poll();
             currentNode.register();
-            currentNode.getMatch().getGame().load();
+            currentNode.getGame().load();
         }
 
         return currentNode;
@@ -89,7 +90,7 @@ public class NodeFactory {
         Node newNode = queueNodes.poll();
         currentNode = newNode;
 
-        newNode.getMatch().getGame().load();
+        newNode.getGame().load();
 
         return currentNode;
     }
