@@ -163,10 +163,4 @@ public final class MapNodesListener implements Listener {
     public void onCreatureSpawn(CreatureSpawnEvent event) {
         event.setCancelled(true);
     }
-
-    @EventHandler(priority = EventPriority.LOWEST)
-    public void onCreatureSpawn(PlayerDeathEvent event) {
-        // TODO Make sure sure this will work with player drops in regions later
-        event.getDrops().clear();
-    }
 }
