@@ -6,12 +6,11 @@ import net.year4000.mapnodes.api.game.modes.GameMode;
 import net.year4000.mapnodes.api.game.modes.GameModeConfig;
 import net.year4000.mapnodes.api.game.modes.GameModeConfigName;
 import net.year4000.mapnodes.api.game.modes.GameModeInfo;
+import net.year4000.mapnodes.listeners.ListenerBuilder;
+import org.bukkit.event.EventHandler;
 
 import java.security.InvalidParameterException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
@@ -98,4 +97,35 @@ public class NodeModeFactory {
         throw new InvalidParameterException(mode.getCanonicalName() + " is not a valid game mode type.");
     }
 
+    private Map<GameModeInfo, ListenerBuilder> enabledListeners = new HashMap<>();
+
+    /** enable the current listeners for the game mode */
+    public void registerListeners(GameMode mode) {
+        try {
+            GameModeInfo configName = mode.getClass().getAnnotation(GameModeInfo.class);
+            ListenerBuilder builder = new ListenerBuilder();
+
+            // If main game mode class has EventHandlers load that instance as a listener
+            if (Arrays.asList(mode.getClass().getMethods()).parallelStream().filter(m -> m.getAnnotation(EventHandler.class) != null).count() > 0L) {
+                builder.registerInstance(mode);
+            }
+
+            builder.addAll(configName.listeners());
+            builder.register();
+            enabledListeners.put(configName, builder);
+        } catch (NullPointerException e) {
+            MapNodesPlugin.log(e, false);
+        }
+    }
+
+    /** disable the current listeners for the game mode */
+    public void unregisterListeners(GameMode mode) {
+        try {
+            GameModeInfo modeInfo = mode.getClass().getAnnotation(GameModeInfo.class);
+
+            enabledListeners.remove(modeInfo).unregister();
+        } catch (NullPointerException e) {
+            MapNodesPlugin.log(e, false);
+        }
+    }
 }

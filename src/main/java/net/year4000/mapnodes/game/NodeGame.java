@@ -140,7 +140,6 @@ public final class NodeGame implements GameManager, Validator {
     private transient Map<String, SidebarGoal> sidebarGoals = new LinkedHashMap<>();
     private transient List<Operations> startControls = new CopyOnWriteArrayList<>();
     private transient long startTime;
-    private transient NodeModeManager nodeModeManager = new NodeModeManager();
 
     /** Init things that happen before load is playable */
     public void load() {
@@ -154,7 +153,7 @@ public final class NodeGame implements GameManager, Validator {
         classes.values().forEach(team -> team.assignNodeGame(this));
 
         // Register game mode listeners
-        gameModes.forEach(nodeModeManager::registerListeners);
+        gameModes.forEach(NodeModeFactory.get()::registerListeners);
 
         // Call the game load event
         new GameLoadEvent(this).call();
@@ -434,7 +433,7 @@ public final class NodeGame implements GameManager, Validator {
             .forEach(RegionEvents::unregisterEvents);
 
         // Unregister game mode listeners
-        gameModes.forEach(nodeModeManager::unregisterListeners);
+        gameModes.forEach(NodeModeFactory.get()::unregisterListeners);
 
         // Cycle game or restart server
         if (NodeFactory.get().isQueuedGames()) {
