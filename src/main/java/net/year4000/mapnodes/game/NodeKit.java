@@ -60,7 +60,7 @@ public class NodeKit implements GameKit, Validator, AssignNodeGame {
     private int food = 20;
 
     /** The kits permissions */
-    @Since(1.0)
+    @Since(2.0)
     private List<String> permissions = new ArrayList<>();
 
     /** Can this kit fly */

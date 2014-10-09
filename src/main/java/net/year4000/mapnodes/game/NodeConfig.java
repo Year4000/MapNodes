@@ -32,7 +32,7 @@ public final class NodeConfig implements GameConfig, Validator {
     private Difficulty difficulty = Difficulty.NORMAL;
 
     /** The time that the map should be locked to. */
-    @Since(1.0)
+    @Since(2.0)
     @SerializedName("time_lock")
     private WorldTime timeLock = new WorldTime(-1);
 
@@ -41,7 +41,7 @@ public final class NodeConfig implements GameConfig, Validator {
     private boolean weather = false;
 
     /** The Environment of the world. */
-    @Since(1.0)
+    @Since(2.0)
     private World.Environment environment = World.Environment.NORMAL;
 
     /** The height of the world. */
@@ -55,7 +55,7 @@ public final class NodeConfig implements GameConfig, Validator {
     private URL resourcePack = null;
 
     /** The area for the spawn. */
-    @Since(1.0)
+    @Since(2.0)
     private LocationList<Location> spawn = new LocationList<>();
 
     @Override

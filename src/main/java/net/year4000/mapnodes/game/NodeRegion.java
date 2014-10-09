@@ -27,11 +27,11 @@ public final class NodeRegion implements GameRegion, Validator, AssignNodeGame {
     }
 
     /** The flags for this region optional if just used for zones */
-    @Since(1.0)
+    @Since(2.0)
     private RegionEvents events = null;
 
     /** The zones that this region contains */
-    @Since(1.0)
+    @Since(2.0)
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
     private RegionList<Region> zones = new RegionList<>();

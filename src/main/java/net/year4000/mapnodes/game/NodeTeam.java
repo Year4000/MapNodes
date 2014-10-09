@@ -2,6 +2,7 @@ package net.year4000.mapnodes.game;
 
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.annotations.Since;
+import com.google.gson.annotations.Until;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -48,12 +49,12 @@ public class NodeTeam implements GameTeam, Validator, AssignNodeGame {
     private int size = 1;
 
     /** Are teammates save from each other. */
-    @Since(1.0)
+    @Since(2.0)
     @SerializedName("friendly_fire")
     private boolean allowFriendlyFire = false;
 
     /** Show each invisible teammates as ghosts. */
-    @Since(1.0)
+    @Since(2.0)
     @SerializedName("friendly_invisibles")
     private boolean canSeeFriendlyInvisibles = true;
 
@@ -66,7 +67,7 @@ public class NodeTeam implements GameTeam, Validator, AssignNodeGame {
     private LocationList<Location> spawns = new LocationList<>();
 
     /** Should this team be tracked by the scoreboard. */
-    @Since(1.0)
+    @Until(1.0)
     @SerializedName("scoreboard")
     private boolean useScoreboard = true;
 

@@ -29,7 +29,7 @@ public final class GsonUtil {
     public static GsonBuilder gsonBuilder() {
         return new GsonBuilder()
             //.setPrettyPrinting()
-            .setVersion(1.0)
+            .setVersion(2.0)
             .registerTypeAdapter(MaterialList.class, new MaterialListDeserializer())
             .registerTypeAdapter(DamageCauseList.class, new DamageCauseListDeserializer())
             .registerTypeAdapter(EntityTypeList.class, new EntityTypeListDeserializer())
