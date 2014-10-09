@@ -80,8 +80,9 @@ public final class NodeSub {
 
         for (int i = 0; i < limit; i++) {
             Node node = NodeFactory.get().getQueueNodes().poll();
-            sender.sendMessage(MessageUtil.message(
-                Msg.locale(sender, "cmd.node.remove"),
+            sender.sendMessage(Msg.locale(
+                sender,
+                "cmd.node.remove",
                 node.getGame().getMap().getName()
             ));
         }
