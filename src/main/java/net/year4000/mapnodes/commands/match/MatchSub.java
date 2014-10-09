@@ -90,15 +90,20 @@ public final class MatchSub {
 
         // win the game with the specific team
         try {
+            // Win as the specific player
             if (args.hasFlag('p')) {
                 GamePlayer player = MapNodes.getCurrentGame().getPlaying()
                     .filter(p -> p.getPlayer().getName().equalsIgnoreCase(args.getFlag('p')))
                     .collect(Collectors.toList()).get(0);
                 new GamePlayerWinEvent(MapNodes.getCurrentGame(), player).call();
-            } else if (args.hasFlag('t')) {
+            }
+            // Win as the specific team
+            else if (args.hasFlag('t')) {
                 GameTeam team = MapNodes.getCurrentGame().getTeams().get(args.getFlag('t'));
                 new GameTeamWinEvent(MapNodes.getCurrentGame(), team).call();
-            } else {
+            }
+            // Just win the game
+            else {
                 new GameWinEvent().call();
             }
         } catch (Exception e) {
