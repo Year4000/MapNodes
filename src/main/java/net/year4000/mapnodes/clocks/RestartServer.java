@@ -45,7 +45,7 @@ public class RestartServer extends Clocker {
         }
 
         running = true;
-        MapNodesPlugin.log(Msg.util("clocks.restart.first", String.valueOf(sec(position) - 1)));
+        MapNodesPlugin.log(Msg.util("clocks.restart.first", (new TimeUtil(sec(position) - 1, TimeUnit.SECONDS)).rawOutput()));
         MapNodes.getCurrentGame().getPlayers().parallel().forEach(player -> FunEffectsUtil.playSound(
             player.getPlayer(),
             Sound.ORB_PICKUP

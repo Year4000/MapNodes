@@ -48,7 +48,7 @@ public class StartGame extends Clocker {
         ((NodeGame)MapNodes.getCurrentGame()).setStartClock(this);
         GameMap map = MapNodes.getCurrentGame().getMap();
 
-        MapNodesPlugin.log(Msg.util("clocks.start.first", map.getName(), String.valueOf(sec(position) - 1)));
+        MapNodesPlugin.log(Msg.util("clocks.start.first", map.getName(), (new TimeUtil(sec(position) - 1, TimeUnit.SECONDS)).rawOutput()));
         MapNodes.getCurrentGame().getPlayers().parallel().forEach(player -> FunEffectsUtil.playSound(
             player.getPlayer(),
             Sound.ORB_PICKUP

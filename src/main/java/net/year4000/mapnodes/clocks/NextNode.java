@@ -50,7 +50,7 @@ public class NextNode extends Clocker {
         running = true;
         GameMap map = NodeFactory.get().peekNextQueued().getGame().getMap();
 
-        MapNodesPlugin.log(Msg.util("clocks.next.first", map.getName(), String.valueOf(sec(position) - 1)));
+        MapNodesPlugin.log(Msg.util("clocks.next.first", map.getName(), (new TimeUtil(sec(position) - 1, TimeUnit.SECONDS)).rawOutput()));
 
         MapNodes.getCurrentGame().getPlayers().parallel().forEach(player -> FunEffectsUtil.playSound(
             player.getPlayer(),
