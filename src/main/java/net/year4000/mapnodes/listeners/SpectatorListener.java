@@ -98,12 +98,17 @@ public class SpectatorListener implements Listener {
     public void onDamage(EntityDamageEvent event) {
         // If not a player don't check
         if (!(event.getEntity() instanceof Player)) return;
+        Player entity = (Player) event.getEntity();
 
         // If not playing send player back to spawn
-        if (!MapNodes.getCurrentGame().getPlayer((Player) event.getEntity()).isPlaying()) {
+        if (!MapNodes.getCurrentGame().getPlayer(entity).isPlaying()) {
             // If the damage is void reset player
             if (event.getCause() == EntityDamageEvent.DamageCause.VOID) {
-                event.getEntity().teleport(((NodeGame) MapNodes.getCurrentGame()).getConfig().getSafeRandomSpawn());
+                // Teleport back to main spawn
+                entity.teleport(((NodeGame) MapNodes.getCurrentGame()).getConfig().getSafeRandomSpawn());
+                // Re enable flying
+                entity.setAllowFlight(true);
+                entity.setFlying(true);
             }
 
             event.setCancelled(true);
