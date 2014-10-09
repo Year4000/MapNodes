@@ -1,6 +1,5 @@
 package net.year4000.mapnodes.gamemodes.skywars;
 
-import lombok.EqualsAndHashCode;
 import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.events.game.GameLoadEvent;
 import net.year4000.mapnodes.api.events.game.GameStartEvent;
@@ -30,14 +29,13 @@ import java.util.stream.Collectors;
     version = "1.0",
     config = SkywarsConfig.class
 )
-@EqualsAndHashCode(callSuper = false)
 public class Skywars extends GameModeTemplate implements GameMode {
-    private transient SkywarsConfig gameModeConfig;
-    private transient NodeGame game;
-    private transient NodeTeam team;
-    private transient Iterator<Location> spawns;
-    private transient List<String> alive = new ArrayList<>();
-    private transient List<String> dead = new ArrayList<>();
+    private SkywarsConfig gameModeConfig;
+    private NodeGame game;
+    private NodeTeam team;
+    private Iterator<Location> spawns;
+    private List<String> alive = new ArrayList<>();
+    private List<String> dead = new ArrayList<>();
 
     @EventHandler
     public void onLoad(GameLoadEvent event) {

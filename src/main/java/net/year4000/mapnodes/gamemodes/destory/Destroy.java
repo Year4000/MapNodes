@@ -1,10 +1,9 @@
 package net.year4000.mapnodes.gamemodes.destory;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 import net.year4000.mapnodes.api.events.game.GameLoadEvent;
 import net.year4000.mapnodes.api.game.modes.GameMode;
 import net.year4000.mapnodes.api.game.modes.GameModeInfo;
+import net.year4000.mapnodes.game.NodeGame;
 import net.year4000.mapnodes.gamemodes.GameModeTemplate;
 import org.bukkit.event.EventHandler;
 
@@ -13,13 +12,13 @@ import org.bukkit.event.EventHandler;
     version = "1.0",
     config = DestroyConfig.class
 )
-@Data
-@EqualsAndHashCode(callSuper = true)
 public class Destroy extends GameModeTemplate implements GameMode {
     private DestroyConfig gameModeConfig;
+    private NodeGame game;
 
     @EventHandler
     public void onLoad(GameLoadEvent event) {
         gameModeConfig = (DestroyConfig) getConfig();
+        game = (NodeGame) event.getGame();
     }
 }

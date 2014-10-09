@@ -1,10 +1,7 @@
 package net.year4000.mapnodes.gamemodes.capture;
 
 import com.google.common.collect.ImmutableMap;
-import lombok.EqualsAndHashCode;
-import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.events.game.GameLoadEvent;
-import net.year4000.mapnodes.api.events.game.GameStopEvent;
 import net.year4000.mapnodes.api.events.team.GameTeamWinEvent;
 import net.year4000.mapnodes.api.game.GamePlayer;
 import net.year4000.mapnodes.api.game.modes.GameMode;
@@ -35,7 +32,6 @@ import java.util.Map;
     version = "1.0",
     config = CaptureConfig.class
 )
-@EqualsAndHashCode(callSuper = true)
 public class Capture extends GameModeTemplate implements GameMode {
     public static final Map<ChatColor, Integer> CHAT_COLOR_DATA_MAP = ImmutableMap.<ChatColor, Integer>builder()
         .put(ChatColor.WHITE, 0)
@@ -57,15 +53,12 @@ public class Capture extends GameModeTemplate implements GameMode {
         .build();
 
     // Game Mode vars
-    private transient CaptureConfig gameModeConfig;
-    private transient Map<String, List<CaptureConfig.BlockCapture>> captures = new HashMap<>();
-    private transient NodeGame game;
-    private transient boolean loaded = false;
+    private CaptureConfig gameModeConfig;
+    private Map<String, List<CaptureConfig.BlockCapture>> captures = new HashMap<>();
+    private NodeGame game;
 
     @EventHandler
     public void onLoad(GameLoadEvent event) {
-        if (loaded) return;
-
         game = (NodeGame) event.getGame();
         gameModeConfig = (CaptureConfig) getConfig();
         gameModeConfig.validate(); // This will assign the var maps
@@ -103,17 +96,8 @@ public class Capture extends GameModeTemplate implements GameMode {
         }
     }
 
-    @EventHandler
-    public void onEnd(GameStopEvent event) {
-        loaded = true;
-        captures = new HashMap<>();
-        gameModeConfig = null;
-    }
-
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onBlockPlace(BlockPlaceEvent event) {
-        if (loaded || !MapNodes.getCurrentGame().getStage().isPlaying()) return;
-
         GamePlayer player = game.getPlayer(event.getPlayer());
         NodeTeam team = ((NodeTeam) player.getTeam());
         Point point = new Point(event.getBlockPlaced().getLocation().toVector().toBlockVector());
@@ -153,14 +137,13 @@ public class Capture extends GameModeTemplate implements GameMode {
                     FunEffectsUtil.playSound(p.getPlayer(), Sound.NOTE_PLING);
                 });
                 SchedulerUtil.runSync(this::shouldWin);
+                break;
             }
         }
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     public void onBlockBreak(BlockBreakEvent event) {
-        if (loaded || !MapNodes.getCurrentGame().getStage().isPlaying()) return;
-
         Point point = new Point(event.getBlock().getLocation().toVector().toBlockVector());
 
         captures.values().forEach(c -> c.forEach(capture -> {

@@ -1,7 +1,6 @@
 package net.year4000.mapnodes.gamemodes.deathmatch;
 
 import com.google.common.base.Joiner;
-import lombok.EqualsAndHashCode;
 import net.year4000.mapnodes.api.events.game.GameClockEvent;
 import net.year4000.mapnodes.api.events.game.GameLoadEvent;
 import net.year4000.mapnodes.api.events.game.GameStartEvent;
@@ -39,14 +38,13 @@ import java.util.stream.Collectors;
     version = "1.0",
     config = DeathmatchConfig.class
 )
-@EqualsAndHashCode(callSuper = false)
 public class Deathmatch extends GameModeTemplate implements GameMode {
-    private transient DeathmatchConfig gameModeConfig;
-    private transient Map<String, Integer> scores = new HashMap<>();
-    private transient NodeGame game;
-    private transient GameTeam winner;
-    private transient int winnerScore;
-    private transient long endTime;
+    private DeathmatchConfig gameModeConfig;
+    private Map<String, Integer> scores = new HashMap<>();
+    private NodeGame game;
+    private GameTeam winner;
+    private int winnerScore;
+    private long endTime;
 
     @EventHandler
     public void onLoad(GameLoadEvent event) {
