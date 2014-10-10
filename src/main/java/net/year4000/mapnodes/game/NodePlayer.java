@@ -166,6 +166,7 @@ public final class NodePlayer implements GamePlayer {
 
         if (pendingTeam != null) {
             pendingTeam.leave(this);
+            pendingTeam = null;
         }
 
         // Cancel tasks
