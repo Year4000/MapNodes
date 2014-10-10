@@ -182,7 +182,7 @@ public class Capture extends GameModeTemplate implements GameMode {
 
     @EventHandler
     public void onPickupWool(InventoryClickEvent event) {
-        if (!MapNodes.getCurrentGame().getStage().isPlaying()) return;
+        if (!MapNodes.getCurrentGame().getStage().isPlaying() || event.getCurrentItem() == null) return;
 
         NodePlayer player = (NodePlayer) game.getPlayer((Player) event.getWhoClicked());
         NodeTeam team = player.getTeam();
