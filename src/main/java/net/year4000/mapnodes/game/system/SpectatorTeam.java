@@ -11,7 +11,7 @@ public class SpectatorTeam extends NodeTeam implements Spectator {
 
         setKit("spectator");
 
-        setSize(-1);
+        setSize(Integer.MAX_VALUE);
 
         setUseScoreboard(false);
     }
