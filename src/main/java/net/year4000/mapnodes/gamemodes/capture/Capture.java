@@ -12,6 +12,7 @@ import net.year4000.mapnodes.game.NodePlayer;
 import net.year4000.mapnodes.game.NodeRegion;
 import net.year4000.mapnodes.game.NodeTeam;
 import net.year4000.mapnodes.game.regions.types.Point;
+import net.year4000.mapnodes.game.system.Spectator;
 import net.year4000.mapnodes.gamemodes.GameModeTemplate;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.SchedulerUtil;
@@ -185,6 +186,8 @@ public class Capture extends GameModeTemplate implements GameMode {
 
         NodePlayer player = (NodePlayer) game.getPlayer((Player) event.getWhoClicked());
         NodeTeam team = player.getTeam();
+
+        if (team instanceof Spectator) return;
 
         for (CaptureConfig.BlockCapture capture : captures.get(team.getId())) {
             // Check material
