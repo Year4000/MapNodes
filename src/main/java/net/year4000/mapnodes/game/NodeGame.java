@@ -214,7 +214,7 @@ public final class NodeGame implements GameManager, Validator {
 
     /** Create the menu in locale */
     private Inventory createTeamChooserMenu(Locale locale) {
-        Inventory inv = Bukkit.createInventory(null, BukkitUtil.invBase(teams.size()), Msg.locale(locale.toString(), "team.menu.title"));
+        Inventory inv = Bukkit.createInventory(null, BukkitUtil.invBase(teams.size()), Common.truncate(Msg.locale(locale.toString(), "team.menu.title"), 32));
         updateTeamChooserMenu(locale, inv);
         return inv;
     }
