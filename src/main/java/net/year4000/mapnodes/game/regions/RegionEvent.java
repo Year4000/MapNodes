@@ -33,7 +33,7 @@ public abstract class RegionEvent {
 
     @Since(1.0)
     @SerializedName("drop_items")
-    private ItemStackList<ItemStack> dropItem = new ItemStackList<>();
+    private ItemStackList<ItemStack> dropItems = new ItemStackList<>();
 
     @Since(1.0)
     @SerializedName("play_sound")
@@ -76,6 +76,13 @@ public abstract class RegionEvent {
     public void runGlobalEventTasks(GamePlayer player) {
         teleportPlayer(player);
         sendMessage(player);
+        dropItems(player.getPlayer().getLocation());
+    }
+
+    public void dropItems(Location location) {
+        if (dropItems.size() > 0) {
+            dropItems.forEach(item -> location.getWorld().dropItemNaturally(location, item));
+        }
     }
 
     /** Teleport the player to a random safe location */
