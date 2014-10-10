@@ -88,10 +88,10 @@ public class ScoreboardFactory {
         // Team Selection
         side.addLine(Msg.locale(nodePlayer, "team.name"));
         if (nodePlayer.getPendingTeam() != null) {
-            side.addLine("  " + nodePlayer.getPendingTeam().getDisplayName() + " " + queue);
+            side.addLine(" " + nodePlayer.getPendingTeam().getDisplayName() + " " + queue);
         }
         else {
-            side.addLine("  " + nodePlayer.getTeam().getDisplayName() + " " + queue);
+            side.addLine(" " + nodePlayer.getTeam().getDisplayName() + " " + queue);
         }
 
         side.addBlank();
