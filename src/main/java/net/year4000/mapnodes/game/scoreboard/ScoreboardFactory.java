@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import net.year4000.mapnodes.game.NodeGame;
 import net.year4000.mapnodes.game.NodePlayer;
 import net.year4000.mapnodes.game.NodeTeam;
+import net.year4000.mapnodes.game.system.Spectator;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.Common;
 import net.year4000.mapnodes.utils.TimeUtil;
@@ -92,6 +93,16 @@ public class ScoreboardFactory {
         else {
             side.addLine("  " + nodePlayer.getTeam().getDisplayName() + " " + queue);
         }
+
+        side.addBlank();
+        side.addLine(Msg.locale(nodePlayer, "team.players"));
+        game.getTeams().values().stream()
+            .sorted((left, right) -> (left instanceof Spectator) ? -1 : 1)
+            .forEach(team -> {
+                String teamSize = Common.colorCapacity(team.getPlayers().size(), team.getSize());
+                side.addLine(" " + teamSize + " " + team.getDisplayName());
+            });
+
 
         // When the map has classes
         if (game.getClasses().size() > 0) {
