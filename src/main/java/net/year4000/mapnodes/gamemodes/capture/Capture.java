@@ -172,7 +172,7 @@ public class Capture extends GameModeTemplate implements GameMode {
                 game.getSidebarGoals().get(getCaptureID(team, capture)).setDisplay(" " + getCaptureDisplay(capture));
 
                 game.getPlayers().forEach(p -> {
-                    p.sendMessage(Msg.locale(p, "capture.grabed", player.getPlayerColor(), team.getDisplayName()));
+                    p.sendMessage(Msg.locale(p, "capture.grabbed", player.getPlayerColor(), team.getDisplayName()));
                     game.getScoreboardFactory().setGameSidebar((NodePlayer) p);
                     FunEffectsUtil.playSound(p.getPlayer(), Sound.NOTE_PLING);
                 });
