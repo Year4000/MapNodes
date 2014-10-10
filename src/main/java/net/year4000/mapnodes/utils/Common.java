@@ -47,21 +47,22 @@ public final class Common {
     public static String colorCapacity(int current, int total) {
         ChatColor color;
 
-        // warning yellow
-        if (current >= total - 3) {
-            color = ChatColor.YELLOW;
-        }
-        // warning orange/gold
-        else if (current >= total - 2) {
-            color = ChatColor.GOLD;
+
+        // danger dark red
+        if (current >= total) {
+            color = ChatColor.DARK_RED;
         }
         // danger red
         else if (current >= total - 1) {
             color = ChatColor.RED;
         }
-        // danger dark red
-        else if (current >= total) {
-            color = ChatColor.DARK_RED;
+        // warning orange/gold
+        else if (current >= total - 2) {
+            color = ChatColor.GOLD;
+        }
+        // warning yellow
+        else if (current >= total - 3) {
+            color = ChatColor.YELLOW;
         }
         // good green
         else {
