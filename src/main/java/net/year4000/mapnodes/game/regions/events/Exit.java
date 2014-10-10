@@ -32,6 +32,7 @@ public class Exit extends RegionEvent implements RegionListener {
             }
 
             runGlobalEventTasks(player);
+            runGlobalEventTasks(event.getTo());
         }
     }
 }

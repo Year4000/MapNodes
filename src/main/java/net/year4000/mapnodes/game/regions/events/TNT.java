@@ -69,5 +69,7 @@ public class TNT extends RegionEvent implements RegionListener {
         if (blockDamage) {
             event.blockList().clear();
         }
+
+        runGlobalEventTasks(event.getLocation());
     }
 }

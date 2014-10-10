@@ -26,5 +26,7 @@ public class CreatureSpawn extends RegionEvent implements RegionListener {
         else if ((isAllow() && !creatures.contains(entityType)) || (!isAllow() && creatures.contains(entityType))) {
             event.setCancelled(true);
         }
+
+        runGlobalEventTasks(event.getLocation());
     }
 }

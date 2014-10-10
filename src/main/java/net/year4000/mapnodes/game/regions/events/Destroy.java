@@ -33,6 +33,7 @@ public class Destroy extends RegionEvent implements RegionListener {
             }
 
             runGlobalEventTasks(player);
+            runGlobalEventTasks(event.getBlock().getLocation());
         }
     }
 }

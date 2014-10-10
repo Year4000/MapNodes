@@ -76,7 +76,11 @@ public abstract class RegionEvent {
     public void runGlobalEventTasks(GamePlayer player) {
         teleportPlayer(player);
         sendMessage(player);
-        dropItems(player.getPlayer().getLocation());
+    }
+
+    /** Run global events tasks */
+    public void runGlobalEventTasks(Location location) {
+        dropItems(location);
     }
 
     public void dropItems(Location location) {

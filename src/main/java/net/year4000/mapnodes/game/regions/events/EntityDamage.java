@@ -1,12 +1,15 @@
 package net.year4000.mapnodes.game.regions.events;
 
 import com.google.gson.annotations.SerializedName;
+import net.year4000.mapnodes.api.MapNodes;
+import net.year4000.mapnodes.api.game.GamePlayer;
 import net.year4000.mapnodes.game.regions.EventType;
 import net.year4000.mapnodes.game.regions.EventTypes;
 import net.year4000.mapnodes.game.regions.RegionEvent;
 import net.year4000.mapnodes.game.regions.RegionListener;
 import net.year4000.mapnodes.game.regions.types.Point;
 import net.year4000.mapnodes.utils.typewrappers.DamageCauseList;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageEvent;
 
@@ -27,5 +30,14 @@ public class EntityDamage extends RegionEvent implements RegionListener {
         else if ((isAllow() && !damageCauses.contains(cause)) || (!isAllow() && damageCauses.contains(cause))) {
             event.setCancelled(true);
         }
+
+        if (event.getEntity() instanceof Player) {
+            GamePlayer player = MapNodes.getCurrentGame().getPlayer((Player) event.getEntity());
+            if (applyToPlayer(player)) {
+                runGlobalEventTasks(player);
+            }
+        }
+
+        runGlobalEventTasks(event.getEntity().getLocation());
     }
 }

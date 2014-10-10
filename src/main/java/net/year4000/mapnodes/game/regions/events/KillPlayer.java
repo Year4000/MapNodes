@@ -21,6 +21,7 @@ public class KillPlayer extends RegionEvent implements RegionListener {
 
         if (applyToPlayer(player)) {
             runGlobalEventTasks(player);
+            runGlobalEventTasks(event.getEntity().getLocation());
         }
     }
 }
