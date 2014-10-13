@@ -98,10 +98,11 @@ public class TNT extends RegionEvent implements RegionListener {
                 Vector velocity = new Vector(x, y, z);
 
                 if (block.getType() == Material.TNT) {
-                    TNTPrimed tnt = block.getWorld().spawn(loc, TNTPrimed.class);
+                    // todo prime the tnt when in the area
+                    /*TNTPrimed tnt = block.getWorld().spawn(loc, TNTPrimed.class);
                     tnt.setFuseTicks(MathUtil.ticks(instantDelay.toSecs()));
                     tnt.setYield(drops);
-                    tnt.setVelocity(velocity);
+                    tnt.setVelocity(velocity);*/
                 }
                 else if (block.getType().isSolid()) {
                     FallingBlock flying = block.getWorld().spawnFallingBlock(event.getLocation(), block.getType(), block.getData());
