@@ -11,6 +11,7 @@ import net.year4000.mapnodes.utils.TimeDuration;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.EventHandler;
@@ -21,6 +22,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
@@ -43,7 +45,7 @@ public class TNT extends RegionEvent implements RegionListener {
     private boolean blockDamage = true;
 
     /** The effected radius for drops */
-    private float yield = 100;
+    private float yield = 85;
 
     /** Should the tnt block drops be thrown instead of dropped */
     @SerializedName("throw_blocks")
@@ -58,18 +60,23 @@ public class TNT extends RegionEvent implements RegionListener {
             event.getBlock().setType(Material.AIR);
 
             // Create the tnt to look like it
-            TNTPrimed tnt = event.getPlayer().getWorld().spawn(
+            final TNTPrimed tnt = event.getPlayer().getWorld().spawn(
                 event.getBlock().getLocation().add(0.5, 0.5, 0.5), // center it
                 TNTPrimed.class
             );
-            tnt.setFuseTicks(MathUtil.ticks(instantDelay.toSecs()));
+            tnt.setFuseTicks(MathUtil.ticks(instantDelay.toSecs() + 1));
             tnt.setYield(yield);
 
             // Run the explosion later
             SchedulerUtil.runSync(() -> {
+                tnt.remove();
                 event.getBlock().getWorld().createExplosion(
-                    event.getBlock().getLocation().add(0.5, 0.5, 0.5), // center it
-                    strength // the strength of tnt
+                    event.getBlock().getLocation().getX() + 0.5, // center it
+                    event.getBlock().getLocation().getY() + 0.5, // center it
+                    event.getBlock().getLocation().getZ() + 0.5, // center it
+                    strength, // the strength of tnt
+                    false,
+                    true
                 );
             }, MathUtil.ticks(instantDelay.toSecs()));
         }
@@ -88,6 +95,13 @@ public class TNT extends RegionEvent implements RegionListener {
             Vector groundZero = event.getLocation().toVector();
             List<Block> blocks = new ArrayList<>(event.blockList());
 
+            for (int i = 0; i < blocks.size(); i++) {
+                Collections.reverse(blocks);
+                Collections.shuffle(blocks);
+            }
+
+            blocks = blocks.subList(0, (int) Math.sqrt(blocks.size()) + blocks.size() / 5);
+
             // Throw the drops
             blocks.forEach(block -> {
                 Location loc = block.getLocation();
@@ -98,19 +112,18 @@ public class TNT extends RegionEvent implements RegionListener {
                 Vector velocity = new Vector(x, y, z);
 
                 if (block.getType() == Material.TNT) {
-                    // todo prime the tnt when in the area
-                    /*TNTPrimed tnt = block.getWorld().spawn(loc, TNTPrimed.class);
-                    tnt.setFuseTicks(MathUtil.ticks(instantDelay.toSecs()));
-                    tnt.setYield(drops);
-                    tnt.setVelocity(velocity);*/
+                    block.setType(Material.AIR);
+                    TNTPrimed tnt = block.getWorld().spawn(loc, TNTPrimed.class);
+                    tnt.setFuseTicks(MathUtil.ticks(4));
+                    tnt.setYield(yield);
+                    tnt.setVelocity(velocity);
                 }
                 else if (block.getType().isSolid()) {
                     FallingBlock flying = block.getWorld().spawnFallingBlock(event.getLocation(), block.getType(), block.getData());
+                    block.setType(Material.AIR);
                     flying.setDropItem(false);
                     flying.setVelocity(velocity);
                 }
-
-                block.setType(Material.AIR);
             });
 
             // Clear drops
