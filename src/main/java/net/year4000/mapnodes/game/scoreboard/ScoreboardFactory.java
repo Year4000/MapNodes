@@ -106,6 +106,7 @@ public class ScoreboardFactory {
 
         // When the map has classes
         if (game.getClasses().size() > 0) {
+            side.addBlank();
             side.addLine(Msg.locale(nodePlayer, "class.name"));
             //side.addLine("  " + nodePlayer.getClazz().getDisplayName());
         }
