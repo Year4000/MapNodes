@@ -1,7 +1,6 @@
 package net.year4000.mapnodes.listeners;
 
 import lombok.EqualsAndHashCode;
-import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.events.player.GamePlayerJoinSpectatorEvent;
 import net.year4000.mapnodes.api.events.player.GamePlayerJoinTeamEvent;
@@ -125,46 +124,6 @@ public class SpectatorListener implements Listener {
     }
 
     // Open Player's Inventory //
-
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void updateInventory(EntityDamageEvent event) {
-        if (event.getEntity() instanceof Player) {
-            GamePlayer player = MapNodes.getCurrentGame().getPlayer((Player) event.getEntity());
-            ((NodePlayer) player).updateInventory();
-        }
-    }
-
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void updateInventory(InventoryClickEvent event) {
-        if (event.getWhoClicked() instanceof Player) {
-            GamePlayer player = MapNodes.getCurrentGame().getPlayer((Player) event.getWhoClicked());
-            ((NodePlayer) player).updateInventory();
-        }
-    }
-
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void updateInventory(PlayerPickupItemEvent event) {
-        GamePlayer player = MapNodes.getCurrentGame().getPlayer(event.getPlayer());
-        ((NodePlayer) player).updateInventory();
-    }
-
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void updateInventory(PlayerDropItemEvent event) {
-        GamePlayer player = MapNodes.getCurrentGame().getPlayer(event.getPlayer());
-        ((NodePlayer) player).updateInventory();
-    }
-
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void updateInventory(PlayerItemConsumeEvent event) {
-        GamePlayer player = MapNodes.getCurrentGame().getPlayer(event.getPlayer());
-        ((NodePlayer) player).updateInventory();
-    }
-
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void updateInventory(PlayerItemBreakEvent event) {
-        GamePlayer player = MapNodes.getCurrentGame().getPlayer(event.getPlayer());
-        ((NodePlayer) player).updateInventory();
-    }
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void openInv(PlayerInteractEntityEvent event) {

@@ -23,7 +23,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 
@@ -122,5 +123,47 @@ public final class GameListener implements Listener {
                 event.setCancelled(true);
             }
         }
+    }
+
+    // Update Player's Inventory
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void updateInventory(EntityDamageEvent event) {
+        if (event.getEntity() instanceof Player) {
+            GamePlayer player = MapNodes.getCurrentGame().getPlayer((Player) event.getEntity());
+            ((NodePlayer) player).updateInventory();
+        }
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void updateInventory(InventoryClickEvent event) {
+        if (event.getWhoClicked() instanceof Player) {
+            GamePlayer player = MapNodes.getCurrentGame().getPlayer((Player) event.getWhoClicked());
+            ((NodePlayer) player).updateInventory();
+        }
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void updateInventory(PlayerPickupItemEvent event) {
+        GamePlayer player = MapNodes.getCurrentGame().getPlayer(event.getPlayer());
+        ((NodePlayer) player).updateInventory();
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void updateInventory(PlayerDropItemEvent event) {
+        GamePlayer player = MapNodes.getCurrentGame().getPlayer(event.getPlayer());
+        ((NodePlayer) player).updateInventory();
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void updateInventory(PlayerItemConsumeEvent event) {
+        GamePlayer player = MapNodes.getCurrentGame().getPlayer(event.getPlayer());
+        ((NodePlayer) player).updateInventory();
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void updateInventory(PlayerItemBreakEvent event) {
+        GamePlayer player = MapNodes.getCurrentGame().getPlayer(event.getPlayer());
+        ((NodePlayer) player).updateInventory();
     }
 }
