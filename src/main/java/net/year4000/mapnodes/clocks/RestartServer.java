@@ -57,7 +57,7 @@ public class RestartServer extends Clocker {
         String color = Common.chatColorNumber(pos, sec(getTime()));
         String time = color + (new TimeUtil(pos, TimeUnit.SECONDS)).prettyOutput("&7:" + color);
 
-        MapNodes.getCurrentGame().getPlayers().parallel().forEach(player -> {
+        MapNodes.getCurrentGame().getPlayers().forEach(player -> {
             if (Arrays.asList(ticks).contains(position)) {
                 FunEffectsUtil.playSound(player.getPlayer(), Sound.NOTE_PLING);
             }
@@ -73,7 +73,7 @@ public class RestartServer extends Clocker {
     public void runLast(int position) {
         MapNodesPlugin.log(Msg.locale(Message.DEFAULT_LOCALE, "clocks.restart.last"));
 
-        MapNodes.getCurrentGame().getPlayers().parallel().forEach(player -> {
+        MapNodes.getCurrentGame().getPlayers().forEach(player -> {
             FunEffectsUtil.playSound(player.getPlayer(), Sound.NOTE_BASS);
             BossBar.setMessage(player.getPlayer(), Msg.locale(player, "clocks.restart.last"), 1);
         });

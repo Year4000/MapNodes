@@ -58,7 +58,7 @@ public class NextNode extends Clocker {
         ));
 
         // Load and register map in its own thread
-        SchedulerUtil.runAsync(() -> NodeFactory.get().peekNextQueued().register());
+        NodeFactory.get().peekNextQueued().register();
     }
 
     public void runTock(int position) {
@@ -68,7 +68,7 @@ public class NextNode extends Clocker {
         String time = color + (new TimeUtil(pos, TimeUnit.SECONDS)).prettyOutput("&7:" + color);
 
 
-        MapNodes.getCurrentGame().getPlayers().parallel().forEach(player -> {
+        MapNodes.getCurrentGame().getPlayers().forEach(player -> {
             if (Arrays.asList(ticks).contains(position)) {
                 FunEffectsUtil.playSound(player.getPlayer(), Sound.NOTE_PLING);
             }
@@ -88,7 +88,7 @@ public class NextNode extends Clocker {
 
         Deque<Player> move = new ArrayDeque<>();
 
-        MapNodes.getCurrentGame().getPlayers().parallel().forEach(player -> {
+        MapNodes.getCurrentGame().getPlayers().forEach(player -> {
             FunEffectsUtil.playSound(player.getPlayer(), Sound.NOTE_BASS);
             BossBar.setMessage(
                 player.getPlayer(),
