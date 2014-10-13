@@ -74,7 +74,13 @@ public class MapFactory {
     public static List<MapFolder> getMaps(int number) {
         Stream<MapFolder> enabledFolders = folders.values().parallelStream().filter(m -> !m.isDisabled());
         List<MapFolder> maps = new ArrayList<>(enabledFolders.collect(Collectors.toList()));
-        Collections.shuffle(maps);
+        
+        // Reverse and shuffle the maps based on the number of maps
+        for (int i = 0; i < maps.size(); i++) {
+            Collections.reverse(maps);
+            Collections.shuffle(maps);
+        }
+        
         Iterator<MapFolder> mapFolderIterator = Iterables.cycle(maps).iterator();
 
         return new ArrayList<MapFolder>() {{
