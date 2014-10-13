@@ -76,7 +76,7 @@ public class TNT extends RegionEvent implements RegionListener {
                     event.getBlock().getLocation().getZ() + 0.5, // center it
                     strength, // the strength of tnt
                     false,
-                    true
+                    blockDamage
                 );
             }, MathUtil.ticks(instantDelay.toSecs()));
         }
