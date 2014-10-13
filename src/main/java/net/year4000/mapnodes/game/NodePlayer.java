@@ -288,8 +288,8 @@ public final class NodePlayer implements GamePlayer {
 
     /** Manage how the players see each other. */
     public void updateHiddenSpectator() {
-        game.getPlayers().parallel().forEach(gPlayer -> {
-            game.getPlayers().parallel().forEach(player -> {
+        game.getPlayers().forEach(gPlayer -> {
+            game.getPlayers().forEach(player -> {
                 if ((player.isSpectator() || player.isEntering()) && gPlayer.isPlaying()) {
                     gPlayer.getPlayer().hidePlayer(player.getPlayer());
                 }
