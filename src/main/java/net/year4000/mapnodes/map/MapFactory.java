@@ -48,7 +48,7 @@ public class MapFactory {
     /** Get the mapfolder by name */
     @Nullable
     public static MapFolder getMap(String name) {
-        if (isMap(name)) {
+        if (isMap(name, true)) {
             return folders.get(name);
         }
 
