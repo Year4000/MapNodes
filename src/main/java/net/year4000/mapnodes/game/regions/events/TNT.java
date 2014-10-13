@@ -43,11 +43,11 @@ public class TNT extends RegionEvent implements RegionListener {
     private boolean blockDamage = true;
 
     /** The effected radius for drops */
-    private float drops = 100;
+    private float yield = 100;
 
     /** Should the tnt block drops be thrown instead of dropped */
-    @SerializedName("throw_drops")
-    private boolean throwDrops = false;
+    @SerializedName("throw_blocks")
+    private boolean throwBlocks = false;
 
     /** If a tnt is place should be ignite it */
     @EventHandler
@@ -63,7 +63,7 @@ public class TNT extends RegionEvent implements RegionListener {
                 TNTPrimed.class
             );
             tnt.setFuseTicks(MathUtil.ticks(instantDelay.toSecs()));
-            tnt.setYield(drops);
+            tnt.setYield(yield);
 
             // Run the explosion later
             SchedulerUtil.runSync(() -> {
@@ -78,13 +78,13 @@ public class TNT extends RegionEvent implements RegionListener {
     /** Set the yield and blocks of the tnt. */
     @EventHandler(priority=EventPriority.HIGH)
     public void onTnt(EntityExplodeEvent event) {
-        event.setYield(drops);
+        event.setYield(yield);
 
         if (!blockDamage) {
             event.blockList().clear();
         }
 
-        if (throwDrops && blockDamage) {
+        if (throwBlocks && blockDamage) {
             Vector groundZero = event.getLocation().toVector();
             List<Block> blocks = new ArrayList<>(event.blockList());
 
