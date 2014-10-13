@@ -2,6 +2,7 @@ package net.year4000.mapnodes.game.regions.events;
 
 import com.google.common.collect.Iterables;
 import com.google.gson.annotations.SerializedName;
+import net.year4000.mapnodes.api.events.game.GameStopEvent;
 import net.year4000.mapnodes.game.regions.EventType;
 import net.year4000.mapnodes.game.regions.EventTypes;
 import net.year4000.mapnodes.game.regions.RegionEvent;
@@ -130,5 +131,12 @@ public class Chest extends RegionEvent implements RegionListener {
         if (event.getBlock().getState() instanceof org.bukkit.block.Chest) {
             placedChests.add(event.getBlock().getLocation().toVector().toBlockVector());
         }
+    }
+
+    /** Clear out the chests lists when the game stops */
+    @EventHandler
+    public void onGameEnd(GameStopEvent event) {
+        chests.clear();
+        placedChests.clear();
     }
 }
