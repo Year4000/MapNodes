@@ -146,9 +146,7 @@ public class Node {
                 boolean online = false;
 
                 for (Player player : getWorld().getPlayers()) {
-                    //PacketHacks.respawnPlayer(player);
-                    //player.teleport(MapNodes.getCurrentWorld().getSpawnLocation());
-                    player.kickPlayer(Msg.locale(player, "error.cmd.error"));
+                    player.teleport(MapNodes.getCurrentWorld().getSpawnLocation());
 
                     if (player.isOnline()) {
                         online = true;
