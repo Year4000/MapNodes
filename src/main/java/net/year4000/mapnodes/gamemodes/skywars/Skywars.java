@@ -12,6 +12,7 @@ import net.year4000.mapnodes.game.NodeTeam;
 import net.year4000.mapnodes.game.system.Spectator;
 import net.year4000.mapnodes.gamemodes.GameModeTemplate;
 import net.year4000.mapnodes.messages.Msg;
+import net.year4000.mapnodes.utils.SchedulerUtil;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -121,7 +122,8 @@ public class Skywars extends GameModeTemplate implements GameMode {
             buildAndSendList();
 
             if (game.getPlayer(name) != null) {
-                ((NodePlayer) game.getPlayer(name)).joinTeam(null);
+                NodePlayer player = (NodePlayer) game.getPlayer(name);
+                player.getPlayerTasks().add(SchedulerUtil.runSync(() -> player.joinTeam(null), 5L));
             }
         }
 
