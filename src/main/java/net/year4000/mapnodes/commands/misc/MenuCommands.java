@@ -2,6 +2,7 @@ package net.year4000.mapnodes.commands.misc;
 
 import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.game.GameManager;
+import net.year4000.mapnodes.game.NodeGame;
 import net.year4000.mapnodes.game.NodePlayer;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.utilities.bukkit.commands.Command;
@@ -9,6 +10,8 @@ import net.year4000.utilities.bukkit.commands.CommandContext;
 import net.year4000.utilities.bukkit.commands.CommandException;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import static com.google.common.base.Preconditions.checkArgument;
 
 public final class MenuCommands {
     @Command(
@@ -19,16 +22,22 @@ public final class MenuCommands {
         desc = "Join the team."
     )
     public static void team(CommandContext args, CommandSender sender) throws CommandException {
-        GameManager gm = MapNodes.getCurrentGame();
+        NodeGame game = (NodeGame) MapNodes.getCurrentGame();
+
+
+
+
 
         try {
-            NodePlayer player = ((NodePlayer) gm.getPlayer((Player) sender));
+            NodePlayer player = ((NodePlayer) game.getPlayer((Player) sender));
+
+            checkArgument(!game.getStage().isEndGame(), Msg.locale(player, "team.menu.not_now"));
 
             if (player.isPlaying()) {
-                throw new CommandException(Msg.locale(sender, "team.join.only_spectator"));
+                throw new CommandException(Msg.locale(sender, "team.join.only_spectator") + "\n" + Msg.locale(sender, "team.select.non_vip_url"));
             }
 
-            player.joinTeam(gm.getTeams().get(args.getString(0)));
+            player.joinTeam(game.checkAndGetTeam(player, args.getString(0)));
         } catch (Exception e) {
             throw new CommandException(e.getMessage());
         }

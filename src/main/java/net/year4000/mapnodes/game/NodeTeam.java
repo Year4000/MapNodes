@@ -31,7 +31,6 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
 
-
 @Data
 @NoArgsConstructor
 /** Manges the teams. */

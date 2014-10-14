@@ -35,6 +35,7 @@ import net.year4000.mapnodes.utils.Validator;
 import net.year4000.mapnodes.utils.typewrappers.GameSet;
 import net.year4000.utilities.bukkit.BukkitUtil;
 import net.year4000.utilities.bukkit.ItemUtil;
+import net.year4000.utilities.bukkit.MessageUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -322,9 +323,21 @@ public final class NodeGame implements GameManager, Validator {
         return teams.values().stream().filter(team -> !(team instanceof Spectator));
     }
 
+    /** Checks if the player can join the specific team */
+    public GameTeam checkAndGetTeam(GamePlayer player, String name) throws IllegalArgumentException {
+        Locale locale = new Locale(player.getPlayer().getLocale());
+        if (Msg.matches(locale.toString(), name, "team.menu.join.random") || MessageUtil.stripColors(name).equalsIgnoreCase("Spectator")) {
+            return getTeam(locale, name);
+        }
+        else {
+            checkArgument(player.getPlayer().hasPermission("theta"), Msg.locale(player, "team.select.non_vip"));
+            return getTeam(locale, name);
+        }
+    }
+
     public GameTeam getTeam(Locale locale, String name) {
         // Random get lowest team
-        if (name.equalsIgnoreCase(Msg.locale(locale.toString(), "team.menu.join.random"))) {
+        if (Msg.matches(locale.toString(), name, "team.menu.join.random")) {
             return teams.values().stream()
                 .filter(team -> !(team instanceof Spectator))
                 .sorted((left, right) -> left.getPlayers().size() < right.getPlayers().size() ? -1 : 1)

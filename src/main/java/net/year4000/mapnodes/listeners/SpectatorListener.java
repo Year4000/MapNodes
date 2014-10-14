@@ -6,6 +6,7 @@ import net.year4000.mapnodes.api.events.player.GamePlayerJoinSpectatorEvent;
 import net.year4000.mapnodes.api.events.player.GamePlayerJoinTeamEvent;
 import net.year4000.mapnodes.api.game.GameManager;
 import net.year4000.mapnodes.api.game.GamePlayer;
+import net.year4000.mapnodes.api.game.GameTeam;
 import net.year4000.mapnodes.game.NodeGame;
 import net.year4000.mapnodes.game.NodeKit;
 import net.year4000.mapnodes.game.NodePlayer;
@@ -211,6 +212,7 @@ public class SpectatorListener implements Listener {
     public void onTeamPicker(InventoryClickEvent event) {
         Player player = (Player)event.getWhoClicked();
         GamePlayer gPlayer = MapNodes.getCurrentGame().getPlayer(player);
+        NodeGame game = (NodeGame) MapNodes.getCurrentGame();
 
         if (gPlayer.isPlaying()) return;
 
@@ -218,8 +220,13 @@ public class SpectatorListener implements Listener {
             try {
                 ItemStack item = event.getCurrentItem();
                 String teamName = item.getItemMeta().getDisplayName();
-                ((NodePlayer) gPlayer).joinTeam(((NodeGame) MapNodes.getCurrentGame()).getTeam(new Locale(player.getLocale()), teamName));
                 FunEffectsUtil.playSound(player, Sound.ITEM_PICKUP);
+                GameTeam team = game.checkAndGetTeam(gPlayer, teamName);
+                ((NodePlayer) gPlayer).joinTeam(team);
+            } catch (IllegalArgumentException e) {
+                player.sendMessage(Msg.util("global.warring", e.getMessage()));
+                player.sendMessage(Msg.locale(gPlayer, "team.select.non_vip_url"));
+                event.setCancelled(true);
             } catch (NullPointerException e) {
                 /** Not a valid item */
                 // MapNodesPlugin.debug(e, true);
