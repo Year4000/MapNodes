@@ -143,7 +143,7 @@ public class MapNodesPlugin extends BukkitPlugin implements Plugin {
             .register();
 
         SchedulerUtil.repeatAsync(() -> {
-            if (!MapNodes.getCurrentGame().getStage().isEndGame()) {
+            if (!MapNodes.getCurrentGame().getStage().isEnded()) {
                 String b = "&" + color.next() + "&l";
                 String name = b + "   [&" + color.next() + "&l" + NAME + b + "]   ";
 
