@@ -5,6 +5,7 @@ import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.NodeFactory;
 import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.events.game.GameClockEvent;
+import net.year4000.mapnodes.api.events.game.GameStopEvent;
 import net.year4000.mapnodes.api.events.player.GamePlayerJoinSpectatorEvent;
 import net.year4000.mapnodes.api.events.player.GamePlayerJoinTeamEvent;
 import net.year4000.mapnodes.api.game.GameManager;
@@ -146,6 +147,12 @@ public final class MapNodesListener implements Listener {
                 new StartGame(120).run(); // 2 mins
             }
         }
+    }
+
+    /** Reset last size for next game */
+    @EventHandler
+    public void onEnd(GameStopEvent event) {
+        lastSize = 0;
     }
 
     /** Force player respawn when joining spectators */
