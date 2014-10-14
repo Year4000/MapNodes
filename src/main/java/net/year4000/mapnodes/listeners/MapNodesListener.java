@@ -129,26 +129,23 @@ public final class MapNodesListener implements Listener {
         if (event.getTo() instanceof Spectator) return;
         if (!MapNodes.getCurrentGame().getStage().isPreGame()) return;
 
-        SchedulerUtil.runAsync(() -> {
-            NodeGame game = ((NodeGame) MapNodes.getCurrentGame());
-            int size = (int) game.getEntering().count();
-            boolean biggerThanLast = lastSize < size;
-            lastSize = size;
+        NodeGame game = ((NodeGame) MapNodes.getCurrentGame());
+        int size = (int) game.getEntering().count();
+        boolean biggerThanLast = lastSize < size;
+        lastSize = size;
 
-            if (game.shouldStart()) {
-                if (game.getStage().isStarting()) {
-                    if (game.getStartClock().getClock().getIndex() > MathUtil.ticks(30) && biggerThanLast) {
-                        game.getStartClock().reduceTime(10); // 10 secs
+        if (game.shouldStart()) {
+            if (game.getStage().isStarting()) {
+                if (game.getStartClock().getClock().getIndex() > MathUtil.ticks(30) && biggerThanLast) {
+                    game.getStartClock().reduceTime(10); // 10 secs
 
-                        // Announcer to players that time was reduce
-                        game.getEntering().forEach(p -> p.sendMessage(Msg.locale(p, "clocks.start.reduce")));
-                    }
-                } else if (game.getStage().isWaiting()) {
-                    new StartGame(120).run(); // 2 mins
+                    // Announcer to players that time was reduce
+                    game.getEntering().forEach(p -> p.sendMessage(Msg.locale(p, "clocks.start.reduce")));
                 }
+            } else if (game.getStage().isWaiting()) {
+                new StartGame(120).run(); // 2 mins
             }
-        }, ((NodeGame) MapNodes.getCurrentGame()).getStage().isStarting() ? 1L : 40L);
-
+        }
     }
 
     /** Force player respawn when joining spectators */
