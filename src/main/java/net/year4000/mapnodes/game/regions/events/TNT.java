@@ -11,6 +11,7 @@ import net.year4000.mapnodes.utils.TimeDuration;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.TNTPrimed;
@@ -21,15 +22,13 @@ import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 @EventType(EventTypes.TNT)
 public class TNT extends RegionEvent implements RegionListener {
     private static final Random rand = new Random();
+    private static Collection<? extends Entity> tracker = new ArrayList<>();
 
     /** Tnt will be active when placed */
     private boolean instant = false;
@@ -68,17 +67,7 @@ public class TNT extends RegionEvent implements RegionListener {
             tnt.setYield(yield);
 
             // Run the explosion later
-            SchedulerUtil.runSync(() -> {
-                tnt.remove();
-                event.getBlock().getWorld().createExplosion(
-                    event.getBlock().getLocation().getX() + 0.5, // center it
-                    event.getBlock().getLocation().getY() + 0.5, // center it
-                    event.getBlock().getLocation().getZ() + 0.5, // center it
-                    strength, // the strength of tnt
-                    false,
-                    blockDamage
-                );
-            }, MathUtil.ticks(instantDelay.toSecs()));
+            explodeLater(tnt, instantDelay.toSecs());
         }
     }
 
@@ -114,8 +103,9 @@ public class TNT extends RegionEvent implements RegionListener {
                 if (block.getType() == Material.TNT) {
                     block.setType(Material.AIR);
                     TNTPrimed tnt = block.getWorld().spawn(loc, TNTPrimed.class);
-                    tnt.setFuseTicks(MathUtil.ticks(4));
+                    tnt.setFuseTicks(MathUtil.ticks(2));
                     tnt.setYield(yield);
+                    explodeLater(tnt, 1);
                     tnt.setVelocity(velocity);
                 }
                 else if (block.getType().isSolid()) {
@@ -131,5 +121,22 @@ public class TNT extends RegionEvent implements RegionListener {
         }
 
         runGlobalEventTasks(event.getLocation());
+    }
+
+    /** Explode the Primed TNT later */
+    private void explodeLater(Entity id, int delay) {
+        Location loc = id.getLocation();
+
+        SchedulerUtil.runSync(() -> {
+            id.remove();
+            loc.getWorld().createExplosion(
+                loc.getX() + 0.5, // center it
+                loc.getY() + 0.5, // center it
+                loc.getZ() + 0.5, // center it
+                strength, // the strength of tnt
+                false,
+                blockDamage
+            );
+        }, MathUtil.ticks(delay));
     }
 }
