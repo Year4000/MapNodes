@@ -76,9 +76,10 @@ public class TntWarsConfig implements GameModeConfig {
         }
 
         public void updatePercent(int amount) {
-            count -= amount * 2;
+            count -= amount;
             percent = 100 - ((count / initSize) * (float)  -0.1);
-            MapNodesPlugin.debug("Island Percent: " + percent);
+            percent = percent < 0 ? 0 : percent;
+            // MapNodesPlugin.debug("Island Percent: " + percent);
         }
 
         public String getPercent() {

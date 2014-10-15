@@ -135,7 +135,7 @@ public class TntWars extends GameModeTemplate implements GameMode {
 
         game.getPlayingTeams().forEach(team -> {
             if (team != player.getTeam()) {
-                addPoint(game, team, 5);
+                addPoint(game, team, 50);
             }
         });
     }
