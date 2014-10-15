@@ -131,11 +131,9 @@ public class TntWars extends GameModeTemplate implements GameMode {
     public void onDeath(PlayerDeathEvent event) {
         GamePlayer player = game.getPlayer(event.getEntity());
 
-        if (player.getPlayer().getLastDamageCause().getCause() != EntityDamageEvent.DamageCause.BLOCK_EXPLOSION) return;
-
         game.getPlayingTeams().forEach(team -> {
             if (team != player.getTeam()) {
-                addPoint(game, team, 50);
+                addPoint(game, team, 25);
             }
         });
     }
