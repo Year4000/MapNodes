@@ -24,6 +24,7 @@ import net.year4000.mapnodes.gamemodes.capture.Capture;
 import net.year4000.mapnodes.gamemodes.deathmatch.Deathmatch;
 import net.year4000.mapnodes.gamemodes.destory.Destroy;
 import net.year4000.mapnodes.gamemodes.skywars.Skywars;
+import net.year4000.mapnodes.gamemodes.tntwars.TntWars;
 import net.year4000.mapnodes.listeners.*;
 import net.year4000.mapnodes.map.MapFactory;
 import net.year4000.mapnodes.messages.Msg;
@@ -92,6 +93,7 @@ public class MapNodesPlugin extends BukkitPlugin implements Plugin {
             .add(Deathmatch.class)
             .add(Destroy.class)
             .add(Skywars.class)
+            .add(TntWars.class)
             .build();
 
         // Clean out old maps

@@ -12,14 +12,12 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
 import java.util.*;
@@ -51,7 +49,7 @@ public class TNT extends RegionEvent implements RegionListener {
     private boolean throwBlocks = false;
 
     /** If a tnt is place should be ignite it */
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onTnt(BlockPlaceEvent event) {
         if (event.getBlock().getType() != Material.TNT) return;
 
@@ -72,7 +70,7 @@ public class TNT extends RegionEvent implements RegionListener {
     }
 
     /** Set the yield and blocks of the tnt. */
-    @EventHandler(priority=EventPriority.HIGH)
+    @EventHandler(ignoreCancelled = true, priority=EventPriority.HIGH)
     public void onTnt(EntityExplodeEvent event) {
         event.setYield(yield);
 

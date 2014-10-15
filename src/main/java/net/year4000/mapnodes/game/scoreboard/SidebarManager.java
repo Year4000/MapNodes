@@ -75,7 +75,11 @@ public class SidebarManager {
             if (scoreInput == 0) {
                 objective.getScore(scoreId).setScore(1);
                 // Apply true score a tick later
-                SchedulerUtil.runSync(() -> objective.getScore(scoreId).setScore(scoreInput), 2L);
+                try {
+                    SchedulerUtil.runSync(() -> objective.getScore(scoreId).setScore(scoreInput), 2L);
+                } catch (IllegalStateException e) {
+                    // MapNodesPlugin.debug(e, true);
+                }
             }
             // Handle score normally
             else {
