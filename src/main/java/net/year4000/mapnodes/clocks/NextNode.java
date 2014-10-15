@@ -100,7 +100,7 @@ public class NextNode extends Clocker {
 
         Node next = NodeFactory.get().loadNextQueued();
 
-        SchedulerUtil.runSync(() -> move.stream().forEach(player -> next.getGame().join(player)), 2L);
+        move.stream().forEach(player -> next.getGame().join(player));
         running = false;
     }
 }
