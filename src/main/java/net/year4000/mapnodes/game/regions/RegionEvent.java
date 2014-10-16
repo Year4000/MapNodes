@@ -9,6 +9,7 @@ import net.year4000.mapnodes.game.NodePlayer;
 import net.year4000.mapnodes.game.NodeRegion;
 import net.year4000.mapnodes.game.NodeTeam;
 import net.year4000.mapnodes.game.regions.types.Point;
+import net.year4000.mapnodes.game.system.Spectator;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.typewrappers.ItemStackList;
 import net.year4000.mapnodes.utils.typewrappers.LocationList;
@@ -69,7 +70,7 @@ public abstract class RegionEvent {
 
     /** Does the region apply to the current player */
     public boolean applyToPlayer(GamePlayer player) {
-        return apply.size() == 0 || apply.contains(((NodeTeam) player.getTeam()).getId().toLowerCase());
+        return !(player.getTeam() instanceof Spectator) && (apply.size() == 0 || apply.contains(((NodeTeam) player.getTeam()).getId().toLowerCase()));
     }
 
     /** Run global events tasks */
