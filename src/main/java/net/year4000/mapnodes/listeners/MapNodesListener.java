@@ -38,7 +38,7 @@ public final class MapNodesListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onJoin(PlayerLoginEvent event) {
         NodeGame game = (NodeGame) MapNodes.getCurrentGame();
-        if (game.getPlayers().count() > game.getMaxPlayers() * 2) {
+        if (game.getPlayers().count() > game.getMaxPlayers() + game.getMaxPlayers() / 2) {
             event.disallow(PlayerLoginEvent.Result.KICK_FULL, Msg.locale(event.getPlayer(), "server.full"));
         }
     }
