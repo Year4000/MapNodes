@@ -28,6 +28,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.ExplosionPrimeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.util.Vector;
 
 import java.util.HashMap;
 import java.util.List;
@@ -105,18 +106,21 @@ public class TntWars extends GameModeTemplate implements GameMode {
 
     // Safe TNT //
 
-    private Map<Integer, Location> locations = new HashMap<>();
+    private Map<Integer, Vector> locations = new HashMap<>();
 
     @EventHandler
     public void onPrimed(ExplosionPrimeEvent event) {
-        locations.put(event.getEntity().getEntityId(), event.getEntity().getLocation());
+        locations.put(event.getEntity().getEntityId(), event.getEntity().getLocation().toVector());
     }
 
     @EventHandler(priority = EventPriority.LOW)
     public void onPrimed(EntityExplodeEvent event) {
         try {
             if (locations.containsKey(event.getEntity().getEntityId())) {
-                if (event.getLocation().distance(locations.get(event.getEntity().getEntityId())) < 10) {
+                Vector current = event.getLocation().toVector();
+                Vector old = locations.get(event.getEntity().getEntityId());
+
+                if (Math.abs(current.getBlockZ() - old.getBlockZ()) < 10 && Math.abs(current.getBlockX() - old.getBlockX()) < 10) {
                     event.setCancelled(true);
                 }
             }
