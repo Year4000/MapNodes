@@ -67,12 +67,12 @@ public class ScoreboardFactory {
         }
 
         NodeGame game = nodePlayer.getGame();
-        String queue;
+        boolean queue;
         if (nodePlayer.getPendingTeam() != null) {
-            queue = nodePlayer.getPendingTeam().getQueue().contains(nodePlayer) ? Msg.locale(nodePlayer, "team.queue") : "";
+            queue = nodePlayer.getPendingTeam().getQueue().contains(nodePlayer);
         }
         else {
-            queue = nodePlayer.getTeam().getQueue().contains(nodePlayer) ? Msg.locale(nodePlayer, "team.queue") : "";
+            queue = nodePlayer.getTeam().getQueue().contains(nodePlayer);
         }
 
         SidebarManager side = new SidebarManager();
@@ -87,11 +87,26 @@ public class ScoreboardFactory {
 
         // Team Selection
         side.addLine(Msg.locale(nodePlayer, "team.name"));
+        String name;
         if (nodePlayer.getPendingTeam() != null) {
-            side.addLine(" " + nodePlayer.getPendingTeam().getDisplayName() + " " + queue);
+            name = " " + nodePlayer.getPendingTeam().getDisplayName();
         }
         else {
-            side.addLine(" " + nodePlayer.getTeam().getDisplayName() + " " + queue);
+            name = " " + nodePlayer.getTeam().getDisplayName();
+        }
+
+        if (queue) {
+            name = name.replaceAll(ChatColor.COLOR_CHAR + "([0-9a-fA-F])", "&$1&o");
+        }
+
+        side.addLine(name);
+
+
+        // When the map has classes
+        if (game.getClasses().size() > 0) {
+            side.addBlank();
+            side.addLine(Msg.locale(nodePlayer, "class.name"));
+            //side.addLine("  " + nodePlayer.getClazz().getDisplayName());
         }
 
         side.addBlank();
@@ -102,14 +117,6 @@ public class ScoreboardFactory {
                 String teamSize = Common.colorCapacity(team.getPlayers().size(), team.getSize());
                 side.addLine(" " + teamSize + " " + team.getDisplayName());
             });
-
-
-        // When the map has classes
-        if (game.getClasses().size() > 0) {
-            side.addBlank();
-            side.addLine(Msg.locale(nodePlayer, "class.name"));
-            //side.addLine("  " + nodePlayer.getClazz().getDisplayName());
-        }
 
         side.buildSidebar(nodePlayer.getScoreboard(), header);
     }
