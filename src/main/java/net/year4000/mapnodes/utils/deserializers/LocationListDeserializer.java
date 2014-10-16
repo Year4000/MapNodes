@@ -2,6 +2,7 @@ package net.year4000.mapnodes.utils.deserializers;
 
 import com.google.common.reflect.TypeToken;
 import com.google.gson.*;
+import lombok.AllArgsConstructor;
 import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.game.regions.Region;
 import net.year4000.mapnodes.game.regions.RegionManager;
@@ -14,12 +15,9 @@ import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map;
 
+@AllArgsConstructor
 public class LocationListDeserializer implements JsonDeserializer<List<Location>> {
     private World world;
-
-    public LocationListDeserializer(World world) {
-        this.world = world;
-    }
 
     @Override
     public List<Location> deserialize(JsonElement element, Type type, JsonDeserializationContext context) throws JsonParseException {

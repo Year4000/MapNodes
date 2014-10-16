@@ -17,6 +17,7 @@ public final class GsonUtil {
     public static Gson createGson(World world) {
         return gsonBuilder()
             .registerTypeAdapter(LocationList.class, new LocationListDeserializer(world))
+            .registerTypeAdapter(RegionEvents.class, new RegionEventsDeserializer(world))
             .create();
     }
 
@@ -43,7 +44,6 @@ public final class GsonUtil {
             .registerTypeAdapter(PlayerArmorList.class, new PlayerArmorDeserializer())
             .registerTypeAdapter(GameSet.class, new GameModesDeserializer())
             .registerTypeAdapter(RegionList.class, new RegionListDeserializer())
-            .registerTypeAdapter(RegionEvents.class, new RegionEventsDeserializer())
             .registerTypeAdapter(ItemStackList.class, new ItemListDeserializer())
             .registerTypeAdapter(Point.class, new PointDeserializer())
             .registerTypeAdapter(TimeDuration.class, new TimeDurationDeserializer())
