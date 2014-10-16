@@ -36,6 +36,14 @@ import org.bukkit.event.server.ServerListPingEvent;
 @EqualsAndHashCode
 public final class MapNodesListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
+    public void onJoin(PlayerLoginEvent event) {
+        NodeGame game = (NodeGame) MapNodes.getCurrentGame();
+        if (game.getPlayers().count() > game.getMaxPlayers() * 2) {
+            event.disallow(PlayerLoginEvent.Result.KICK_FULL, Msg.locale(event.getPlayer(), "server.full"));
+        }
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onJoin(PlayerJoinEvent event) {
         event.setJoinMessage(null);
         ((NodeGame) MapNodes.getCurrentGame()).join(event.getPlayer());
