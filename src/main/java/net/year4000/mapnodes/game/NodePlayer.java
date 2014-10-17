@@ -71,11 +71,10 @@ public final class NodePlayer implements GamePlayer {
     public void start() {
         if (pendingTeam != null) {
             // If you are in the team's queue don't start
-            if (pendingTeam.getQueue().contains(this)) {
-                joinTeam(null);
+            if (!pendingTeam.getQueue().contains(this)) {
+                team = pendingTeam;
             }
 
-            team = pendingTeam;
             pendingTeam = null;
         }
 
