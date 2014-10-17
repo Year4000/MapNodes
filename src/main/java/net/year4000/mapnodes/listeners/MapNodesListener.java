@@ -38,8 +38,9 @@ public final class MapNodesListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onJoin(PlayerLoginEvent event) {
         NodeGame game = (NodeGame) MapNodes.getCurrentGame();
-        if (game.getPlayers().count() > game.getMaxPlayers() + game.getMaxPlayers() / 2) {
-            event.disallow(PlayerLoginEvent.Result.KICK_FULL, Msg.locale(event.getPlayer(), "server.full") + '\n' + Msg.locale(event.getPlayer(), "team.select.non_vip_url"));
+        Player player = event.getPlayer();
+        if (game.getPlayers().count() > game.getMaxPlayers() + game.getMaxPlayers() / 2 && !player.hasPermission("theta")) {
+            event.disallow(PlayerLoginEvent.Result.KICK_FULL, Msg.locale(player, "server.full") + '\n' + Msg.locale(player, "team.select.non_vip_url"));
         }
     }
 
