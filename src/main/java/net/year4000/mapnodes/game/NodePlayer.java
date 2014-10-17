@@ -40,7 +40,7 @@ import static net.year4000.mapnodes.utils.MathUtil.percent;
 import static net.year4000.mapnodes.utils.MathUtil.ticks;
 
 @Data
-public final class NodePlayer implements GamePlayer {
+public final class NodePlayer implements GamePlayer, Comparable {
     // internals
     private final NodeGame game;
     private final Player player;
@@ -381,5 +381,14 @@ public final class NodePlayer implements GamePlayer {
     /** Get the player's color according to the team */
     public String getPlayerColor() {
         return MessageUtil.replaceColors(team.getColor() + player.getName());
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        if (!(o instanceof NodePlayer)) {
+            return -1;
+        }
+
+        return player.hasPermission("theta") ? 1 : -1;
     }
 }
