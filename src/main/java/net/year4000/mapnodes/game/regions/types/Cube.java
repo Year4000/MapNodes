@@ -6,9 +6,11 @@ import net.year4000.mapnodes.exceptions.InvalidJsonException;
 import net.year4000.mapnodes.game.regions.Region;
 import net.year4000.mapnodes.game.regions.RegionType;
 import net.year4000.mapnodes.game.regions.RegionTypes;
+import net.year4000.mapnodes.utils.Common;
 import net.year4000.mapnodes.utils.Validator;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -71,10 +73,8 @@ public class Cube implements Region, Validator {
 
     @Override
     public boolean inRegion(Point region) {
-        boolean inX = center.getX() - radius < region.getX() && center.getX() + radius > region.getX();
-        boolean inY = center.getY() < region.getY() && center.getY() + height > region.getY();
-        boolean inZ = center.getZ() - radius < region.getZ() && center.getZ() + radius > region.getZ();
+        Vector point = Common.pointToVector(region);
 
-        return inX && inY && inZ;
+        return point.isInAABB(new Vector(center.getX() - radius, center.getY(), center.getZ()), new Vector(center.getX() + radius, center.getY() + height, center.getZ() + radius));
     }
 }

@@ -7,9 +7,11 @@ import net.year4000.mapnodes.game.regions.Region;
 import net.year4000.mapnodes.game.regions.RegionType;
 import net.year4000.mapnodes.game.regions.RegionTypes;
 import net.year4000.mapnodes.messages.Msg;
+import net.year4000.mapnodes.utils.Common;
 import net.year4000.mapnodes.utils.Validator;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -79,9 +81,8 @@ public class Chunk implements Region, Validator {
         int maxX = (this.x * CHUNK_SIZE) + CHUNK_SIZE;
         int maxZ = (this.z * CHUNK_SIZE) + CHUNK_SIZE;
 
-        boolean inX = minX < region.getX() && maxX > region.getX();
-        boolean inZ = minZ < region.getZ() && maxZ > region.getZ();
-        return inX && inZ;
+        Vector point = Common.pointToVector(region);
 
+        return point.isInAABB(new Vector(minX, 0, minZ), new Vector(maxX, CHUNK_HEIGHT, maxZ));
     }
 }

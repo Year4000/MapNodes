@@ -7,9 +7,11 @@ import net.year4000.mapnodes.game.regions.Region;
 import net.year4000.mapnodes.game.regions.RegionType;
 import net.year4000.mapnodes.game.regions.RegionTypes;
 import net.year4000.mapnodes.messages.Msg;
+import net.year4000.mapnodes.utils.Common;
 import net.year4000.mapnodes.utils.Validator;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -71,10 +73,8 @@ public class Cuboid implements Region, Validator {
 
     @Override
     public boolean inRegion(Point region) {
-        boolean inX = min.getX() < region.getX() && max.getX() > region.getX();
-        boolean inY = min.getY() < region.getY() && max.getY() > region.getY();
-        boolean inZ = min.getZ() < region.getZ() && max.getZ() > region.getZ();
+        Vector point = Common.pointToVector(region);
 
-        return inX && inY && inZ;
+        return point.isInAABB(Common.pointToVector(min), Common.pointToVector(max));
     }
 }

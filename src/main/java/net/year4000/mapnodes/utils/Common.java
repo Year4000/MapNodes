@@ -1,8 +1,10 @@
 package net.year4000.mapnodes.utils;
 
+import net.year4000.mapnodes.game.regions.types.Point;
 import net.year4000.utilities.ChatColor;
 import net.year4000.utilities.bukkit.MessageUtil;
 import org.bukkit.Location;
+import org.bukkit.util.Vector;
 
 public final class Common {
     private Common() {
@@ -158,5 +160,10 @@ public final class Common {
         }
 
         return new String(text);
+    }
+
+    /** Convert a point to a vector */
+    public static Vector pointToVector(Point point) {
+        return new Vector(point.getX(), point.getY(), point.getZ());
     }
 }
