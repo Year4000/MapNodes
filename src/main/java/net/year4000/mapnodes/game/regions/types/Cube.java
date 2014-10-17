@@ -75,6 +75,6 @@ public class Cube implements Region, Validator {
     public boolean inRegion(Point region) {
         Vector point = Common.pointToVector(region);
 
-        return point.isInAABB(new Vector(center.getX() - radius, center.getY(), center.getZ()), new Vector(center.getX() + radius, center.getY() + height, center.getZ() + radius));
+        return point.isInAABB(Common.pointToVector(getPoints().get(0)), Common.pointToVector(getPoints().get(getPoints().size() - 1)));
     }
 }
