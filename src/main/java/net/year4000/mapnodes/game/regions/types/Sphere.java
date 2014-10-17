@@ -9,6 +9,7 @@ import net.year4000.mapnodes.game.regions.RegionTypes;
 import net.year4000.mapnodes.utils.Validator;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -102,6 +103,7 @@ public class Sphere implements Region, Validator {
 
     @Override
     public boolean inRegion(Point region) {
-        return getPoints().contains(region);
+        Vector point = new Vector(region.getX(), region.getY(), region.getZ());
+        return point.isInSphere(new Vector(center.getX(), center.getY(), center.getZ()), radius);
     }
 }

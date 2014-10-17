@@ -74,6 +74,14 @@ public class Chunk implements Region, Validator {
 
     @Override
     public boolean inRegion(Point region) {
-        return getPoints().contains(region);
+        int minX = this.x * CHUNK_SIZE;
+        int minZ = this.z * CHUNK_SIZE;
+        int maxX = (this.x * CHUNK_SIZE) + CHUNK_SIZE;
+        int maxZ = (this.z * CHUNK_SIZE) + CHUNK_SIZE;
+
+        boolean inX = minX < region.getX() && maxX > region.getX();
+        boolean inZ = minZ < region.getZ() && maxZ > region.getZ();
+        return inX && inZ;
+
     }
 }

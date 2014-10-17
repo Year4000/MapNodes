@@ -71,6 +71,10 @@ public class Cube implements Region, Validator {
 
     @Override
     public boolean inRegion(Point region) {
-        return getPoints().contains(region);
+        boolean inX = center.getX() - radius < region.getX() && center.getX() + radius > region.getX();
+        boolean inY = center.getY() < region.getY() && center.getY() + height > region.getY();
+        boolean inZ = center.getZ() - radius < region.getZ() && center.getZ() + radius > region.getZ();
+
+        return inX && inY && inZ;
     }
 }
