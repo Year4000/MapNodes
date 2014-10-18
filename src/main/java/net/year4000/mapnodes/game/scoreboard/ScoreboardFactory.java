@@ -96,7 +96,7 @@ public class ScoreboardFactory {
         }
 
         if (queue) {
-            name = name.replaceAll(ChatColor.COLOR_CHAR + "([0-9a-fA-F])", "&$1&o");
+            name = Common.fcolor(ChatColor.BOLD, name);
         }
 
         side.addLine(name);

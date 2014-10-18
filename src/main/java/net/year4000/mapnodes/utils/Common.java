@@ -162,6 +162,11 @@ public final class Common {
         return new String(text);
     }
 
+    /** add a format to preformated color message */
+    public static String fcolor(ChatColor color, String message) {
+        return message.replaceAll(ChatColor.COLOR_CHAR + "([0-9a-fA-F])", "&$1" + color.toString());
+    }
+
     /** Convert a point to a vector */
     public static Vector pointToVector(Point point) {
         return new Vector(point.getX(), point.getY(), point.getZ());
