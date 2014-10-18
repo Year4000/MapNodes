@@ -78,13 +78,6 @@ public class SpectatorListener implements Listener {
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
-    public void onDamage(EntityDamageByEntityEvent event) {
-        if (!(event.getDamager() instanceof Player)) return;
-
-        stopEvent(event, (Player) event.getDamager());
-    }
-
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
     public void onPickUp(PlayerPickupItemEvent event) {
         stopEvent(event, event.getPlayer());
     }
@@ -94,7 +87,7 @@ public class SpectatorListener implements Listener {
         stopEvent(event, event.getPlayer());
     }
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
+    @EventHandler
     public void onDamage(EntityDamageEvent event) {
         // If not a player don't check
         if (!(event.getEntity() instanceof Player)) return;
@@ -113,6 +106,11 @@ public class SpectatorListener implements Listener {
 
             event.setCancelled(true);
         }
+    }
+
+    @EventHandler
+    public void onInteract(PlayerInteractEntityEvent event) {
+        stopEvent(event, event.getPlayer());
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
