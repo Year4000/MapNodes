@@ -140,7 +140,8 @@ public final class MapNodesListener implements Listener {
         if (!MapNodes.getCurrentGame().getStage().isPreGame()) return;
 
         NodeGame game = ((NodeGame) MapNodes.getCurrentGame());
-        int size = (int) game.getEntering().count();
+        // Add one as this happens before they fully enter the team
+        int size = (int) game.getEntering().count() + 1;
         boolean biggerThanLast = lastSize < size;
         lastSize = size;
 
