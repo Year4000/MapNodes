@@ -200,7 +200,6 @@ public class NodeKit implements GameKit, Validator, AssignNodeGame {
 
             @Override
             public void runTock(int position) {
-                player.updateInventory();
                 player.setExp(MathUtil.percent(getTime(), position)/100);
             }
 
