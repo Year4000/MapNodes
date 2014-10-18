@@ -4,6 +4,7 @@ import com.google.common.base.Joiner;
 import net.year4000.mapnodes.api.events.game.GameClockEvent;
 import net.year4000.mapnodes.api.events.game.GameLoadEvent;
 import net.year4000.mapnodes.api.events.game.GameStartEvent;
+import net.year4000.mapnodes.api.events.player.GamePlayerStartEvent;
 import net.year4000.mapnodes.api.events.team.GameTeamWinEvent;
 import net.year4000.mapnodes.api.game.GamePlayer;
 import net.year4000.mapnodes.api.game.GameTeam;
@@ -70,6 +71,11 @@ public class TntWars extends GameModeTemplate implements GameMode {
             island.initIsland(game);
             game.addStaticGoal(island.getId(), island.getDisplay());
         });
+    }
+
+    @EventHandler
+    public void onPlayerStart(GamePlayerStartEvent event) {
+        event.setImmortal(false);
     }
 
     @EventHandler
