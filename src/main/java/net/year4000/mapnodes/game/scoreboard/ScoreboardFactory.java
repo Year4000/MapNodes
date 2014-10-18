@@ -80,7 +80,7 @@ public class ScoreboardFactory {
         // When game is running show game time length
         if (game.getStage().isPlaying()) {
             long currentTime = System.currentTimeMillis() - game.getStartTime();
-            String time = (new TimeUtil(currentTime, TimeUnit.MILLISECONDS)).prettyOutput();
+            String time = "&a" + (new TimeUtil(currentTime, TimeUnit.MILLISECONDS)).prettyOutput("&7:&a");
             side.addLine(Msg.locale(nodePlayer, "game.time", time));
             side.addBlank();
         }
@@ -115,7 +115,14 @@ public class ScoreboardFactory {
             .sorted((left, right) -> (left instanceof Spectator) ? -1 : 1)
             .forEach(team -> {
                 String teamSize = Common.colorCapacity(team.getPlayers().size(), team.getSize());
-                side.addLine(" " + teamSize + " " + team.getDisplayName());
+                String teamName = team.getDisplayName();
+
+                // If Same team show in italic
+                if ((nodePlayer.getPendingTeam() != null && nodePlayer.getPendingTeam().equals(team)) || (nodePlayer.getTeam().equals(team) && nodePlayer.getPendingTeam() == null)) {
+                    teamName = Common.fcolor(ChatColor.ITALIC, teamName);
+                }
+
+                side.addLine(" &7(" + teamSize + "&7) " + teamName);
             });
 
         side.buildSidebar(nodePlayer.getScoreboard(), header);
