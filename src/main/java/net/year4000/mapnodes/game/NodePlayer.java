@@ -113,7 +113,7 @@ public final class NodePlayer implements GamePlayer, Comparable {
             sendMessage(Common.textLine(game.getMap().title(), 40, '*'));
 
             sendMessage(Common.textLine(Msg.locale(player, "map.created") + game.getMap().author(player.getLocale()), size, ' ', "", "&7&o"));
-            game.getMap().getMultiLineDescription(player.getLocale(), 7)
+            game.getMap().getMultiLineDescription(player.getLocale(), 6)
                 .forEach(string -> sendMessage(Common.textLine(string, size, ' ', "", "&a&o")));
 
             if (start.getMessage().size() > 0) {
