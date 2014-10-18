@@ -39,7 +39,7 @@ public final class MapNodesListener implements Listener {
     public void onJoin(PlayerLoginEvent event) {
         NodeGame game = (NodeGame) MapNodes.getCurrentGame();
         Player player = event.getPlayer();
-        if (game.getPlayers().count() > game.getMaxPlayers() + game.getMaxPlayers() / 2 && !player.hasPermission("theta")) {
+        if (game.getPlayers().count() + 1 > game.getRealMaxCount() && !player.hasPermission("theta")) {
             event.disallow(PlayerLoginEvent.Result.KICK_FULL, Msg.locale(player, "server.full") + '\n' + Msg.locale(player, "team.select.non_vip_url"));
         }
     }
@@ -86,7 +86,7 @@ public final class MapNodesListener implements Listener {
     @EventHandler
     public void onPing(ServerListPingEvent event) {
         Node node = NodeFactory.get().getCurrentGame();
-        GameManager gm = node.getGame();
+        NodeGame gm = (NodeGame) node.getGame();
 
         // Don't show spectators when game is playing
         if (gm.getStage().isPlaying()) {
@@ -97,7 +97,7 @@ public final class MapNodesListener implements Listener {
             event.setNumPlayers((int) gm.getPlayers().count());
         }
 
-        event.setMaxPlayers(gm.getMaxPlayers());
+        event.setMaxPlayers(gm.getRealMaxCount());
 
         event.setMotd(MessageUtil.message(
             "%s%s &7| &5&o%s",

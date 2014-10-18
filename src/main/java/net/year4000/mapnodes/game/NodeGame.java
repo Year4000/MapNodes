@@ -369,6 +369,10 @@ public final class NodeGame implements GameManager, Validator {
         return count;
     }
 
+    public int getRealMaxCount() {
+        return getMaxPlayers() + getMaxPlayers() / 2;
+    }
+
     // END Game Components Handlers //
 
     // START Game Controls //
