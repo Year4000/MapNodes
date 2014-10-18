@@ -415,7 +415,9 @@ public final class NodeGame implements GameManager, Validator {
         // Close spectator inventories
         start.getGame().getSpectating().forEach(player -> player.getPlayer().closeInventory());
         start.getGame().getEntering().forEach(player -> player.getPlayer().closeInventory());
-        start.getGame().getEntering().forEach(player -> ((NodePlayer) player).start());
+        start.getGame().getEntering()
+            .filter(player -> !((NodeTeam) player.getTeam()).getQueue().contains(player))
+            .forEach(player -> ((NodePlayer) player).start());
 
         gameClock = SchedulerUtil.repeatAsync(() -> new GameClockEvent(this).call(), 20L);
         startTime = System.currentTimeMillis();

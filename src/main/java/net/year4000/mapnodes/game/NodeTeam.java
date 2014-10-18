@@ -10,26 +10,29 @@ import lombok.Setter;
 import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.game.GameKit;
+import net.year4000.mapnodes.api.game.GameMap;
 import net.year4000.mapnodes.api.game.GamePlayer;
 import net.year4000.mapnodes.api.game.GameTeam;
+import net.year4000.mapnodes.clocks.Clocker;
 import net.year4000.mapnodes.exceptions.InvalidJsonException;
 import net.year4000.mapnodes.game.system.Spectator;
 import net.year4000.mapnodes.messages.Msg;
-import net.year4000.mapnodes.utils.AssignNodeGame;
-import net.year4000.mapnodes.utils.Common;
-import net.year4000.mapnodes.utils.Validator;
+import net.year4000.mapnodes.utils.*;
 import net.year4000.mapnodes.utils.typewrappers.LocationList;
 import net.year4000.utilities.bukkit.BukkitUtil;
+import net.year4000.utilities.bukkit.FunEffectsUtil;
 import net.year4000.utilities.bukkit.ItemUtil;
 import net.year4000.utilities.bukkit.MessageUtil;
-import org.bukkit.ChatColor;
-import org.bukkit.Color;
-import org.bukkit.Location;
-import org.bukkit.Material;
+import net.year4000.utilities.bukkit.bossbar.BossBar;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
+import java.util.concurrent.TimeUnit;
+
+import static net.year4000.mapnodes.utils.MathUtil.percent;
+import static net.year4000.mapnodes.utils.MathUtil.ticks;
 
 @Data
 @NoArgsConstructor
@@ -114,7 +117,7 @@ public class NodeTeam implements GameTeam, Validator, AssignNodeGame {
 
     /** Join this team or add to queue */
     public void join(GamePlayer player, boolean display) {
-        if (players.size() <= size || size == -1) {
+        if (players.size() + 1 <= size || size == -1) {
             players.add(player);
 
             if (display) {
@@ -143,14 +146,53 @@ public class NodeTeam implements GameTeam, Validator, AssignNodeGame {
 
         // add queue players to team
         if (queue.size() > 0) {
-            join(queue.poll(), true);
+            GamePlayer nextPlayer = queue.poll();
+            join(nextPlayer, true);
+            start(nextPlayer);
         }
     }
 
     /** Start the team for the player */
     public void start(GamePlayer player) {
         if (players.contains(player)) {
-            player.getPlayer().setDisplayName(player.getPlayerColor() + ChatColor.WHITE.toString());
+            Clocker join = new Clocker(MathUtil.ticks(10)) {
+                private Integer[] ticks = {
+                    ticks(5),
+                    ticks(4),
+                    ticks(3),
+                    ticks(2),
+                    ticks(1)
+                };
+
+                public void runFirst(int position) {
+                    FunEffectsUtil.playSound(player.getPlayer(), Sound.ORB_PICKUP);
+                }
+
+                public void runTock(int position) {
+                    GameMap map = game.getMap();
+
+                    if (Arrays.asList(ticks).contains(position)) {
+                        FunEffectsUtil.playSound(player.getPlayer(), Sound.NOTE_PLING);
+                    }
+
+                    int currentTime = sec(position);
+                    String color = Common.chatColorNumber(currentTime, sec(getTime()));
+                    String time = color + (new TimeUtil(currentTime, TimeUnit.SECONDS)).prettyOutput("&7:" + color);
+
+                    BossBar.setMessage(
+                        player.getPlayer(),
+                        Msg.locale(player, "clocks.join.tock", map.getName(), time),
+                        percent(getTime(), position)
+                    );
+                }
+
+                public void runLast(int position) {
+                    FunEffectsUtil.playSound(player.getPlayer(), Sound.NOTE_BASS);
+                    BossBar.setMessage(player.getPlayer(), Msg.locale(player, "clocks.join.last"), 1);
+                    ((NodePlayer) player).start();
+                }
+            };
+            player.getPlayerTasks().add(join.run());
         }
         else {
             MapNodesPlugin.debug(player.getPlayer().getName() + " not starting!");

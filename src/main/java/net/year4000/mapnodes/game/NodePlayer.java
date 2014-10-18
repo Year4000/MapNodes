@@ -19,6 +19,7 @@ import net.year4000.utilities.bukkit.FunEffectsUtil;
 import net.year4000.utilities.bukkit.MessageUtil;
 import net.year4000.utilities.bukkit.bossbar.BossBar;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.HumanEntity;
@@ -91,9 +92,7 @@ public final class NodePlayer implements GamePlayer, Comparable {
 
         game.getScoreboardFactory().setTeam(this, (NodeTeam) start.getTeam());
         game.getScoreboardFactory().setGameSidebar(this);
-
-        // team start
-        ((NodeTeam) start.getTeam()).start(this);
+        player.getPlayer().setDisplayName(getPlayerColor() + ChatColor.WHITE.toString());
 
         // team kit
         ((NodeKit) start.getTeam().getKit()).giveKit(this);
@@ -194,7 +193,6 @@ public final class NodePlayer implements GamePlayer, Comparable {
             joinSpectator.call();
             team = (NodeTeam)joinSpectator.getSpectator();
             team.join(this, joinSpectator.isDisplay());
-            team.start(this);
 
             // Auto join spectator team
             game.getScoreboardFactory().setTeam(this, team);
@@ -236,46 +234,7 @@ public final class NodePlayer implements GamePlayer, Comparable {
             game.getScoreboardFactory().setPersonalSidebar(this);
 
             if (joinTeam.isJoining()) {
-                GamePlayer gamePlayer = this;
-
-                Clocker join = new Clocker(MathUtil.ticks(10)) {
-                    private Integer[] ticks = {
-                        ticks(5),
-                        ticks(4),
-                        ticks(3),
-                        ticks(2),
-                        ticks(1)
-                    };
-
-                    public void runFirst(int position) {
-                        FunEffectsUtil.playSound(player, Sound.ORB_PICKUP);
-                    }
-
-                    public void runTock(int position) {
-                        GameMap map = game.getMap();
-
-                        if (Arrays.asList(ticks).contains(position)) {
-                            FunEffectsUtil.playSound(player, Sound.NOTE_PLING);
-                        }
-
-                        int currentTime = sec(position);
-                        String color = Common.chatColorNumber(currentTime, sec(getTime()));
-                        String time = color + (new TimeUtil(currentTime, TimeUnit.SECONDS)).prettyOutput("&7:" + color);
-
-                        BossBar.setMessage(
-                            player,
-                            Msg.locale(player, "clocks.join.tock", map.getName(), time),
-                            percent(getTime(), position)
-                        );
-                    }
-
-                    public void runLast(int position) {
-                        FunEffectsUtil.playSound(player, Sound.NOTE_BASS);
-                        BossBar.setMessage(player, Msg.locale(player, "clocks.join.last"), 1);
-                        ((NodePlayer) gamePlayer).start();
-                    }
-                };
-                playerTasks.add(join.run());
+                pendingTeam.start(this);
             }
         }
 
