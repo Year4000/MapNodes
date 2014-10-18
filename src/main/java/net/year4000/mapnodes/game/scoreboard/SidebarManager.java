@@ -1,14 +1,13 @@
 package net.year4000.mapnodes.game.scoreboard;
 
+import com.google.common.base.Splitter;
 import net.year4000.mapnodes.utils.Common;
 import net.year4000.mapnodes.utils.SchedulerUtil;
 import net.year4000.utilities.bukkit.MessageUtil;
-import org.bukkit.scoreboard.DisplaySlot;
-import org.bukkit.scoreboard.Objective;
-import org.bukkit.scoreboard.Score;
-import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.*;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class SidebarManager {
@@ -47,6 +46,28 @@ public class SidebarManager {
         return this;
     }
 
+    /** Creates a team to allow for 48 chars and return the short */
+    private String buildTeam(Scoreboard scoreboard, String name) {
+        name = MessageUtil.replaceColors(Common.truncate(name, 48));
+
+        if (name.length() <= 16) {
+            return name;
+        }
+
+        String result;
+        Team team = scoreboard.registerNewTeam(Common.truncate("txt:" + scoreboard.getTeams().size(), 16));
+        Iterator<String> part = Splitter.fixedLength(16).split(name).iterator();
+        team.setPrefix(part.next());
+        result = part.next();
+
+        if (name.length() > 32) {
+            team.setPrefix(part.next());
+        }
+
+        team.add(result);
+        return result;
+    }
+
     public Objective buildSidebar(Scoreboard scoreboard, String title) {
         String id = String.valueOf(title.hashCode());
 
@@ -62,13 +83,13 @@ public class SidebarManager {
 
         // Add static scores that are the order they are in the list
         for (int i = 0; i < staticScores.size(); i++) {
-            Score score = objective.getScore(Common.truncate(MessageUtil.replaceColors(staticScores.get(i)), 16));
+            Score score = objective.getScore(buildTeam(scoreboard, staticScores.get(i)));
             score.setScore(-(i + 1));
         }
 
         // Add dynamic scores that don't depend on statics
         for (Object[] lines : dynamicScores) {
-            String scoreId = Common.truncate(MessageUtil.replaceColors((String) lines[0]), 16);
+            String scoreId = buildTeam(scoreboard, ((String) lines[0]));
             int scoreInput = (Integer) lines[1];
 
             // Set default score to fix Bukkit / Minecraft cant start with 0
