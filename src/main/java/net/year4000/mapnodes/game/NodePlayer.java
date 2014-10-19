@@ -11,10 +11,7 @@ import net.year4000.mapnodes.api.game.GameTeam;
 import net.year4000.mapnodes.clocks.Clocker;
 import net.year4000.mapnodes.game.system.Spectator;
 import net.year4000.mapnodes.messages.Msg;
-import net.year4000.mapnodes.utils.Common;
-import net.year4000.mapnodes.utils.MathUtil;
-import net.year4000.mapnodes.utils.SchedulerUtil;
-import net.year4000.mapnodes.utils.TimeUtil;
+import net.year4000.mapnodes.utils.*;
 import net.year4000.utilities.bukkit.FunEffectsUtil;
 import net.year4000.utilities.bukkit.MessageUtil;
 import net.year4000.utilities.bukkit.bossbar.BossBar;
@@ -90,14 +87,10 @@ public final class NodePlayer implements GamePlayer, Comparable {
         }};
         start.call();
 
+        // Event Method Results
         game.getScoreboardFactory().setTeam(this, (NodeTeam) start.getTeam());
         game.getScoreboardFactory().setGameSidebar(this);
-        player.getPlayer().setDisplayName(getPlayerColor() + ChatColor.WHITE.toString());
-
-        // team kit
         ((NodeKit) start.getTeam().getKit()).giveKit(this);
-
-        // spawn tp
         player.teleport(start.getSpawn());
 
         // God buffer mode
@@ -126,6 +119,8 @@ public final class NodePlayer implements GamePlayer, Comparable {
 
         // Player Settings
         player.setCollidesWithEntities(true);
+        player.getPlayer().setDisplayName(getPlayerColor() + ChatColor.WHITE.toString());
+        reopenPlayerInventory();
         updateHiddenSpectator();
         updateInventory();
     }
@@ -136,6 +131,11 @@ public final class NodePlayer implements GamePlayer, Comparable {
         joinTeam(null);
 
         inventory = Bukkit.createInventory(null, INV_SIZE, getPlayerColor());
+        PacketHacks.setTabListHeadFoot(
+            player,
+            MessageUtil.replaceColors("&bYear4000"),
+            MessageUtil.replaceColors("&bmc&7.&byear4000&7.&bnet")
+        );
 
         GamePlayerJoinEvent join = new GamePlayerJoinEvent(this) {{
             this.setSpawn(game.getConfig().getSafeRandomSpawn());
