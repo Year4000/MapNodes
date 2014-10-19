@@ -5,6 +5,7 @@ import net.year4000.mapnodes.game.regions.EventType;
 import net.year4000.mapnodes.game.regions.EventTypes;
 import net.year4000.mapnodes.game.regions.RegionEvent;
 import net.year4000.mapnodes.game.regions.RegionListener;
+import net.year4000.mapnodes.game.regions.types.Point;
 import net.year4000.mapnodes.utils.MathUtil;
 import net.year4000.mapnodes.utils.SchedulerUtil;
 import net.year4000.mapnodes.utils.TimeDuration;
@@ -52,6 +53,7 @@ public class TNT extends RegionEvent implements RegionListener {
     @EventHandler(ignoreCancelled = true)
     public void onTnt(BlockPlaceEvent event) {
         if (event.getBlock().getType() != Material.TNT) return;
+        if (!region.inZone(new Point(event.getBlockPlaced().getLocation().toVector().toBlockVector()))) return;
 
         if (instant) {
             event.getBlock().setType(Material.AIR);
@@ -72,6 +74,8 @@ public class TNT extends RegionEvent implements RegionListener {
     /** Set the yield and blocks of the tnt. */
     @EventHandler(ignoreCancelled = true, priority=EventPriority.HIGH)
     public void onTnt(EntityExplodeEvent event) {
+        if (!region.inZone(new Point(event.getLocation().toVector().toBlockVector()))) return;
+
         event.setYield(yield);
 
         if (!blockDamage) {
