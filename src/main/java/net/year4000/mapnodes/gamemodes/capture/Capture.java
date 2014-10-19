@@ -245,13 +245,17 @@ public class Capture extends GameModeTemplate implements GameMode {
     /** Get the capture display based on the stage */
     private String getCaptureDisplay(CaptureConfig.BlockCapture capture) {
         String stage = "";
+        String flag = ChatColor.RED + "\u2690";
+
         if (capture.isDone()) {
             stage = ChatColor.STRIKETHROUGH.toString();
+            flag = ChatColor.GREEN + "\u2691";
         }
         else if (capture.getGrabbed().size() > 0) {
             stage = ChatColor.ITALIC.toString();
+            flag = ChatColor.YELLOW + "\u2690";
         }
 
-        return capture.getPrefix().toString() + stage + capture.getName();
+        return  flag + " " + capture.getPrefix().toString() + stage + capture.getName();
     }
 }
