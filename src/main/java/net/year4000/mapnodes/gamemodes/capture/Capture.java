@@ -16,9 +16,10 @@ import net.year4000.mapnodes.game.system.Spectator;
 import net.year4000.mapnodes.gamemodes.GameModeTemplate;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.SchedulerUtil;
+import net.year4000.utilities.bukkit.BukkitUtil;
 import net.year4000.utilities.bukkit.FunEffectsUtil;
-import org.bukkit.ChatColor;
-import org.bukkit.Sound;
+import org.bukkit.*;
+import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -27,6 +28,9 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryClickedEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.FireworkEffectMeta;
+import org.bukkit.inventory.meta.FireworkMeta;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,7 +39,7 @@ import java.util.Map;
 
 @GameModeInfo(
     name = "Capture",
-    version = "1.0",
+    version = "1.3",
     config = CaptureConfig.class
 )
 public class Capture extends GameModeTemplate implements GameMode {
@@ -135,14 +139,33 @@ public class Capture extends GameModeTemplate implements GameMode {
                     return;
                 }
 
+                // We capture the goal
                 event.setCancelled(false);
                 capture.setDone(true);
                 game.getSidebarGoals().get(getCaptureID(team, capture)).setDisplay(" " + getCaptureDisplay(capture));
-                game.getPlayers().forEach(p -> {
+
+                // Broadcast message
+                game.getPlaying().forEach(p -> {
                     p.sendMessage(Msg.locale(p, "capture.placed", player.getPlayerColor(), team.getDisplayName()));
                     game.getScoreboardFactory().setGameSidebar((NodePlayer) p);
                     FunEffectsUtil.playSound(p.getPlayer(), Sound.NOTE_PLING);
                 });
+
+                // Show firework in the block
+                Location center = event.getBlockPlaced().getLocation().clone().add(0.5, -0.5, 0.5);
+                Firework firework = MapNodes.getCurrentWorld().spawn(center, Firework.class);
+                FireworkEffect effect = FireworkEffect.builder()
+                    .withColor(BukkitUtil.dyeColorToColor(BukkitUtil.chatColorToDyeColor(capture.getPrefix())))
+                    .withFade(BukkitUtil.dyeColorToColor(BukkitUtil.chatColorToDyeColor(capture.getPrefix())))
+                    .with(FireworkEffect.Type.BURST)
+                    .build();
+                FireworkMeta meta = firework.getFireworkMeta();
+                meta.clearEffects();
+                meta.addEffect(effect);
+                meta.setPower(0);
+                firework.setFireworkMeta(meta);
+
+                // Check is should win then break loop
                 SchedulerUtil.runSync(this::shouldWin);
                 break;
             }
@@ -155,29 +178,9 @@ public class Capture extends GameModeTemplate implements GameMode {
 
         NodePlayer player = (NodePlayer) game.getPlayer(event.getPlayer());
         NodeTeam team = player.getTeam();
+        ItemStack item = event.getItem().getItemStack();
 
-        for (CaptureConfig.BlockCapture capture : captures.get(team.getId())) {
-            // Check material
-            if (event.getItem().getItemStack().getType() != capture.getBlock()) {
-                continue;
-            }
-
-            // Check data
-            if ((int) event.getItem().getItemStack().getData().getData() != capture.getData()) {
-                continue;
-            }
-
-            if (!capture.getGrabbed().contains(player)) {
-                capture.getGrabbed().add(player);
-                game.getSidebarGoals().get(getCaptureID(team, capture)).setDisplay(" " + getCaptureDisplay(capture));
-
-                game.getPlayers().forEach(p -> {
-                    p.sendMessage(Msg.locale(p, "capture.grabbed", player.getPlayerColor(), team.getDisplayName()));
-                    game.getScoreboardFactory().setGameSidebar((NodePlayer) p);
-                    FunEffectsUtil.playSound(p.getPlayer(), Sound.NOTE_PLING);
-                });
-            }
-        }
+        checkPickUpCapture(team, player, item.getType(), item.getData().getData());
     }
 
     @EventHandler
@@ -189,14 +192,19 @@ public class Capture extends GameModeTemplate implements GameMode {
 
         if (team instanceof Spectator) return;
 
+        checkPickUpCapture(team, player, event.getCurrentItem().getType(), event.getCurrentItem().getData().getData());
+    }
+
+    /** Check if the wool has been picked up by a player and do things with it */
+    private void checkPickUpCapture(NodeTeam team, NodePlayer player, Material material, byte data) {
         for (CaptureConfig.BlockCapture capture : captures.get(team.getId())) {
             // Check material
-            if (event.getCurrentItem().getType() != capture.getBlock()) {
+            if (material != capture.getBlock()) {
                 continue;
             }
 
             // Check data
-            if ((int) event.getCurrentItem().getData().getData() != capture.getData()) {
+            if ((int) data != capture.getData()) {
                 continue;
             }
 
@@ -204,11 +212,13 @@ public class Capture extends GameModeTemplate implements GameMode {
                 capture.getGrabbed().add(player);
                 game.getSidebarGoals().get(getCaptureID(team, capture)).setDisplay(" " + getCaptureDisplay(capture));
 
-                game.getPlayers().forEach(p -> {
+                // Show grabbed message
+                game.getPlaying().forEach(p -> {
                     p.sendMessage(Msg.locale(p, "capture.grabbed", player.getPlayerColor(), team.getDisplayName()));
                     game.getScoreboardFactory().setGameSidebar((NodePlayer) p);
                     FunEffectsUtil.playSound(p.getPlayer(), Sound.NOTE_PLING);
                 });
+                break;
             }
         }
     }
@@ -226,6 +236,7 @@ public class Capture extends GameModeTemplate implements GameMode {
         }));
     }
 
+    /** Call the win event if the game should be won */
     private void shouldWin() {
         for (Map.Entry<String, List<CaptureConfig.BlockCapture>> tracker : captures.entrySet()) {
             List<CaptureConfig.BlockCapture> blockCaptures = tracker.getValue();
