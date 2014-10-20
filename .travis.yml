@@ -10,4 +10,4 @@ before_install:
   - git submodule update --init --recursive
   - cd utilities/ ; mvn clean install ; cd ../
 install:
-  - mvn clean install -o
+  - mvn install -o -DskipTests=true -Dmaven.javadoc.skip=true -B -V
