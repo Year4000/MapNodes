@@ -9,6 +9,7 @@ import net.year4000.mapnodes.messages.Message;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.Common;
 import net.year4000.mapnodes.utils.MathUtil;
+import net.year4000.mapnodes.utils.PacketHacks;
 import net.year4000.mapnodes.utils.TimeUtil;
 import net.year4000.utilities.bukkit.FunEffectsUtil;
 import net.year4000.utilities.bukkit.bossbar.BossBar;
@@ -66,7 +67,7 @@ public class StartGame extends Clocker {
                 FunEffectsUtil.playSound(player.getPlayer(), Sound.NOTE_PLING);
             }
 
-            BossBar.setMessage(
+            PacketHacks.title(
                 player.getPlayer(),
                 Msg.locale(player, "clocks.start.tock", map.getName(), time),
                 percent(getTime(), position)
@@ -79,7 +80,7 @@ public class StartGame extends Clocker {
 
         MapNodes.getCurrentGame().getPlayers().forEach(player -> {
             FunEffectsUtil.playSound(player.getPlayer(), Sound.NOTE_BASS);
-            BossBar.setMessage(player.getPlayer(), Msg.locale(player, "clocks.start.last"), 1);
+            PacketHacks.title(player.getPlayer(), Msg.locale(player, "clocks.start.last"), 1);
         });
 
         ((NodeGame)MapNodes.getCurrentGame()).start();

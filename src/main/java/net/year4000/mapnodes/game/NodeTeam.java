@@ -179,7 +179,7 @@ public class NodeTeam implements GameTeam, Validator, AssignNodeGame {
                     String color = Common.chatColorNumber(currentTime, sec(getTime()));
                     String time = color + (new TimeUtil(currentTime, TimeUnit.SECONDS)).prettyOutput("&7:" + color);
 
-                    BossBar.setMessage(
+                    PacketHacks.title(
                         player.getPlayer(),
                         Msg.locale(player, "clocks.join.tock", map.getName(), time),
                         percent(getTime(), position)
@@ -188,7 +188,7 @@ public class NodeTeam implements GameTeam, Validator, AssignNodeGame {
 
                 public void runLast(int position) {
                     FunEffectsUtil.playSound(player.getPlayer(), Sound.NOTE_BASS);
-                    BossBar.setMessage(player.getPlayer(), Msg.locale(player, "clocks.join.last"), 1);
+                    PacketHacks.title(player.getPlayer(), Msg.locale(player, "clocks.join.last"), 1);
                     ((NodePlayer) player).start();
                 }
             };

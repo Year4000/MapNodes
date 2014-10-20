@@ -28,6 +28,7 @@ import net.year4000.mapnodes.gamemodes.tntwars.TntWars;
 import net.year4000.mapnodes.listeners.*;
 import net.year4000.mapnodes.map.MapFactory;
 import net.year4000.mapnodes.messages.Msg;
+import net.year4000.mapnodes.utils.PacketInjector;
 import net.year4000.mapnodes.utils.SchedulerUtil;
 import net.year4000.utilities.LogUtil;
 import net.year4000.utilities.bukkit.BukkitPlugin;
@@ -58,6 +59,7 @@ public class MapNodesPlugin extends BukkitPlugin implements Plugin {
         inst = this;
         log = new LogUtil(getLogger());
         MapNodes.init(inst);
+        PacketInjector.inject();
 
         // Register region types to be used during map.json parsing
         RegionManager.get()

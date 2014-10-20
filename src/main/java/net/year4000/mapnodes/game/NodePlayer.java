@@ -133,8 +133,8 @@ public final class NodePlayer implements GamePlayer, Comparable {
         inventory = Bukkit.createInventory(null, INV_SIZE, getPlayerColor());
         PacketHacks.setTabListHeadFoot(
             player,
-            MessageUtil.replaceColors("&bYear4000"),
-            MessageUtil.replaceColors("&bmc&7.&byear4000&7.&bnet")
+            MessageUtil.replaceColors(game.getMap().title()),
+            MessageUtil.replaceColors("&3[&bYear4000&3] &7- &bmc&7.&byear4000&7.&bnet")
         );
 
         GamePlayerJoinEvent join = new GamePlayerJoinEvent(this) {{
@@ -170,6 +170,7 @@ public final class NodePlayer implements GamePlayer, Comparable {
         // Cancel tasks
         playerTasks.stream().forEach(BukkitTask::cancel);
         BossBar.removeBar(player);
+        PacketHacks.setTabListHeadFoot(player, MessageUtil.replaceColors("&3[&bYear4000&3] &7- &bmc&7.&byear4000&7.&bnet"), "");
         // Update team menu
         game.updateTeamChooserMenu();
     }
