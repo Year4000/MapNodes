@@ -154,6 +154,8 @@ public class Deathmatch extends GameModeTemplate implements GameMode {
 
     /** Add the amount of points to a team and set the winner */
     public void addPoint(NodeGame game, GameTeam team, int amount) {
+        if (!scores.containsKey(((NodeTeam) team).getId())) return;
+
         int newScore = scores.get(((NodeTeam) team).getId()) + amount;
         scores.put(((NodeTeam) team).getId(), newScore);
         game.getSidebarGoals().get(((NodeTeam) team).getId()).setScore(scores.get(((NodeTeam) team).getId()));
