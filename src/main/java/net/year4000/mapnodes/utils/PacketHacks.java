@@ -58,12 +58,11 @@ public final class PacketHacks {
         // Title bar
         else {
             percent = ((percent * 10) / 10) - 1;
-            String sub = "****************************************************************************************************";
+            String sub = "....................................................................................................";
             IChatBaseComponent title = ChatSerializer.a(Common.sanitize(message));
             IChatBaseComponent subtitle = ChatSerializer.a(Common.sanitize(MessageUtil.replaceColors("&d" + sub.substring(0, (int) percent) + "&5" + sub.substring((int) percent, sub.length()))));
-            //IChatBaseComponent subtitle = ChatSerializer.a(Common.sanitize(MessageUtil.replaceColors("&a" + sub)));
 
-            craftPlayer.getHandle().playerConnection.sendPacket(new PacketInjector.PacketTitle(PacketInjector.PacketTitle.Action.TIMES, 0, -1, 0));
+            craftPlayer.getHandle().playerConnection.sendPacket(new PacketInjector.PacketTitle(PacketInjector.PacketTitle.Action.TIMES, 0, -1, 1));
             craftPlayer.getHandle().playerConnection.sendPacket(new PacketInjector.PacketTitle(PacketInjector.PacketTitle.Action.TITLE, title));
             craftPlayer.getHandle().playerConnection.sendPacket(new PacketInjector.PacketTitle(PacketInjector.PacketTitle.Action.SUBTITLE, subtitle));
         }

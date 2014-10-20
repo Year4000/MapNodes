@@ -69,7 +69,7 @@ public class StartGame extends Clocker {
 
             PacketHacks.title(
                 player.getPlayer(),
-                Msg.locale(player, "clocks.start.tock", map.getName(), time),
+                Msg.locale(player, "clocks.start.tock", time),
                 percent(getTime(), position)
             );
         });
