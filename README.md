@@ -1,4 +1,4 @@
-### MapNodes ###
+### MapNodes [![Build Status](https://magnum.travis-ci.com/ewized/Maps.svg?token=zmUpkLZqvMbrRfbszTjK&branch=master)](https://magnum.travis-ci.com/ewized/Maps)
 
 This is the plugin that handles the games that `Year4000` runs.
 
