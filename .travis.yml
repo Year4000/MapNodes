@@ -4,4 +4,5 @@ jdk:
 notifications:
   email: false
 before_install:
+  - git clone https://github.com/Year4000/FireCast.git ; cd FireCast/ ; ./init.sh ; ./build.sh ; cd ../
   - git submodule update --init --recursive
