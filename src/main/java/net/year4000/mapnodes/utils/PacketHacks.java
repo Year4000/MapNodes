@@ -33,6 +33,8 @@ public final class PacketHacks {
 
     /** Set the tablist header and footer */
     public static void setTabListHeadFoot(Player player, String header, String footer) {
+        if (!isTitleAble(player)) return;
+
         CraftPlayer craftPlayer = (CraftPlayer) player;
 
         Packet headFoot = new ProtocolInjector.PacketPlayOutPlayerListHeaderFooter(
