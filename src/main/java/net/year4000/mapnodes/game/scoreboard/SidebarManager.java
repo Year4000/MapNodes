@@ -13,6 +13,7 @@ import java.util.List;
 public class SidebarManager {
     int blankCounter = 1;
     private List<String> staticScores = new ArrayList<>();
+    private List<String> customTeams = new ArrayList<>();
     private List<Object[]> dynamicScores = new ArrayList<>();
 
     /** Add a blank line */
@@ -33,7 +34,7 @@ public class SidebarManager {
     public SidebarManager addLine(String line) {
         // When scores are the same append a blank until the string is different.
         while (staticScores.contains(line)) {
-            line += " ";
+            line += "&r";
         }
 
         staticScores.add(line);
@@ -60,8 +61,25 @@ public class SidebarManager {
         team.setPrefix(part.next());
         result = part.next();
 
+        while (customTeams.contains(result)) {
+            result = "&r" + result;
+        }
+
+        customTeams.add(result);
+
+        String nameHack = result;
+
         if (name.length() > 32) {
-            team.setPrefix(part.next());
+            nameHack += part.next();
+        }
+
+        nameHack = MessageUtil.replaceColors(Common.truncate(nameHack, 32));
+        Iterator<String> suffix = Splitter.fixedLength(16).split(nameHack).iterator();
+
+        result = suffix.next();
+
+        if (nameHack.length() > 16) {
+            team.setSuffix(suffix.next());
         }
 
         team.add(result);
