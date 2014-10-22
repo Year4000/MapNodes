@@ -58,7 +58,7 @@ public class Deathmatch extends GameModeTemplate implements GameMode {
 
         game.getPlayingTeams().forEach(team -> {
             scores.put(team.getId(), 0);
-            game.addDynamicGoal(team.getId(), team.getId(), team.getDisplayName() + "'s Points", 0);
+            game.addDynamicGoal(team.getId() + "-deathmatch", team.getId(), team.getDisplayName() + "'s Points", 0);
         });
     }
 

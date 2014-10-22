@@ -37,7 +37,7 @@ public class Destroy extends GameModeTemplate implements GameMode {
         game = (NodeGame) event.getGame();
 
         game.getPlayingTeams().forEach(team -> {
-            game.addStaticGoal(team.getId(), team.getDisplayName() + "'s Targets");
+            game.addStaticGoal(team.getId() + "-destroy", team.getId(), team.getDisplayName() + "'s Targets");
             gameModeConfig.getChallengerTargets(team.getId()).forEach(target -> {
                 target.init(game);
                 game.addStaticGoal(target.getId(), target.getDisplay());
@@ -97,7 +97,7 @@ public class Destroy extends GameModeTemplate implements GameMode {
         target.updateProgress(blocks);
 
         game.getPlayingTeams().forEach(team -> {
-            game.addStaticGoal(team.getId(), team.getId(), team.getDisplayName() + "'s Targets");
+            game.addStaticGoal(team.getId() + "-destroy", team.getId(), team.getDisplayName() + "'s Targets");
             gameModeConfig.getChallengerTargets(team.getId()).forEach(get -> game.addStaticGoal(get.getId(), get.getDisplay()));
         });
 
