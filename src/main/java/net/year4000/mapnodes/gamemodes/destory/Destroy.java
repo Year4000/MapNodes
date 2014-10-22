@@ -81,7 +81,7 @@ public class Destroy extends GameModeTemplate implements GameMode {
 
             // The Challenger check if broken
             for (DestroyTarget target : gameModeConfig.getChallengerTargets(((NodeTeam) player.getTeam()).getId())) {
-                if (target.getNodeRegion().inZone(point)) {
+                if (target.getNodeRegion().inZone(point) && target.getStage() != DestroyTarget.Stage.END) {
                     cancel = false;
                     updateDisplays(target, player, block);
                     break;
