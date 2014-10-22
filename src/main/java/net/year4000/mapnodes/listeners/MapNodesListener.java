@@ -97,7 +97,7 @@ public final class MapNodesListener implements Listener {
             event.setNumPlayers((int) gm.getPlayers().count());
         }
 
-        event.setMaxPlayers(gm.getRealMaxCount());
+        event.setMaxPlayers(gm.getMaxPlayers());
 
         event.setMotd(MessageUtil.message(
             "%s%s &7| &5&o%s",
