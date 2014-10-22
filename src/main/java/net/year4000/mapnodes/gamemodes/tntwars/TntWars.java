@@ -23,8 +23,10 @@ import net.year4000.mapnodes.utils.SchedulerUtil;
 import net.year4000.mapnodes.utils.TimeUtil;
 import net.year4000.utilities.bukkit.bossbar.BossBar;
 import org.bukkit.Location;
+import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.block.BlockDispenseEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.ExplosionPrimeEvent;
@@ -119,12 +121,19 @@ public class TntWars extends GameModeTemplate implements GameMode {
         locations.put(event.getEntity().getEntityId(), event.getEntity().getLocation().toVector());
     }
 
+    @EventHandler
+    public void onPrimed(BlockDispenseEntityEvent event) {
+        if (!(event.getEntity() instanceof TNTPrimed)) return;
+
+        locations.put(event.getEntity().getEntityId(), event.getEntity().getLocation().toVector());
+    }
+
     @EventHandler(priority = EventPriority.LOW)
     public void onPrimed(EntityExplodeEvent event) {
         try {
             if (locations.containsKey(event.getEntity().getEntityId())) {
                 Vector current = event.getLocation().toVector();
-                Vector old = locations.get(event.getEntity().getEntityId());
+                Vector old = locations.remove(event.getEntity().getEntityId());
 
                 if (Math.abs(current.getBlockZ() - old.getBlockZ()) < 10 && Math.abs(current.getBlockX() - old.getBlockX()) < 10) {
                     event.setCancelled(true);
