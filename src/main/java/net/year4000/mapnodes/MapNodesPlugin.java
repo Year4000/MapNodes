@@ -6,6 +6,7 @@ import lombok.Getter;
 import net.year4000.mapnodes.addons.Addons;
 import net.year4000.mapnodes.addons.modules.misc.DeathMessages;
 import net.year4000.mapnodes.addons.modules.misc.GameMech;
+import net.year4000.mapnodes.addons.modules.misc.VIPEffects;
 import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.Plugin;
 import net.year4000.mapnodes.api.game.GameManager;
@@ -143,6 +144,7 @@ public class MapNodesPlugin extends BukkitPlugin implements Plugin {
         addons.builder()
             .add(DeathMessages.class)
             .add(GameMech.class)
+            .add(VIPEffects.class)
             .register();
 
         SchedulerUtil.repeatAsync(() -> {
