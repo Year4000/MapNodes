@@ -13,7 +13,7 @@ import java.util.List;
 public class PlayerInventoryDeserializer implements JsonDeserializer<List<ItemStack>> {
     @Override
     public List<ItemStack> deserialize(JsonElement element, Type type, JsonDeserializationContext context) throws JsonParseException {
-        List<ItemStack> newList = new PlayerInventoryList<>();
+        PlayerInventoryList<ItemStack> newList = new PlayerInventoryList<>();
         Gson gson = GsonUtil.createGson();
 
         for (int i = 0; i < 36; i++) {
@@ -22,7 +22,8 @@ public class PlayerInventoryDeserializer implements JsonDeserializer<List<ItemSt
 
         for (JsonElement item : element.getAsJsonArray()) {
             SlotItem itemSlot = gson.fromJson(item, SlotItem.class);
-            newList.set(itemSlot.getSlot(), itemSlot.create());
+            newList.getRawItems().add(itemSlot);
+            newList.set(itemSlot.getSlot() == -1 ? 0 : itemSlot.getSlot(), itemSlot.create());
         }
 
         return newList;

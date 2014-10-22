@@ -14,12 +14,12 @@ import static com.google.common.base.Preconditions.checkArgument;
 @NoArgsConstructor
 public class SlotItem extends Item implements Validator {
     /** The slot number to appear in the inventory. */
-    private int slot = 0;
+    private int slot = -1;
 
     @Override
     public void validate() throws InvalidJsonException {
         super.validate();
 
-        checkArgument(slot <= 0 || slot <= 35, Msg.util("settings.kit.item.slot"));
+        checkArgument(slot >= -1 && slot <= 35, Msg.util("settings.kit.item.slot"));
     }
 }
