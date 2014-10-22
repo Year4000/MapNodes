@@ -30,6 +30,7 @@ import org.bukkit.scheduler.BukkitTask;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Data
 @NoArgsConstructor
@@ -200,6 +201,11 @@ public class NodeKit implements GameKit, Validator, AssignNodeGame {
 
             @Override
             public void runTock(int position) {
+                // If effects were not applied some how just reset player time.
+                if (!player.getActivePotionEffects().stream().map(PotionEffect::getType).collect(Collectors.toList()).containsAll(types)) {
+                    player.resetPlayerTime();
+                }
+
                 player.setExp(MathUtil.percent(getTime(), position)/100);
             }
 
