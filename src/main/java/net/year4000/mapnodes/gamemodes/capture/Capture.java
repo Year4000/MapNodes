@@ -72,6 +72,7 @@ public class Capture extends GameModeTemplate implements GameMode {
         game = (NodeGame) event.getGame();
         gameModeConfig = (CaptureConfig) getConfig();
         gameModeConfig.validate(); // This will assign the var maps
+        game.addStartTime(60);
 
         // Set up internal tracking of wools
         gameModeConfig.getBlockCaptures().forEach(capture -> {

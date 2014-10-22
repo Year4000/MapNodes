@@ -56,6 +56,7 @@ public class TntWars extends GameModeTemplate implements GameMode {
     public void onLoad(GameLoadEvent event) {
         gameModeConfig = (TntWarsConfig) getConfig();
         game = (NodeGame) event.getGame();
+        game.addStartTime(60);
 
         // Add max if map has max score
         if (gameModeConfig.getMaxScore() != null) {

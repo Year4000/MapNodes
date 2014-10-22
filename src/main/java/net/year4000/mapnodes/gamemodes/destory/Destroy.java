@@ -38,6 +38,7 @@ public class Destroy extends GameModeTemplate implements GameMode {
     public void onLoad(GameLoadEvent event) {
         gameModeConfig = (DestroyConfig) getConfig();
         game = (NodeGame) event.getGame();
+        game.addStartTime(60);
 
         game.getPlayingTeams().forEach(team -> {
             game.addStaticGoal(team.getId() + "-destroy", team.getId(), team.getDisplayName() + "'s Targets");

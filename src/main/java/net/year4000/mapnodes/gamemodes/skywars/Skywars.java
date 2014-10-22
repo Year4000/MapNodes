@@ -44,6 +44,7 @@ public class Skywars extends GameModeTemplate implements GameMode {
         game = (NodeGame) event.getGame();
         team = game.getTeams().get(gameModeConfig.getPlayersTeam());
         team.setAllowFriendlyFire(true); // Force enable so players can kill each other
+        game.addStartTime(45);
 
         // Add requirements | Their must be at least 2 players to start Skywars
         game.getStartControls().add(() -> team.getPlayers().size() >= 2);

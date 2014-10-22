@@ -3,6 +3,7 @@ package net.year4000.mapnodes.game;
 import com.google.common.base.Joiner;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.annotations.Since;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -141,6 +142,13 @@ public final class NodeGame implements GameManager, Validator {
     private transient Map<String, SidebarGoal> sidebarGoals = new LinkedHashMap<>();
     private transient List<Operations> startControls = new CopyOnWriteArrayList<>();
     private transient long startTime;
+    @Setter(AccessLevel.NONE)
+    private transient int baseStartTime = 30;
+
+    /** The start time for the game */
+    public void addStartTime(int time) {
+        baseStartTime += time;
+    }
 
     /** Init things that happen before load is playable */
     public void load() {
