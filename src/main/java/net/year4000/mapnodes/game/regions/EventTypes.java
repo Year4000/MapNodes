@@ -12,8 +12,7 @@ public enum EventTypes {
     KILL_PLAYER("kill_player"),
     TNT("tnt"),
     BOW("bow"),
-    BLOCK_DROP("block_drops"),
-    PLAYER_DROP("player_drops"),
+    ITEM_DROP("item_drops"),
     ;
 
     private String name;
