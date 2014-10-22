@@ -1,5 +1,6 @@
 package net.year4000.mapnodes.gamemodes.destory;
 
+import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.events.game.GameLoadEvent;
 import net.year4000.mapnodes.api.events.team.GameTeamWinEvent;
 import net.year4000.mapnodes.api.game.GamePlayer;
@@ -14,10 +15,12 @@ import net.year4000.mapnodes.gamemodes.GameModeTemplate;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.SchedulerUtil;
 import net.year4000.utilities.bukkit.FunEffectsUtil;
+import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.entity.EntityExplodeEvent;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -54,17 +57,18 @@ public class Destroy extends GameModeTemplate implements GameMode {
     }
 
     // todo handle tnt block breaks
-    /*@EventHandler
+    @EventHandler
     public void onBreak(EntityExplodeEvent event) {
-        if (event.getEntity().getEntityId())
-        GamePlayer player = game.getPlayer(event.getPlayer());
+        GamePlayer player = game.getPlayer(Bukkit.getOnlinePlayers().iterator().next());
         NodeTeam team = ((NodeTeam) player.getTeam());
 
+
         event.setCancelled(destroyTarget(player, team, event.blockList().toArray(new Block[event.blockList().size()])));
-    }*/
+    }
 
     public boolean destroyTarget(GamePlayer player, NodeTeam team, Block... blocks) {
         boolean cancel = false;
+        DestroyTarget goal = null;
 
         for (Block block : blocks) {
             Point point = new Point(block.getLocation().toVector().toBlockVector());
@@ -83,19 +87,22 @@ public class Destroy extends GameModeTemplate implements GameMode {
             for (DestroyTarget target : gameModeConfig.getChallengerTargets(((NodeTeam) player.getTeam()).getId())) {
                 if (target.getNodeRegion().inZone(point) && target.getStage() != DestroyTarget.Stage.END) {
                     cancel = false;
-                    updateDisplays(target, player, block);
+                    target.updateProgress(blocks);
+                    goal = target;
                     break;
                 }
             }
+        }
+
+        if (goal != null) {
+            updateDisplays(goal, player);
         }
 
         return cancel;
     }
 
     /** Update the target and send the display with sound to the playing players */
-    private void updateDisplays(DestroyTarget target, GamePlayer gamePlayer, Block... blocks) {
-        target.updateProgress(blocks);
-
+    private void updateDisplays(DestroyTarget target, GamePlayer gamePlayer) {
         game.getPlayingTeams().forEach(team -> {
             game.addStaticGoal(team.getId() + "-destroy", team.getId(), team.getDisplayName() + "'s Targets");
             gameModeConfig.getChallengerTargets(team.getId()).forEach(get -> game.addStaticGoal(get.getId(), get.getDisplay()));
