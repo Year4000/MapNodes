@@ -93,6 +93,13 @@ public class SpectatorListener implements Listener {
 
         stopEvent(event, (Player) event.getDamager());
     }
+    
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
+    public void onDamage(EntityDamageByEntityEvent event) {
+        if (!(event.getEntity() instanceof Player)) return;
+
+        stopEvent(event, (Player) event.getEntity());
+    }
 
     @EventHandler
     public void onDamage(EntityDamageEvent event) {
