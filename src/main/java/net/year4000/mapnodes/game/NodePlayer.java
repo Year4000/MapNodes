@@ -240,7 +240,7 @@ public final class NodePlayer implements GamePlayer, Comparable {
         }
 
         // Update player's inventory
-        reopenPlayerInventory();
+        //reopenPlayerInventory();
         // Update team menu
         game.updateTeamChooserMenu();
     }
