@@ -11,6 +11,7 @@ import net.year4000.mapnodes.game.NodeTeam;
 import net.year4000.mapnodes.game.regions.types.Point;
 import net.year4000.mapnodes.game.system.Spectator;
 import net.year4000.mapnodes.messages.Msg;
+import net.year4000.mapnodes.utils.Common;
 import net.year4000.mapnodes.utils.typewrappers.ItemStackList;
 import net.year4000.mapnodes.utils.typewrappers.LocationList;
 import org.bukkit.Location;
@@ -39,6 +40,9 @@ public abstract class RegionEvent {
     @Since(1.0)
     @SerializedName("play_sound")
     private Sound playSound;
+
+    @Since(1.0)
+    private Point velocity;
 
     @Since(1.0)
     private String message;
@@ -77,6 +81,10 @@ public abstract class RegionEvent {
     public void runGlobalEventTasks(GamePlayer player) {
         teleportPlayer(player);
         sendMessage(player);
+
+        if (velocity != null) {
+            player.getPlayer().setVelocity(player.getPlayer().getVelocity().add(Common.pointToVector(velocity)));
+        }
     }
 
     /** Run global events tasks */

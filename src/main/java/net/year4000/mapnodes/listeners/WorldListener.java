@@ -8,6 +8,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.*;
 import org.bukkit.event.entity.CreatureSpawnEvent;
+import org.bukkit.event.entity.EntityExplodeEvent;
 
 @EqualsAndHashCode
 public final class WorldListener implements Listener {
@@ -34,6 +35,11 @@ public final class WorldListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onMapPlaying(BlockDispenseEvent event) {
         event.setCancelled(isMapPlaying(event.getBlock().getWorld()));
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    public void onMapPlaying(EntityExplodeEvent event) {
+        event.setCancelled(isMapPlaying(event.getLocation().getWorld()));
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)

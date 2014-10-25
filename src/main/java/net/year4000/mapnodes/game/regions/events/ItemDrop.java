@@ -13,6 +13,7 @@ import net.year4000.mapnodes.utils.typewrappers.MaterialList;
 import org.bukkit.Material;
 import org.bukkit.entity.Item;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -24,7 +25,7 @@ public class ItemDrop extends RegionEvent implements RegionListener {
 
     private transient BukkitTask task;
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onPickup(PlayerPickupItemEvent event) {
         Material material = event.getItem().getItemStack().getType();
         if ((isAllow() && items.contains(material)) || (!isAllow() && !items.contains(material))) {
@@ -51,7 +52,7 @@ public class ItemDrop extends RegionEvent implements RegionListener {
                             item.remove();
                         }
                     });
-            }, 1L);
+            }, 5L);
         }
     }
 

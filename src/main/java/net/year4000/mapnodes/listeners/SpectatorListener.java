@@ -46,6 +46,11 @@ public class SpectatorListener implements Listener {
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
+    public void stayFlying(PlayerToggleFlightEvent event) {
+        stopEvent(event, event.getPlayer());
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
     public void onDrop(PlayerDropItemEvent event) {
         stopEvent(event, event.getPlayer());
     }

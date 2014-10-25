@@ -13,6 +13,7 @@ import net.year4000.mapnodes.game.system.Spectator;
 import net.year4000.mapnodes.gamemodes.GameModeTemplate;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.SchedulerUtil;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -44,7 +45,7 @@ public class Skywars extends GameModeTemplate implements GameMode {
         game = (NodeGame) event.getGame();
         team = game.getTeams().get(gameModeConfig.getPlayersTeam());
         team.setAllowFriendlyFire(true); // Force enable so players can kill each other
-        game.addStartTime(45);
+        game.addStartTime(30);
 
         // Add requirements | Their must be at least 2 players to start Skywars
         game.getStartControls().add(() -> team.getPlayers().size() >= 2);
@@ -131,7 +132,7 @@ public class Skywars extends GameModeTemplate implements GameMode {
         if (alive.size() == 1) {
             if (game.getStage().isPlaying()) {
                 try {
-                    new GamePlayerWinEvent(game, game.getPlaying().iterator().next()).call();
+                    new GamePlayerWinEvent(game, game.getPlayer(Bukkit.getPlayer(alive.iterator().next()))).call();
                 } catch (NoSuchElementException e) {
                     game.stop();
                 }

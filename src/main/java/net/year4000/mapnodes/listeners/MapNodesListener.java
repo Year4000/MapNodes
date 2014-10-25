@@ -112,13 +112,10 @@ public final class MapNodesListener implements Listener {
     }
 
     @EventHandler
-    public void onMove(PlayerMoveEvent event) {
-        Player player = event.getPlayer();
-        Location loc = event.getTo().clone();
-        loc.setYaw(0);
-        loc.setPitch(0);
-
-        player.setCompassTarget(loc);
+    public void onMove(PlayerTeleportEvent event) {
+        if (!event.getTo().getWorld().equals(MapNodes.getCurrentWorld())) {
+            event.setTo(MapNodes.getCurrentGame().getConfig().getSpawn().iterator().next());
+        }
     }
 
     /** No players stop the game unless in debug mode */
