@@ -10,7 +10,6 @@ import net.year4000.mapnodes.api.game.GameTeam;
 import net.year4000.mapnodes.game.NodeGame;
 import net.year4000.mapnodes.game.NodeKit;
 import net.year4000.mapnodes.game.NodePlayer;
-import net.year4000.mapnodes.game.regions.types.Chunk;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.SchedulerUtil;
 import net.year4000.utilities.bukkit.FunEffectsUtil;
@@ -19,7 +18,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
 import org.bukkit.block.Chest;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
@@ -40,8 +38,6 @@ import org.bukkit.util.BlockIterator;
 
 import java.util.Iterator;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 @EqualsAndHashCode
 public class SpectatorListener implements Listener {
     /** Stop the event if the player is not playing the game */
@@ -49,11 +45,6 @@ public class SpectatorListener implements Listener {
         if (!MapNodes.getCurrentGame().getPlayer(player).isPlaying()) {
             event.setCancelled(true);
         }
-    }
-
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
-    public void stayFlying(PlayerToggleFlightEvent event) {
-        stopEvent(event, event.getPlayer());
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
