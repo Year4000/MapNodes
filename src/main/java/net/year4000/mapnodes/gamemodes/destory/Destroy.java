@@ -90,6 +90,7 @@ public class Destroy extends GameModeTemplate implements GameMode {
                     cancel = false;
                     target.updateProgress(blocks);
                     goal = target;
+                    block.getDrops().clear();
                     break;
                 }
             }
