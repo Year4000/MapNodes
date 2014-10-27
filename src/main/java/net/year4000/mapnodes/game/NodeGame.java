@@ -141,7 +141,7 @@ public final class NodeGame implements GameManager, Validator {
     private transient ScoreboardFactory scoreboardFactory;
     private transient Map<String, SidebarGoal> sidebarGoals = new LinkedHashMap<>();
     private transient List<Operations> startControls = new CopyOnWriteArrayList<>();
-    private transient long startTime;
+    private transient long startTime, stopTime;
     @Setter(AccessLevel.NONE)
     private transient int baseStartTime = 30;
 
@@ -424,7 +424,7 @@ public final class NodeGame implements GameManager, Validator {
         start.getGame().getSpectating().forEach(player -> player.getPlayer().closeInventory());
         start.getGame().getEntering().forEach(player -> player.getPlayer().closeInventory());
         start.getGame().getEntering()
-            .filter(player -> !((NodeTeam) player.getTeam()).getQueue().contains(player))
+            .filter(player -> !(((NodePlayer) player).getPendingTeam()).getQueue().contains(player))
             .forEach(player -> ((NodePlayer) player).start());
 
         gameClock = SchedulerUtil.repeatAsync(() -> new GameClockEvent(this).call(), 20L);
@@ -443,6 +443,7 @@ public final class NodeGame implements GameManager, Validator {
         }
 
         stage = NodeStage.ENDING;
+        stopTime = System.currentTimeMillis();
 
         if (gameClock != null) {
             gameClock.cancel();
