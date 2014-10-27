@@ -1,6 +1,5 @@
 package net.year4000.mapnodes.gamemodes.destory;
 
-import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.events.game.GameLoadEvent;
 import net.year4000.mapnodes.api.events.team.GameTeamWinEvent;
 import net.year4000.mapnodes.api.game.GamePlayer;
@@ -62,7 +61,6 @@ public class Destroy extends GameModeTemplate implements GameMode {
     public void onBreak(EntityExplodeEvent event) {
         GamePlayer player = game.getPlayer(Bukkit.getOnlinePlayers().iterator().next());
         NodeTeam team = ((NodeTeam) player.getTeam());
-
 
         event.setCancelled(destroyTarget(player, team, event.blockList().toArray(new Block[event.blockList().size()])));
     }

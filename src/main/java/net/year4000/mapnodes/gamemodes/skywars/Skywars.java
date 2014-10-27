@@ -4,6 +4,7 @@ import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.events.game.GameLoadEvent;
 import net.year4000.mapnodes.api.events.game.GameStartEvent;
 import net.year4000.mapnodes.api.events.player.*;
+import net.year4000.mapnodes.api.game.GamePlayer;
 import net.year4000.mapnodes.api.game.modes.GameMode;
 import net.year4000.mapnodes.api.game.modes.GameModeInfo;
 import net.year4000.mapnodes.game.NodeGame;
@@ -83,6 +84,7 @@ public class Skywars extends GameModeTemplate implements GameMode {
     /** Set up the players in the game */
     @EventHandler
     public void onGameStart(GameStartEvent event) {
+        team.getQueue().forEach(player -> ((NodePlayer) player).joinTeam(null));
         alive.addAll(team.getPlayers().stream().map(player -> player.getPlayer().getName()).collect(Collectors.toList()));
         buildAndSendList();
 
