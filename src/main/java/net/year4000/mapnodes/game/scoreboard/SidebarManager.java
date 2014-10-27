@@ -132,14 +132,7 @@ public final class SidebarManager {
             // Set default score to fix Bukkit / Minecraft cant start with 0
             if (scoreInput == 0) {
                 objective.getScore(scoreId).setScore(1);
-                // Apply true score a tick later
-                SchedulerUtil.runSync(() -> {
-                    try {
-                        objective.getScore(scoreId).setScore(scoreInput);
-                    } catch (IllegalStateException e) {
-                        // MapNodesPlugin.debug(e, true);
-                    }
-                }, 2L);
+                objective.getScore(scoreId).setScore(0);
             }
             // Handle score normally
             else {
