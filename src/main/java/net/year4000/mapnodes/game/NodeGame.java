@@ -421,8 +421,7 @@ public final class NodeGame implements GameManager, Validator {
         regions.values().stream().filter(region -> region.getEvents() != null).forEach(region -> region.getEvents().assignRegion(region));
 
         // Close spectator inventories
-        start.getGame().getSpectating().forEach(player -> player.getPlayer().closeInventory());
-        start.getGame().getEntering().forEach(player -> player.getPlayer().closeInventory());
+        Stream.concat(start.getGame().getSpectating(), start.getGame().getEntering()).forEach(player -> player.getPlayer().closeInventory());
         start.getGame().getEntering()
             .filter(player -> !(((NodePlayer) player).getPendingTeam()).getQueue().contains(player))
             .forEach(player -> ((NodePlayer) player).start());
@@ -452,7 +451,10 @@ public final class NodeGame implements GameManager, Validator {
         GameStopEvent stop = new GameStopEvent(this);
         stop.call();
 
-        Stream.concat(stop.getGame().getPlaying(), stop.getGame().getEntering()).forEach(player -> ((NodePlayer) player).joinTeam(null));
+        Stream.concat(stop.getGame().getPlaying(), stop.getGame().getEntering()).forEach(player -> {
+            player.getPlayer().closeInventory();
+            ((NodePlayer) player).joinTeam(null);
+        });
 
         // Unregister region events
         regions.values().stream()
