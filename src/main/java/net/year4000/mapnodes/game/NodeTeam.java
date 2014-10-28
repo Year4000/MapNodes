@@ -179,11 +179,16 @@ public class NodeTeam implements GameTeam, Validator, AssignNodeGame {
                     String color = Common.chatColorNumber(currentTime, sec(getTime()));
                     String time = color + (new TimeUtil(currentTime, TimeUnit.SECONDS)).prettyOutput("&7:" + color);
 
-                    PacketHacks.title(
-                        player.getPlayer(),
-                        Msg.locale(player, "clocks.join.tock", map.getName(), time),
-                        percent(getTime(), position)
-                    );
+                    if (PacketHacks.isTitleAble(player.getPlayer())) {
+                        PacketHacks.countTitle(player.getPlayer(), "Joining...", time, percent(getTime(), position));
+                    }
+                    else {
+                        PacketHacks.title(
+                            player.getPlayer(),
+                            Msg.locale(player, "clocks.join.tock", map.getName(), time),
+                            percent(getTime(), position)
+                        );
+                    }
                 }
 
                 public void runLast(int position) {

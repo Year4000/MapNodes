@@ -12,6 +12,8 @@ import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.spigotmc.ProtocolInjector;
 
+import java.util.concurrent.TimeUnit;
+
 public final class PacketHacks {
     /** Re-spawn a dead player */
     public static void respawnPlayer(Player player) {
@@ -67,6 +69,37 @@ public final class PacketHacks {
             craftPlayer.getHandle().playerConnection.sendPacket(new PacketInjector.PacketTitle(PacketInjector.PacketTitle.Action.TIMES, 0, -1, 1));
             craftPlayer.getHandle().playerConnection.sendPacket(new PacketInjector.PacketTitle(PacketInjector.PacketTitle.Action.TITLE, title));
             craftPlayer.getHandle().playerConnection.sendPacket(new PacketInjector.PacketTitle(PacketInjector.PacketTitle.Action.SUBTITLE, subtitle));
+        }
+    }
+
+    public static void countTitle(Player player, String header, String time, float percent) {
+        CraftPlayer craftPlayer = (CraftPlayer) player;
+
+        if (isTitleAble(player)) {
+            int percentInt = (int) (((percent * 10) / 10) * .80);
+            String bar = Common.textLine(time, 80, '.', "&d", "");
+            String footer;
+
+            // If percent is bigger than no no zone print normal
+            if (percentInt > 43 + time.length()) {
+                footer = bar.substring(0, percentInt) + "&5" + bar.substring(percentInt);
+            }
+            // Don't show position in clock
+            else if (percentInt > 40 && percentInt < 44 + time.length()) {
+                footer = bar.substring(0, 43 + time.length()) + "&5" + bar.substring(43 + time.length());
+            }
+            else {
+                footer = bar.substring(0, 43 + time.length()) + "&5" + bar.substring(43 + time.length());
+                footer = footer.substring(0, percentInt <= 1 ? 2 : percentInt) + "&5" + footer.substring( percentInt <= 1 ? 2 : percentInt);
+            }
+
+            IChatBaseComponent title = ChatSerializer.a(Common.sanitize(MessageUtil.replaceColors("&a" + header)));
+            IChatBaseComponent subtitle = ChatSerializer.a(Common.sanitize(MessageUtil.replaceColors(footer)));
+
+            craftPlayer.getHandle().playerConnection.sendPacket(new PacketInjector.PacketTitle(PacketInjector.PacketTitle.Action.TIMES, 0, -1, 1));
+            craftPlayer.getHandle().playerConnection.sendPacket(new PacketInjector.PacketTitle(PacketInjector.PacketTitle.Action.TITLE, title));
+            craftPlayer.getHandle().playerConnection.sendPacket(new PacketInjector.PacketTitle(PacketInjector.PacketTitle.Action.SUBTITLE, subtitle));
+
         }
     }
 }

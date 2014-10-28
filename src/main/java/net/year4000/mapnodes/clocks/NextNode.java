@@ -70,11 +70,16 @@ public class NextNode extends Clocker {
                 FunEffectsUtil.playSound(player.getPlayer(), Sound.NOTE_PLING);
             }
 
-            PacketHacks.title(
-                player.getPlayer(),
-                Msg.locale(player, "clocks.next.tock", map.getName(), time),
-                percent(getTime(), position)
-            );
+            if (PacketHacks.isTitleAble(player.getPlayer())) {
+                PacketHacks.countTitle(player.getPlayer(), map.getName(), time, percent(getTime(), position));
+            }
+            else {
+                PacketHacks.title(
+                    player.getPlayer(),
+                    Msg.locale(player, "clocks.next.tock", map.getName(), time),
+                    percent(getTime(), position)
+                );
+            }
         });
     }
 

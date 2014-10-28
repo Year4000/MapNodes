@@ -67,11 +67,16 @@ public class StartGame extends Clocker {
                 FunEffectsUtil.playSound(player.getPlayer(), Sound.NOTE_PLING);
             }
 
-            PacketHacks.title(
-                player.getPlayer(),
-                Msg.locale(player, "clocks.start.tock", time),
-                percent(getTime(), position)
-            );
+            if (PacketHacks.isTitleAble(player.getPlayer())) {
+                PacketHacks.countTitle(player.getPlayer(), "Starting...", time, percent(getTime(), position));
+            }
+            else {
+                PacketHacks.title(
+                    player.getPlayer(),
+                    Msg.locale(player, "clocks.start.tock", time),
+                    percent(getTime(), position)
+                );
+            }
         });
     }
 

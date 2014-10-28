@@ -59,11 +59,16 @@ public class RestartServer extends Clocker {
                 FunEffectsUtil.playSound(player.getPlayer(), Sound.NOTE_PLING);
             }
 
-            PacketHacks.title(
-                player.getPlayer(),
-                Msg.locale(player, "clocks.restart.tock", time),
-                percent(getTime(), position)
-            );
+            if (PacketHacks.isTitleAble(player.getPlayer())) {
+                PacketHacks.countTitle(player.getPlayer(), "Restarting...", time, percent(getTime(), position));
+            }
+            else {
+                PacketHacks.title(
+                    player.getPlayer(),
+                    Msg.locale(player, "clocks.restart.tock", time),
+                    percent(getTime(), position)
+                );
+            }
         });
     }
 
