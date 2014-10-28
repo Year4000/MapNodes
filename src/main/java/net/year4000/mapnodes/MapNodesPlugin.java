@@ -174,13 +174,14 @@ public class MapNodesPlugin extends BukkitPlugin implements Plugin {
 
     @Override
     public void onDisable() {
+        // Kick all online players
+        Bukkit.getOnlinePlayers().forEach(player -> {
+            player.kickPlayer(MessageUtil.message(Msg.locale(player, "clocks.restart.last")));
+            log(player.getName() + " " + Msg.locale(player, "clocks.restart.last"));
+        });
+
         // Tasks that must happen when the plugin loaded with maps
         if (enable) {
-            MapNodes.getCurrentGame().getPlayers().forEach(p -> {
-                p.getPlayer().kickPlayer(MessageUtil.message(Msg.locale(p, "clocks.restart.last")));
-                log(p.getPlayer().getName() + " " + Msg.locale(p, "clocks.restart.last"));
-            });
-
             if (NodeFactory.get().getAllGames().size() != 0) {
                 NodeFactory.get().getCurrentGame().unregister();
             }
