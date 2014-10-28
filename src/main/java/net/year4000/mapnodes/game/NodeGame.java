@@ -466,22 +466,24 @@ public final class NodeGame implements GameManager, Validator {
         gameModes.forEach(NodeModeFactory.get()::unregisterListeners);
 
         // Cycle game or restart server
-        if (NodeFactory.get().isQueuedGames()) {
-            if (time != null) {
-                stopClock = new NextNode(time).run();
+        SchedulerUtil.runSync(() -> {
+            if (NodeFactory.get().isQueuedGames()) {
+                if (time != null) {
+                    stopClock = new NextNode(time).run();
+                }
+                else {
+                    stopClock = new NextNode().run();
+                }
             }
             else {
-                stopClock = new NextNode().run();
+                if (time != null) {
+                    stopClock = new RestartServer(time).run();
+                }
+                else {
+                    stopClock = new RestartServer().run();
+                }
             }
-        }
-        else {
-            if (time != null) {
-                stopClock = new RestartServer(time).run();
-            }
-            else {
-                stopClock = new RestartServer().run();
-            }
-        }
+        }, 40L);
     }
 
     // STOP Game Controls //
