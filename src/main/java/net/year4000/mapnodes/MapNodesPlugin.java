@@ -36,6 +36,9 @@ import net.year4000.utilities.bukkit.BukkitPlugin;
 import net.year4000.utilities.bukkit.MessageUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.world.WorldInitEvent;
 
 import java.util.Iterator;
 import java.util.List;
@@ -107,6 +110,16 @@ public class MapNodesPlugin extends BukkitPlugin implements Plugin {
 
     @Override
     public void onEnable() {
+        // Disable the main world from loading spawn
+        Bukkit.getPluginManager().registerEvents(new Listener() {
+            @EventHandler
+            public void onWorldInit(WorldInitEvent event) {
+                if (event.getWorld().equals(Bukkit.getWorlds().get(0))) {
+                    event.getWorld().setKeepSpawnInMemory(false);
+                }
+            }
+        }, this);
+
         List<Node> maps = NodeFactory.get().getAllGames();
 
         // Disable if no loaded maps
