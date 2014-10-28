@@ -451,10 +451,8 @@ public final class NodeGame implements GameManager, Validator {
         GameStopEvent stop = new GameStopEvent(this);
         stop.call();
 
-        Stream.concat(stop.getGame().getPlaying(), stop.getGame().getEntering()).forEach(player -> {
-            player.getPlayer().closeInventory();
-            ((NodePlayer) player).joinTeam(null);
-        });
+        stop.getGame().getPlayers().forEach(player -> player.getPlayer().closeInventory());
+        Stream.concat(stop.getGame().getPlaying(), stop.getGame().getEntering()).forEach(player -> ((NodePlayer) player).joinTeam(null));
 
         // Unregister region events
         regions.values().stream()
