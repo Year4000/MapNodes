@@ -481,7 +481,7 @@ public final class NodeGame implements GameManager, Validator {
                     stopClock = new RestartServer().run();
                 }
             }
-        }, 40L);
+        }, 20L * 5);
     }
 
     // STOP Game Controls //
