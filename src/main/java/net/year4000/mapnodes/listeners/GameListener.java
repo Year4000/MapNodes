@@ -16,7 +16,9 @@ import net.year4000.mapnodes.game.system.Spectator;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.Common;
 import net.year4000.utilities.ChatColor;
+import net.year4000.utilities.bukkit.FunEffectsUtil;
 import net.year4000.utilities.bukkit.MessageUtil;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -62,6 +64,9 @@ public final class GameListener implements Listener {
 
         // Game Player Messages
         event.getGame().getPlaying().forEach(player -> {
+            FunEffectsUtil.playSound(player.getPlayer(), Sound.FIREWORK_BLAST2);
+            FunEffectsUtil.playSound(player.getPlayer(), Sound.FIREWORK_TWINKLE2);
+
             player.sendMessage("");
             player.sendMessage(Common.textLine(Msg.locale(player, "game.end"), 40, '*'));
             String winnerText = event.getWinnerText(), endComment = null;
