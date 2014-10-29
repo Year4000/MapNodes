@@ -5,20 +5,18 @@ import net.year4000.mapnodes.api.events.player.GamePlayerJoinEvent;
 import net.year4000.mapnodes.api.events.player.GamePlayerJoinSpectatorEvent;
 import net.year4000.mapnodes.api.events.player.GamePlayerJoinTeamEvent;
 import net.year4000.mapnodes.api.events.player.GamePlayerStartEvent;
-import net.year4000.mapnodes.api.game.GameMap;
 import net.year4000.mapnodes.api.game.GamePlayer;
 import net.year4000.mapnodes.api.game.GameTeam;
-import net.year4000.mapnodes.clocks.Clocker;
 import net.year4000.mapnodes.game.system.Spectator;
 import net.year4000.mapnodes.messages.Msg;
-import net.year4000.mapnodes.utils.*;
-import net.year4000.utilities.bukkit.FunEffectsUtil;
+import net.year4000.mapnodes.utils.Common;
+import net.year4000.mapnodes.utils.PacketHacks;
+import net.year4000.mapnodes.utils.SchedulerUtil;
 import net.year4000.utilities.bukkit.MessageUtil;
 import net.year4000.utilities.bukkit.bossbar.BossBar;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.Sound;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -26,16 +24,12 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitTask;
+import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
-
-import static net.year4000.mapnodes.utils.MathUtil.percent;
-import static net.year4000.mapnodes.utils.MathUtil.ticks;
 
 @Data
 public final class NodePlayer implements GamePlayer, Comparable {
@@ -48,7 +42,6 @@ public final class NodePlayer implements GamePlayer, Comparable {
 
     // scoreboard
     private Scoreboard scoreboard;
-    private Objective playerSidebar;
 
     // player flags (set by methods bellow)
     private boolean spectator;
@@ -131,11 +124,25 @@ public final class NodePlayer implements GamePlayer, Comparable {
         joinTeam(null);
 
         inventory = Bukkit.createInventory(null, INV_SIZE, getPlayerColor());
-        PacketHacks.setTabListHeadFoot(
-            player,
-            MessageUtil.replaceColors(game.getMap().title()),
-            MessageUtil.replaceColors("&3[&bYear4000&3] &7- &bmc&7.&byear4000&7.&bnet")
-        );
+
+        if (PacketHacks.isTitleAble(player.getPlayer())) {
+            PacketHacks.setTitle(
+                player.getPlayer(),
+                "&a" + game.getMap().getName(),
+                Msg.locale(player, "map.created") + game.getMap().author(player.getPlayer().getLocale()),
+                0,
+                55,
+                0
+            );
+            PacketHacks.setTabListHeadFoot(
+                player,
+                MessageUtil.replaceColors(game.getMap().title()),
+                MessageUtil.replaceColors("&3[&bYear4000&3] &7- &bmc&7.&byear4000&7.&bnet")
+            );
+        }
+        else {
+            sendMessage(Msg.util("global.warring", Msg.locale(player, "game.new.recommend")));
+        }
 
         GamePlayerJoinEvent join = new GamePlayerJoinEvent(this) {{
             this.setSpawn(game.getConfig().getSafeRandomSpawn());
@@ -145,14 +152,15 @@ public final class NodePlayer implements GamePlayer, Comparable {
 
         // run a tick later to allow player to login
         player.teleport(join.getSpawn());
-        player.setBedSpawnLocation(join.getSpawn(), true);
 
         // start menu
         playerTasks.add(SchedulerUtil.runAsync(() -> {
             if (join.isMenu()) {
                 game.openTeamChooserMenu(this);
             }
-        }, 10L));
+
+            game.getScoreboardFactory().setPersonalSidebar(this);
+        }, 55L));
     }
 
     public void leave() {
@@ -170,7 +178,6 @@ public final class NodePlayer implements GamePlayer, Comparable {
         // Cancel tasks
         playerTasks.stream().forEach(BukkitTask::cancel);
         BossBar.removeBar(player);
-        PacketHacks.setTabListHeadFoot(player, MessageUtil.replaceColors("&3[&bYear4000&3] &7- &bmc&7.&byear4000&7.&bnet"), "");
         // Update team menu
         game.updateTeamChooserMenu();
     }
@@ -197,7 +204,11 @@ public final class NodePlayer implements GamePlayer, Comparable {
 
             // Auto join spectator team
             game.getScoreboardFactory().setTeam(this, team);
-            game.getScoreboardFactory().setPersonalSidebar(this);
+
+            // Update sidebar when their is a sidebar to update
+            if (scoreboard.getObjective(DisplaySlot.SIDEBAR) != null) {
+                game.getScoreboardFactory().setPersonalSidebar(this);
+            }
 
             // Kit
             ((NodeKit) joinSpectator.getKit()).giveKit(this);
@@ -243,6 +254,7 @@ public final class NodePlayer implements GamePlayer, Comparable {
         //reopenPlayerInventory();
         // Update team menu
         game.updateTeamChooserMenu();
+        player.getPlayer().setDisplayName(getPlayerColor() + ChatColor.WHITE.toString());
     }
 
     /** Manage how the players see each other. */

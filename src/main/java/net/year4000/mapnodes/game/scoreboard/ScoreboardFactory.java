@@ -1,25 +1,59 @@
 package net.year4000.mapnodes.game.scoreboard;
 
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Iterables;
 import lombok.AllArgsConstructor;
+import net.year4000.mapnodes.api.MapNodes;
+import net.year4000.mapnodes.api.game.GamePlayer;
 import net.year4000.mapnodes.game.NodeGame;
 import net.year4000.mapnodes.game.NodePlayer;
 import net.year4000.mapnodes.game.NodeTeam;
 import net.year4000.mapnodes.game.system.Spectator;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.Common;
+import net.year4000.mapnodes.utils.PacketHacks;
+import net.year4000.mapnodes.utils.SchedulerUtil;
 import net.year4000.mapnodes.utils.TimeUtil;
 import net.year4000.utilities.ChatColor;
+import net.year4000.utilities.MessageUtil;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitTask;
+import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
 import org.bukkit.scoreboard.Team;
 
+import java.util.Iterator;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Stream;
 
 @AllArgsConstructor
 public class ScoreboardFactory {
     private static final ScoreboardManager manager = Bukkit.getScoreboardManager();
     private final NodeGame game;
+
+    // Fancy Title
+    private static final Set<String> shimmer = ImmutableSet.of("3", "b", "8", "7", "2", "a", "4", "c", "5", "d", "6", "e", "1", "9");
+    private static final String NAME = "Year4000";
+    private static final Iterable<String> forever = Iterables.cycle(shimmer);
+    private static final Iterator<String> color = forever.iterator();
+
+    static {
+        SchedulerUtil.repeatAsync(() -> {
+            String b = "&" + color.next() + "&l";
+            String name = b + "   [&" + color.next() + "&l" + NAME + b + "]   ";
+
+            Stream.concat(MapNodes.getCurrentGame().getSpectating(), MapNodes.getCurrentGame().getEntering())
+                .filter(p -> !((NodePlayer) p).getGame().getStage().isEndGame())
+                .map(GamePlayer::getPlayer)
+                .map(Player::getScoreboard)
+                .map(obj -> obj.getObjective(DisplaySlot.SIDEBAR))
+                .filter(obj -> obj != null)
+                .forEach(obj -> obj.setDisplayName(MessageUtil.replaceColors(name)));
+        }, 20L);
+    }
 
     /** Create a scoreboard for the player */
     public Scoreboard createScoreboard(NodePlayer player) {
@@ -68,6 +102,7 @@ public class ScoreboardFactory {
 
         NodeGame game = nodePlayer.getGame();
         boolean queue;
+
         if (nodePlayer.getPendingTeam() != null) {
             queue = nodePlayer.getPendingTeam().getQueue().contains(nodePlayer);
         }
@@ -78,7 +113,7 @@ public class ScoreboardFactory {
         SidebarManager side = new SidebarManager();
 
         // When game is running show game time length
-        if (game.getStage().isPlaying()) {
+        if (game.getStage().isPlaying() && !PacketHacks.isTitleAble(nodePlayer.getPlayer())) {
             long currentTime = System.currentTimeMillis() - game.getStartTime();
             String time = "&a" + (new TimeUtil(currentTime, TimeUnit.MILLISECONDS)).prettyOutput("&7:&a");
             side.addLine(Msg.locale(nodePlayer, "game.time", time));
@@ -101,11 +136,11 @@ public class ScoreboardFactory {
 
         side.addLine(name);
 
-
         // When the map has classes
         if (game.getClasses().size() > 0) {
             side.addBlank();
             side.addLine(Msg.locale(nodePlayer, "class.name"));
+            side.addLine(" " + Msg.locale(nodePlayer, "class.default"));
             //side.addLine("  " + nodePlayer.getClazz().getDisplayName());
         }
 

@@ -96,13 +96,6 @@ public class Deathmatch extends GameModeTemplate implements GameMode {
     }
 
     @EventHandler
-    public void onGameEnd(GameWinEvent event) {
-        game.getPlayingTeams().forEach(team -> {
-            event.getMessage().add(team.getDisplayName() + "&7: " + Common.colorNumber(scores.get(teamId(team)), winnerScore));
-        });
-    }
-
-    @EventHandler
     public void onDeath(PlayerDeathEvent event) {
         GamePlayer player = game.getPlayer(event.getEntity());
 

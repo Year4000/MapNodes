@@ -1,7 +1,5 @@
 package net.year4000.mapnodes;
 
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Iterables;
 import lombok.Getter;
 import net.year4000.mapnodes.addons.Addons;
 import net.year4000.mapnodes.addons.modules.misc.DeathMessages;
@@ -16,7 +14,8 @@ import net.year4000.mapnodes.commands.maps.MapCommands;
 import net.year4000.mapnodes.commands.match.MatchBase;
 import net.year4000.mapnodes.commands.misc.MenuCommands;
 import net.year4000.mapnodes.commands.node.NodeBase;
-import net.year4000.mapnodes.game.*;
+import net.year4000.mapnodes.game.Node;
+import net.year4000.mapnodes.game.NodeModeFactory;
 import net.year4000.mapnodes.game.regions.EventManager;
 import net.year4000.mapnodes.game.regions.RegionManager;
 import net.year4000.mapnodes.game.regions.events.*;
@@ -30,20 +29,13 @@ import net.year4000.mapnodes.listeners.*;
 import net.year4000.mapnodes.map.MapFactory;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.PacketInjector;
-import net.year4000.mapnodes.utils.SchedulerUtil;
 import net.year4000.utilities.LogUtil;
 import net.year4000.utilities.bukkit.BukkitPlugin;
 import net.year4000.utilities.bukkit.MessageUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.world.WorldInitEvent;
 
-import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Stream;
 
 @Getter
 public class MapNodesPlugin extends BukkitPlugin implements Plugin {
@@ -51,12 +43,6 @@ public class MapNodesPlugin extends BukkitPlugin implements Plugin {
     private static MapNodesPlugin inst = null;
     private Addons addons = new Addons();
     private boolean enable = true;
-
-    // Fancy Title
-    private Set<String> shimmer = ImmutableSet.of("3", "b", "8", "7", "2", "a", "4", "c", "5", "d", "6", "e", "1", "9");
-    private final String NAME = "Year4000";
-    private Iterable<String> forever = Iterables.cycle(shimmer);
-    private Iterator<String> color = forever.iterator();
 
     @Override
     public void onLoad() {
@@ -110,16 +96,6 @@ public class MapNodesPlugin extends BukkitPlugin implements Plugin {
 
     @Override
     public void onEnable() {
-        // Disable the main world from loading spawn
-        Bukkit.getPluginManager().registerEvents(new Listener() {
-            @EventHandler
-            public void onWorldInit(WorldInitEvent event) {
-                if (event.getWorld().equals(Bukkit.getWorlds().get(0))) {
-                    event.getWorld().setKeepSpawnInMemory(false);
-                }
-            }
-        }, this);
-
         List<Node> maps = NodeFactory.get().getAllGames();
 
         // Disable if no loaded maps
@@ -159,17 +135,6 @@ public class MapNodesPlugin extends BukkitPlugin implements Plugin {
             .add(GameMech.class)
             .add(VIPEffects.class)
             .register();
-
-        SchedulerUtil.repeatAsync(() -> {
-            if (!MapNodes.getCurrentGame().getStage().isEnded()) {
-                String b = "&" + color.next() + "&l";
-                String name = b + "   [&" + color.next() + "&l" + NAME + b + "]   ";
-
-                Stream.concat(MapNodes.getCurrentGame().getSpectating(), MapNodes.getCurrentGame().getEntering())
-                    .parallel()
-                    .forEach(player -> ((NodeGame) MapNodes.getCurrentGame()).getScoreboardFactory().setPersonalSidebar((NodePlayer) player, name));
-            }
-        }, 20L);
     }
 
     @Override

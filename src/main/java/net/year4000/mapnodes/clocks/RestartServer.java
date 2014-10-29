@@ -3,6 +3,7 @@ package net.year4000.mapnodes.clocks;
 import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.game.NodeGame;
+import net.year4000.mapnodes.game.NodeMap;
 import net.year4000.mapnodes.game.NodeStage;
 import net.year4000.mapnodes.messages.Message;
 import net.year4000.mapnodes.messages.Msg;
@@ -60,7 +61,7 @@ public class RestartServer extends Clocker {
             }
 
             if (PacketHacks.isTitleAble(player.getPlayer())) {
-                PacketHacks.countTitle(player.getPlayer(), "Restarting...", time, percent(getTime(), position));
+                PacketHacks.countTitle(player.getPlayer(), Msg.locale(player, "clocks.restart.tock.new"), time, percent(getTime(), position));
             }
             else {
                 PacketHacks.title(
@@ -77,7 +78,15 @@ public class RestartServer extends Clocker {
 
         MapNodes.getCurrentGame().getPlayers().forEach(player -> {
             FunEffectsUtil.playSound(player.getPlayer(), Sound.NOTE_BASS);
-            PacketHacks.title(player.getPlayer(), Msg.locale(player, "clocks.restart.last"), 1);
+
+            if (PacketHacks.isTitleAble(player.getPlayer())) {
+                PacketHacks.setTitle(player.getPlayer(), Msg.locale(player, "clocks.restart.last.new"), "");
+            }
+            else {
+                PacketHacks.title(player.getPlayer(), Msg.locale(player, "clocks.restart.last"), 1);
+            }
+
+            BossBar.removeBar(player.getPlayer());
         });
 
         ((NodeGame)MapNodes.getCurrentGame()).setStage(NodeStage.ENDED);

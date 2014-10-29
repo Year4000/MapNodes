@@ -8,13 +8,12 @@ import net.year4000.mapnodes.api.events.game.GameClockEvent;
 import net.year4000.mapnodes.api.events.game.GameWinEvent;
 import net.year4000.mapnodes.api.events.team.GameTeamWinEvent;
 import net.year4000.mapnodes.api.game.GamePlayer;
-import net.year4000.mapnodes.game.NodeGame;
-import net.year4000.mapnodes.game.NodeKit;
-import net.year4000.mapnodes.game.NodePlayer;
-import net.year4000.mapnodes.game.NodeTeam;
+import net.year4000.mapnodes.game.*;
 import net.year4000.mapnodes.game.system.Spectator;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.Common;
+import net.year4000.mapnodes.utils.PacketHacks;
+import net.year4000.mapnodes.utils.TimeUtil;
 import net.year4000.utilities.ChatColor;
 import net.year4000.utilities.bukkit.FunEffectsUtil;
 import net.year4000.utilities.bukkit.MessageUtil;
@@ -29,6 +28,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.*;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -104,6 +104,22 @@ public final class GameListener implements Listener {
 
     @EventHandler
     public void onClock(GameClockEvent event) {
+        // Update TabList header and footer
+        long currentTime = System.currentTimeMillis() - ((NodeGame) MapNodes.getCurrentGame()).getStartTime();
+        String time = "&a" + (new TimeUtil(currentTime, TimeUnit.MILLISECONDS)).prettyOutput("&7:&a");
+
+        event.getGame().getPlayers().parallel().forEach(player -> {
+            if (!PacketHacks.isTitleAble(player.getPlayer()) && !player.isPlaying()) {
+                ((NodeGame) event.getGame()).getScoreboardFactory().setPersonalSidebar((NodePlayer) player);
+            }
+
+            PacketHacks.setTabListHeadFoot(
+                player.getPlayer(),
+                MessageUtil.replaceColors(((NodeMap) MapNodes.getCurrentGame().getMap()).title() + " &7- " + Msg.locale(player, "game.time", time)),
+                MessageUtil.replaceColors("&3[&bYear4000&3] &7- &bmc&7.&byear4000&7.&bnet")
+            );
+        });
+
         // If not in debug mode check if their are still players.
         if (!MapNodesPlugin.getInst().getLog().isDebug()) {
             // Ensure their is at least one player on each team else just end the game
