@@ -31,7 +31,7 @@ public abstract class RegionEvent {
     protected transient NodeRegion region;
 
     @Since(1.0)
-    private boolean allow = false;
+    private Boolean allow;
 
     @Since(1.0)
     @SerializedName("drop_items")
@@ -70,6 +70,14 @@ public abstract class RegionEvent {
             .collect(Collectors.toList());
 
         return regions.size() != 0 && regions.get(0).equals(region);
+    }
+
+    public boolean isAllowSet() {
+        return allow != null;
+    }
+
+    public boolean isAllow() {
+        return allow;
     }
 
     /** Does the region apply to the current player */

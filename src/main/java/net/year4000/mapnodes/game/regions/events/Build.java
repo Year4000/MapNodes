@@ -8,6 +8,7 @@ import net.year4000.mapnodes.game.regions.RegionListener;
 import net.year4000.mapnodes.game.regions.types.Point;
 import net.year4000.mapnodes.utils.typewrappers.MaterialList;
 import org.bukkit.Material;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockPlaceEvent;
@@ -27,18 +28,20 @@ public class Build extends RegionEvent implements RegionListener {
         Material material = event.getBlockPlaced().getType();
 
         if (applyToPlayer(player)) {
-            if ((isAllow() && blocks.contains(material)) || (!isAllow() && !blocks.contains(material))) {
-                event.setCancelled(false);
-
-                // Make the block have gravity when placed
-                if (gravity) {
-                    FallingBlock block = event.getBlock().getWorld().spawnFallingBlock(event.getBlockPlaced().getLocation(), material, event.getBlockPlaced().getData());
-                    block.setDropItem(false);
-                    event.getBlock().setType(Material.AIR);
+            if (isAllowSet()) {
+                if ((isAllow() && blocks.contains(material)) || (!isAllow() && !blocks.contains(material))) {
+                    event.setCancelled(false);
+                }
+                else if ((isAllow() && !blocks.contains(material)) || (!isAllow() && blocks.contains(material))) {
+                    event.setCancelled(true);
                 }
             }
-            else if ((isAllow() && !blocks.contains(material)) || (!isAllow() && blocks.contains(material))) {
-                event.setCancelled(true);
+
+            // Make the block have gravity when placed
+            if (gravity && blocks.contains(material) && event.getBlockPlaced().getRelative(BlockFace.DOWN).isEmpty()) {
+                FallingBlock block = event.getBlock().getWorld().spawnFallingBlock(event.getBlockPlaced().getLocation(), material, event.getBlockPlaced().getData());
+                block.setDropItem(false);
+                event.getBlock().setType(Material.AIR);
             }
 
             runGlobalEventTasks(player);

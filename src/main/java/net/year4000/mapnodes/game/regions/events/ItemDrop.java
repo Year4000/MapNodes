@@ -22,12 +22,15 @@ public class ItemDrop extends RegionEvent implements RegionListener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPickup(PlayerPickupItemEvent event) {
         Material material = event.getItem().getItemStack().getType();
-        if ((isAllow() && items.contains(material)) || (!isAllow() && !items.contains(material))) {
-            event.setCancelled(false);
-        }
-        else if ((isAllow() && !items.contains(material)) || (!isAllow() && items.contains(material))) {
-            event.setCancelled(true);
-            event.getItem().remove();
+
+        if (isAllowSet()) {
+            if ((isAllow() && items.contains(material)) || (!isAllow() && !items.contains(material))) {
+                event.setCancelled(false);
+            }
+            else if ((isAllow() && !items.contains(material)) || (!isAllow() && items.contains(material))) {
+                event.setCancelled(true);
+                event.getItem().remove();
+            }
         }
     }
 
