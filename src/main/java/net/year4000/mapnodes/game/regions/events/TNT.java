@@ -127,9 +127,8 @@ public class TNT extends RegionEvent implements RegionListener {
 
     /** Explode the Primed TNT later */
     private void explodeLater(Entity id, int delay) {
-        Location loc = id.getLocation();
-
         SchedulerUtil.runSync(() -> {
+            Location loc = id.getLocation();
             id.remove();
             loc.getWorld().createExplosion(
                 loc.getX() + 0.5, // center it
