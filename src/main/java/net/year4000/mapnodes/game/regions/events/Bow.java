@@ -14,6 +14,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -65,6 +66,11 @@ public class Bow extends RegionEvent implements RegionListener {
             // Entity not set but still set velocity of projectile
             if (power != null) {
                 event.getProjectile().getVelocity().multiply(power);
+            }
+
+            // Calculate the arrow damage of the bow
+            if (event.getBow().containsEnchantment(Enchantment.ARROW_DAMAGE)) {
+                event.getProjectile().getVelocity().multiply(1 + event.getBow().getEnchantmentLevel(Enchantment.ARROW_DAMAGE));
             }
 
             entityIds.put(event.getProjectile().getEntityId(), livingEntity);
@@ -124,7 +130,14 @@ public class Bow extends RegionEvent implements RegionListener {
     public void onHit(EntityDamageByEntityEvent event) {
         if (entityIds.containsKey(event.getDamager().getEntityId())) {
             if (event.getDamager() instanceof Projectile) {
-                event.setDamage(event.getDamage());
+                Vector vector = event.getDamager().getVelocity();
+
+                if (power != null) {
+                    vector.multiply(power);
+                }
+
+                double damage = Math.abs(vector.getX()) + Math.abs(vector.getY()) + Math.abs(vector.getZ());
+                event.setDamage(Math.abs(damage + Math.sqrt(damage)));
             }
         }
     }
