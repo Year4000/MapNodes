@@ -89,6 +89,12 @@ public class ScoreboardFactory {
         });
     }
 
+    public void setAllPersonalSidebar() {
+        Stream.concat(game.getSpectating(), game.getEntering())
+            .map(player -> (NodePlayer) player)
+            .forEach(this::setPersonalSidebar);
+    }
+
     public void setPersonalSidebar(NodePlayer nodePlayer) {
         setPersonalSidebar(nodePlayer, "&3&l   [&b&lYear4000&3&l]   ");
     }
@@ -161,6 +167,12 @@ public class ScoreboardFactory {
             });
 
         side.buildSidebar(nodePlayer.getScoreboard(), header);
+    }
+
+    public void setAllGameSidebar() {
+        game.getPlaying()
+            .map(player -> (NodePlayer) player)
+            .forEach(this::setPersonalSidebar);
     }
 
     public void setGameSidebar(NodePlayer nodePlayer) {

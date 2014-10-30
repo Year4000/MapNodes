@@ -25,7 +25,6 @@ import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.scoreboard.DisplaySlot;
-import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 
 import java.util.ArrayList;
@@ -207,7 +206,7 @@ public final class NodePlayer implements GamePlayer, Comparable {
 
             // Update sidebar when their is a sidebar to update
             if (scoreboard.getObjective(DisplaySlot.SIDEBAR) != null) {
-                game.getScoreboardFactory().setPersonalSidebar(this);
+                game.getScoreboardFactory().setAllPersonalSidebar();
             }
 
             // Kit
@@ -243,7 +242,7 @@ public final class NodePlayer implements GamePlayer, Comparable {
             entering = true;
             pendingTeam = (NodeTeam) joinTeam.getTo();
             pendingTeam.join(this, joinTeam.isDisplay());
-            game.getScoreboardFactory().setPersonalSidebar(this);
+            game.getScoreboardFactory().setAllPersonalSidebar();
 
             if (joinTeam.isJoining()) {
                 pendingTeam.start(this);
