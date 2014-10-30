@@ -1,6 +1,7 @@
 package net.year4000.mapnodes.gamemodes.tntwars;
 
 import com.google.common.base.Joiner;
+import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.events.game.GameClockEvent;
 import net.year4000.mapnodes.api.events.game.GameLoadEvent;
 import net.year4000.mapnodes.api.events.game.GameStartEvent;
@@ -23,6 +24,10 @@ import net.year4000.mapnodes.utils.MathUtil;
 import net.year4000.mapnodes.utils.SchedulerUtil;
 import net.year4000.mapnodes.utils.TimeUtil;
 import net.year4000.utilities.bukkit.bossbar.BossBar;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -32,6 +37,7 @@ import org.bukkit.event.entity.ExplosionPrimeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.util.Vector;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -115,6 +121,7 @@ public class TntWars extends GameModeTemplate implements GameMode {
     // Safe TNT //
 
     private Map<Integer, Vector> locations = new HashMap<>();
+    private List<Integer> fromDispenser = new ArrayList<>();
 
     @EventHandler
     public void onPrimed(ExplosionPrimeEvent event) {
@@ -126,6 +133,7 @@ public class TntWars extends GameModeTemplate implements GameMode {
         if (!(event.getEntity() instanceof TNTPrimed)) return;
 
         locations.put(event.getEntity().getEntityId(), event.getEntity().getLocation().toVector());
+        fromDispenser.add(event.getEntity().getEntityId());
     }
 
     @EventHandler(priority = EventPriority.LOW)
@@ -136,6 +144,23 @@ public class TntWars extends GameModeTemplate implements GameMode {
                 Vector old = locations.remove(event.getEntity().getEntityId());
 
                 if (Math.abs(current.getBlockZ() - old.getBlockZ()) < 10 && Math.abs(current.getBlockX() - old.getBlockX()) < 10) {
+
+                    if (fromDispenser.remove((Integer) event.getEntity().getEntityId())) {
+                        Block baseBlock = old.toLocation(MapNodes.getCurrentWorld()).getBlock();
+
+                        event.getEntity().getNearbyEntities(1.5, 1.5, 1.5)
+                            .stream()
+                            .filter(e -> e instanceof TNTPrimed)
+                            .forEach(Entity::remove);
+
+                        for (BlockFace face : BlockFace.values()) {
+                            Block dispenser = baseBlock.getRelative(face);
+                            if (dispenser.getType() == Material.DISPENSER) {
+                                dispenser.setType(Material.AIR);
+                            }
+                        }
+                    }
+
                     event.setCancelled(true);
                 }
             }
