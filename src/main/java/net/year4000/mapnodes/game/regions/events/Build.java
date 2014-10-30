@@ -47,7 +47,7 @@ public class Build extends RegionEvent implements RegionListener {
             }
 
             // Make the block have gravity when placed
-            if (gravity && blocks.contains(material) && event.getBlockPlaced().getRelative(BlockFace.DOWN).isEmpty()) {
+            if (gravity && blocks.contains(material) && !event.getBlockPlaced().getRelative(BlockFace.DOWN).getType().isBlock()) {
                 FallingBlock block = event.getBlock().getWorld().spawnFallingBlock(event.getBlockPlaced().getLocation(), material, event.getBlockPlaced().getData());
                 block.setDropItem(false);
                 gravityEntities.add(block.getEntityId());
