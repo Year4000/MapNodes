@@ -76,6 +76,7 @@ public class MapNodesPlugin extends BukkitPlugin implements Plugin {
             .add(CreatureSpawn.class)
             .add(ItemDrop.class)
             .add(KillPlayer.class)
+            .add(FallingBlock.class)
             .build();
 
         // Register game modes that MapNodes can support

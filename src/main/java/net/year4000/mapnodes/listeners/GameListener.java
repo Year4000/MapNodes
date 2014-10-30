@@ -102,7 +102,7 @@ public final class GameListener implements Listener {
         ((NodeGame) MapNodes.getCurrentGame()).stop();
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGH)
     public void onClock(GameClockEvent event) {
         // Update TabList header and footer
         long currentTime = System.currentTimeMillis() - ((NodeGame) MapNodes.getCurrentGame()).getStartTime();
