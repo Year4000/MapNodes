@@ -158,7 +158,9 @@ public final class NodePlayer implements GamePlayer, Comparable {
                 game.openTeamChooserMenu(this);
             }
 
-            game.getScoreboardFactory().setPersonalSidebar(this);
+            if (!game.getStage().isEndGame()) {
+                game.getScoreboardFactory().setPersonalSidebar(this);
+            }
         }, 55L));
     }
 
