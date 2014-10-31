@@ -24,11 +24,13 @@ public class EntityDamage extends RegionEvent implements RegionListener {
 
         EntityDamageEvent.DamageCause cause = event.getCause();
 
-        if ((isAllow() && damageCauses.contains(cause)) || (!isAllow() && !damageCauses.contains(cause))) {
-            event.setCancelled(false);
-        }
-        else if ((isAllow() && !damageCauses.contains(cause)) || (!isAllow() && damageCauses.contains(cause))) {
-            event.setCancelled(true);
+        if (isAllowSet()) {
+            if ((isAllow() && damageCauses.contains(cause)) || (!isAllow() && !damageCauses.contains(cause))) {
+                event.setCancelled(false);
+            }
+            else if ((isAllow() && !damageCauses.contains(cause)) || (!isAllow() && damageCauses.contains(cause))) {
+                event.setCancelled(true);
+            }
         }
 
         if (event.getEntity() instanceof Player) {

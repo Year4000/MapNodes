@@ -3,10 +3,13 @@ package net.year4000.mapnodes.game;
 import com.google.common.base.Joiner;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.annotations.Since;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.NodeFactory;
+import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.events.game.GameClockEvent;
 import net.year4000.mapnodes.api.events.game.GameLoadEvent;
 import net.year4000.mapnodes.api.events.game.GameStartEvent;
@@ -17,6 +20,7 @@ import net.year4000.mapnodes.api.game.GameTeam;
 import net.year4000.mapnodes.api.game.modes.GameMode;
 import net.year4000.mapnodes.api.game.modes.GameModeConfig;
 import net.year4000.mapnodes.api.utils.Operations;
+import net.year4000.mapnodes.clocks.Clocker;
 import net.year4000.mapnodes.clocks.NextNode;
 import net.year4000.mapnodes.clocks.RestartServer;
 import net.year4000.mapnodes.clocks.StartGame;
@@ -30,6 +34,7 @@ import net.year4000.mapnodes.messages.Message;
 import net.year4000.mapnodes.messages.MessageManager;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.Common;
+import net.year4000.mapnodes.utils.MathUtil;
 import net.year4000.mapnodes.utils.SchedulerUtil;
 import net.year4000.mapnodes.utils.Validator;
 import net.year4000.mapnodes.utils.typewrappers.GameSet;
@@ -42,6 +47,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitTask;
+import org.bukkit.scoreboard.DisplaySlot;
+import org.bukkit.scoreboard.Objective;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -140,7 +147,14 @@ public final class NodeGame implements GameManager, Validator {
     private transient ScoreboardFactory scoreboardFactory;
     private transient Map<String, SidebarGoal> sidebarGoals = new LinkedHashMap<>();
     private transient List<Operations> startControls = new CopyOnWriteArrayList<>();
-    private transient long startTime;
+    private transient long startTime, stopTime;
+    @Setter(AccessLevel.NONE)
+    private transient int baseStartTime = 30;
+
+    /** The start time for the game */
+    public void addStartTime(int time) {
+        baseStartTime += time;
+    }
 
     /** Init things that happen before load is playable */
     public void load() {
@@ -370,7 +384,7 @@ public final class NodeGame implements GameManager, Validator {
     }
 
     public int getRealMaxCount() {
-        return getMaxPlayers() + getMaxPlayers() / 2;
+        return getMaxPlayers() + (getMaxPlayers() / 2) + 5;
     }
 
     // END Game Components Handlers //
@@ -413,10 +427,9 @@ public final class NodeGame implements GameManager, Validator {
         regions.values().stream().filter(region -> region.getEvents() != null).forEach(region -> region.getEvents().assignRegion(region));
 
         // Close spectator inventories
-        start.getGame().getSpectating().forEach(player -> player.getPlayer().closeInventory());
-        start.getGame().getEntering().forEach(player -> player.getPlayer().closeInventory());
+        Stream.concat(start.getGame().getSpectating(), start.getGame().getEntering()).forEach(player -> player.getPlayer().closeInventory());
         start.getGame().getEntering()
-            .filter(player -> !((NodeTeam) player.getTeam()).getQueue().contains(player))
+            .filter(player -> !(((NodePlayer) player).getPendingTeam()).getQueue().contains(player))
             .forEach(player -> ((NodePlayer) player).start());
 
         gameClock = SchedulerUtil.repeatAsync(() -> new GameClockEvent(this).call(), 20L);
@@ -435,6 +448,7 @@ public final class NodeGame implements GameManager, Validator {
         }
 
         stage = NodeStage.ENDING;
+        stopTime = System.currentTimeMillis();
 
         if (gameClock != null) {
             gameClock.cancel();
@@ -443,7 +457,11 @@ public final class NodeGame implements GameManager, Validator {
         GameStopEvent stop = new GameStopEvent(this);
         stop.call();
 
-        Stream.concat(stop.getGame().getPlaying(), stop.getGame().getEntering()).forEach(player -> ((NodePlayer) player).joinTeam(null));
+        stop.getGame().getPlayers().forEach(player -> {
+            player.getPlayer().closeInventory();
+            ((NodePlayer) player).joinTeam(null);
+            ((NodeGame) stop.getGame()).getScoreboardFactory().setGameSidebar((NodePlayer) player);
+        });
 
         // Unregister region events
         regions.values().stream()
@@ -455,22 +473,50 @@ public final class NodeGame implements GameManager, Validator {
         gameModes.forEach(NodeModeFactory.get()::unregisterListeners);
 
         // Cycle game or restart server
-        if (NodeFactory.get().isQueuedGames()) {
-            if (time != null) {
-                stopClock = new NextNode(time).run();
+        new Clocker(165) {
+            String shortMapName = Common.shortMessage(22, getMap().getName());
+            String title = shortMapName;
+
+            @Override
+            public void runTock(int position) {
+                getPlayers()
+                    .map(GamePlayer::getPlayer)
+                    .map(Player::getScoreboard)
+                    .map(obj -> obj.getObjective(DisplaySlot.SIDEBAR))
+                    .filter(obj -> obj != null)
+                    .forEach(obj -> {
+                        int pos = (int) (((MathUtil.percent(getTime(), position) * 10) / 10) * (title.length() * .01));
+                        obj.setDisplayName(Common.truncate(MessageUtil.replaceColors("    &b" + title.substring(0, pos) + "&3" + title.substring(pos) + "    "), 32));
+                    });
             }
-            else {
-                stopClock = new NextNode().run();
+
+            @Override
+            public void runLast(int position) {
+                getPlayers()
+                    .map(GamePlayer::getPlayer)
+                    .map(Player::getScoreboard)
+                    .map(obj -> obj.getObjective(DisplaySlot.SIDEBAR))
+                    .filter(obj -> obj != null)
+                    .forEach(Objective::unregister);
+
+                if (NodeFactory.get().isQueuedGames()) {
+                    if (time != null) {
+                        stopClock = new NextNode(time).run();
+                    }
+                    else {
+                        stopClock = new NextNode().run();
+                    }
+                }
+                else {
+                    if (time != null) {
+                        stopClock = new RestartServer(time).run();
+                    }
+                    else {
+                        stopClock = new RestartServer().run();
+                    }
+                }
             }
-        }
-        else {
-            if (time != null) {
-                stopClock = new RestartServer(time).run();
-            }
-            else {
-                stopClock = new RestartServer().run();
-            }
-        }
+        }.run();
     }
 
     // STOP Game Controls //

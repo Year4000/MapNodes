@@ -11,6 +11,7 @@ import net.year4000.mapnodes.game.NodeTeam;
 import net.year4000.mapnodes.game.regions.types.Point;
 import net.year4000.mapnodes.game.system.Spectator;
 import net.year4000.mapnodes.messages.Msg;
+import net.year4000.mapnodes.utils.Common;
 import net.year4000.mapnodes.utils.typewrappers.ItemStackList;
 import net.year4000.mapnodes.utils.typewrappers.LocationList;
 import org.bukkit.Location;
@@ -30,7 +31,7 @@ public abstract class RegionEvent {
     protected transient NodeRegion region;
 
     @Since(1.0)
-    private boolean allow = false;
+    private Boolean allow;
 
     @Since(1.0)
     @SerializedName("drop_items")
@@ -39,6 +40,9 @@ public abstract class RegionEvent {
     @Since(1.0)
     @SerializedName("play_sound")
     private Sound playSound;
+
+    @Since(1.0)
+    private Point velocity;
 
     @Since(1.0)
     private String message;
@@ -68,6 +72,14 @@ public abstract class RegionEvent {
         return regions.size() != 0 && regions.get(0).equals(region);
     }
 
+    public boolean isAllowSet() {
+        return allow != null;
+    }
+
+    public boolean isAllow() {
+        return allow;
+    }
+
     /** Does the region apply to the current player */
     public boolean applyToPlayer(GamePlayer player) {
         return !(player.getTeam() instanceof Spectator) && (apply.size() == 0 || apply.contains(((NodeTeam) player.getTeam()).getId().toLowerCase()));
@@ -77,6 +89,10 @@ public abstract class RegionEvent {
     public void runGlobalEventTasks(GamePlayer player) {
         teleportPlayer(player);
         sendMessage(player);
+
+        if (velocity != null) {
+            player.getPlayer().setVelocity(player.getPlayer().getVelocity().add(Common.pointToVector(velocity)));
+        }
     }
 
     /** Run global events tasks */

@@ -15,6 +15,7 @@ import net.year4000.mapnodes.utils.SchedulerUtil;
 import net.year4000.utilities.bukkit.FunEffectsUtil;
 import net.year4000.utilities.bukkit.ItemUtil;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
@@ -33,8 +34,9 @@ import org.bukkit.event.player.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.BlockIterator;
 
-import java.util.Locale;
+import java.util.Iterator;
 
 @EqualsAndHashCode
 public class SpectatorListener implements Listener {
@@ -88,10 +90,17 @@ public class SpectatorListener implements Listener {
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
-    public void onDamage(EntityDamageByEntityEvent event) {
+    public void onDamager(EntityDamageByEntityEvent event) {
         if (!(event.getDamager() instanceof Player)) return;
 
         stopEvent(event, (Player) event.getDamager());
+    }
+    
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
+    public void onDamagee(EntityDamageByEntityEvent event) {
+        if (!(event.getEntity() instanceof Player)) return;
+
+        stopEvent(event, (Player) event.getEntity());
     }
 
     @EventHandler
@@ -262,6 +271,44 @@ public class SpectatorListener implements Listener {
                 // MapNodesPlugin.debug(e, true);
             } finally {
                 event.setCancelled(true);
+            }
+        }
+    }
+
+    // Teleport on punch //
+
+    @EventHandler
+    public void onPunch(PlayerInteractEvent event) {
+        GamePlayer player = MapNodes.getCurrentGame().getPlayer(event.getPlayer());
+
+        if (!player.isPlaying() && event.getAction() == Action.LEFT_CLICK_AIR) {
+            try {
+                Location last = null;
+                Iterator<Block> itr = new BlockIterator(player.getPlayer(), 300);
+
+                while (itr.hasNext()) {
+                    Location loc = itr.next().getLocation();
+                    boolean solid = loc.getBlock().getType().isSolid();
+                    boolean dist = loc.distance(player.getPlayer().getLocation()) > 5;
+
+                    if (solid && dist) {
+                        last = loc;
+
+                        while (last.add(0, 1, 0).getBlock().getType().isSolid()) {
+                            if (last.getY() > 256) break;
+
+                            last = last.add(0, 1, 0);
+                        }
+
+                        last.setYaw(player.getPlayer().getLocation().getYaw());
+                        last.setPitch(player.getPlayer().getLocation().getPitch());
+                        break;
+                    }
+                }
+
+                player.getPlayer().teleport(last.clone());
+            } catch (IllegalStateException | NullPointerException e) {
+                player.sendMessage(Msg.util("global.warring", Msg.locale(player, "items.teleport_hand")));
             }
         }
     }

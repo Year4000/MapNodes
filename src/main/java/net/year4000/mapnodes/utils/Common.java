@@ -6,7 +6,12 @@ import net.year4000.utilities.bukkit.MessageUtil;
 import org.bukkit.Location;
 import org.bukkit.util.Vector;
 
+import java.util.Random;
+
+
 public final class Common {
+    public static final Random rand = new Random();
+
     private Common() {
         // Utility Class
     }
@@ -227,4 +232,7 @@ public final class Common {
         return sb.toString();
     }
 
+    public static Vector randomOffset() {
+        return new Vector(rand.nextDouble(), rand.nextDouble(), rand.nextDouble());
+    }
 }

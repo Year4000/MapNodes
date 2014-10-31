@@ -50,6 +50,7 @@ public class Deathmatch extends GameModeTemplate implements GameMode {
     public void onLoad(GameLoadEvent event) {
         gameModeConfig = (DeathmatchConfig) getConfig();
         game = (NodeGame) event.getGame();
+        game.addStartTime(60);
 
         // Add max if map has max score
         if (gameModeConfig.getMaxScore() != null) {
@@ -57,8 +58,8 @@ public class Deathmatch extends GameModeTemplate implements GameMode {
         }
 
         game.getPlayingTeams().forEach(team -> {
-            scores.put(team.getId(), 0);
-            game.addDynamicGoal(team.getId() + "-deathmatch", team.getId(), team.getDisplayName() + "'s Points", 0);
+            scores.put(teamId(team), 0);
+            game.addDynamicGoal(teamId(team), team.getId(), team.getDisplayName() + "'s Points", 0);
         });
     }
 
@@ -92,13 +93,6 @@ public class Deathmatch extends GameModeTemplate implements GameMode {
                 win.call();
             }
         }
-    }
-
-    @EventHandler
-    public void onGameEnd(GameWinEvent event) {
-        scores.forEach((team, score) -> {
-            event.getMessage().add(game.getTeams().get(team).getDisplayName() + "&7: " + Common.colorNumber(score, winnerScore));
-        });
     }
 
     @EventHandler
@@ -154,11 +148,11 @@ public class Deathmatch extends GameModeTemplate implements GameMode {
 
     /** Add the amount of points to a team and set the winner */
     public void addPoint(NodeGame game, GameTeam team, int amount) {
-        if (!scores.containsKey(((NodeTeam) team).getId())) return;
+        if (!scores.containsKey(teamId(team))) return;
 
-        int newScore = scores.get(((NodeTeam) team).getId()) + amount;
-        scores.put(((NodeTeam) team).getId(), newScore);
-        game.getSidebarGoals().get(((NodeTeam) team).getId()).setScore(scores.get(((NodeTeam) team).getId()));
+        int newScore = scores.get(teamId(team)) + amount;
+        scores.put(teamId(team), newScore);
+        game.getSidebarGoals().get(teamId(team)).setScore(scores.get(teamId(team)));
         game.getPlaying().forEach(p -> (game.getScoreboardFactory()).setGameSidebar((NodePlayer) p));
 
         // If game team new score is higher than all set as winner
@@ -177,5 +171,13 @@ public class Deathmatch extends GameModeTemplate implements GameMode {
                 }
             }
         }
+    }
+
+    public String teamId(GameTeam team) {
+        return ((NodeTeam) team).getId() + "-deathmatch";
+    }
+
+    public String teamId(NodeTeam team) {
+        return team.getId() + "-deathmatch";
     }
 }

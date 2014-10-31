@@ -27,7 +27,7 @@ public class Enter extends RegionEvent implements RegionListener {
 
         // Should we deny entrance
         if (applyToPlayer(player)) {
-            if (!isAllow()) {
+            if (isAllowSet() && !isAllow()) {
                 event.setTo(event.getFrom());
             }
 

@@ -6,30 +6,29 @@ import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.events.game.GameClockEvent;
 import net.year4000.mapnodes.api.events.game.GameWinEvent;
+import net.year4000.mapnodes.api.events.team.GameTeamWinEvent;
 import net.year4000.mapnodes.api.game.GamePlayer;
-import net.year4000.mapnodes.game.NodeGame;
-import net.year4000.mapnodes.game.NodeKit;
-import net.year4000.mapnodes.game.NodePlayer;
-import net.year4000.mapnodes.game.NodeTeam;
+import net.year4000.mapnodes.game.*;
 import net.year4000.mapnodes.game.system.Spectator;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.Common;
+import net.year4000.mapnodes.utils.PacketHacks;
+import net.year4000.mapnodes.utils.TimeUtil;
+import net.year4000.utilities.ChatColor;
+import net.year4000.utilities.bukkit.FunEffectsUtil;
 import net.year4000.utilities.bukkit.MessageUtil;
-import org.bukkit.Color;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.*;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.LeatherArmorMeta;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -65,9 +64,30 @@ public final class GameListener implements Listener {
 
         // Game Player Messages
         event.getGame().getPlaying().forEach(player -> {
+            FunEffectsUtil.playSound(player.getPlayer(), Sound.FIREWORK_BLAST2);
+            FunEffectsUtil.playSound(player.getPlayer(), Sound.FIREWORK_TWINKLE2);
+
             player.sendMessage("");
             player.sendMessage(Common.textLine(Msg.locale(player, "game.end"), 40, '*'));
-            player.sendMessage(Common.textLine(Msg.locale(player, "game.end.winner", event.getWinnerText()), size, ' ', "", "&a"));
+            String winnerText = event.getWinnerText(), endComment = null;
+
+            // Color winnerText and add endComment
+            if (event instanceof GameTeamWinEvent) {
+                if (player.getTeam().equals(((GameTeamWinEvent) event).getWinner())) {
+                    winnerText = Common.fcolor(ChatColor.ITALIC, winnerText);
+                    endComment = Msg.locale(player, "game.end.team_winner");
+                }
+                else {
+                    endComment = Msg.locale(player, "game.end.team_loser");
+                }
+            }
+
+            player.sendMessage(Common.textLine(Msg.locale(player, "game.end.winner", winnerText), size, ' ', "", "&a"));
+
+            // Show comment to see if you won or lost
+            if (endComment != null) {
+                player.sendMessage(Common.textLine(endComment, size, ' ', "", ""));
+            }
 
             if (event.getMessage().size() > 0) {
                 player.sendMessage("");
@@ -82,8 +102,24 @@ public final class GameListener implements Listener {
         ((NodeGame) MapNodes.getCurrentGame()).stop();
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGH)
     public void onClock(GameClockEvent event) {
+        // Update TabList header and footer
+        long currentTime = System.currentTimeMillis() - ((NodeGame) MapNodes.getCurrentGame()).getStartTime();
+        String time = "&a" + (new TimeUtil(currentTime, TimeUnit.MILLISECONDS)).prettyOutput("&7:&a");
+
+        event.getGame().getPlayers().parallel().forEach(player -> {
+            if (!PacketHacks.isTitleAble(player.getPlayer()) && !player.isPlaying()) {
+                ((NodeGame) event.getGame()).getScoreboardFactory().setPersonalSidebar((NodePlayer) player);
+            }
+
+            PacketHacks.setTabListHeadFoot(
+                player.getPlayer(),
+                MessageUtil.replaceColors(((NodeMap) MapNodes.getCurrentGame().getMap()).title() + " &7- " + Msg.locale(player, "game.time", time)),
+                MessageUtil.replaceColors("&3[&bYear4000&3] &7- &bmc&7.&byear4000&7.&bnet")
+            );
+        });
+
         // If not in debug mode check if their are still players.
         if (!MapNodesPlugin.getInst().getLog().isDebug()) {
             // Ensure their is at least one player on each team else just end the game

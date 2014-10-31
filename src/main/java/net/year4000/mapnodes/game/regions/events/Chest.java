@@ -11,11 +11,13 @@ import net.year4000.mapnodes.game.regions.types.Point;
 import net.year4000.mapnodes.utils.ChestUtil;
 import net.year4000.mapnodes.utils.SchedulerUtil;
 import net.year4000.mapnodes.utils.typewrappers.ItemStackList;
+import org.bukkit.block.DoubleChest;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.DoubleChestInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitTask;
@@ -81,7 +83,9 @@ public class Chest extends RegionEvent implements RegionListener {
 
                         @Override
                         public void run() {
-                            if (chest.getViewers().size() == 0) {
+                            boolean remove = chest instanceof DoubleChestInventory ? ((DoubleChestInventory) chest).getLeftSide().getViewers().size() + ((DoubleChestInventory) chest).getRightSide().getViewers().size() == 0 : chest.getViewers().size() == 0;
+
+                            if (remove) {
                                 chests.remove(location);
                                 chest.setContents(new ItemStack[chest.getSize()]);
                                 task.cancel();

@@ -131,7 +131,7 @@ public class GameMech extends Addon implements Listener {
         .build();
 
     /** Merge items when they are picked up, this will repair if needed */
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onPickup(PlayerPickupItemEvent event) {
         ItemStack item = event.getItem().getItemStack();
         PlayerInventory inv = event.getPlayer().getInventory();
@@ -181,6 +181,6 @@ public class GameMech extends Addon implements Listener {
     }
 
     public short dura(ItemStack old, ItemStack pickup) {
-        return (short) (old.getDurability() - (pickup.getDurability() / 4));
+        return (short) (old.getDurability() - pickup.getDurability());
     }
 }

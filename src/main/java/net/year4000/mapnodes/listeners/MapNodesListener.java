@@ -8,7 +8,6 @@ import net.year4000.mapnodes.api.events.game.GameClockEvent;
 import net.year4000.mapnodes.api.events.game.GameStopEvent;
 import net.year4000.mapnodes.api.events.player.GamePlayerJoinSpectatorEvent;
 import net.year4000.mapnodes.api.events.player.GamePlayerJoinTeamEvent;
-import net.year4000.mapnodes.api.game.GameManager;
 import net.year4000.mapnodes.api.game.GamePlayer;
 import net.year4000.mapnodes.clocks.StartGame;
 import net.year4000.mapnodes.game.Node;
@@ -22,14 +21,12 @@ import net.year4000.mapnodes.utils.SchedulerUtil;
 import net.year4000.utilities.bukkit.FunEffectsUtil;
 import net.year4000.utilities.bukkit.MessageUtil;
 import org.bukkit.Effect;
-import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.event.server.ServerListPingEvent;
 
@@ -97,7 +94,7 @@ public final class MapNodesListener implements Listener {
             event.setNumPlayers((int) gm.getPlayers().count());
         }
 
-        event.setMaxPlayers(gm.getRealMaxCount());
+        event.setMaxPlayers(gm.getMaxPlayers());
 
         event.setMotd(MessageUtil.message(
             "%s%s &7| &5&o%s",
@@ -112,13 +109,10 @@ public final class MapNodesListener implements Listener {
     }
 
     @EventHandler
-    public void onMove(PlayerMoveEvent event) {
-        Player player = event.getPlayer();
-        Location loc = event.getTo().clone();
-        loc.setYaw(0);
-        loc.setPitch(0);
-
-        player.setCompassTarget(loc);
+    public void onMove(PlayerTeleportEvent event) {
+        if (!event.getTo().getWorld().equals(MapNodes.getCurrentWorld())) {
+            event.setTo(MapNodes.getCurrentGame().getConfig().getSpawn().iterator().next());
+        }
     }
 
     /** No players stop the game unless in debug mode */
@@ -154,7 +148,7 @@ public final class MapNodesListener implements Listener {
                     game.getEntering().forEach(p -> p.sendMessage(Msg.locale(p, "clocks.start.reduce")));
                 }
             } else if (game.getStage().isWaiting()) {
-                new StartGame(120).run(); // 2 mins
+                new StartGame(game.getBaseStartTime()).run();
             }
         }
     }

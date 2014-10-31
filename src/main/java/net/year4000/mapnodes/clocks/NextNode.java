@@ -7,7 +7,10 @@ import net.year4000.mapnodes.api.game.GameMap;
 import net.year4000.mapnodes.game.Node;
 import net.year4000.mapnodes.messages.Message;
 import net.year4000.mapnodes.messages.Msg;
-import net.year4000.mapnodes.utils.*;
+import net.year4000.mapnodes.utils.Common;
+import net.year4000.mapnodes.utils.MathUtil;
+import net.year4000.mapnodes.utils.PacketHacks;
+import net.year4000.mapnodes.utils.TimeUtil;
 import net.year4000.utilities.bukkit.FunEffectsUtil;
 import net.year4000.utilities.bukkit.bossbar.BossBar;
 import org.bukkit.Sound;
@@ -70,11 +73,16 @@ public class NextNode extends Clocker {
                 FunEffectsUtil.playSound(player.getPlayer(), Sound.NOTE_PLING);
             }
 
-            PacketHacks.title(
-                player.getPlayer(),
-                Msg.locale(player, "clocks.next.tock", map.getName(), time),
-                percent(getTime(), position)
-            );
+            if (PacketHacks.isTitleAble(player.getPlayer())) {
+                PacketHacks.countTitle(player.getPlayer(), map.getName(), time, percent(getTime(), position));
+            }
+            else {
+                PacketHacks.title(
+                    player.getPlayer(),
+                    Msg.locale(player, "clocks.next.tock", map.getName(), time),
+                    percent(getTime(), position)
+                );
+            }
         });
     }
 
@@ -87,11 +95,19 @@ public class NextNode extends Clocker {
 
         MapNodes.getCurrentGame().getPlayers().forEach(player -> {
             FunEffectsUtil.playSound(player.getPlayer(), Sound.NOTE_BASS);
-            PacketHacks.title(
-                player.getPlayer(),
-                Msg.locale(player, "clocks.next.last", map.getName()),
-                1
-            );
+
+            if (PacketHacks.isTitleAble(player.getPlayer())) {
+                PacketHacks.setTitle(player.getPlayer(), "&a" + map.getName(), Msg.locale(player, "map.created") + map.author(player.getPlayer().getLocale()));
+            }
+            else {
+                PacketHacks.title(
+                    player.getPlayer(),
+                    Msg.locale(player, "clocks.next.last", map.getName()),
+                    1
+                );
+            }
+
+            BossBar.removeBar(player.getPlayer());
             move.add(player.getPlayer());
         });
 
