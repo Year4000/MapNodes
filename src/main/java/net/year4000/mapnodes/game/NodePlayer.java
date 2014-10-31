@@ -140,7 +140,7 @@ public final class NodePlayer implements GamePlayer, Comparable {
             );
         }
         else {
-            sendMessage(Msg.util("global.warring", Msg.locale(player, "game.new.recommend")));
+            sendMessage(Msg.NOTICE + Msg.locale(player, "game.new.recommend"));
         }
 
         GamePlayerJoinEvent join = new GamePlayerJoinEvent(this) {{

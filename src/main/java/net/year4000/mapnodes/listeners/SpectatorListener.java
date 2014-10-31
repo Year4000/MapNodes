@@ -238,7 +238,7 @@ public class SpectatorListener implements Listener {
                 GameTeam team = game.checkAndGetTeam(gPlayer, teamName);
                 ((NodePlayer) gPlayer).joinTeam(team);
             } catch (IllegalArgumentException e) {
-                player.sendMessage(Msg.util("global.warring", e.getMessage()));
+                player.sendMessage(Msg.NOTICE + e.getMessage());
                 player.sendMessage(Msg.locale(gPlayer, "team.select.non_vip_url"));
                 event.setCancelled(true);
             } catch (NullPointerException e) {
@@ -308,7 +308,7 @@ public class SpectatorListener implements Listener {
 
                 player.getPlayer().teleport(last.clone());
             } catch (IllegalStateException | NullPointerException e) {
-                player.sendMessage(Msg.util("global.warring", Msg.locale(player, "items.teleport_hand")));
+                player.sendMessage(Msg.NOTICE + Msg.locale(player, "items.teleport_hand"));
             }
         }
     }
