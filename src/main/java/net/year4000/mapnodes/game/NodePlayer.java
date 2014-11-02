@@ -9,6 +9,7 @@ import net.year4000.mapnodes.api.game.GamePlayer;
 import net.year4000.mapnodes.api.game.GameTeam;
 import net.year4000.mapnodes.game.system.Spectator;
 import net.year4000.mapnodes.messages.Msg;
+import net.year4000.mapnodes.utils.BadgeManager;
 import net.year4000.mapnodes.utils.Common;
 import net.year4000.mapnodes.utils.PacketHacks;
 import net.year4000.mapnodes.utils.SchedulerUtil;
@@ -33,6 +34,7 @@ import java.util.List;
 @Data
 public final class NodePlayer implements GamePlayer, Comparable {
     // internals
+    public static final BadgeManager badges = new BadgeManager();
     private final NodeGame game;
     private final Player player;
     private NodeTeam team;
@@ -152,6 +154,14 @@ public final class NodePlayer implements GamePlayer, Comparable {
         // run a tick later to allow player to login
         player.teleport(join.getSpawn());
 
+        // Update player's info
+        playerTasks.add(SchedulerUtil.runAsync(() -> {
+            game.getPlayers().map(player -> (NodePlayer) player).forEach(player -> {
+                game.getScoreboardFactory().setOrUpdateListName(player, this);
+                game.getScoreboardFactory().setOrUpdateListName(this, player);
+            });
+        }, 25L));
+
         // start menu
         playerTasks.add(SchedulerUtil.runAsync(() -> {
             if (join.isMenu()) {
@@ -264,8 +274,7 @@ public final class NodePlayer implements GamePlayer, Comparable {
             game.getPlayers().forEach(player -> {
                 if ((player.isSpectator() || player.isEntering()) && gPlayer.isPlaying()) {
                     gPlayer.getPlayer().hidePlayer(player.getPlayer());
-                }
-                else {
+                } else {
                     gPlayer.getPlayer().showPlayer(player.getPlayer());
                 }
             });
@@ -354,6 +363,17 @@ public final class NodePlayer implements GamePlayer, Comparable {
     /** Get the player's color according to the team */
     public String getPlayerColor() {
         return MessageUtil.replaceColors(team.getColor() + player.getName());
+    }
+
+    /** Get the badge of this player */
+    public String getBadge() {
+        return badges.getBadge(player);
+    }
+
+    /** Get the split name used to tab list name */
+    public String[] getSplitName() {
+        String name = MessageUtil.stripColors(player.getDisplayName());
+        return new String[] {name.substring(0, name.length() - 2), name.substring(name.length() - 2)};
     }
 
     @Override

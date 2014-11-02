@@ -18,11 +18,7 @@ import net.year4000.utilities.ChatColor;
 import net.year4000.utilities.MessageUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitTask;
-import org.bukkit.scoreboard.DisplaySlot;
-import org.bukkit.scoreboard.Scoreboard;
-import org.bukkit.scoreboard.ScoreboardManager;
-import org.bukkit.scoreboard.Team;
+import org.bukkit.scoreboard.*;
 
 import java.util.Iterator;
 import java.util.Set;
@@ -71,21 +67,44 @@ public class ScoreboardFactory {
         return scoreboard;
     }
 
+    /** Update player's custom display tab list name */
+    public void setOrUpdateListName(NodePlayer viewer, NodePlayer player) {
+        String hash = String.valueOf(player.getPlayer().getName().hashCode());
+        String color = player.getTeam().getColor().toString();
+        color = viewer == player ? Common.fcolor(ChatColor.ITALIC, color) : color;
+        String prefix = MessageUtil.replaceColors(player.getBadge() + " " + color);
+        player.getPlayer().setPlayerListName(player.getSplitName()[0]);
+        Scoreboard scoreboard = viewer.getScoreboard();
+
+        if (scoreboard.getTeam(hash) == null) {
+            Team team = scoreboard.registerNewTeam(hash);
+            team.setPrefix(prefix);
+            team.setSuffix(player.getSplitName()[1]);
+            team.add(player.getSplitName()[0]);
+        }
+        else {
+            Team team = scoreboard.getTeam(hash);
+            team.setPrefix(prefix);
+        }
+    }
+
     /** Set the team of the player for the player's personal scoreboard */
     public void setTeam(NodePlayer nodePlayer, NodeTeam nodeTeam) {
         // Set all other players to know about the player
-        game.getPlayers().forEach(player -> {
+        game.getPlayers().map(player -> (NodePlayer) player).forEach(player -> {
             // Remove Player
-            ((NodePlayer) player).getScoreboard().getTeams().stream()
+            player.getScoreboard().getTeams().stream()
                 .forEach(team -> team.removePlayer(nodePlayer.getPlayer()));
 
             // Add Player
-            ((NodePlayer) player).getScoreboard().getTeams().stream()
+            player.getScoreboard().getTeams().stream()
                 .filter(team -> team.getName().equals(nodeTeam.getName()))
                 .forEach(team -> team.addPlayer(nodePlayer.getPlayer()));
 
             nodePlayer.getScoreboard().getTeam(player.getTeam().getName()).addPlayer(player.getPlayer());
 
+            setOrUpdateListName(player, nodePlayer);
+            setOrUpdateListName(nodePlayer, player);
         });
     }
 
