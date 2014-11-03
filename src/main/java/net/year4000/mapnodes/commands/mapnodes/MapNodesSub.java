@@ -29,7 +29,7 @@ public final class MapNodesSub {
         gitQuickSend(sender, "cmd.git.email", "git.commit.user.email");
         gitQuickSend(sender, "cmd.git.time", "git.commit.time");
         gitQuickSend(sender, "cmd.git.commit.branch", "git.branch");
-        gitQuickSend(sender, "cmd.git.commit.id", "git.commit.id.describe");
+        gitQuickSend(sender, "cmd.git.commit.id", "git.commit.id");
         gitQuickSend(sender, "cmd.git.commit.message", "git.commit.message.short");
     }
 
