@@ -144,6 +144,7 @@ public final class NodeGame implements GameManager, Validator {
     private transient StartGame startClock;
     private transient BukkitTask stopClock;
     private transient Map<Locale, Inventory> teamChooser = new HashMap<>();
+    private transient Map<Locale, Inventory> classKitChooser = new HashMap<>();
     private transient ScoreboardFactory scoreboardFactory;
     private transient Map<String, SidebarGoal> sidebarGoals = new LinkedHashMap<>();
     private transient List<Operations> startControls = new CopyOnWriteArrayList<>();
@@ -176,6 +177,7 @@ public final class NodeGame implements GameManager, Validator {
         // Create GUI for all locales
         for (Locale locale : MessageManager.get().getLocales().keySet()) {
             teamChooser.put(locale, createTeamChooserMenu(locale));
+            classKitChooser.put(locale, createClassKitChooserMenu(locale));
         }
 
         // Run heavy resource tasks
@@ -221,7 +223,33 @@ public final class NodeGame implements GameManager, Validator {
 
     // START Class GUI //
 
-    // todo Class GUIs
+    /** Create the menu in locale */
+    private Inventory createClassKitChooserMenu(Locale locale) {
+        int base = BukkitUtil.invBase(classes.size());
+        Inventory inv = Bukkit.createInventory(null, base, Common.truncate(Msg.locale(locale.toString(), "class.menu.title"), 32));
+
+        ItemStack[] items = classes.values().stream()
+            .map(clazz -> clazz.createClassIcon(locale))
+            .collect(Collectors.toList())
+            .toArray(new ItemStack[base]);
+
+        SchedulerUtil.runSync(() -> inv.setContents(items));
+
+        return inv;
+    }
+
+    /** Open the menu if they can */
+    public void openClassKitChooserMenu(GamePlayer player) {
+        Locale locale = new Locale(player.getPlayer().getLocale());
+        Inventory menu = MessageManager.get().isLocale(player.getPlayer().getLocale()) ? classKitChooser.get(locale) : classKitChooser.get(new Locale(Message.DEFAULT_LOCALE));
+
+        if (!stage.isEndGame()) {
+            player.getPlayer().openInventory(menu);
+        }
+        else {
+            player.sendMessage(Msg.NOTICE + Msg.locale(player, "class.menu.not_now"));
+        }
+    }
 
     // END Class GUI //
 
@@ -371,6 +399,14 @@ public final class NodeGame implements GameManager, Validator {
                 return stream.get(0);
             }
         }
+    }
+
+    public NodeClass getClassKit(String name) {
+        List<NodeClass> stream = classes.values().stream()
+            .filter(clazz -> clazz.getName().equalsIgnoreCase(MessageUtil.stripColors(name)))
+            .collect(Collectors.toList());
+
+        return stream.get(0);
     }
 
     public int getMaxPlayers() {

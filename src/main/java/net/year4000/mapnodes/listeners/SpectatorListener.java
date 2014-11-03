@@ -7,10 +7,12 @@ import net.year4000.mapnodes.api.events.player.GamePlayerJoinTeamEvent;
 import net.year4000.mapnodes.api.game.GameManager;
 import net.year4000.mapnodes.api.game.GamePlayer;
 import net.year4000.mapnodes.api.game.GameTeam;
+import net.year4000.mapnodes.game.NodeClass;
 import net.year4000.mapnodes.game.NodeGame;
 import net.year4000.mapnodes.game.NodeKit;
 import net.year4000.mapnodes.game.NodePlayer;
 import net.year4000.mapnodes.messages.Msg;
+import net.year4000.mapnodes.utils.PacketHacks;
 import net.year4000.mapnodes.utils.SchedulerUtil;
 import net.year4000.utilities.bukkit.FunEffectsUtil;
 import net.year4000.utilities.bukkit.ItemUtil;
@@ -37,6 +39,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.BlockIterator;
 
 import java.util.Iterator;
+import java.util.Optional;
+import java.util.function.Supplier;
 
 @EqualsAndHashCode
 public class SpectatorListener implements Listener {
@@ -209,15 +213,20 @@ public class SpectatorListener implements Listener {
     }
 
     @EventHandler
-    public void onJoin(GamePlayerJoinSpectatorEvent e) {
-        NodeKit kit = (NodeKit) e.getKit();
+    public void onJoin(GamePlayerJoinSpectatorEvent event) {
+        NodeKit kit = (NodeKit) event.getKit();
+        boolean classKit = ((NodePlayer) event.getPlayer()).getGame().getClasses().size() > 0;
 
         // Book
-        kit.getItems().set(2, book(e.getPlayer()));
+        kit.getItems().set(classKit ? 3 : 2, book(event.getPlayer()));
         // Servers
-        kit.getItems().set(8, ItemUtil.makeItem("nether_star", "{'display':{'name':'" + Msg.locale(e.getPlayer(), "items.servers_menu") + "'}}"));
+        kit.getItems().set(8, ItemUtil.makeItem("enchanted_book", "{'display':{'name':'" + Msg.locale(event.getPlayer(), "items.servers_menu") + "'}}"));
         // Game Menu
-        kit.getItems().set(0, ItemUtil.makeItem("eye_of_ender", "{'display':{'name':'" + Msg.locale(e.getPlayer(), "team.menu.item") + "'}}"));
+        kit.getItems().set(0, ItemUtil.makeItem("eye_of_ender", "{'display':{'name':'" + Msg.locale(event.getPlayer(), "team.menu.item") + "'}}"));
+        // Class Menu
+        if (classKit) {
+            kit.getItems().set(1, ItemUtil.makeItem("magma_cream", "{'display':{'name':'" + Msg.locale(event.getPlayer(), "class.menu.item") + "'}}"));
+        }
     }
 
     // Team picker GUI //
@@ -265,6 +274,61 @@ public class SpectatorListener implements Listener {
             try {
                 if (Msg.matches(player, hand.getItemMeta().getDisplayName(), "team.menu.item")) {
                     ((NodeGame) MapNodes.getCurrentGame()).openTeamChooserMenu(player);
+                }
+            } catch (NullPointerException e) {
+                /** Not a valid item */
+                // MapNodesPlugin.debug(e, true);
+            } finally {
+                event.setCancelled(true);
+            }
+        }
+    }
+
+    // Class Kit picker GUI //
+
+    @EventHandler
+    public void onClassPicker(InventoryClickEvent event) {
+        Player player = (Player)event.getWhoClicked();
+        GamePlayer gPlayer = MapNodes.getCurrentGame().getPlayer(player);
+        NodeGame game = (NodeGame) MapNodes.getCurrentGame();
+
+        if (gPlayer.isPlaying()) return;
+
+        if (Msg.matches(gPlayer, event.getInventory().getName(), "class.menu.title")) {
+            try {
+                ItemStack item = event.getCurrentItem();
+                String clazzName = item.getItemMeta().getDisplayName();
+                FunEffectsUtil.playSound(player, Sound.ITEM_PICKUP);
+                NodeClass team = game.getClassKit(clazzName);
+                ((NodePlayer) gPlayer).setClassKit(team);
+            } catch (IllegalArgumentException e) {
+                player.sendMessage(Msg.NOTICE + e.getMessage());
+                player.sendMessage(Msg.locale(gPlayer, "server.non_vip_url"));
+                event.setCancelled(true);
+            } catch (NullPointerException e) {
+                /** Not a valid item */
+                // MapNodesPlugin.debug(e, true);
+            } finally {
+                player.closeInventory();
+                event.setCancelled(true);
+            }
+        }
+    }
+
+    @EventHandler
+    public void onClassJoiner(PlayerInteractEvent event) {
+        boolean rightAir = event.getAction() == Action.RIGHT_CLICK_AIR;
+        boolean rightBlock = event.getAction() == Action.RIGHT_CLICK_BLOCK;
+
+        if (rightAir || rightBlock) {
+            ItemStack hand = event.getPlayer().getItemInHand();
+            GamePlayer player = MapNodes.getCurrentGame().getPlayer(event.getPlayer());
+
+            if (player.isPlaying()) return;
+
+            try {
+                if (Msg.matches(player, hand.getItemMeta().getDisplayName(), "class.menu.item")) {
+                    ((NodeGame) MapNodes.getCurrentGame()).openClassKitChooserMenu(player);
                 }
             } catch (NullPointerException e) {
                 /** Not a valid item */

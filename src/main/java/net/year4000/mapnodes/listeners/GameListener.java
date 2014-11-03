@@ -39,7 +39,13 @@ public final class GameListener implements Listener {
         GamePlayer player = MapNodes.getCurrentGame().getPlayer(event.getPlayer());
 
         if (player.isPlaying()) {
-            ((NodeKit) player.getTeam().getKit()).giveKit(player);
+            if (((NodePlayer) player).hasClassKit()) {
+                ((NodePlayer) player).getClassKit().getKit().giveKit(player);
+            }
+            else {
+                ((NodeKit) player.getTeam().getKit()).giveKit(player);
+            }
+
             ((NodePlayer) player).updateInventory();
 
             // God buffer mode

@@ -2,6 +2,7 @@ package net.year4000.mapnodes.utils;
 
 import net.minecraft.server.v1_7_R4.ChatSerializer;
 import net.minecraft.server.v1_7_R4.IChatBaseComponent;
+import net.minecraft.server.v1_7_R4.NBTTagCompound;
 import net.minecraft.server.v1_7_R4.Packet;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.utilities.MessageUtil;
@@ -9,8 +10,12 @@ import net.year4000.utilities.bukkit.bossbar.BossBar;
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_7_R4.CraftServer;
 import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_7_R4.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.spigotmc.ProtocolInjector;
+
+import java.util.Optional;
 
 public final class PacketHacks {
     /** Re-spawn a dead player */
@@ -29,6 +34,28 @@ public final class PacketHacks {
             ((CraftServer) Bukkit.getServer()).getServer().getPlayerList().moveToWorld(craftPlayer.getHandle(), 0, false);
             ++counter;
         }
+    }
+
+    /** Get the NBT Tag is their is one */
+    public static String getNBTTag(ItemStack item, String key) {
+        net.minecraft.server.v1_7_R4.ItemStack craftItem = CraftItemStack.asNMSCopy(item);
+
+        if (!craftItem.hasTag()) {
+            return null;
+        }
+
+        return craftItem.getTag().getString(key);
+    }
+
+    /** Set a custom NBT data to an item */
+    public static void setNBTTag(ItemStack item, String key, String value) {
+        net.minecraft.server.v1_7_R4.ItemStack craftItem = CraftItemStack.asNMSCopy(item);
+
+        if (!craftItem.hasTag()) {
+            craftItem.setTag(new NBTTagCompound());
+        }
+
+        craftItem.getTag().setString(key, value);
     }
 
     /** Set the tablist header and footer */

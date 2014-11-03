@@ -165,8 +165,12 @@ public class ScoreboardFactory {
         if (game.getClasses().size() > 0) {
             side.addBlank();
             side.addLine(Msg.locale(nodePlayer, "class.name"));
-            side.addLine(" " + Msg.locale(nodePlayer, "class.default"));
-            //side.addLine("  " + nodePlayer.getClazz().getDisplayName());
+            if (nodePlayer.hasClassKit()) {
+                side.addLine(" &a" + nodePlayer.getClassKit().getName());
+            }
+            else {
+                side.addLine(" " + Msg.locale(nodePlayer, "class.default"));
+            }
         }
 
         side.addBlank();

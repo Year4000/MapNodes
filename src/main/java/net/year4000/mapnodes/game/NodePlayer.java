@@ -39,6 +39,7 @@ public final class NodePlayer implements GamePlayer, Comparable {
     private final Player player;
     private NodeTeam team;
     private NodeTeam pendingTeam;
+    private NodeClass classKit;
     private List<BukkitTask> playerTasks = new ArrayList<>();
 
     // scoreboard
@@ -60,6 +61,18 @@ public final class NodePlayer implements GamePlayer, Comparable {
         player.setScoreboard(scoreboard);
     }
 
+    /** Does this player have a class kit */
+    public boolean hasClassKit() {
+        return classKit != null;
+    }
+
+    /** Set the class kit for this player */
+    public void setClassKit(NodeClass classKit) {
+        sendMessage(Msg.locale(player, "class.join", "&a" + classKit.getName()));
+        this.classKit = classKit;
+        game.getScoreboardFactory().setPersonalSidebar(this);
+    }
+
     public void start() {
         if (pendingTeam != null) {
             // If you are in the team's queue don't start
@@ -75,7 +88,7 @@ public final class NodePlayer implements GamePlayer, Comparable {
 
         GamePlayerStartEvent start = new GamePlayerStartEvent(this) {{
             this.setImmortal(true);
-            this.setKit(team.getKit());
+            this.setKit(hasClassKit() ? classKit.getKit() : team.getKit());
             this.setTeam(team);
             this.setSpawn(team.getSpawns().getSafeRandomSpawn());
         }};
@@ -84,7 +97,7 @@ public final class NodePlayer implements GamePlayer, Comparable {
         // Event Method Results
         game.getScoreboardFactory().setTeam(this, (NodeTeam) start.getTeam());
         game.getScoreboardFactory().setGameSidebar(this);
-        ((NodeKit) start.getTeam().getKit()).giveKit(this);
+        ((NodeKit) start.getKit()).giveKit(this);
         player.teleport(start.getSpawn());
 
         // God buffer mode
