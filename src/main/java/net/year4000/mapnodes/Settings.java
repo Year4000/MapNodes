@@ -7,6 +7,9 @@ import net.year4000.utilities.config.Config;
 import net.year4000.utilities.config.InvalidConfigurationException;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -57,4 +60,10 @@ public class Settings extends Config {
         add("/y4k/maps/");
     }};
 
+    @Comment("The json file location to load global kits")
+    private String kits = "/y4k/maps/kits.json";
+
+    public Reader getGlobalKits() throws FileNotFoundException {
+        return new FileReader(new File(kits));
+    }
 }

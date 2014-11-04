@@ -1,6 +1,8 @@
 package net.year4000.mapnodes.game;
 
+import com.google.common.reflect.TypeToken;
 import com.google.gson.JsonIOException;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import lombok.Getter;
 import net.lingala.zip4j.core.ZipFile;
@@ -8,6 +10,7 @@ import net.lingala.zip4j.exception.ZipException;
 import net.minecraft.util.org.apache.commons.io.FileUtils;
 import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.NodeFactory;
+import net.year4000.mapnodes.Settings;
 import net.year4000.mapnodes.api.game.GameConfig;
 import net.year4000.mapnodes.clocks.RestartServer;
 import net.year4000.mapnodes.exceptions.InvalidJsonException;
@@ -27,10 +30,9 @@ import org.bukkit.util.CachedServerIcon;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.Reader;
+import java.io.*;
+import java.lang.reflect.Type;
+import java.util.Map;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -106,14 +108,23 @@ public class Node {
             if (game.getTeams().containsKey("spectator")) {
                 game.getTeams().remove("spectator");
             }
+
             game.getTeams().put("spectator", new SpectatorTeam());
 
             if (game.getKits().containsKey("spectator")) {
                 game.getKits().remove("spectator");
             }
-            game.getKits().put("spectator", new SpectatorKit());
-            game.getKits().put("default", new NodeKit());
 
+            game.getKits().put("spectator", new SpectatorKit());
+
+            // Load global kits
+            try {
+                Type kitType = new TypeToken<Map<String, NodeKit>>(){}.getType();
+                Map<String, NodeKit> globalKits = GsonUtil.createGson().fromJson(Settings.get().getGlobalKits(), kitType);
+                globalKits.forEach((key, kit) -> game.getKits().put(key, kit));
+            } catch (FileNotFoundException e) {
+                game.getKits().put("default", new NodeKit());
+            }
         } catch (JsonIOException | JsonSyntaxException | WorldLoadException e) {
             MapNodesPlugin.debug(e, false);
 
