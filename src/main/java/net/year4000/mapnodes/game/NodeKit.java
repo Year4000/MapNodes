@@ -20,7 +20,9 @@ import net.year4000.mapnodes.utils.typewrappers.PlayerInventoryList;
 import net.year4000.mapnodes.utils.typewrappers.PotionEffectList;
 import org.bukkit.Color;
 import org.bukkit.GameMode;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.potion.PotionEffect;
@@ -36,6 +38,10 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 /** Manage the items and effects that are given to the player. */
 public class NodeKit implements GameKit, Validator, AssignNodeGame {
+    /** The parents the kit will inherit */
+    @Since(2.0)
+    private List<String> parents = new ArrayList<>();
+
     /** The items to put in the player's inventory. */
     @Since(1.0)
     private PlayerInventoryList<ItemStack> items = new PlayerInventoryList<>();
@@ -164,6 +170,32 @@ public class NodeKit implements GameKit, Validator, AssignNodeGame {
             effects.forEach(effect -> rawPlayer.addPotionEffect(effect, true));
 
             // noinspection deprecation
+            rawPlayer.updateInventory();
+        }, 1L));
+
+        rawPlayer.setMaxHealth(health);
+        rawPlayer.setHealth(health);
+        rawPlayer.setFoodLevel(food);
+        rawPlayer.setGameMode(gamemode);
+        rawPlayer.setAllowFlight(fly);
+        rawPlayer.setFlying(fly);
+    }
+
+    public void addKit(GamePlayer player) {
+        Player rawPlayer = player.getPlayer();
+
+        player.getPlayerTasks().add(SchedulerUtil.runSync(() -> {
+            Inventory inv = player.getInventory();
+            // Apply the items to the player if it has a slot set that slot if not just add it
+            items.getRawItems().forEach(slotItem -> {
+                if (slotItem.getSlot() == -1) {
+                    inv.addItem(slotItem.create());
+                }
+                else {
+                    inv.setItem(slotItem.getSlot(), slotItem.create());
+                }
+            });
+
             rawPlayer.updateInventory();
         }, 1L));
 
