@@ -1,5 +1,6 @@
 package net.year4000.mapnodes.gamemodes.skywars;
 
+import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.events.game.GameLoadEvent;
 import net.year4000.mapnodes.api.events.game.GameStartEvent;
@@ -87,7 +88,7 @@ public class Skywars extends GameModeTemplate implements GameMode {
         alive.addAll(team.getPlayers().stream().map(player -> player.getPlayer().getName()).collect(Collectors.toList()));
         buildAndSendList();
 
-        if (alive.size() <= 1) {
+        if (alive.size() <= 1 && !MapNodesPlugin.getInst().isDebug()) {
             game.stop();
         }
     }
