@@ -3,6 +3,7 @@ package net.year4000.mapnodes.game.regions.events;
 import com.google.common.collect.Iterables;
 import com.google.gson.annotations.SerializedName;
 import net.year4000.mapnodes.api.events.game.GameStopEvent;
+import net.year4000.mapnodes.game.NodeKit;
 import net.year4000.mapnodes.game.regions.EventType;
 import net.year4000.mapnodes.game.regions.EventTypes;
 import net.year4000.mapnodes.game.regions.RegionEvent;
@@ -23,6 +24,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.BlockVector;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
@@ -33,6 +35,7 @@ public class Chest extends RegionEvent implements RegionListener {
     private static transient final Random rand = new Random(System.currentTimeMillis());
     private static transient final List<BlockVector> chests = new CopyOnWriteArrayList<>();
     private static transient final List<BlockVector> placedChests = new CopyOnWriteArrayList<>();
+    private List<String> kits = new ArrayList<>();
     private ItemStackList<ItemStack> items = new ItemStackList<>();
     @SerializedName("keep_filled")
     private boolean keepFilled = false;
@@ -94,6 +97,14 @@ public class Chest extends RegionEvent implements RegionListener {
                     }
 
                     new ChestLoop();
+                }
+
+                // Add items from the kit to the chests
+                if (kits.size() > 0) {
+                    kits.forEach(kit -> {
+                        NodeKit nodeKit = region.getGame().getKits().get(kit);
+                        items.addAll(nodeKit.getItems().getNonAirItems());
+                    });
                 }
 
                 ItemStack[] chestContents = new ItemStack[chest.getSize()];
