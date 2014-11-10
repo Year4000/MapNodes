@@ -207,7 +207,8 @@ public class SpectatorListener implements Listener {
         SchedulerUtil.runSync(() -> gm.getSpectating().parallel().forEach(player -> {
             Inventory inv = player.getPlayer().getInventory();
 
-            inv.setItem(2, book(player));
+
+            inv.setItem(((NodeGame) gm).getClasses().size() > 0 ? 3 : 2, book(player));
             player.getPlayer().updateInventory();
         }), 5L);
     }
