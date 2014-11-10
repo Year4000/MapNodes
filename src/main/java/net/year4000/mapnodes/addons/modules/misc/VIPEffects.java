@@ -27,10 +27,10 @@ public class VIPEffects extends Addon implements Listener {
             .filter(player -> player.getPlayer().hasPermission("theta"))
             .filter(player -> player.getPlayer().getLocation().distance(loc) < 50)
             .forEach(player -> {
-                Location l = event.getEntity().getLocation().clone().add(0, 1, 0).subtract(Common.randomOffset());
-                player.getPlayer().playEffect(l.clone().add(Common.randomOffset()), Effect.MAGIC_CRIT, (byte) 0);
-                player.getPlayer().playEffect(l.clone().add(Common.randomOffset()), Effect.INSTANT_SPELL, (byte) 0);
-                player.getPlayer().playEffect(l.clone().add(Common.randomOffset()), Effect.MAGIC_CRIT, (byte) 0);
+                Location l = event.getEntity().getLocation().clone().add(0, 1, 0);
+                player.getPlayer().playEffect(l.clone().add(Common.randomOffset()), Effect.STEP_SOUND, (byte) 152);
+                player.getPlayer().playEffect(l.clone().add(Common.randomOffset()), Effect.STEP_SOUND, (byte) 152);
+                player.getPlayer().playEffect(l.clone().add(Common.randomOffset()), Effect.STEP_SOUND, (byte) 152);
             });
     }
 }
