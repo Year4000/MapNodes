@@ -109,7 +109,7 @@ public class Node {
                 game.getTeams().remove("spectator");
             }
 
-            game.getTeams().put("spectator", new SpectatorTeam());
+            game.getTeams().put("spectator", new SpectatorTeam(game.getConfig().getSpawn()));
 
             if (game.getKits().containsKey("spectator")) {
                 game.getKits().remove("spectator");
