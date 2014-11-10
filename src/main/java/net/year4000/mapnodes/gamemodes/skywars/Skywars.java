@@ -96,7 +96,7 @@ public class Skywars extends GameModeTemplate implements GameMode {
     /** Show death message to all game players */
     @EventHandler
     public void onPlayerDeath(GamePlayerDeathEvent event) {
-        event.getViewers().addAll(team.getPlayers());
+        event.getViewers().addAll(game.getPlayers().collect(Collectors.toList()));
     }
 
     /** Handle raw player death's */
