@@ -11,8 +11,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -24,7 +26,7 @@ import java.util.Set;
 
 @AddonInfo(
     name = "Game Mech",
-    version = "1.0",
+    version = "1.1",
     description = "Change vanilla mechanics to better serve the game.",
     listeners = {GameMech.class}
 )
@@ -182,5 +184,16 @@ public class GameMech extends Addon implements Listener {
 
     public short dura(ItemStack old, ItemStack pickup) {
         return (short) (old.getDurability() - pickup.getDurability());
+    }
+
+    /** Open a fake crafting table */
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void fakeTable(PlayerInteractEvent event) {
+        if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+            if (event.getClickedBlock().getType() == Material.WORKBENCH) {
+                event.getPlayer().openWorkbench(event.getPlayer().getLocation(), true);
+                event.setCancelled(true);
+            }
+        }
     }
 }
