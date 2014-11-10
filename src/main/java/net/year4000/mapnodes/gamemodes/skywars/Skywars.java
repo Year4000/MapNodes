@@ -21,10 +21,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @GameModeInfo(
@@ -52,7 +49,10 @@ public class Skywars extends GameModeTemplate implements GameMode {
         game.getStartControls().add(() -> team.getPlayers().size() >= 2);
 
         // Create the iterator of spawns
-        spawns = team.getSpawns().iterator();
+        List<Location> shuffledSpawns = new ArrayList<>(team.getSpawns());
+        Collections.shuffle(shuffledSpawns);
+
+        spawns = shuffledSpawns.iterator();
     }
 
     /** Set the player's spawn to the next spawn in the list */
