@@ -28,9 +28,9 @@ public class VIPEffects extends Addon implements Listener {
             .filter(player -> player.getPlayer().getLocation().distance(loc) < 50)
             .forEach(player -> {
                 Location l = event.getEntity().getLocation().clone().add(0, 1, 0);
-                player.getPlayer().playEffect(l.clone().add(Common.randomOffset()), Effect.STEP_SOUND, (byte) 152);
-                player.getPlayer().playEffect(l.clone().add(Common.randomOffset()), Effect.STEP_SOUND, (byte) 152);
-                player.getPlayer().playEffect(l.clone().add(Common.randomOffset()), Effect.STEP_SOUND, (byte) 152);
+                player.getPlayer().playEffect(l.clone().add(Common.randomOffset()), Effect.STEP_SOUND, 152);
+                player.getPlayer().playEffect(l.clone().add(Common.randomOffset()), Effect.STEP_SOUND, 152);
+                player.getPlayer().playEffect(l.clone().add(Common.randomOffset()), Effect.STEP_SOUND, 152);
             });
     }
 }
