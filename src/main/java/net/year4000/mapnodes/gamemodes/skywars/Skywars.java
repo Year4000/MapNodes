@@ -84,7 +84,7 @@ public class Skywars extends GameModeTemplate implements GameMode {
     /** Set up the players in the game */
     @EventHandler
     public void onGameStart(GameStartEvent event) {
-        team.getQueue().forEach(player -> ((NodePlayer) player).joinTeam(null));
+        new ArrayList<>(team.getQueue()).forEach(player -> ((NodePlayer) player).joinTeam(null));
         alive.addAll(team.getPlayers().stream().map(player -> player.getPlayer().getName()).collect(Collectors.toList()));
         buildAndSendList();
 
