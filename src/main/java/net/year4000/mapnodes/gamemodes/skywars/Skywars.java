@@ -58,6 +58,8 @@ public class Skywars extends GameModeTemplate implements GameMode {
     /** Set the player's spawn to the next spawn in the list */
     @EventHandler
     public void onPlayerJoin(GamePlayerStartEvent event) {
+        if (event.getPlayer().getTeam() instanceof Spectator) return;
+
         event.setImmortal(false);
         event.setSpawn(spawns.next());
     }
