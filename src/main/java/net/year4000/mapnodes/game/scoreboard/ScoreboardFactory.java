@@ -1,5 +1,6 @@
 package net.year4000.mapnodes.game.scoreboard;
 
+import com.google.common.base.Ascii;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import lombok.AllArgsConstructor;
@@ -69,7 +70,14 @@ public class ScoreboardFactory {
 
     /** Update player's custom display tab list name */
     public void setOrUpdateListName(NodePlayer viewer, NodePlayer player) {
-        String hash = String.valueOf(player.getPlayer().getName().hashCode());
+        // The sorting algorithm
+        int sortedHash = player.getTeam().getId().hashCode();
+        sortedHash /= player.getBadgeRank();
+        sortedHash += Ascii.toLowerCase(player.getPlayer().getName().toCharArray()[0]);
+        sortedHash = Math.abs(sortedHash);
+        String hash = String.valueOf(sortedHash);
+
+        // set how the display looks
         String color = player.getTeam().getColor().toString();
         color = viewer == player ? Common.fcolor(ChatColor.ITALIC, color) : color;
         String prefix = MessageUtil.replaceColors(player.getBadge() + " " + color);
