@@ -74,7 +74,7 @@ public class ScoreboardFactory {
     /** Update player's custom display tab list name */
     public void setOrUpdateListName(NodePlayer viewer, NodePlayer player) {
         // The sorting algorithm
-        int sortedHash = player.getTeam().getId().hashCode();
+        int sortedHash = player.getTeam() instanceof Spectator ? Integer.MAX_VALUE : player.getTeam().getId().hashCode();
         sortedHash /= player.getBadgeRank();
         char[] charName = player.getPlayer().getName().toCharArray();
 
