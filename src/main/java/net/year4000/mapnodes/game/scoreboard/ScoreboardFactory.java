@@ -23,12 +23,15 @@ import org.bukkit.scoreboard.*;
 
 import java.util.Iterator;
 import java.util.Set;
+import java.util.List;
+import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
 @AllArgsConstructor
 public class ScoreboardFactory {
     private static final ScoreboardManager manager = Bukkit.getScoreboardManager();
+    private transient final List<Team> tabListTeamNames = new ArrayList<>();
     private final NodeGame game;
 
     // Fancy Title
@@ -73,9 +76,14 @@ public class ScoreboardFactory {
         // The sorting algorithm
         int sortedHash = player.getTeam().getId().hashCode();
         sortedHash /= player.getBadgeRank();
-        sortedHash += Ascii.toLowerCase(player.getPlayer().getName().toCharArray()[0]);
-        sortedHash = Math.abs(sortedHash);
-        String hash = String.valueOf(sortedHash);
+        char[] charName = player.getPlayer().getName().toCharArray();
+
+        for (int i = 0; i < charName.length; i++) {
+            sortedHash += Ascii.toLowerCase(charName[i]);
+        }
+
+        sortedHash = -Math.abs(sortedHash);
+        String hash = "tab:" + String.valueOf(sortedHash);
 
         // set how the display looks
         String color = player.getTeam().getColor().toString();
@@ -85,7 +93,12 @@ public class ScoreboardFactory {
         Scoreboard scoreboard = viewer.getScoreboard();
 
         if (scoreboard.getTeam(hash) == null) {
+            // Purge name from old teams
+            tabListTeamNames.forEach(team -> team.remove(player.getSplitName()[0]));
+
+            // Create new team and assign player to it
             Team team = scoreboard.registerNewTeam(hash);
+            tabListTeamNames.add(team);
             team.setPrefix(prefix);
             team.setSuffix(player.getSplitName()[1]);
             team.add(player.getSplitName()[0]);
@@ -93,6 +106,7 @@ public class ScoreboardFactory {
         else {
             Team team = scoreboard.getTeam(hash);
             team.setPrefix(prefix);
+            team.add(player.getSplitName()[0]);
         }
     }
 
