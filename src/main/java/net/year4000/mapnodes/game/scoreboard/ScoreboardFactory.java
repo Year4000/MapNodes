@@ -25,13 +25,15 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
 @AllArgsConstructor
 public class ScoreboardFactory {
     private static final ScoreboardManager manager = Bukkit.getScoreboardManager();
-    private transient final List<Team> tabListTeamNames = new ArrayList<>();
+    private transient final Map<Scoreboard, List<Team>> tabListTeamNames = new HashMap<>();
     private final NodeGame game;
 
     // Fancy Title
@@ -92,13 +94,18 @@ public class ScoreboardFactory {
         player.getPlayer().setPlayerListName(player.getSplitName()[0]);
         Scoreboard scoreboard = viewer.getScoreboard();
 
+        // Create record in Map
+        if (!tabListTeamNames.containsKey(scoreboard)) {
+            tabListTeamNames.put(scoreboard, new ArrayList<>());
+        }
+
         if (scoreboard.getTeam(hash) == null) {
             // Purge name from old teams
-            tabListTeamNames.forEach(team -> team.remove(player.getSplitName()[0]));
+            tabListTeamNames.get(scoreboard).forEach(team -> team.remove(player.getSplitName()[0]));
 
             // Create new team and assign player to it
             Team team = scoreboard.registerNewTeam(hash);
-            tabListTeamNames.add(team);
+            tabListTeamNames.get(scoreboard).add(team);
             team.setPrefix(prefix);
             team.setSuffix(player.getSplitName()[1]);
             team.add(player.getSplitName()[0]);
