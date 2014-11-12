@@ -78,7 +78,7 @@ public class ScoreboardFactory {
         sortedHash /= player.getBadgeRank();
         char[] charName = player.getPlayer().getName().toCharArray();
 
-        for (int i = 0; i < charName.length; i++) {
+        for (int i = 0; i < 3; i++) {
             sortedHash += Ascii.toLowerCase(charName[i]);
         }
 
