@@ -80,7 +80,7 @@ public class ScoreboardFactory {
         sortedHash /= player.getBadgeRank();
         char[] charName = player.getPlayer().getName().toCharArray();
 
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < player.getSplitName()[0].length(); i++) {
             sortedHash += Ascii.toLowerCase(charName[i]);
         }
 
