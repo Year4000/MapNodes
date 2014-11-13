@@ -81,7 +81,7 @@ public class ScoreboardFactory {
         char[] charName = player.getPlayer().getName().toCharArray();
 
         for (int i = 0; i < player.getSplitName()[0].length(); i++) {
-            sortedHash += Ascii.toLowerCase(charName[i]);
+            sortedHash -= Ascii.toLowerCase(charName[i]);
         }
 
         sortedHash = Math.abs(sortedHash);
