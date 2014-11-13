@@ -84,7 +84,7 @@ public class ScoreboardFactory {
             sortedHash += Ascii.toLowerCase(charName[i]);
         }
 
-        sortedHash = -Math.abs(sortedHash);
+        sortedHash = Math.abs(sortedHash);
         String hash = "tab:" + String.valueOf(sortedHash);
 
         // set how the display looks
