@@ -9,6 +9,7 @@ import net.year4000.mapnodes.api.game.GameClass;
 import net.year4000.mapnodes.exceptions.InvalidJsonException;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.AssignNodeGame;
+import net.year4000.mapnodes.utils.NMSHacks;
 import net.year4000.mapnodes.utils.PacketHacks;
 import net.year4000.mapnodes.utils.Validator;
 import net.year4000.utilities.MessageUtil;
@@ -128,7 +129,7 @@ public final class NodeClass implements GameClass, Validator, AssignNodeGame {
         kitMeta.setLore(lore);
         kitIcon.setItemMeta(kitMeta);
 
-        PacketHacks.setNBTTag(kitIcon, "MapNodes_Class", getId());
+        NMSHacks.setNBTTag(kitIcon, "MapNodes_Class", getId());
 
         return kitIcon;
     }

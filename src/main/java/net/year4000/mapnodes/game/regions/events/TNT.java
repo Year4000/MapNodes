@@ -6,14 +6,13 @@ import net.year4000.mapnodes.game.regions.EventTypes;
 import net.year4000.mapnodes.game.regions.RegionEvent;
 import net.year4000.mapnodes.game.regions.RegionListener;
 import net.year4000.mapnodes.game.regions.types.Point;
-import net.year4000.mapnodes.utils.MathUtil;
-import net.year4000.mapnodes.utils.SchedulerUtil;
-import net.year4000.mapnodes.utils.TimeDuration;
+import net.year4000.mapnodes.utils.*;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.FallingBlock;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -63,11 +62,12 @@ public class TNT extends RegionEvent implements RegionListener {
                 event.getBlock().getLocation().add(0.5, 0.5, 0.5), // center it
                 TNTPrimed.class
             );
+            NMSHacks.addTNTSource(tnt, event.getPlayer());
             tnt.setFuseTicks(MathUtil.ticks(instantDelay.toSecs() + 1));
             tnt.setYield(yield);
 
             // Run the explosion later
-            explodeLater(tnt, instantDelay.toSecs());
+            explodeLater(tnt.getSource(), tnt, instantDelay.toSecs());
         }
     }
 
@@ -85,6 +85,7 @@ public class TNT extends RegionEvent implements RegionListener {
         if (throwBlocks && blockDamage) {
             Vector groundZero = event.getLocation().toVector();
             List<Block> blocks = new ArrayList<>(event.blockList());
+            final LivingEntity source = (LivingEntity) (event.getEntity() instanceof LivingEntity ? event.getEntity() : event.getEntity() instanceof TNTPrimed && ((TNTPrimed) event.getEntity()).getSource() instanceof LivingEntity ? ((TNTPrimed) event.getEntity()).getSource() : null);
 
             for (int i = 0; i < blocks.size(); i++) {
                 Collections.reverse(blocks);
@@ -105,9 +106,10 @@ public class TNT extends RegionEvent implements RegionListener {
                 if (block.getType() == Material.TNT) {
                     block.setType(Material.AIR);
                     TNTPrimed tnt = block.getWorld().spawn(loc, TNTPrimed.class);
+                    NMSHacks.addTNTSource(tnt, source);
                     tnt.setFuseTicks(MathUtil.ticks(2));
                     tnt.setYield(yield);
-                    explodeLater(tnt, 1);
+                    explodeLater(tnt.getSource(), tnt, 1);
                     tnt.setVelocity(velocity);
                 }
                 else if (block.getType().isSolid()) {
@@ -126,18 +128,12 @@ public class TNT extends RegionEvent implements RegionListener {
     }
 
     /** Explode the Primed TNT later */
-    private void explodeLater(Entity id, int delay) {
+    private void explodeLater(Entity entity, Entity id, int delay) {
         SchedulerUtil.runSync(() -> {
             Location loc = id.getLocation();
+            boolean fire = id.getFireTicks() > 0;
             id.remove();
-            loc.getWorld().createExplosion(
-                loc.getX() + 0.5, // center it
-                loc.getY() + 0.5, // center it
-                loc.getZ() + 0.5, // center it
-                strength, // the strength of tnt
-                false,
-                blockDamage
-            );
+            NMSHacks.createExplosion(entity, Common.center(loc), (byte) strength, fire, blockDamage);
         }, MathUtil.ticks(delay));
     }
 }
