@@ -9,6 +9,7 @@ import net.year4000.mapnodes.game.regions.EventTypes;
 import net.year4000.mapnodes.game.regions.RegionEvent;
 import net.year4000.mapnodes.game.regions.RegionListener;
 import net.year4000.mapnodes.game.regions.types.Point;
+import net.year4000.mapnodes.utils.NMSHacks;
 import net.year4000.mapnodes.utils.typewrappers.MaterialList;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -18,10 +19,10 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.projectiles.ProjectileSource;
 import org.bukkit.util.BlockIterator;
 import org.bukkit.util.Vector;
 
@@ -60,6 +61,7 @@ public class Bow extends RegionEvent implements RegionListener {
             if (entity != null) {
                 Entity bowEntity = MapNodes.getCurrentWorld().spawnEntity(loc, entity);
                 event.setProjectile(bowEntity);
+                NMSHacks.addShooter(bowEntity, event.getEntity());
                 bowEntity.setVelocity(vector);
             }
 
@@ -97,7 +99,9 @@ public class Bow extends RegionEvent implements RegionListener {
 
             // Create an explosion if true
             if (explode) {
-                MapNodes.getCurrentWorld().createExplosion(loc.getX(), loc.getY(), loc.getZ(), 2, event.getEntity().getFireTicks() > 0, true);
+                boolean fire = event.getEntity().getFireTicks() > 0;
+                event.getEntity().remove();
+                NMSHacks.createExplosion(shooter, loc, (byte) 2, fire, true);
             }
 
             // Break the impact block
