@@ -11,6 +11,7 @@ import java.util.Collections;
 import java.util.List;
 
 public final class BadgeManager {
+    public static final int MAX_RANK = 6;
     @AllArgsConstructor
     public enum Badges {
         ALPHA(ChatColor.DARK_AQUA, "α", "alpha", 1),

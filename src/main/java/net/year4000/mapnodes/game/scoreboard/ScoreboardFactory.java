@@ -11,10 +11,7 @@ import net.year4000.mapnodes.game.NodePlayer;
 import net.year4000.mapnodes.game.NodeTeam;
 import net.year4000.mapnodes.game.system.Spectator;
 import net.year4000.mapnodes.messages.Msg;
-import net.year4000.mapnodes.utils.Common;
-import net.year4000.mapnodes.utils.PacketHacks;
-import net.year4000.mapnodes.utils.SchedulerUtil;
-import net.year4000.mapnodes.utils.TimeUtil;
+import net.year4000.mapnodes.utils.*;
 import net.year4000.utilities.ChatColor;
 import net.year4000.utilities.MessageUtil;
 import org.bukkit.Bukkit;
@@ -76,16 +73,11 @@ public class ScoreboardFactory {
     /** Update player's custom display tab list name */
     public void setOrUpdateListName(NodePlayer viewer, NodePlayer player) {
         // The sorting algorithm
-        int sortedHash = player.getTeam() instanceof Spectator ? Integer.MAX_VALUE : player.getTeam().getId().hashCode();
-        sortedHash /= player.getBadgeRank();
-        char[] charName = player.getPlayer().getName().toCharArray();
+        int teamHash = Common.chars(player.getTeam().getId());
+        int nameHash = Common.chars(player.getPlayer().getName());
+        int rank = player.getBadgeRank();
 
-        for (int i = 0; i < player.getSplitName()[0].length(); i++) {
-            sortedHash -= Ascii.toLowerCase(charName[i]);
-        }
-
-        sortedHash = Math.abs(sortedHash);
-        String hash = "tab:" + String.valueOf(sortedHash);
+        String hash = "tab:" + (teamHash >> 4) + "" + (BadgeManager.MAX_RANK - rank) + "" + (nameHash >> 4);
 
         // set how the display looks
         String color = player.getTeam().getColor().toString();
