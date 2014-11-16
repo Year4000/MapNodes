@@ -95,7 +95,6 @@ public class ScoreboardFactory {
             // Copy the list, find old teams and remove them from map and unregister them.
             new ArrayList<>(tabListTeamNames.get(scoreboard)).stream()
                 .filter(team -> team.has(player.getSplitName()[0]))
-                .filter(team -> team.getName().startsWith("tab:"))
                 .forEach(team -> {
                     tabListTeamNames.get(scoreboard).remove(team);
                     team.unregister();
