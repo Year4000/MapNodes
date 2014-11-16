@@ -1,6 +1,5 @@
 package net.year4000.mapnodes.game.scoreboard;
 
-import com.google.common.base.Ascii;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import lombok.AllArgsConstructor;
