@@ -72,7 +72,7 @@ public class ScoreboardFactory {
     /** Update player's custom display tab list name */
     public void setOrUpdateListName(NodePlayer viewer, NodePlayer player) {
         // The sorting algorithm
-        int teamHash = Common.chars(player.getTeam().getId());
+        int teamHash = Common.chars(player.getTeam() instanceof Spectator ? player.getTeam().getId().replaceAll(".", "`") : player.getTeam().getId());
         int nameHash = Common.chars(player.getPlayer().getName());
         int rank = player.getBadgeRank();
 
