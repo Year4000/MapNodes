@@ -72,11 +72,28 @@ public class ScoreboardFactory {
     /** Update player's custom display tab list name */
     public void setOrUpdateListName(NodePlayer viewer, NodePlayer player) {
         // The sorting algorithm
-        int teamHash = Common.chars(player.getTeam() instanceof Spectator ? player.getTeam().getId().replaceAll(".", "`") : player.getTeam().getId());
-        int nameHash = Common.chars(player.getPlayer().getName());
-        int rank = player.getBadgeRank();
+        StringBuilder stringBuilder = new StringBuilder("tab:");
 
-        String hash = "tab:" + (teamHash >> 4) + "" + (BadgeManager.MAX_RANK - rank) + "" + (nameHash >> 4);
+        // Order player -> team members -> other teams -> spectators
+        if (viewer == player) {
+            stringBuilder.append(0);
+        }
+        else if (viewer.getTeam() == player.getTeam() && !(player.getTeam() instanceof Spectator)) {
+            stringBuilder.append(1);
+        }
+        else if (!(player.getTeam() instanceof Spectator)) {
+            stringBuilder.append(2);
+        }
+        else {
+            stringBuilder.append(9);
+        }
+
+        stringBuilder
+            .append(Common.chars(player.getTeam().getId()) >> 4)
+            .append(BadgeManager.MAX_RANK - player.getBadgeRank())
+            .append(Common.chars(player.getPlayer().getName()) >> 4);
+
+        String hash = stringBuilder.toString();
 
         // set how the display looks
         String color = player.getTeam().getColor().toString();
