@@ -76,7 +76,7 @@ public class ScoreboardFactory {
 
         // Order player -> team members -> other teams -> spectators
         if (viewer == player) {
-            stringBuilder.append(0);
+            stringBuilder.append(player.getTeam() instanceof Spectator ? 8 : 0);
         }
         else if (viewer.getTeam() == player.getTeam() && !(player.getTeam() instanceof Spectator)) {
             stringBuilder.append(1);
