@@ -15,6 +15,7 @@ import net.year4000.mapnodes.game.regions.types.Point;
 import net.year4000.mapnodes.game.system.Spectator;
 import net.year4000.mapnodes.gamemodes.GameModeTemplate;
 import net.year4000.mapnodes.messages.Msg;
+import net.year4000.mapnodes.utils.Common;
 import net.year4000.mapnodes.utils.SchedulerUtil;
 import net.year4000.utilities.bukkit.BukkitUtil;
 import net.year4000.utilities.bukkit.FunEffectsUtil;
@@ -37,7 +38,7 @@ import java.util.Map;
 
 @GameModeInfo(
     name = "Capture",
-    version = "1.3",
+    version = "1.4",
     config = CaptureConfig.class
 )
 public class Capture extends GameModeTemplate implements GameMode {
@@ -145,7 +146,7 @@ public class Capture extends GameModeTemplate implements GameMode {
 
                 // Broadcast message
                 game.getPlaying().forEach(p -> {
-                    p.sendMessage(Msg.locale(p, "capture.placed", player.getPlayerColor(), team.getDisplayName()));
+                    Common.sendAnimatedActionBar(p, Msg.locale(p, "capture.placed", player.getPlayerColor(), team.getDisplayName()));
                     game.getScoreboardFactory().setGameSidebar((NodePlayer) p);
                     FunEffectsUtil.playSound(p.getPlayer(), Sound.NOTE_PLING);
                 });
@@ -213,7 +214,7 @@ public class Capture extends GameModeTemplate implements GameMode {
 
                 // Show grabbed message
                 game.getPlaying().forEach(p -> {
-                    p.sendMessage(Msg.locale(p, "capture.grabbed", player.getPlayerColor(), team.getDisplayName()));
+                    Common.sendAnimatedActionBar(p, Msg.locale(p, "capture.grabbed", player.getPlayerColor(), team.getDisplayName()));
                     game.getScoreboardFactory().setGameSidebar((NodePlayer) p);
                     FunEffectsUtil.playSound(p.getPlayer(), Sound.NOTE_PLING);
                 });

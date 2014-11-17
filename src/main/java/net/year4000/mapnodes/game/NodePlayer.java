@@ -373,6 +373,11 @@ public final class NodePlayer implements GamePlayer, Comparable {
         messages.forEach(this::sendMessage);
     }
 
+    /** Send a message to the Action Bar */
+    public void sendActionbarMessage(String message, Object... args) {
+        PacketHacks.sendActionBarMessage(player, MessageUtil.message(message, args));
+    }
+
     /** Get the player's color according to the team */
     public String getPlayerColor() {
         return MessageUtil.replaceColors(team.getColor() + player.getName());

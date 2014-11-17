@@ -1,12 +1,18 @@
 package net.year4000.mapnodes.utils;
 
 import com.google.common.base.Ascii;
+import net.year4000.mapnodes.api.game.GamePlayer;
+import net.year4000.mapnodes.clocks.Clocker;
+import net.year4000.mapnodes.game.NodePlayer;
 import net.year4000.mapnodes.game.regions.types.Point;
 import net.year4000.utilities.ChatColor;
 import net.year4000.utilities.bukkit.MessageUtil;
 import org.bukkit.Location;
+import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 
@@ -247,5 +253,40 @@ public final class Common {
 
     public static Vector randomOffset() {
         return new Vector(rand.nextDouble(), rand.nextDouble(), rand.nextDouble());
+    }
+
+    private static Map<NodePlayer, BukkitTask> actionBarAnimations = new HashMap<>();
+
+    /** Send a cool animated action bar message */
+    public static void sendAnimatedActionBar(GamePlayer player, String message) {
+        final NodePlayer nodePlayer = (NodePlayer) player;
+
+        Clocker animation = new Clocker(MathUtil.ticks(4)) {
+            @Override
+            public void runTock(int position) {
+                String[] prefix = new String[] {"&e&l>>> &f", "&e&l>>&0&l> &f", "&e&l>&0&l>&e&l> &f","&0&l>&e&l>> &f"};
+                String[] suffix = new String[] {" &e&l<<<", " &0&l<&e&l<&e&l<", " &e&l<&0&l<&e&l<", " &e&l<<&0&l<"};
+                int pos = position / 20;
+
+                nodePlayer.sendActionbarMessage(MessageUtil.replaceColors(prefix[pos]) + message + MessageUtil.replaceColors(suffix[pos]));
+            }
+
+            @Override
+            public void runLast(int position) {
+                actionBarAnimations.remove(nodePlayer);
+            }
+        };
+
+        // Make sure the player is running 1.8 or newer
+        if (PacketHacks.isTitleAble(player.getPlayer())) {
+            if (actionBarAnimations.containsKey(nodePlayer)) {
+                actionBarAnimations.get(nodePlayer).cancel();
+            }
+
+            actionBarAnimations.put(nodePlayer, animation.run());
+        }
+        else {
+            nodePlayer.sendMessage(message);
+        }
     }
 }
