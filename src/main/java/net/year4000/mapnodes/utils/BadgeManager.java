@@ -11,20 +11,24 @@ import java.util.Collections;
 import java.util.List;
 
 public final class BadgeManager {
+    public static final int MAX_RANK = 6;
+
     @AllArgsConstructor
     public enum Badges {
-        ALPHA(ChatColor.DARK_AQUA, "α", "alpha"),
-        THETA(ChatColor.GRAY, "Θ", "theta"),
-        MU(ChatColor.YELLOW, "μ", "mu"),
-        PI(ChatColor.AQUA, "π", "pi"),
-        SIGMA(ChatColor.GOLD, "σ", "sigma"),
-        OMEGA(ChatColor.RED, "Ω", "omega"),
+        ALPHA(ChatColor.DARK_AQUA, "α", "alpha", 1),
+        THETA(ChatColor.GRAY, "Θ", "theta", 2),
+        MU(ChatColor.YELLOW, "μ", "mu", 3),
+        PI(ChatColor.AQUA, "π", "pi", 4),
+        SIGMA(ChatColor.GOLD, "σ", "sigma", 5),
+        OMEGA(ChatColor.RED, "Ω", "omega", 6),
         /* DIFF CHECKER */;
 
         @Getter
         private ChatColor color;
         @Getter
         private String badge, permission;
+        @Getter
+        private int rank;
 
         @Override
         public String toString() {

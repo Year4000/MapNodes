@@ -10,10 +10,7 @@ import net.year4000.mapnodes.game.NodePlayer;
 import net.year4000.mapnodes.game.NodeTeam;
 import net.year4000.mapnodes.game.system.Spectator;
 import net.year4000.mapnodes.messages.Msg;
-import net.year4000.mapnodes.utils.Common;
-import net.year4000.mapnodes.utils.PacketHacks;
-import net.year4000.mapnodes.utils.SchedulerUtil;
-import net.year4000.mapnodes.utils.TimeUtil;
+import net.year4000.mapnodes.utils.*;
 import net.year4000.utilities.ChatColor;
 import net.year4000.utilities.MessageUtil;
 import org.bukkit.Bukkit;
@@ -22,12 +19,17 @@ import org.bukkit.scoreboard.*;
 
 import java.util.Iterator;
 import java.util.Set;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
 @AllArgsConstructor
 public class ScoreboardFactory {
     private static final ScoreboardManager manager = Bukkit.getScoreboardManager();
+    private transient final Map<Scoreboard, List<Team>> tabListTeamNames = new HashMap<>();
     private final NodeGame game;
 
     // Fancy Title
@@ -69,15 +71,54 @@ public class ScoreboardFactory {
 
     /** Update player's custom display tab list name */
     public void setOrUpdateListName(NodePlayer viewer, NodePlayer player) {
-        String hash = String.valueOf(player.getPlayer().getName().hashCode());
+        // The sorting algorithm
+        StringBuilder stringBuilder = new StringBuilder("tab:");
+
+        // Order player -> team members -> other teams -> spectators
+        if (viewer == player) {
+            stringBuilder.append(player.getTeam() instanceof Spectator ? 8 : 0);
+        }
+        else if (viewer.getTeam() == player.getTeam() && !(player.getTeam() instanceof Spectator)) {
+            stringBuilder.append(1);
+        }
+        else if (!(player.getTeam() instanceof Spectator)) {
+            stringBuilder.append(2);
+        }
+        else {
+            stringBuilder.append(9);
+        }
+
+        stringBuilder
+            .append(Common.chars(player.getTeam().getId()) >> 4)
+            .append(BadgeManager.MAX_RANK - player.getBadgeRank())
+            .append(Common.chars(player.getPlayer().getName()) >> 4);
+
+        String hash = stringBuilder.toString();
+
+        // set how the display looks
         String color = player.getTeam().getColor().toString();
         color = viewer == player ? Common.fcolor(ChatColor.ITALIC, color) : color;
         String prefix = MessageUtil.replaceColors(player.getBadge() + " " + color);
         player.getPlayer().setPlayerListName(player.getSplitName()[0]);
         Scoreboard scoreboard = viewer.getScoreboard();
 
+        // Create record in Map
+        if (!tabListTeamNames.containsKey(scoreboard)) {
+            tabListTeamNames.put(scoreboard, new ArrayList<>());
+        }
+
         if (scoreboard.getTeam(hash) == null) {
+            // Copy the list, find old teams and remove them from map and unregister them.
+            new ArrayList<>(tabListTeamNames.get(scoreboard)).stream()
+                .filter(team -> team.has(player.getSplitName()[0]))
+                .forEach(team -> {
+                    tabListTeamNames.get(scoreboard).remove(team);
+                    team.unregister();
+                });
+
+            // Create new team and assign player to it
             Team team = scoreboard.registerNewTeam(hash);
+            tabListTeamNames.get(scoreboard).add(team);
             team.setPrefix(prefix);
             team.setSuffix(player.getSplitName()[1]);
             team.add(player.getSplitName()[0]);
@@ -85,6 +126,7 @@ public class ScoreboardFactory {
         else {
             Team team = scoreboard.getTeam(hash);
             team.setPrefix(prefix);
+            team.add(player.getSplitName()[0]);
         }
     }
 

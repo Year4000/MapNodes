@@ -1,5 +1,6 @@
 package net.year4000.mapnodes.utils;
 
+import com.google.common.base.Ascii;
 import net.year4000.mapnodes.api.game.GamePlayer;
 import net.year4000.mapnodes.clocks.Clocker;
 import net.year4000.mapnodes.game.NodePlayer;
@@ -236,6 +237,18 @@ public final class Common {
         }
         sb.append('"');
         return sb.toString();
+    }
+
+    public static int chars(String string) {
+        String finalString = "";
+
+        for (int i = 0; i < string.toCharArray().length ; i++) {
+            if (finalString.length() > 4) break;
+
+            finalString += (int) Ascii.toUpperCase(string.toCharArray()[i]);
+        }
+
+        return Integer.valueOf(finalString);
     }
 
     public static Vector randomOffset() {

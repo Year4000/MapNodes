@@ -388,6 +388,11 @@ public final class NodePlayer implements GamePlayer, Comparable {
         return badges.getBadge(player);
     }
 
+    /** Get the badge rank of this player */
+    public int getBadgeRank() {
+        return badges.findBadge(player).getRank();
+    }
+
     /** Get the split name used to tab list name */
     public String[] getSplitName() {
         String name = MessageUtil.stripColors(player.getDisplayName());
