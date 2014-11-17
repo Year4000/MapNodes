@@ -134,7 +134,7 @@ public class Deathmatch extends GameModeTemplate implements GameMode {
                         event.setTo(((NodeTeam) player.getTeam()).getSpawns().getSafeRandomSpawn());
 
                         game.getPlaying().forEach(p -> {
-                            p.sendMessage(Msg.locale(p, "deathmatch.scored", player.getPlayerColor(), String.valueOf(pointRegion.getPoint()), ((NodeTeam) player.getTeam()).getDisplayName()));
+                            Common.sendAnimatedActionBar(p, Msg.locale(p, "deathmatch.scored", player.getPlayerColor(), String.valueOf(pointRegion.getPoint()), ((NodeTeam) player.getTeam()).getDisplayName()));
                         });
                     }
                 });

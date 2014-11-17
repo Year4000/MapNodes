@@ -12,6 +12,7 @@ import net.year4000.mapnodes.game.NodeTeam;
 import net.year4000.mapnodes.game.regions.types.Point;
 import net.year4000.mapnodes.gamemodes.GameModeTemplate;
 import net.year4000.mapnodes.messages.Msg;
+import net.year4000.mapnodes.utils.Common;
 import net.year4000.mapnodes.utils.SchedulerUtil;
 import net.year4000.utilities.bukkit.FunEffectsUtil;
 import org.bukkit.Bukkit;
@@ -113,10 +114,10 @@ public class Destroy extends GameModeTemplate implements GameMode {
 
             if (target.getStage() == DestroyTarget.Stage.END) {
                 FunEffectsUtil.playSound(player.getPlayer(), Sound.ORB_PICKUP);
-                player.sendMessage(Msg.locale(player, "destroy.done", gamePlayer.getPlayerColor(), target.getOwnerName(), target.getName()));
+                Common.sendAnimatedActionBar(player, Msg.locale(player, "destroy.done", gamePlayer.getPlayerColor(), target.getOwnerName(), target.getName()));
             }
             else if (player.getTeam() == gamePlayer.getTeam()) {
-                player.sendMessage(Msg.locale(player, "destroy.damage", gamePlayer.getPlayerColor(), target.getOwnerName(), target.getName()));
+                Common.sendAnimatedActionBar(player, Msg.locale(player, "destroy.damage", gamePlayer.getPlayerColor(), target.getOwnerName(), target.getName()));
             }
         });
 
