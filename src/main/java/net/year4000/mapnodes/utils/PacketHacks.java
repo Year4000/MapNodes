@@ -3,12 +3,14 @@ package net.year4000.mapnodes.utils;
 import net.minecraft.server.v1_7_R4.ChatSerializer;
 import net.minecraft.server.v1_7_R4.IChatBaseComponent;
 import net.minecraft.server.v1_7_R4.Packet;
+import net.minecraft.server.v1_7_R4.PacketPlayOutChat;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.utilities.MessageUtil;
 import net.year4000.utilities.bukkit.bossbar.BossBar;
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_7_R4.CraftServer;
 import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_7_R4.util.CraftChatMessage;
 import org.bukkit.entity.Player;
 import org.spigotmc.ProtocolInjector;
 
@@ -31,6 +33,15 @@ public final class PacketHacks {
             ((CraftServer) Bukkit.getServer()).getServer().getPlayerList().moveToWorld(craftPlayer.getHandle(), 0, false);
             ++counter;
         }
+    }
+
+    /** Send a message to the Action Bar */
+    public static void sendActionBarMessage(Player player, String message) {
+        CraftPlayer craftPlayer = (CraftPlayer) player;
+        byte eight = (byte) (isTitleAble(player) ?  2 : 0);
+
+        IChatBaseComponent component = ChatSerializer.a(Common.sanitize(MessageUtil.replaceColors(message)));
+        craftPlayer.getHandle().playerConnection.sendPacket(new PacketPlayOutChat(component, eight));
     }
 
     /** Set the tablist header and footer */
