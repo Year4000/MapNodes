@@ -37,7 +37,7 @@ import java.util.Map;
 
 @GameModeInfo(
     name = "Capture",
-    version = "1.3",
+    version = "1.4",
     config = CaptureConfig.class
 )
 public class Capture extends GameModeTemplate implements GameMode {
@@ -145,7 +145,7 @@ public class Capture extends GameModeTemplate implements GameMode {
 
                 // Broadcast message
                 game.getPlaying().forEach(p -> {
-                    p.sendMessage(Msg.locale(p, "capture.placed", player.getPlayerColor(), team.getDisplayName()));
+                    ((NodePlayer) p).sendActionbarMessage(Msg.locale(p, "capture.placed", player.getPlayerColor(), team.getDisplayName()));
                     game.getScoreboardFactory().setGameSidebar((NodePlayer) p);
                     FunEffectsUtil.playSound(p.getPlayer(), Sound.NOTE_PLING);
                 });
@@ -213,7 +213,7 @@ public class Capture extends GameModeTemplate implements GameMode {
 
                 // Show grabbed message
                 game.getPlaying().forEach(p -> {
-                    p.sendMessage(Msg.locale(p, "capture.grabbed", player.getPlayerColor(), team.getDisplayName()));
+                    ((NodePlayer) p).sendActionbarMessage(Msg.locale(p, "capture.grabbed", player.getPlayerColor(), team.getDisplayName()));
                     game.getScoreboardFactory().setGameSidebar((NodePlayer) p);
                     FunEffectsUtil.playSound(p.getPlayer(), Sound.NOTE_PLING);
                 });
