@@ -1,6 +1,5 @@
 package net.year4000.mapnodes.clocks;
 
-import net.minecraft.server.v1_7_R4.PacketPlayInSettings;
 import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.NodeFactory;
 import net.year4000.mapnodes.api.MapNodes;
@@ -114,8 +113,9 @@ public class NextNode extends Clocker {
 
         Node next = NodeFactory.get().loadNextQueued();
 
-        while(move.peek() != null)
+        while(move.peek() != null) {
             next.getGame().join(move.pop());
+        }
         running = false;
     }
 }
