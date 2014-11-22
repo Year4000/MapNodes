@@ -101,22 +101,11 @@
         </plugins>
     </build>
 
-    <repositories>
-        <!--<repository>
-            <id>year4000-repo</id>
-            <url>http://repo.year4000.net/content/repositories/public/</url>
-        </repository>-->
-        <!--<repository>
-            <id>overcast-repo</id>
-            <url>https://repo.oc.tc/content/groups/public/</url>
-        </repository>-->
-    </repositories>
-
     <dependencies>
         <!-- Custom Bukkit Server -->
         <dependency>
-            <groupId>tc.oc</groupId>
-            <artifactId>sportbukkit</artifactId>
+            <groupId>net.year4000</groupId>
+            <artifactId>firecast</artifactId>
             <version>1.7.10-R0.1-SNAPSHOT</version>
         </dependency>
 
