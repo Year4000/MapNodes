@@ -52,7 +52,12 @@ public final class GameListener implements Listener {
             player.getPlayerTasks().add(NodeKit.immortal(event.getPlayer()));
         }
 
-        event.setRespawnLocation(((NodeTeam) player.getTeam()).getSpawns().getSafeRandomSpawn());
+        if(player.getTeam() == null){
+            event.setRespawnLocation(MapNodes.getCurrentGame().getTeams().get("spectator").getSpawns().getSafeRandomSpawn());
+        }
+        else {
+            event.setRespawnLocation(((NodeTeam) player.getTeam()).getSpawns().getSafeRandomSpawn());
+        }
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
