@@ -13,6 +13,7 @@ import net.year4000.mapnodes.game.NodeTeam;
 import net.year4000.mapnodes.game.system.Spectator;
 import net.year4000.mapnodes.gamemodes.GameModeTemplate;
 import net.year4000.mapnodes.messages.Msg;
+import net.year4000.mapnodes.utils.Common;
 import net.year4000.mapnodes.utils.SchedulerUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -126,6 +127,15 @@ public class Skywars extends GameModeTemplate implements GameMode {
         if (alive.remove(name.getName())) {
             dead.add(name.getName());
             buildAndSendList();
+            int eliminationSize = alive.size() - 1;
+
+            game.getPlayers().forEach(player -> {
+                if (eliminationSize > 1) {
+                    Common.sendAnimatedActionBar(player, Msg.locale(player, "skywars.eliminated.plural", name.getName(), String.valueOf(eliminationSize)));
+                } else if (eliminationSize == 1) {
+                    Common.sendAnimatedActionBar(player, Msg.locale(player, "skywars.eliminated.one", name.getName(), String.valueOf(eliminationSize)));
+                }
+            });
 
             if (game.getPlayer(name) != null) {
                 NodePlayer player = (NodePlayer) game.getPlayer(name);
