@@ -21,15 +21,15 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Map;
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
 @AllArgsConstructor
 public class ScoreboardFactory {
     private static final ScoreboardManager manager = Bukkit.getScoreboardManager();
-    private transient final Map<Scoreboard, List<Team>> tabListTeamNames = new HashMap<>();
+    private transient final ConcurrentMap<Scoreboard, List<Team>> tabListTeamNames = new ConcurrentHashMap<>();
     private final NodeGame game;
 
     // Fancy Title
@@ -103,13 +103,12 @@ public class ScoreboardFactory {
         Scoreboard scoreboard = viewer.getScoreboard();
 
         // Create record in Map
-        if (!tabListTeamNames.containsKey(scoreboard)) {
-            tabListTeamNames.put(scoreboard, new ArrayList<>());
-        }
+        tabListTeamNames.putIfAbsent(scoreboard, new ArrayList<>());
 
         if (scoreboard.getTeam(hash) == null) {
             // Copy the list, find old teams and remove them from map and unregister them.
             new ArrayList<>(tabListTeamNames.get(scoreboard)).stream()
+                .filter(NMSHacks::isTeamRegistered)
                 .filter(team -> team.has(player.getSplitName()[0]))
                 .forEach(team -> {
                     tabListTeamNames.get(scoreboard).remove(team);

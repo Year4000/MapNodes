@@ -10,12 +10,19 @@ import org.bukkit.craftbukkit.v1_7_R4.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_7_R4.entity.CraftProjectile;
 import org.bukkit.craftbukkit.v1_7_R4.entity.CraftTNTPrimed;
 import org.bukkit.craftbukkit.v1_7_R4.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_7_R4.scoreboard.CraftTeam;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scoreboard.Team;
 
 public final class NMSHacks {
     private NMSHacks() {}
+
+    /** Is the team registered */
+    public static boolean isTeamRegistered(Team team) {
+        return team instanceof CraftTeam && ((CraftTeam) team).getScoreboard() != null;
+    }
 
     /** Get the NBT Tag is their is one */
     public static String getNBTTag(ItemStack item, String key) {
