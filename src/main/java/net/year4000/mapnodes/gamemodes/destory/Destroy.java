@@ -19,6 +19,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 
@@ -49,7 +50,7 @@ public class Destroy extends GameModeTemplate implements GameMode {
         });
     }
 
-    @EventHandler
+    @EventHandler (priority = EventPriority.HIGH)
     public void onBreak(BlockBreakEvent event) {
         GamePlayer player = game.getPlayer(event.getPlayer());
         NodeTeam team = ((NodeTeam) player.getTeam());
@@ -57,8 +58,7 @@ public class Destroy extends GameModeTemplate implements GameMode {
         event.setCancelled(destroyTarget(player, team, event.getBlock()));
     }
 
-    // todo handle tnt block breaks
-    @EventHandler
+    @EventHandler (priority = EventPriority.HIGH)
     public void onBreak(EntityExplodeEvent event) {
         GamePlayer player = game.getPlayer(Bukkit.getOnlinePlayers().iterator().next());
         NodeTeam team = ((NodeTeam) player.getTeam());
