@@ -50,18 +50,24 @@ public class Destroy extends GameModeTemplate implements GameMode {
         });
     }
 
+    @EventHandler (priority = EventPriority.HIGH)
     public void onBreak(BlockBreakEvent event) {
         GamePlayer player = game.getPlayer(event.getPlayer());
         NodeTeam team = ((NodeTeam) player.getTeam());
 
-        event.setCancelled(destroyTarget(player, team, event.getBlock()));
+        if (!event.isCancelled()) {
+            event.setCancelled(destroyTarget(player, team, event.getBlock()));
+        }
     }
 
+    @EventHandler (priority = EventPriority.HIGH)
     public void onBreak(EntityExplodeEvent event) {
         GamePlayer player = game.getPlayer(Bukkit.getOnlinePlayers().iterator().next());
         NodeTeam team = ((NodeTeam) player.getTeam());
 
-        event.setCancelled(destroyTarget(player, team, event.blockList().toArray(new Block[event.blockList().size()])));
+        if (!event.isCancelled()) {
+            event.setCancelled(destroyTarget(player, team, event.blockList().toArray(new Block[event.blockList().size()])));
+        }
     }
 
     public boolean destroyTarget(GamePlayer player, NodeTeam team, Block... blocks) {
