@@ -11,6 +11,7 @@ import org.bukkit.Location;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -255,7 +256,7 @@ public final class Common {
         return new Vector(rand.nextDouble(), rand.nextDouble(), rand.nextDouble());
     }
 
-    private static Map<NodePlayer, BukkitTask> actionBarAnimations = new HashMap<>();
+    private static Map<NodePlayer, BukkitTask> actionBarAnimations = Collections.synchronizedMap(new HashMap<>());
 
     /** Send a cool animated action bar message */
     public static void sendAnimatedActionBar(GamePlayer player, String message) {
