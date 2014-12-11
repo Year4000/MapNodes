@@ -1,5 +1,6 @@
 package net.year4000.mapnodes.clocks;
 
+import com.google.common.collect.Queues;
 import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.NodeFactory;
 import net.year4000.mapnodes.api.MapNodes;
@@ -19,6 +20,8 @@ import org.bukkit.entity.Player;
 import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.Deque;
+import java.util.Queue;
+import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.TimeUnit;
 
 import static net.year4000.mapnodes.utils.MathUtil.percent;
@@ -91,7 +94,7 @@ public class NextNode extends Clocker {
 
         MapNodesPlugin.log(Msg.locale(Message.DEFAULT_LOCALE, "clocks.next.last", map.getName()));
 
-        Deque<Player> move = new ArrayDeque<>();
+        Queue<Player> move = new SynchronousQueue<>();
 
         MapNodes.getCurrentGame().getPlayers().forEach(player -> {
             FunEffectsUtil.playSound(player.getPlayer(), Sound.NOTE_BASS);
@@ -114,7 +117,7 @@ public class NextNode extends Clocker {
         Node next = NodeFactory.get().loadNextQueued();
 
         while(move.peek() != null) {
-            next.getGame().join(move.pop());
+            next.getGame().join(move.poll());
         }
         running = false;
     }
