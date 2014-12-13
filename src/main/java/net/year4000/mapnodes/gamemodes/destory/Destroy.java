@@ -55,9 +55,7 @@ public class Destroy extends GameModeTemplate implements GameMode {
         GamePlayer player = game.getPlayer(event.getPlayer());
         NodeTeam team = ((NodeTeam) player.getTeam());
 
-        if (!event.isCancelled()) {
-            event.setCancelled(destroyTarget(player, team, event.getBlock()));
-        }
+        event.setCancelled(destroyTarget(player, team, event.isCancelled(), event.getBlock()));
     }
 
     @EventHandler (priority = EventPriority.HIGH)
@@ -65,13 +63,14 @@ public class Destroy extends GameModeTemplate implements GameMode {
         GamePlayer player = game.getPlayer(Bukkit.getOnlinePlayers().iterator().next());
         NodeTeam team = ((NodeTeam) player.getTeam());
 
-        if (!event.isCancelled()) {
-            event.setCancelled(destroyTarget(player, team, event.blockList().toArray(new Block[event.blockList().size()])));
-        }
+        event.setCancelled(destroyTarget(player, team, event.isCancelled(), event.blockList().toArray(new Block[event.blockList().size()])));
     }
 
     public boolean destroyTarget(GamePlayer player, NodeTeam team, Block... blocks) {
-        boolean cancel = false;
+        return destroyTarget(player, team, false, blocks);
+    }
+
+    public boolean destroyTarget(GamePlayer player, NodeTeam team, boolean cancel, Block... blocks) {
         DestroyTarget goal = null;
 
         for (Block block : blocks) {
