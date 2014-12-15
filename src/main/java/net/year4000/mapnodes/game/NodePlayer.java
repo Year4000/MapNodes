@@ -206,6 +206,11 @@ public final class NodePlayer implements GamePlayer, Comparable {
             pendingTeam = null;
         }
 
+        // Update sidebar when there is a sidebar to update
+        if (scoreboard.getObjective(DisplaySlot.SIDEBAR) != null) {
+            game.getScoreboardFactory().setAllPersonalSidebar();
+        }
+
         // Cancel tasks
         playerTasks.stream().forEach(BukkitTask::cancel);
         BossBar.removeBar(player);
@@ -237,7 +242,7 @@ public final class NodePlayer implements GamePlayer, Comparable {
             // Auto join spectator team
             game.getScoreboardFactory().setTeam(this, team);
 
-            // Update sidebar when their is a sidebar to update
+            // Update sidebar when there is a sidebar to update
             if (scoreboard.getObjective(DisplaySlot.SIDEBAR) != null) {
                 game.getScoreboardFactory().setAllPersonalSidebar();
             }
