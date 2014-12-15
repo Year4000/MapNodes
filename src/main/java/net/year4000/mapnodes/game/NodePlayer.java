@@ -1,8 +1,6 @@
 package net.year4000.mapnodes.game;
 
 import lombok.Data;
-import lombok.Getter;
-import lombok.Synchronized;
 import net.year4000.mapnodes.api.events.player.GamePlayerJoinEvent;
 import net.year4000.mapnodes.api.events.player.GamePlayerJoinSpectatorEvent;
 import net.year4000.mapnodes.api.events.player.GamePlayerJoinTeamEvent;
@@ -38,7 +36,6 @@ public final class NodePlayer implements GamePlayer, Comparable {
     // internals
     public static final BadgeManager badges = new BadgeManager();
     private final NodeGame game;
-    @Getter(onMethod = @__(@Synchronized("player"))) // IDE BUGS THIS BUT IT WORKS
     private final Player player;
     private NodeTeam team;
     private NodeTeam pendingTeam;
@@ -70,14 +67,12 @@ public final class NodePlayer implements GamePlayer, Comparable {
     }
 
     /** Set the class kit for this player */
-    @Synchronized("player")
     public void setClassKit(NodeClass classKit) {
         sendMessage(Msg.locale(player, "class.join", "&a" + classKit.getName()));
         this.classKit = classKit;
         game.getScoreboardFactory().setPersonalSidebar(this);
     }
 
-    @Synchronized("player")
     public void start() {
         if (pendingTeam != null) {
             // If you are in the team's queue don't start
@@ -137,7 +132,6 @@ public final class NodePlayer implements GamePlayer, Comparable {
         updateInventory();
     }
 
-    @Synchronized("player")
     public void join() {
         playing = false;
 
@@ -193,7 +187,6 @@ public final class NodePlayer implements GamePlayer, Comparable {
         }, 55L));
     }
 
-    @Synchronized("player")
     public void leave() {
         playing = false;
 
@@ -218,7 +211,6 @@ public final class NodePlayer implements GamePlayer, Comparable {
         game.updateTeamChooserMenu();
     }
 
-    @Synchronized("player")
     public void joinTeam(GameTeam gameTeam) {
         // Init team join spectator
         if (team == null || gameTeam == null) {
@@ -353,7 +345,6 @@ public final class NodePlayer implements GamePlayer, Comparable {
     }
 
     /** Get the heal for the player. */
-    @Synchronized("player")
     private ItemStack getHealth() {
         int health = (int) player.getHealth();
 
@@ -366,7 +357,6 @@ public final class NodePlayer implements GamePlayer, Comparable {
     }
 
     /** Get the hunger for the player. */
-    @Synchronized("player")
     private ItemStack getHunger() {
         int hunger = player.getFoodLevel();
 
@@ -379,7 +369,6 @@ public final class NodePlayer implements GamePlayer, Comparable {
     }
 
     /** Send a message with out grabing the player's instance first */
-    @Synchronized("player")
     public void sendMessage(String message, Object... args) {
         player.sendMessage(MessageUtil.message(message, args));
     }
@@ -390,37 +379,31 @@ public final class NodePlayer implements GamePlayer, Comparable {
     }
 
     /** Send a message to the Action Bar */
-    @Synchronized("player")
     public void sendActionbarMessage(String message, Object... args) {
         PacketHacks.sendActionBarMessage(player, MessageUtil.message(message, args));
     }
 
     /** Get the player's color according to the team */
-    @Synchronized("player")
     public String getPlayerColor() {
         return MessageUtil.replaceColors(team.getColor() + player.getName());
     }
 
     /** Get the badge of this player */
-    @Synchronized("player")
     public String getBadge() {
         return badges.getBadge(player);
     }
 
     /** Get the badge rank of this player */
-    @Synchronized("player")
     public int getBadgeRank() {
         return badges.findBadge(player).getRank();
     }
 
     /** Get the split name used to tab list name */
-    @Synchronized("player")
     public String[] getSplitName() {
         String name = MessageUtil.stripColors(player.getDisplayName());
         return new String[] {name.substring(0, name.length() - 2), name.substring(name.length() - 2)};
     }
 
-    @Synchronized("player")
     @Override
     public int compareTo(Object o) {
         if (!(o instanceof NodePlayer)) {
