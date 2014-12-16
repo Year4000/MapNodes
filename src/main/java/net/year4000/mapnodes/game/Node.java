@@ -29,6 +29,7 @@ import org.bukkit.util.CachedServerIcon;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.lang.reflect.Type;
 import java.util.Map;
@@ -40,6 +41,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class Node {
     private static final File WORLD_CONTAINER = new File(Bukkit.getWorldContainer(), MapNodesPlugin.getInst().getName());
     private static final String TEMPLATE = "%d-%s";
+    private static final int ICON_SIZE = 64;
 
     /** The node's id */
     private int id;
@@ -71,8 +73,17 @@ public class Node {
         // Load icon if one
         if (worldFolder.getIcon() != null) {
             try {
-                icon = Bukkit.loadServerIcon(worldFolder.getIcon());
-                iconImage = ImageIO.read(worldFolder.getIcon());
+                // Original size
+                BufferedImage bufferedImage = ImageIO.read(worldFolder.getIcon());
+
+                // Resize to 64 x 64
+                BufferedImage bufferedIcon = new BufferedImage(ICON_SIZE, ICON_SIZE, BufferedImage.TYPE_INT_RGB);
+                Graphics graphic = bufferedIcon.createGraphics();
+                graphic.drawImage(bufferedImage, 0, 0, ICON_SIZE, ICON_SIZE, null);
+                graphic.dispose();
+
+                icon = Bukkit.loadServerIcon(bufferedIcon);
+                iconImage = bufferedIcon;
             } catch (Exception e) {
                 MapNodesPlugin.debug(e.getMessage());
             }
