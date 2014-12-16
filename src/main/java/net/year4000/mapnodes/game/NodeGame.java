@@ -281,7 +281,10 @@ public final class NodeGame implements GameManager, Validator {
         )));
         items[0] = rand;
 
-        for (GameTeam team : this.teams.values()) {
+        Collection<NodeTeam> onlySpectator = new ArrayList<>(getTeams().values());
+        onlySpectator.removeAll(getPlayingTeams().collect(Collectors.toList()));
+
+        for (GameTeam team : this.teams.values().size() == 2 ? onlySpectator : this.teams.values()) {
             int position = team instanceof Spectator ? base - 1 : teams;
             items[position] = ((NodeTeam) team).getTeamIcon(locale);
             teams++;
