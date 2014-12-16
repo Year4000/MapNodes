@@ -1,6 +1,5 @@
 package net.year4000.mapnodes.clocks;
 
-import com.google.common.collect.Queues;
 import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.NodeFactory;
 import net.year4000.mapnodes.api.MapNodes;
@@ -17,12 +16,9 @@ import net.year4000.utilities.bukkit.bossbar.BossBar;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.Deque;
-import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedDeque;
-import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.TimeUnit;
 
 import static net.year4000.mapnodes.utils.MathUtil.percent;

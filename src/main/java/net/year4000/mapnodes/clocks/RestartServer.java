@@ -3,7 +3,6 @@ package net.year4000.mapnodes.clocks;
 import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.game.NodeGame;
-import net.year4000.mapnodes.game.NodeMap;
 import net.year4000.mapnodes.game.NodeStage;
 import net.year4000.mapnodes.messages.Message;
 import net.year4000.mapnodes.messages.Msg;

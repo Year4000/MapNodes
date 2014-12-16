@@ -10,7 +10,6 @@ import net.year4000.utilities.bukkit.bossbar.BossBar;
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_7_R4.CraftServer;
 import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_7_R4.util.CraftChatMessage;
 import org.bukkit.entity.Player;
 import org.spigotmc.ProtocolInjector;
 

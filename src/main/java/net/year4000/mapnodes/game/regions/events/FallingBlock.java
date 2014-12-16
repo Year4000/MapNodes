@@ -12,7 +12,6 @@ import net.year4000.mapnodes.utils.SchedulerUtil;
 import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.block.BlockFace;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockFallEvent;
 import org.bukkit.event.entity.EntityChangeBlockEvent;

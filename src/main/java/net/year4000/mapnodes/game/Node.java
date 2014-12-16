@@ -2,7 +2,6 @@ package net.year4000.mapnodes.game;
 
 import com.google.common.reflect.TypeToken;
 import com.google.gson.JsonIOException;
-import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import lombok.Getter;
 import net.lingala.zip4j.core.ZipFile;

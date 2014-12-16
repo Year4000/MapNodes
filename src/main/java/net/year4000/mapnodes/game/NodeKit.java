@@ -20,7 +20,6 @@ import net.year4000.mapnodes.utils.typewrappers.PlayerInventoryList;
 import net.year4000.mapnodes.utils.typewrappers.PotionEffectList;
 import org.bukkit.Color;
 import org.bukkit.GameMode;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
