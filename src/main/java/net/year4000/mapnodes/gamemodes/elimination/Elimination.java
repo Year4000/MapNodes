@@ -22,6 +22,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -79,9 +80,9 @@ public class Elimination extends GameModeTemplate implements GameMode {
 
     /** Teleport the player to the start if they died */
     @EventHandler
-    public void onPlayerJoin(GamePlayerJoinSpectatorEvent event) {
-        if (dead.contains(event.getPlayer().getPlayer().getName())) {
-            event.getPlayer().getPlayer().teleport(game.getConfig().getSafeRandomSpawn());
+    public void onPlayerRespawn(PlayerRespawnEvent event) {
+        if (dead.contains(event.getPlayer().getName()) && game.getPlayer(event.getPlayer()).getTeam() instanceof Spectator) {
+            event.setRespawnLocation(game.getConfig().getSafeRandomSpawn());
         }
     }
 
