@@ -13,6 +13,7 @@ import net.year4000.mapnodes.clocks.StartGame;
 import net.year4000.mapnodes.game.Node;
 import net.year4000.mapnodes.game.NodeGame;
 import net.year4000.mapnodes.game.system.Spectator;
+import net.year4000.mapnodes.messages.Locales;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.Common;
 import net.year4000.mapnodes.utils.MathUtil;
@@ -170,5 +171,12 @@ public final class MapNodesListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onCreatureSpawn(CreatureSpawnEvent event) {
         event.setCancelled(true);
+    }
+
+    @EventHandler
+    public void onLocaleChange(PlayerLocaleChangeEvent event) {
+        if (event.getNewLocale() != null && !event.getNewLocale().equals(event.getOldLocale())) {
+            Msg.getCodes().refresh(event.getPlayer());
+        }
     }
 }
