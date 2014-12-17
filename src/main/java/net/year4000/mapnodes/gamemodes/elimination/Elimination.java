@@ -46,7 +46,7 @@ public class Elimination extends GameModeTemplate implements GameMode {
         game = (NodeGame) event.getGame();
 
         if (gameModeConfig.getPlayersTeam() == null) {
-            team = game.getTeams().values().iterator().next();
+            team = game.getPlayingTeams().collect(Collectors.toList()).iterator().next();
         }
         else {
             team = game.getTeams().get(gameModeConfig.getPlayersTeam());
