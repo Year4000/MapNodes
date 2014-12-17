@@ -212,7 +212,7 @@ public class SpectatorListener implements Listener {
 
     @EventHandler
     public void onJoin(GamePlayerJoinSpectatorEvent event) {
-        NodeKit kit = (NodeKit) event.getKit();
+        NodeKit kit = ((NodeKit) event.getKit()).clone();
         boolean classKit = ((NodePlayer) event.getPlayer()).getGame().getClasses().size() > 0;
 
         // Book
