@@ -5,6 +5,7 @@ import net.year4000.mapnodes.api.game.GameStage;
 import net.year4000.utilities.bukkit.MessageUtil;
 
 public enum NodeStage implements GameStage {
+    LOADING,
     WAITING,
     STARTING,
     PLAYING,
@@ -20,7 +21,7 @@ public enum NodeStage implements GameStage {
     /** Is the server running. */
     public boolean isPreGame() {
         GameStage stage = MapNodes.getCurrentGame().getStage();
-        return stage == NodeStage.WAITING || stage == NodeStage.STARTING;
+        return stage == NodeStage.WAITING || stage == NodeStage.STARTING || stage == NodeStage.LOADING;
     }
 
     /** Is the server running. */
@@ -31,7 +32,7 @@ public enum NodeStage implements GameStage {
     /** Is the server running. */
     public boolean isWaiting() {
         GameStage stage = MapNodes.getCurrentGame().getStage();
-        return stage == NodeStage.WAITING;
+        return stage == NodeStage.WAITING || stage == NodeStage.LOADING;
     }
 
     /** Is the server running. */

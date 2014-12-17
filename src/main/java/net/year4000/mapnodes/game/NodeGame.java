@@ -12,9 +12,7 @@ import net.year4000.mapnodes.api.events.game.GameClockEvent;
 import net.year4000.mapnodes.api.events.game.GameLoadEvent;
 import net.year4000.mapnodes.api.events.game.GameStartEvent;
 import net.year4000.mapnodes.api.events.game.GameStopEvent;
-import net.year4000.mapnodes.api.game.GameManager;
-import net.year4000.mapnodes.api.game.GamePlayer;
-import net.year4000.mapnodes.api.game.GameTeam;
+import net.year4000.mapnodes.api.game.*;
 import net.year4000.mapnodes.api.game.modes.GameMode;
 import net.year4000.mapnodes.api.game.modes.GameModeConfig;
 import net.year4000.mapnodes.api.utils.Operations;
@@ -48,6 +46,7 @@ import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -137,7 +136,7 @@ public final class NodeGame implements GameManager, Validator {
 
     private transient static final Joiner pageJoiner = Joiner.on('\n');
     private transient Map<UUID, GamePlayer> players = new ConcurrentHashMap<>();
-    private transient NodeStage stage = NodeStage.WAITING;
+    private transient NodeStage stage = NodeStage.LOADING;
     private transient BukkitTask gameClock;
     private transient StartGame startClock;
     private transient BukkitTask stopClock;
@@ -188,6 +187,36 @@ public final class NodeGame implements GameManager, Validator {
                 return size >= (int) teams.values().stream().filter(team -> !(team instanceof Spectator)).count();
             });
         }
+
+        stage = NodeStage.WAITING;
+    }
+
+    /** Load a team in to the system */
+    public void loadTeam(String id, @Nonnull GameTeam team) {
+        checkArgument(stage == NodeStage.LOADING, Msg.util("load.only.loading"));
+
+        teams.putIfAbsent(id, (NodeTeam) team);
+    }
+
+    /** Load a kit in to the system */
+    public void loadKit(String id, @Nonnull GameKit kit) {
+        checkArgument(stage == NodeStage.LOADING, Msg.util("load.only.loading"));
+
+        kits.putIfAbsent(id, (NodeKit) kit);
+    }
+
+    /** Load a class in to the system */
+    public void loadClass(String id, @Nonnull GameClass clazz) {
+        checkArgument(stage == NodeStage.LOADING, Msg.util("load.only.loading"));
+
+        classes.putIfAbsent(id, (NodeClass) clazz);
+    }
+
+    /** Load a class in to the system */
+    public void loadRegion(String id, @Nonnull GameRegion region) {
+        checkArgument(stage == NodeStage.LOADING, Msg.util("load.only.loading"));
+
+        regions.putIfAbsent(id, (NodeRegion) region);
     }
 
     /** Add start control operation */

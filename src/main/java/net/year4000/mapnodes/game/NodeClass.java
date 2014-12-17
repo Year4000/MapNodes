@@ -16,6 +16,7 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -66,6 +67,14 @@ public final class NodeClass implements GameClass, Validator, AssignNodeGame {
     private transient NodeGame game;
     @Setter(AccessLevel.NONE)
     private transient String id;
+
+    public NodeClass(NodeGame game, String name, Material icon, String description, String kit) {
+        assignNodeGame(game);
+        this.name = name;
+        this.icon = icon;
+        this.description = description;
+        this.kit = kit;
+    }
 
     /** Assign the game to this region */
     public void assignNodeGame(NodeGame game) {

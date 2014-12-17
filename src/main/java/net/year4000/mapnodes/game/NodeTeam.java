@@ -95,6 +95,12 @@ public class NodeTeam implements GameTeam, Validator, AssignNodeGame {
     private transient List<GamePlayer> players = new ArrayList<>();
     private transient Queue<GamePlayer> queue = new PriorityQueue<>();
 
+    public NodeTeam(NodeGame game, String name, LocationList<Location> spawns) {
+        assignNodeGame(game);
+        this.name = name;
+        this.spawns = spawns;
+    }
+
     /** Assign the game to this region */
     public void assignNodeGame(NodeGame game) {
         this.game = game;
