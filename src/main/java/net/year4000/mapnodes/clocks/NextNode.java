@@ -35,11 +35,11 @@ public class NextNode extends Clocker {
     };
 
     public NextNode() {
-        this(30);
+        this(20);
     }
 
     public NextNode(int time) {
-        super(MathUtil.ticks(MapNodesPlugin.getInst().getLog().isDebug() ? 20 : time));
+        super(MathUtil.ticks(MapNodesPlugin.getInst().getLog().isDebug() ? 15 : time));
     }
 
     public void runFirst(int position) {

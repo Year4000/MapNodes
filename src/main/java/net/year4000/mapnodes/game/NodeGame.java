@@ -147,7 +147,7 @@ public final class NodeGame implements GameManager, Validator {
     private transient List<Operations> startControls = new CopyOnWriteArrayList<>();
     private transient long startTime, stopTime;
     @Setter(AccessLevel.NONE)
-    private transient int baseStartTime = 30;
+    private transient int baseStartTime = 10;
 
     /** The start time for the game */
     public void addStartTime(int time) {
