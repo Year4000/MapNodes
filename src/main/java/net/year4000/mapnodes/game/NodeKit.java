@@ -2,10 +2,7 @@ package net.year4000.mapnodes.game;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.gson.annotations.Since;
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import net.year4000.mapnodes.api.game.GameKit;
 import net.year4000.mapnodes.api.game.GamePlayer;
 import net.year4000.mapnodes.clocks.Clocker;
@@ -36,7 +33,7 @@ import java.util.stream.Collectors;
 @Data
 @NoArgsConstructor
 /** Manage the items and effects that are given to the player. */
-public class NodeKit implements GameKit, Validator, AssignNodeGame {
+public class NodeKit implements GameKit, Validator, AssignNodeGame, Cloneable {
     /** The parents the kit will inherit */
     @Since(2.0)
     private List<String> parents = new ArrayList<>();
@@ -248,5 +245,11 @@ public class NodeKit implements GameKit, Validator, AssignNodeGame {
         };
 
         return immortal.run();
+    }
+
+    @SneakyThrows
+    @Override
+    public NodeKit clone() {
+        return (NodeKit) super.clone();
     }
 }
