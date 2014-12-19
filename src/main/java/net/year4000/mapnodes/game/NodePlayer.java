@@ -162,13 +162,12 @@ public final class NodePlayer implements GamePlayer, Comparable {
                     }
                 }, 40L);
             }
-            else {
-                PacketHacks.setTabListHeadFoot(
-                    player,
-                    MessageUtil.replaceColors(game.getMap().title()),
-                    MessageUtil.replaceColors("&b" + MapNodesPlugin.getInst().getNetwork().getName() + " &7- &3[&bYear4000&3] &7- &bmc&7.&byear4000&7.&bnet")
-                );
-            }
+
+            PacketHacks.setTabListHeadFoot(
+                player,
+                MessageUtil.replaceColors(game.getMap().title()),
+                MessageUtil.replaceColors("&b" + MapNodesPlugin.getInst().getNetwork().getName() + " &7- &3[&bYear4000&3] &7- &bmc&7.&byear4000&7.&bnet")
+            );
         }
         else {
             sendMessage(Msg.NOTICE + Msg.locale(player, "game.new.recommend"));
