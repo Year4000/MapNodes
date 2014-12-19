@@ -1,6 +1,7 @@
 package net.year4000.mapnodes.utils;
 
 import com.google.common.base.Ascii;
+import lombok.Synchronized;
 import net.year4000.mapnodes.api.game.GamePlayer;
 import net.year4000.mapnodes.clocks.Clocker;
 import net.year4000.mapnodes.game.NodePlayer;
@@ -256,9 +257,10 @@ public final class Common {
         return new Vector(rand.nextDouble(), rand.nextDouble(), rand.nextDouble());
     }
 
-    private static Map<NodePlayer, BukkitTask> actionBarAnimations = Collections.synchronizedMap(new HashMap<>());
+    private static Map<NodePlayer, BukkitTask> actionBarAnimations = new HashMap<>();
 
     /** Send a cool animated action bar message */
+    @Synchronized("actionBarAnimations")
     public static void sendAnimatedActionBar(GamePlayer player, String message) {
         final NodePlayer nodePlayer = (NodePlayer) player;
 
@@ -281,7 +283,7 @@ public final class Common {
         // Make sure the player is running 1.8 or newer
         if (PacketHacks.isTitleAble(player.getPlayer())) {
             if (actionBarAnimations.containsKey(nodePlayer)) {
-                actionBarAnimations.get(nodePlayer).cancel();
+                actionBarAnimations.remove(nodePlayer).cancel();
             }
 
             actionBarAnimations.put(nodePlayer, animation.run());
