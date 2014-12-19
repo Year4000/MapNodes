@@ -46,6 +46,9 @@ public final class MapNodesListener implements Listener {
     public void onJoin(PlayerJoinEvent event) {
         event.setJoinMessage(null);
         ((NodeGame) MapNodes.getCurrentGame()).join(event.getPlayer());
+
+        // Update server name
+        MapNodesPlugin.getInst().getNetwork().updateName();
     }
 
     @EventHandler(priority = EventPriority.LOWEST)

@@ -127,7 +127,7 @@ public final class GameListener implements Listener {
             PacketHacks.setTabListHeadFoot(
                 player.getPlayer(),
                 MessageUtil.replaceColors(((NodeMap) MapNodes.getCurrentGame().getMap()).title() + " &7- " + Msg.locale(player, "game.time", time)),
-                MessageUtil.replaceColors("&3[&bYear4000&3] &7- &bmc&7.&byear4000&7.&bnet")
+                MessageUtil.replaceColors("&b" + MapNodesPlugin.getInst().getNetwork().getName() + " &7- &3[&bYear4000&3] &7- &bmc&7.&byear4000&7.&bnet")
             );
         });
 

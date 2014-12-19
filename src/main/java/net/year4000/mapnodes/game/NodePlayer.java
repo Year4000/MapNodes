@@ -1,6 +1,7 @@
 package net.year4000.mapnodes.game;
 
 import lombok.Data;
+import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.api.events.player.GamePlayerJoinEvent;
 import net.year4000.mapnodes.api.events.player.GamePlayerJoinSpectatorEvent;
 import net.year4000.mapnodes.api.events.player.GamePlayerJoinTeamEvent;
@@ -148,11 +149,26 @@ public final class NodePlayer implements GamePlayer, Comparable {
                 55,
                 0
             );
-            PacketHacks.setTabListHeadFoot(
-                player,
-                MessageUtil.replaceColors(game.getMap().title()),
-                MessageUtil.replaceColors("&3[&bYear4000&3] &7- &bmc&7.&byear4000&7.&bnet")
-            );
+
+            // If server name is unknown wait 2 secs before trying to set it
+            if (MapNodesPlugin.getInst().getNetwork().getName().equals("unknown")) {
+                SchedulerUtil.runAsync(() -> {
+                    if (!MapNodesPlugin.getInst().getNetwork().getName().equals("unknown")) {
+                        PacketHacks.setTabListHeadFoot(
+                            player,
+                            MessageUtil.replaceColors(game.getMap().title()),
+                            MessageUtil.replaceColors("&b" + MapNodesPlugin.getInst().getNetwork().getName() + " &7- &3[&bYear4000&3] &7- &bmc&7.&byear4000&7.&bnet")
+                        );
+                    }
+                }, 40L);
+            }
+            else {
+                PacketHacks.setTabListHeadFoot(
+                    player,
+                    MessageUtil.replaceColors(game.getMap().title()),
+                    MessageUtil.replaceColors("&b" + MapNodesPlugin.getInst().getNetwork().getName() + " &7- &3[&bYear4000&3] &7- &bmc&7.&byear4000&7.&bnet")
+                );
+            }
         }
         else {
             sendMessage(Msg.NOTICE + Msg.locale(player, "game.new.recommend"));
