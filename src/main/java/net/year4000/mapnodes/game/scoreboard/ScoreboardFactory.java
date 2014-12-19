@@ -92,7 +92,7 @@ public class ScoreboardFactory {
         }
 
         stringBuilder
-            .append(Common.chars(player.getTeam().getId()) >> 4)
+            .append(Common.chars(player.getTeam().getId()) >> 18)
             .append(BadgeManager.MAX_RANK - player.getBadgeRank())
             .append(Common.chars(player.getPlayer().getName()) >> 4);
 

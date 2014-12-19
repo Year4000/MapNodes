@@ -244,7 +244,7 @@ public final class Common {
         String finalString = "";
 
         for (int i = 0; i < string.toCharArray().length ; i++) {
-            if (finalString.length() > 4) break;
+            if (finalString.length() > 6) break;
 
             finalString += (int) Ascii.toUpperCase(string.toCharArray()[i]);
         }
