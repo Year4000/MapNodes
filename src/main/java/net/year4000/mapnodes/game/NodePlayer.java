@@ -151,17 +151,15 @@ public final class NodePlayer implements GamePlayer, Comparable {
                 0
             );
 
-            // If server name is unknown wait 2 secs before trying to set it
+            // If server name is unknown wait 6 secs before trying to set it again
             if (MapNodesPlugin.getInst().getNetwork().getName().equals(Network.UNKNOWN)) {
-                SchedulerUtil.runAsync(() -> {
-                    if (MapNodesPlugin.getInst().getNetwork().getName().equals(Network.UNKNOWN)) {
-                        PacketHacks.setTabListHeadFoot(
-                            player,
-                            MessageUtil.replaceColors(game.getMap().title()),
-                            MessageUtil.replaceColors("&b" + MapNodesPlugin.getInst().getNetwork().getName() + " &7- &3[&bYear4000&3] &7- &bmc&7.&byear4000&7.&bnet")
-                        );
-                    }
-                }, 40L);
+                SchedulerUtil.runSync(() -> {
+                    PacketHacks.setTabListHeadFoot(
+                        player,
+                        MessageUtil.replaceColors(game.getMap().title()),
+                        MessageUtil.replaceColors("&b" + MapNodesPlugin.getInst().getNetwork().getName() + " &7- &3[&bYear4000&3] &7- &bmc&7.&byear4000&7.&bnet")
+                    );
+                }, 120L);
             }
 
             PacketHacks.setTabListHeadFoot(
