@@ -460,6 +460,11 @@ public final class NodeGame implements GameManager, Validator {
 
             return MessageUtil.replaceColors(getMap().title() + " &7- " + Msg.locale(player, "game.time", time));
         }
+        else if (stage.isEndGame() && player != null) {
+            String time = "&a" + (new TimeUtil(getStopTime() - getStartTime(), TimeUnit.MILLISECONDS)).prettyOutput("&7:&a");
+
+            return MessageUtil.replaceColors(getMap().title() + " &7- " + Msg.locale(player, "game.time", time));
+        }
         else {
             return MessageUtil.replaceColors(getMap().title());
         }
