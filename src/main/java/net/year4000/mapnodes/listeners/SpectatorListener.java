@@ -190,11 +190,15 @@ public class SpectatorListener implements Listener {
     public ItemStack book(GamePlayer player) {
         GameManager gm = MapNodes.getCurrentGame();
 
-        return ItemUtil.createBook(
+        ItemStack book = ItemUtil.createBook(
             "&b" + gm.getMap().getName(),
             "&5&o" + gm.getMap().getMainAuthor(),
             ((NodeGame) gm).getBookPages(player.getPlayer())
         );
+
+        book.setItemMeta(ItemUtil.addMeta(book, "{'display': {'name': '" + ("&b" + gm.getMap().getName() + " &7(" + Msg.locale(player, "action.right") + ")") + "'}}"));
+
+        return book;
     }
 
     @EventHandler
