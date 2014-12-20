@@ -190,6 +190,9 @@ public final class MapNodesListener implements Listener {
             if (player.getTeam() instanceof Spectator) {
                 player.joinTeam(null);
             }
+            else {
+                player.getGame().getScoreboardFactory().setGameSidebar(player);
+            }
         }
     }
 }
