@@ -7,16 +7,20 @@ import net.year4000.mapnodes.api.events.player.GamePlayerJoinTeamEvent;
 import net.year4000.mapnodes.api.game.GameManager;
 import net.year4000.mapnodes.api.game.GamePlayer;
 import net.year4000.mapnodes.api.game.GameTeam;
+import net.year4000.mapnodes.commands.maps.MapCommands;
 import net.year4000.mapnodes.game.NodeClass;
 import net.year4000.mapnodes.game.NodeGame;
 import net.year4000.mapnodes.game.NodeKit;
 import net.year4000.mapnodes.game.NodePlayer;
 import net.year4000.mapnodes.messages.Msg;
+import net.year4000.mapnodes.utils.PacketHacks;
 import net.year4000.mapnodes.utils.SchedulerUtil;
 import net.year4000.utilities.bukkit.FunEffectsUtil;
 import net.year4000.utilities.bukkit.ItemUtil;
+import net.year4000.utilities.bukkit.commands.CommandException;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
@@ -228,6 +232,31 @@ public class SpectatorListener implements Listener {
         // Class Menu
         if (classKit) {
             kit.getItems().set(1, ItemUtil.makeItem("magma_cream", "{'display':{'name':'" + Msg.locale(event.getPlayer(), "class.menu.item") + "'}}"));
+        }
+    }
+
+    // 1.8 clients have a bug where the books change the nbt data and broke books
+    @EventHandler
+    public void onBookClick(PlayerInteractEvent event) {
+        boolean rightAir = event.getAction() == Action.RIGHT_CLICK_AIR;
+        boolean rightBlock = event.getAction() == Action.RIGHT_CLICK_BLOCK;
+
+        if (rightAir || rightBlock) {
+            ItemStack hand = event.getPlayer().getItemInHand();
+            GamePlayer player = MapNodes.getCurrentGame().getPlayer(event.getPlayer());
+
+            if (player.isPlaying()) return;
+
+            try {
+                if (PacketHacks.isTitleAble(event.getPlayer()) && hand.getType() == Material.WRITTEN_BOOK) {
+                    MapCommands.current(null, event.getPlayer());
+                }
+            } catch (NullPointerException | CommandException e) {
+                /** Not a valid item */
+                // MapNodesPlugin.debug(e, true);
+            } finally {
+                event.setCancelled(true);
+            }
         }
     }
 
