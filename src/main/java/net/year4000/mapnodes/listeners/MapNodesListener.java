@@ -15,6 +15,7 @@ import net.year4000.mapnodes.game.NodeGame;
 import net.year4000.mapnodes.game.system.Spectator;
 import net.year4000.mapnodes.messages.Locales;
 import net.year4000.mapnodes.messages.Msg;
+import net.year4000.mapnodes.net.Network;
 import net.year4000.mapnodes.utils.Common;
 import net.year4000.mapnodes.utils.MathUtil;
 import net.year4000.mapnodes.utils.PacketHacks;
@@ -48,7 +49,9 @@ public final class MapNodesListener implements Listener {
         ((NodeGame) MapNodes.getCurrentGame()).join(event.getPlayer());
 
         // Update server name
-        MapNodesPlugin.getInst().getNetwork().updateName();
+        if (MapNodesPlugin.getInst().getNetwork().getName().equals(Network.UNKNOWN)) {
+            MapNodesPlugin.getInst().getNetwork().updateName();
+        }
     }
 
     @EventHandler(priority = EventPriority.LOWEST)

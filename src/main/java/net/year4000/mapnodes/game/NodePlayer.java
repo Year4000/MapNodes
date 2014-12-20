@@ -10,6 +10,7 @@ import net.year4000.mapnodes.api.game.GamePlayer;
 import net.year4000.mapnodes.api.game.GameTeam;
 import net.year4000.mapnodes.game.system.Spectator;
 import net.year4000.mapnodes.messages.Msg;
+import net.year4000.mapnodes.net.Network;
 import net.year4000.mapnodes.utils.BadgeManager;
 import net.year4000.mapnodes.utils.Common;
 import net.year4000.mapnodes.utils.PacketHacks;
@@ -151,9 +152,9 @@ public final class NodePlayer implements GamePlayer, Comparable {
             );
 
             // If server name is unknown wait 2 secs before trying to set it
-            if (MapNodesPlugin.getInst().getNetwork().getName().equals("unknown")) {
+            if (MapNodesPlugin.getInst().getNetwork().getName().equals(Network.UNKNOWN)) {
                 SchedulerUtil.runAsync(() -> {
-                    if (!MapNodesPlugin.getInst().getNetwork().getName().equals("unknown")) {
+                    if (MapNodesPlugin.getInst().getNetwork().getName().equals(Network.UNKNOWN)) {
                         PacketHacks.setTabListHeadFoot(
                             player,
                             MessageUtil.replaceColors(game.getMap().title()),
