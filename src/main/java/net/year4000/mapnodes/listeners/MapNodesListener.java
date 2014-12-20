@@ -185,10 +185,10 @@ public final class MapNodesListener implements Listener {
     public void onLocaleChange(PlayerLocaleChangeEvent event) {
         if (event.getNewLocale() != null && !event.getNewLocale().equals(event.getOldLocale())) {
             Msg.getCodes().refresh(event.getPlayer());
-            GamePlayer player = MapNodes.getCurrentGame().getPlayer(event.getPlayer());
+            NodePlayer player = (NodePlayer) MapNodes.getCurrentGame().getPlayer(event.getPlayer());
 
             if (player.getTeam() instanceof Spectator) {
-                ((NodeKit) player.getTeam().getKit()).giveKit(player);
+                player.joinTeam(null);
             }
         }
     }
