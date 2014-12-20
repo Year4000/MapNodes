@@ -115,20 +115,10 @@ public final class GameListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onClock(GameClockEvent event) {
-        // Update TabList header and footer
-        long currentTime = System.currentTimeMillis() - ((NodeGame) MapNodes.getCurrentGame()).getStartTime();
-        String time = "&a" + (new TimeUtil(currentTime, TimeUnit.MILLISECONDS)).prettyOutput("&7:&a");
-
         event.getGame().getPlayers().parallel().forEach(player -> {
             if (!PacketHacks.isTitleAble(player.getPlayer()) && !player.isPlaying()) {
                 ((NodeGame) event.getGame()).getScoreboardFactory().setPersonalSidebar((NodePlayer) player);
             }
-
-            PacketHacks.setTabListHeadFoot(
-                player.getPlayer(),
-                MessageUtil.replaceColors(((NodeMap) MapNodes.getCurrentGame().getMap()).title() + " &7- " + Msg.locale(player, "game.time", time)),
-                MessageUtil.replaceColors("&b" + MapNodesPlugin.getInst().getNetwork().getName() + " &7- &3[&bYear4000&3] &7- &bmc&7.&byear4000&7.&bnet")
-            );
         });
 
         // If not in debug mode check if their are still players.

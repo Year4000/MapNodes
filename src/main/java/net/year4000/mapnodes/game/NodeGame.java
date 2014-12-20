@@ -7,7 +7,9 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.NodeFactory;
+import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.events.game.GameClockEvent;
 import net.year4000.mapnodes.api.events.game.GameLoadEvent;
 import net.year4000.mapnodes.api.events.game.GameStartEvent;
@@ -29,10 +31,7 @@ import net.year4000.mapnodes.game.system.Spectator;
 import net.year4000.mapnodes.messages.Message;
 import net.year4000.mapnodes.messages.MessageManager;
 import net.year4000.mapnodes.messages.Msg;
-import net.year4000.mapnodes.utils.Common;
-import net.year4000.mapnodes.utils.MathUtil;
-import net.year4000.mapnodes.utils.SchedulerUtil;
-import net.year4000.mapnodes.utils.Validator;
+import net.year4000.mapnodes.utils.*;
 import net.year4000.mapnodes.utils.typewrappers.GameSet;
 import net.year4000.utilities.bukkit.BukkitUtil;
 import net.year4000.utilities.bukkit.ItemUtil;
@@ -51,6 +50,7 @@ import javax.annotation.Nullable;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -451,6 +451,31 @@ public final class NodeGame implements GameManager, Validator {
 
     public int getRealMaxCount() {
         return getMaxPlayers() + (getMaxPlayers() / 2) + 5;
+    }
+
+    public String getTabHeader(GamePlayer player) {
+        if (stage.isPlaying() && player != null) {
+            long currentTime = System.currentTimeMillis() - getStartTime();
+            String time = "&a" + (new TimeUtil(currentTime, TimeUnit.MILLISECONDS)).prettyOutput("&7:&a");
+
+            return MessageUtil.replaceColors(getMap().title() + " &7- " + Msg.locale(player, "game.time", time));
+        }
+        else {
+            return MessageUtil.replaceColors(getMap().title());
+        }
+    }
+
+    public String getTabHeader() {
+        return getTabHeader(null);
+    }
+
+    public String getTabFooter(String logo) {
+        logo = logo == null ? "&3[&bYear4000&3]" : logo;
+        return MessageUtil.replaceColors("&b" + MapNodesPlugin.getInst().getNetwork().getName() + " &7- " + logo + " &7- &bmc&7.&byear4000&7.&bnet");
+    }
+
+    public String getTabFooter() {
+        return getTabFooter(null);
     }
 
     // END Game Components Handlers //

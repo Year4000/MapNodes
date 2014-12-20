@@ -53,6 +53,16 @@ public class ScoreboardFactory {
                 .map(obj -> obj.getObjective(DisplaySlot.SIDEBAR))
                 .filter(obj -> obj != null)
                 .forEach(obj -> obj.setDisplayName(MessageUtil.replaceColors(name)));
+
+            MapNodes.getCurrentGame().getPlayers()
+                .map(p -> (NodePlayer) p)
+                .forEach(player -> {
+                    PacketHacks.setTabListHeadFoot(
+                        player.getPlayer(),
+                        player.getGame().getTabHeader(player),
+                        player.getGame().getTabFooter(name.replaceAll("( |&l)", ""))
+                    );
+                });
         }, 20L);
     }
 
