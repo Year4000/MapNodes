@@ -12,6 +12,8 @@ import net.year4000.mapnodes.api.game.GamePlayer;
 import net.year4000.mapnodes.clocks.StartGame;
 import net.year4000.mapnodes.game.Node;
 import net.year4000.mapnodes.game.NodeGame;
+import net.year4000.mapnodes.game.NodeKit;
+import net.year4000.mapnodes.game.NodePlayer;
 import net.year4000.mapnodes.game.system.Spectator;
 import net.year4000.mapnodes.messages.Locales;
 import net.year4000.mapnodes.messages.Msg;
@@ -183,6 +185,11 @@ public final class MapNodesListener implements Listener {
     public void onLocaleChange(PlayerLocaleChangeEvent event) {
         if (event.getNewLocale() != null && !event.getNewLocale().equals(event.getOldLocale())) {
             Msg.getCodes().refresh(event.getPlayer());
+            GamePlayer player = MapNodes.getCurrentGame().getPlayer(event.getPlayer());
+
+            if (player.getTeam() instanceof Spectator) {
+                ((NodeKit) player.getTeam().getKit()).giveKit(player);
+            }
         }
     }
 }
