@@ -454,20 +454,21 @@ public final class NodeGame implements GameManager, Validator {
     }
 
     public String getTabHeader(GamePlayer player) {
+        String header = getMap().title();
+
         if (stage.isPlaying() && player != null) {
             long currentTime = System.currentTimeMillis() - getStartTime();
             String time = "&a" + (new TimeUtil(currentTime, TimeUnit.MILLISECONDS)).prettyOutput("&7:&a");
 
-            return MessageUtil.replaceColors(getMap().title() + " &7- " + Msg.locale(player, "game.time", time));
+            header = getMap().title() + " &7- " + Msg.locale(player, "game.time", time);
         }
         else if (stage.isEndGame() && player != null) {
             String time = "&a" + (new TimeUtil(getStopTime() - getStartTime(), TimeUnit.MILLISECONDS)).prettyOutput("&7:&a");
 
-            return MessageUtil.replaceColors(getMap().title() + " &7- " + Msg.locale(player, "game.time", time));
+            header = getMap().title() + " &7- " + Msg.locale(player, "game.time", time);
         }
-        else {
-            return MessageUtil.replaceColors(getMap().title());
-        }
+
+        return stage.getStageColor() + MessageUtil.replaceColors(header).substring(2);
     }
 
     public String getTabHeader() {
