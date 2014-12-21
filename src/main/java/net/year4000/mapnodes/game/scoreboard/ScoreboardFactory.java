@@ -111,8 +111,8 @@ public class ScoreboardFactory {
         // set how the display looks
         String color = player.getTeam().getColor().toString();
         color = viewer == player ? Common.fcolor(ChatColor.ITALIC, color) : color;
-        String prefix = MessageUtil.replaceColors(color);
         String badgePrefix = MessageUtil.replaceColors(player.getBadge() + " " + color);
+        String prefix = PacketHacks.isTitleAble(viewer.getPlayer()) ? MessageUtil.replaceColors(color) : badgePrefix;
         player.getPlayer().setPlayerListName(player.getSplitName()[0]);
         player.getPlayer().setPlayerListDisplayName(badgePrefix + player.getPlayer().getName());
         Scoreboard scoreboard = viewer.getScoreboard();
