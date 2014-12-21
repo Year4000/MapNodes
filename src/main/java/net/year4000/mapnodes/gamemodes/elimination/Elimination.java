@@ -93,7 +93,7 @@ public class Elimination extends GameModeTemplate implements GameMode {
 
         if (MapNodes.getCurrentGame().getStage().isPlaying()) {
             event.setCancelled(true);
-            event.getPlayer().sendMessage(Msg.locale(event.getPlayer(), "elimination.join.playing"));
+            event.getPlayer().sendMessage(Msg.NOTICE + Msg.locale(event.getPlayer(), "elimination.join.playing"));
         }
     }
 
