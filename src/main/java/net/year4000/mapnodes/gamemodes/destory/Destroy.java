@@ -37,7 +37,7 @@ public class Destroy extends GameModeTemplate implements GameMode {
 
     @EventHandler
     public void onLoad(GameLoadEvent event) {
-        gameModeConfig = (DestroyConfig) getConfig();
+        gameModeConfig = getConfig();
         game = (NodeGame) event.getGame();
         game.addStartTime(60);
 

@@ -69,7 +69,7 @@ public class Capture extends GameModeTemplate implements GameMode {
     @EventHandler
     public void onLoad(GameLoadEvent event) {
         game = (NodeGame) event.getGame();
-        gameModeConfig = (CaptureConfig) getConfig();
+        gameModeConfig = getConfig();
         gameModeConfig.validate(); // This will assign the var maps
         game.addStartTime(60);
 

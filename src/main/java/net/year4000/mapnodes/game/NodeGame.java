@@ -112,22 +112,19 @@ public final class NodeGame implements GameManager, Validator {
         checkNotNull(gameModes != null, Msg.util("settings.modes"));
 
         // Validate components
-        for (GameModeConfig mode : gameModes.stream().map(GameMode::getConfig).collect(Collectors.toList())) {
-            mode.validate();
-        }
+        gameModes.stream()
+            .map(GameMode::getRawConfig)
+            .collect(Collectors.toList())
+            .forEach(GameModeConfig::validate);
 
         // Required component
         checkArgument(teams.size() != 0, Msg.util("settings.team"));
 
         // Validate components
-        for (NodeTeam team : teams.values()) {
-            team.validate();
-        }
+        teams.values().forEach(NodeTeam::validate);
 
         // Validate components
-        for (NodeClass clazz : classes.values()) {
-            clazz.validate();
-        }
+        classes.values().forEach(NodeClass::validate);
     }
 
     /*//--------------------------------------------//

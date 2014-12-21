@@ -42,7 +42,7 @@ public class Elimination extends GameModeTemplate implements GameMode {
 
     @EventHandler
     public void onLoad(GameLoadEvent event) {
-        gameModeConfig = (EliminationConfig) getConfig();
+        gameModeConfig = getConfig();
         game = (NodeGame) event.getGame();
 
         if (gameModeConfig.getPlayersTeam() == null) {

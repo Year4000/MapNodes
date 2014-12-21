@@ -59,7 +59,7 @@ public class TntWars extends GameModeTemplate implements GameMode {
 
     @EventHandler
     public void onLoad(GameLoadEvent event) {
-        gameModeConfig = (TntWarsConfig) getConfig();
+        gameModeConfig = getConfig();
         game = (NodeGame) event.getGame();
         game.addStartTime(60);
 
