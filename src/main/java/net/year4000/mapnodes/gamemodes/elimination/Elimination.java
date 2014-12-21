@@ -34,11 +34,11 @@ import java.util.stream.Collectors;
 )
 public class Elimination extends GameModeTemplate implements GameMode {
     private EliminationConfig gameModeConfig;
-    private NodeGame game;
-    private NodeTeam team;
-    private Iterator<Location> spawns;
-    private List<String> alive = new ArrayList<>();
-    private List<String> dead = new ArrayList<>();
+    protected NodeGame game;
+    protected NodeTeam team;
+    protected Iterator<Location> spawns;
+    protected List<String> alive = new ArrayList<>();
+    protected List<String> dead = new ArrayList<>();
 
     @EventHandler
     public void onLoad(GameLoadEvent event) {
