@@ -21,9 +21,6 @@ import static com.google.common.base.Preconditions.checkArgument;
 @Data
 @GameModeConfigName("tnt_wars")
 public class TntWarsConfig implements GameModeConfig {
-    @SerializedName("time_limit")
-    private TimeDuration timeLimit = null;
-
     @SerializedName("max_score")
     private Integer maxScore = null;
 
@@ -31,12 +28,7 @@ public class TntWarsConfig implements GameModeConfig {
 
     @Override
     public void validate() throws InvalidJsonException {
-        if (timeLimit != null) {
-            checkArgument(timeLimit.toSecs() > 0, Msg.util("deathmatch.error.time_limit"));
-        }
-        else {
-            checkArgument(maxScore != null, Msg.util("deathmatch.error.max_score_null"));
-        }
+        checkArgument(maxScore != null, Msg.util("deathmatch.error.max_score_null"));
 
         if (maxScore != null) {
             checkArgument(maxScore > 0, Msg.util("deathmatch.error.max_score"));

@@ -1,10 +1,7 @@
 package net.year4000.mapnodes.gamemodes.tntwars;
 
-import com.google.common.base.Joiner;
 import net.year4000.mapnodes.api.MapNodes;
-import net.year4000.mapnodes.api.events.game.GameClockEvent;
 import net.year4000.mapnodes.api.events.game.GameLoadEvent;
-import net.year4000.mapnodes.api.events.game.GameStartEvent;
 import net.year4000.mapnodes.api.events.player.GamePlayerStartEvent;
 import net.year4000.mapnodes.api.events.team.GameTeamWinEvent;
 import net.year4000.mapnodes.api.game.GamePlayer;
@@ -18,12 +15,7 @@ import net.year4000.mapnodes.game.NodeTeam;
 import net.year4000.mapnodes.game.regions.types.Global;
 import net.year4000.mapnodes.game.regions.types.Point;
 import net.year4000.mapnodes.gamemodes.GameModeTemplate;
-import net.year4000.mapnodes.messages.Msg;
-import net.year4000.mapnodes.utils.Common;
-import net.year4000.mapnodes.utils.MathUtil;
 import net.year4000.mapnodes.utils.SchedulerUtil;
-import net.year4000.mapnodes.utils.TimeUtil;
-import net.year4000.utilities.bukkit.bossbar.BossBar;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -41,7 +33,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @GameModeInfo(
@@ -55,7 +46,6 @@ public class TntWars extends GameModeTemplate implements GameMode {
     private NodeGame game;
     private GameTeam winner;
     private int winnerScore;
-    private long endTime;
 
     @EventHandler
     public void onLoad(GameLoadEvent event) {
@@ -84,38 +74,6 @@ public class TntWars extends GameModeTemplate implements GameMode {
     @EventHandler
     public void onPlayerStart(GamePlayerStartEvent event) {
         event.setImmortal(false);
-    }
-
-    @EventHandler
-    public void onLoad(GameStartEvent event) {
-        if (gameModeConfig.getTimeLimit() != null) {
-            endTime = (System.currentTimeMillis() + 1000) + (TimeUnit.MILLISECONDS.convert(gameModeConfig.getTimeLimit().toSecs(), TimeUnit.SECONDS));
-        }
-    }
-
-    @EventHandler
-    public void gameClock(GameClockEvent event) {
-        if (!event.getGame().getStage().isPlaying()) return;
-
-        if (gameModeConfig.getTimeLimit() != null) {
-            long currentTime = endTime - System.currentTimeMillis();
-            String color = Common.chatColorNumber((int) System.currentTimeMillis(), (int) endTime);
-            String time = color + (new TimeUtil(currentTime, TimeUnit.MILLISECONDS)).prettyOutput("&7:" + color);
-
-            game.getPlaying().map(GamePlayer::getPlayer).forEach(player -> {
-                BossBar.setMessage(player, Msg.locale(player, "tnt_wars.clocks.time_left", time), MathUtil.percent((int) Math.abs(endTime - game.getStartTime()), (int) Math.abs(endTime - System.currentTimeMillis())));
-            });
-
-            if (currentTime <= 0L) {
-                GameTeamWinEvent win = new GameTeamWinEvent(game, winner);
-
-                if (win.getWinner() == null) {
-                    win.setWinnerText(Joiner.on("&7, ").join(game.getPlayingTeams().map(NodeTeam::getDisplayName).collect(Collectors.toList())));
-                }
-
-                win.call();
-            }
-        }
     }
 
     // Safe TNT //
