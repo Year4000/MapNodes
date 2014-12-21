@@ -177,7 +177,7 @@ public final class NodePlayer implements GamePlayer, Comparable {
 
         // start menu
         playerTasks.add(SchedulerUtil.runAsync(() -> {
-            if (join.isMenu() && player.getOpenInventory().getType() == InventoryType.PLAYER) {
+            if (join.isMenu() && player.getOpenInventory().getType() == InventoryType.CRAFTING) {
                 game.openTeamChooserMenu(this);
             }
 
