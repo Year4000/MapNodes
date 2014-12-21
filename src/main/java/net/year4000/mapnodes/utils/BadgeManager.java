@@ -11,7 +11,7 @@ import java.util.Collections;
 import java.util.List;
 
 public final class BadgeManager {
-    public static final int MAX_RANK = 6;
+    public static final int MAX_RANK = Badges.values().length;
 
     @AllArgsConstructor
     public enum Badges {
@@ -20,7 +20,9 @@ public final class BadgeManager {
         MU(ChatColor.YELLOW, "μ", "mu", 3),
         PI(ChatColor.AQUA, "π", "pi", 4),
         SIGMA(ChatColor.GOLD, "σ", "sigma", 5),
-        OMEGA(ChatColor.RED, "Ω", "omega", 6),
+        PHI(ChatColor.LIGHT_PURPLE, "Φ", "phi", 6),
+        DELTA(ChatColor.BLUE, "δ", "delta", 7),
+        OMEGA(ChatColor.RED, "Ω", "omega", 8),
         /* DIFF CHECKER */;
 
         @Getter
