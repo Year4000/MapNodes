@@ -1,13 +1,11 @@
 package net.year4000.mapnodes.gamemodes.skywars;
 
 import net.year4000.mapnodes.api.events.game.GameLoadEvent;
-import net.year4000.mapnodes.api.events.game.GameStartEvent;
 import net.year4000.mapnodes.api.game.modes.GameModeInfo;
 import net.year4000.mapnodes.game.NodeClass;
 import net.year4000.mapnodes.game.NodeGame;
 import net.year4000.mapnodes.game.NodePlayer;
 import net.year4000.mapnodes.gamemodes.elimination.Elimination;
-import net.year4000.mapnodes.utils.Common;
 import net.year4000.utilities.bukkit.MessageUtil;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -39,17 +37,12 @@ public class Skywars extends Elimination {
 
     // todo After x time go to sudden death and start blowing up islands
 
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void onStart(GameStartEvent event) {
-        alive.forEach(player -> kills.put(player, 0));
-    }
-
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onKill(PlayerDeathEvent event) {
         Player killer = event.getEntity().getKiller();
 
         if (killer != null) {
-            kills.put(killer.getName(), kills.get(killer.getName()) + 1);
+            kills.put(killer.getName(), kills.getOrDefault(killer.getName(), 0) + 1);
         }
     }
 
@@ -57,15 +50,15 @@ public class Skywars extends Elimination {
     @Override
     public void buildAndSendList() {
         game.getSidebarGoals().clear();
+        int total = alive.size() + dead.size();
 
-        if (alive.size() + dead.size() > 16) {
+        if (total > 16) {
             game.addDynamicGoal("alive", MessageUtil.replaceColors("&6Alive&7:"), alive.size());
             game.addDynamicGoal("dead", MessageUtil.replaceColors("&6Dead&7:"), dead.size());
         }
         else {
-            int total = alive.size() + dead.size();
-            alive.forEach(name -> game.addStaticGoal(name, "&7(" + Common.chatColorNumber(kills.get(name), total) + "&7) &a" + name));
-            dead.forEach(name -> game.addStaticGoal(name, "&7(" + Common.chatColorNumber(kills.get(name), total) + "&7) &c&m" + name));
+            alive.forEach(name -> game.addStaticGoal(name, "&7(&e" + kills.getOrDefault(name, 0) + "&7) &a" + name));
+            dead.forEach(name -> game.addStaticGoal(name, "&7(&e" + kills.getOrDefault(name, 0) + "&7) &c&m" + name));
         }
 
         game.getPlaying().forEach(player -> game.getScoreboardFactory().setGameSidebar((NodePlayer) player));
