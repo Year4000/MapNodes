@@ -132,7 +132,7 @@ public final class NodeGame implements GameManager, Validator {
     *///--------------------------------------------//
 
     private transient static final Joiner pageJoiner = Joiner.on('\n');
-    private transient Map<UUID, GamePlayer> players = new ConcurrentHashMap<>();
+    private transient Map<Player, GamePlayer> players = new ConcurrentHashMap<>();
     private transient NodeStage stage = NodeStage.LOADING;
     private transient BukkitTask gameClock;
     private transient StartGame startClock;
@@ -385,7 +385,7 @@ public final class NodeGame implements GameManager, Validator {
     }
 
     public GamePlayer getPlayer(Player player) {
-        return players.get(player.getUniqueId());
+        return players.get(player);
     }
 
     public Stream<NodeTeam> getPlayingTeams() {
@@ -486,13 +486,13 @@ public final class NodeGame implements GameManager, Validator {
     // START Game Controls //
 
     public void join(Player player) {
-        players.put(player.getUniqueId(), new NodePlayer(this, player));
+        players.put(player, new NodePlayer(this, player));
         ((NodePlayer) getPlayer(player)).join();
     }
 
     public void quit(Player player) {
         ((NodePlayer) getPlayer(player)).leave();
-        players.remove(player.getUniqueId());
+        players.remove(player);
     }
 
     /** Should the game start depending all start operations are true */
