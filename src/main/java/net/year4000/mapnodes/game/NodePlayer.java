@@ -22,6 +22,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -176,7 +177,7 @@ public final class NodePlayer implements GamePlayer, Comparable {
 
         // start menu
         playerTasks.add(SchedulerUtil.runAsync(() -> {
-            if (join.isMenu()) {
+            if (join.isMenu() && player.getOpenInventory().getType() == InventoryType.PLAYER) {
                 game.openTeamChooserMenu(this);
             }
 
