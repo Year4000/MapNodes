@@ -12,6 +12,7 @@ import net.year4000.mapnodes.game.NodeClass;
 import net.year4000.mapnodes.game.NodeGame;
 import net.year4000.mapnodes.game.NodeKit;
 import net.year4000.mapnodes.game.NodePlayer;
+import net.year4000.mapnodes.game.system.SpectatorKit;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.PacketHacks;
 import net.year4000.mapnodes.utils.SchedulerUtil;
@@ -220,7 +221,7 @@ public class SpectatorListener implements Listener {
 
     @EventHandler
     public void onJoin(GamePlayerJoinSpectatorEvent event) {
-        NodeKit kit = ((NodeKit) event.getKit()).clone();
+        NodeKit kit = new SpectatorKit();
         boolean classKit = ((NodePlayer) event.getPlayer()).getGame().getClasses().size() > 0;
 
         // Book
@@ -233,6 +234,8 @@ public class SpectatorListener implements Listener {
         if (classKit) {
             kit.getItems().set(1, ItemUtil.makeItem("magma_cream", "{'display':{'name':'" + Msg.locale(event.getPlayer(), "class.menu.item") + "'}}"));
         }
+
+        event.setKit(kit);
     }
 
     // 1.8 clients have a bug where the books change the nbt data and broke books
