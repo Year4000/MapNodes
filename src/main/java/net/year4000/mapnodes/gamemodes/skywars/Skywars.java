@@ -58,7 +58,7 @@ public class Skywars extends Elimination {
         }
         else {
             alive.stream()
-                .sorted((l, r) -> kills.getOrDefault(l, 0) > kills.getOrDefault(r, 0) ? 1 : -1)
+                .sorted((l, r) -> kills.getOrDefault(l, 0) < kills.getOrDefault(r, 0) ? 1 : -1)
                 .forEach(name -> game.addStaticGoal(name, "&7(&e" + kills.getOrDefault(name, 0) + "&7) &a" + name));
             dead.forEach(name -> game.addStaticGoal(name, "&7(&e" + kills.getOrDefault(name, 0) + "&7) &c&m" + name));
         }
