@@ -250,7 +250,7 @@ public class ScoreboardFactory {
     public void setAllGameSidebar() {
         game.getPlaying()
             .map(player -> (NodePlayer) player)
-            .forEach(this::setPersonalSidebar);
+            .forEach(this::setGameSidebar);
     }
 
     public void setGameSidebar(NodePlayer nodePlayer) {

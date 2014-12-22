@@ -63,6 +63,6 @@ public class Skywars extends Elimination {
             dead.forEach(name -> game.addStaticGoal(name, "&7(&e" + kills.getOrDefault(name, 0) + "&7) &c&m" + name));
         }
 
-        game.getPlaying().forEach(player -> game.getScoreboardFactory().setGameSidebar((NodePlayer) player));
+        game.getScoreboardFactory().setAllGameSidebar();
     }
 }
