@@ -2,6 +2,7 @@ package net.year4000.mapnodes.game.regions.events;
 
 import com.google.common.collect.Iterables;
 import com.google.gson.annotations.SerializedName;
+import lombok.Data;
 import net.year4000.mapnodes.api.events.game.GameStopEvent;
 import net.year4000.mapnodes.game.NodeKit;
 import net.year4000.mapnodes.game.regions.EventType;
@@ -23,18 +24,17 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.BlockVector;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.stream.Collectors;
 
 @EventType(EventTypes.CHEST)
 public class Chest extends RegionEvent implements RegionListener {
     private static transient final Random rand = new Random(System.currentTimeMillis());
     private static transient final List<BlockVector> chests = new CopyOnWriteArrayList<>();
     private static transient final List<BlockVector> placedChests = new CopyOnWriteArrayList<>();
-    private List<String> kits = new ArrayList<>();
+    private List<ChestKit> kits = new ArrayList<>();
+    private String kit = null;
     private ItemStackList<ItemStack> items = new ItemStackList<>();
     @SerializedName("keep_filled")
     private boolean keepFilled = false;
@@ -99,36 +99,65 @@ public class Chest extends RegionEvent implements RegionListener {
                 }
 
                 // Add items from the kit to the chests
-                if (kits.size() > 0) {
+                final ItemStack[] chestContents = new ItemStack[chest.getSize()];
+
+                // Place items in chest based on kit list
+                if (kits.size() > 0 && kit == null) {
+                    List<ItemStack> chestItems = new ArrayList<>();
+
                     kits.forEach(kit -> {
+                        NodeKit nodeKit = region.getGame().getKits().get(kit.getName());
+
+                        if (kit.isRepeat()) {
+                            for (int i = 0; i < (kit.getAmount() > chest.getSize() ? chest.getSize() : kit.getAmount()); i++) {
+                                chestItems.add(nodeKit.getItems().getNonAirItems().get(Math.abs(rand.nextInt(nodeKit.getItems().getNonAirItems().size()))));
+                            }
+                        }
+                        else {
+                            List<ItemStack> itemStacks = nodeKit.getItems().getNonAirItems();
+                            Collections.shuffle(itemStacks);
+
+                            for (int i = 0; i < (kit.getAmount() > chest.getSize() ? chest.getSize() : kit.getAmount()); i++) {
+                                chestItems.add(itemStacks.get(i));
+                            }
+                        }
+
+                    });
+
+                    for (int i = 0; i < (chestItems.size() > chest.getSize() ? chest.getSize() : chestItems.size()); i++) {
+                        chestContents[i] = chestItems.get(i);
+                    }
+                }
+                else {
+                    // If one kit treat it like external list
+                    if (kit != null) {
                         NodeKit nodeKit = region.getGame().getKits().get(kit);
                         items.addAll(nodeKit.getItems().getNonAirItems());
-                    });
-                }
+                    }
 
-                ItemStack[] chestContents = new ItemStack[chest.getSize()];
-                Iterator<ItemStack> itemIterator = Iterables.cycle(items).iterator();
+                    Iterator<ItemStack> itemIterator = Iterables.cycle(items).iterator();
 
-                for (int i = 0; i < (amount > chest.getSize() || fill ? chest.getSize() : amount); i++) {
-                    if (scatter) {
-                        int itemIndex = Math.abs(rand.nextInt(items.size()));
-                        int scatterIndex = Math.abs(rand.nextInt(chest.getSize()));
-                        chestContents[scatterIndex] = items.get(itemIndex);
-                        // MapNodesPlugin.log("SCATTER");
-                    }
-                    else if (scatter && fill) {
-                        int scatterIndex = Math.abs(rand.nextInt(chest.getSize()));
-                        chestContents[scatterIndex] = itemIterator.next();
-                        // MapNodesPlugin.log("SCATTER & FILL");
-                    }
-                    else if (fill) {
-                        chestContents[i] = itemIterator.next();
-                        // MapNodesPlugin.log("FILL");
-                    }
-                    else {
-                        int itemIndex = Math.abs(rand.nextInt(items.size()));
-                        chestContents[i] = items.get(itemIndex);
-                        // MapNodesPlugin.log("OTHER");
+                    for (int i = 0; i < (amount > chest.getSize() || fill ? chest.getSize() : amount); i++) {
+                        if (scatter) {
+                            int itemIndex = Math.abs(rand.nextInt(items.size()));
+                            int scatterIndex = Math.abs(rand.nextInt(chest.getSize()));
+                            chestContents[scatterIndex] = items.get(itemIndex);
+                            // MapNodesPlugin.log("SCATTER");
+                        }
+                        else if (scatter && fill) {
+                            int scatterIndex = Math.abs(rand.nextInt(chest.getSize()));
+                            chestContents[scatterIndex] = itemIterator.next();
+                            // MapNodesPlugin.log("SCATTER & FILL");
+                        }
+                        else if (fill) {
+                            chestContents[i] = itemIterator.next();
+                            // MapNodesPlugin.log("FILL");
+                        }
+                        else {
+                            int itemIndex = Math.abs(rand.nextInt(items.size()));
+                            chestContents[i] = items.get(itemIndex);
+                            // MapNodesPlugin.log("OTHER");
+                        }
                     }
                 }
 
@@ -152,5 +181,12 @@ public class Chest extends RegionEvent implements RegionListener {
     public void onGameEnd(GameStopEvent event) {
         chests.clear();
         placedChests.clear();
+    }
+
+    @Data
+    public static class ChestKit {
+        private String name;
+        private int amount;
+        private boolean repeat = false;
     }
 }
