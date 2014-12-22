@@ -34,6 +34,8 @@ import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.event.server.ServerListPingEvent;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 @EqualsAndHashCode
 public final class MapNodesListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
@@ -134,27 +136,28 @@ public final class MapNodesListener implements Listener {
         }
     }
 
-    int lastSize = 0;
+    private AtomicInteger lastSize = new AtomicInteger(0);
 
     /** Start the game and when another player join reduce the time */
     @EventHandler
     public void onClock(GamePlayerJoinTeamEvent event) {
-        if (event.getTo() instanceof Spectator) return;
-        if (!MapNodes.getCurrentGame().getStage().isPreGame()) return;
-
         NodeGame game = ((NodeGame) MapNodes.getCurrentGame());
+
+        if (event.getTo() instanceof Spectator) return;
+        if (!game.getStage().isPreGame()) return;
+
         // Add one as this happens before they fully enter the team
         int size = (int) game.getEntering().count() + 1;
-        boolean biggerThanLast = lastSize < size;
-        lastSize = size;
+        boolean biggerThanLast = lastSize.get() < size;
+        lastSize.set(size);
 
         if (game.shouldStart()) {
             if (game.getStage().isStarting()) {
-                if (game.getStartClock().getClock().getIndex() > MathUtil.ticks(30) && biggerThanLast) {
+                if (game.getStartClock().getClock().getIndex() > MathUtil.ticks(20) && biggerThanLast) {
                     game.getStartClock().reduceTime(10); // 10 secs
 
                     // Announcer to players that time was reduce
-                    game.getEntering().forEach(p -> p.sendMessage(Msg.locale(p, "clocks.start.reduce")));
+                    game.getEntering().forEach(p -> p.sendMessage(Msg.locale(p, "clocks.start.reduce", event.getPlayer().getPlayer().getName())));
                 }
             } else if (game.getStage().isWaiting()) {
                 new StartGame(game.getBaseStartTime()).run();
@@ -165,7 +168,7 @@ public final class MapNodesListener implements Listener {
     /** Reset last size for next game */
     @EventHandler
     public void onEnd(GameStopEvent event) {
-        lastSize = 0;
+        lastSize.set(0);
     }
 
     /** Force player respawn when joining spectators */
