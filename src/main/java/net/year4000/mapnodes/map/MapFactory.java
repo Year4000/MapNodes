@@ -9,6 +9,7 @@ import net.year4000.mapnodes.messages.Msg;
 
 import javax.annotation.Nullable;
 import java.io.File;
+import java.lang.reflect.Array;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
@@ -84,11 +85,14 @@ public class MapFactory {
         }
 
         Iterator<MapFolder> mapFolderIterator = Iterables.cycle(maps).iterator();
+        ArrayList<MapFolder> loadedMaps = new ArrayList<>();
 
-        return new ArrayList<MapFolder>() {{
-            for (int i = 0; i < number; i++) {
-                add(mapFolderIterator.next());
+        for (int i = 0; i < number; i++) {
+            if (mapFolderIterator.hasNext()) {
+                loadedMaps.add(mapFolderIterator.next());
             }
-        }};
+        }
+
+        return loadedMaps;
     }
 }

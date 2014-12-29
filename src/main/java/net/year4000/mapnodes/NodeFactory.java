@@ -64,7 +64,6 @@ public class NodeFactory {
             }
             catch (NullPointerException e) {
                 MapNodesPlugin.debug(Msg.util("error.world.none"));
-                MapNodesPlugin.debug(e, false);
             }
         }};
     }
