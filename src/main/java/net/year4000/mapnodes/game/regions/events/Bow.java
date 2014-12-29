@@ -44,13 +44,9 @@ public class Bow extends RegionEvent implements RegionListener {
 
     @EventHandler(ignoreCancelled = true)
     public void onBowShoot(EntityShootBowEvent event) {
-        if (!(event.getEntity() instanceof Player)) {
-            return;
-        }
+        if (!(event.getEntity() instanceof Player)) return;
 
-        if (!region.inZone(new Point(event.getEntity().getLocation().toVector().toBlockVector()))) {
-            return;
-        }
+        if (!region.inZone(new Point(event.getEntity().getLocation().toVector().toBlockVector()))) return;
 
         GamePlayer player = region.getGame().getPlayer((Player) event.getEntity());
 

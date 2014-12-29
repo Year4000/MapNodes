@@ -67,27 +67,21 @@ public class SpectatorListener implements Listener {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
     public void onEntityTarget(EntityTargetLivingEntityEvent event) {
-        if (!(event.getTarget() instanceof Player)) {
-            return;
-        }
+        if (!(event.getTarget() instanceof Player)) return;
 
         stopEvent(event, (Player) event.getTarget());
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
     public void onInteract(EntityInteractEvent event) {
-        if (!(event.getEntity() instanceof Player)) {
-            return;
-        }
+        if (!(event.getEntity() instanceof Player)) return;
 
         stopEvent(event, (Player) event.getEntity());
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
     public void onIvnInteract(InventoryClickEvent event) {
-        if (!(event.getWhoClicked() instanceof Player)) {
-            return;
-        }
+        if (!(event.getWhoClicked() instanceof Player)) return;
 
         stopEvent(event, (Player) event.getWhoClicked());
     }
@@ -104,18 +98,14 @@ public class SpectatorListener implements Listener {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
     public void onDamager(EntityDamageByEntityEvent event) {
-        if (!(event.getDamager() instanceof Player)) {
-            return;
-        }
+        if (!(event.getDamager() instanceof Player)) return;
 
         stopEvent(event, (Player) event.getDamager());
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
     public void onDamagee(EntityDamageByEntityEvent event) {
-        if (!(event.getEntity() instanceof Player)) {
-            return;
-        }
+        if (!(event.getEntity() instanceof Player)) return;
 
         stopEvent(event, (Player) event.getEntity());
     }
@@ -123,9 +113,8 @@ public class SpectatorListener implements Listener {
     @EventHandler
     public void onDamage(EntityDamageEvent event) {
         // If not a player don't check
-        if (!(event.getEntity() instanceof Player)) {
-            return;
-        }
+        if (!(event.getEntity() instanceof Player)) return;
+
         Player entity = (Player) event.getEntity();
 
         // If not playing send player back to spawn
@@ -211,7 +200,7 @@ public class SpectatorListener implements Listener {
         ItemStack book = ItemUtil.createBook(
             "&b" + gm.getMap().getName(),
             "&5&o" + gm.getMap().getMainAuthor(),
-            ((NodeGame) gm).getBookPages(player.getPlayer())
+            gm.getBookPages(player.getPlayer())
         );
 
         book.setItemMeta(ItemUtil.addMeta(book, "{'display': {'name': '" + ("&b" + gm.getMap().getName() + " &7(" + Msg.locale(player, "action.right") + ")") + "'}}"));
@@ -227,7 +216,7 @@ public class SpectatorListener implements Listener {
             Inventory inv = player.getPlayer().getInventory();
 
 
-            inv.setItem(((NodeGame) gm).getClasses().size() > 0 ? 3 : 2, book(player));
+            inv.setItem(gm.getClasses().size() > 0 ? 3 : 2, book(player));
             player.getPlayer().updateInventory();
         }), 5L);
     }
@@ -261,9 +250,7 @@ public class SpectatorListener implements Listener {
             ItemStack hand = event.getPlayer().getItemInHand();
             GamePlayer player = MapNodes.getCurrentGame().getPlayer(event.getPlayer());
 
-            if (player.isPlaying()) {
-                return;
-            }
+            if (player.isPlaying()) return;
 
             try {
                 if (PacketHacks.isTitleAble(event.getPlayer()) && hand.getType() == Material.WRITTEN_BOOK) {
@@ -288,9 +275,7 @@ public class SpectatorListener implements Listener {
         GamePlayer gPlayer = MapNodes.getCurrentGame().getPlayer(player);
         NodeGame game = (NodeGame) MapNodes.getCurrentGame();
 
-        if (gPlayer.isPlaying()) {
-            return;
-        }
+        if (gPlayer.isPlaying()) return;
 
         if (Msg.matches(gPlayer, event.getInventory().getName(), "team.menu.title")) {
             try {
@@ -325,13 +310,11 @@ public class SpectatorListener implements Listener {
             ItemStack hand = event.getPlayer().getItemInHand();
             GamePlayer player = MapNodes.getCurrentGame().getPlayer(event.getPlayer());
 
-            if (player.isPlaying()) {
-                return;
-            }
+            if (player.isPlaying()) return;
 
             try {
                 if (Msg.matches(player, hand.getItemMeta().getDisplayName(), "team.menu.item")) {
-                    ((NodeGame) MapNodes.getCurrentGame()).openTeamChooserMenu(player);
+                    MapNodes.getCurrentGame().openTeamChooserMenu(player);
                 }
             }
             catch (NullPointerException e) {
@@ -352,9 +335,7 @@ public class SpectatorListener implements Listener {
         GamePlayer gPlayer = MapNodes.getCurrentGame().getPlayer(player);
         NodeGame game = (NodeGame) MapNodes.getCurrentGame();
 
-        if (gPlayer.isPlaying()) {
-            return;
-        }
+        if (gPlayer.isPlaying()) return;
 
         if (Msg.matches(gPlayer, event.getInventory().getName(), "class.menu.title")) {
             try {
@@ -389,13 +370,11 @@ public class SpectatorListener implements Listener {
             ItemStack hand = event.getPlayer().getItemInHand();
             GamePlayer player = MapNodes.getCurrentGame().getPlayer(event.getPlayer());
 
-            if (player.isPlaying()) {
-                return;
-            }
+            if (player.isPlaying()) return;
 
             try {
                 if (Msg.matches(player, hand.getItemMeta().getDisplayName(), "class.menu.item")) {
-                    ((NodeGame) MapNodes.getCurrentGame()).openClassKitChooserMenu(player);
+                    MapNodes.getCurrentGame().openClassKitChooserMenu(player);
                 }
             }
             catch (NullPointerException e) {

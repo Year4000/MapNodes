@@ -12,18 +12,10 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 public interface GameManager {
-    /**
-     * Get the info of the map from the json settings.
-     *
-     * @return The map settings.
-     */
+    /** Get the info of the map from the json settings */
     public GameMap getMap();
 
-    /**
-     * Get the map config settings.
-     *
-     * @return The map config.
-     */
+    /** Get the map config settings */
     public GameConfig getConfig();
 
     public Map<String, GameKit> getKits();

@@ -16,9 +16,7 @@ public class CreatureSpawn extends RegionEvent implements RegionListener {
 
     @EventHandler
     public void onCreatureSpawn(CreatureSpawnEvent event) {
-        if (!region.inZone(new Point(event.getLocation().toVector().toBlockVector()))) {
-            return;
-        }
+        if (!region.inZone(new Point(event.getLocation().toVector().toBlockVector()))) return;
 
         EntityType entityType = event.getEntityType();
 

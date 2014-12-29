@@ -13,7 +13,8 @@ public enum EventTypes {
     TNT("tnt"),
     BOW("bow"),
     ITEM_DROP("item_drops"),
-    FALLING_BLOCKS("falling_blocks"),;
+    FALLING_BLOCKS("falling_blocks"),
+    ;
 
     private String name;
 

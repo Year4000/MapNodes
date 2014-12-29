@@ -19,9 +19,7 @@ public class Destroy extends RegionEvent implements RegionListener {
 
     @EventHandler
     public void onPlace(BlockBreakEvent event) {
-        if (!region.inZone(new Point(event.getBlock().getLocation().toVector().toBlockVector()))) {
-            return;
-        }
+        if (!region.inZone(new Point(event.getBlock().getLocation().toVector().toBlockVector()))) return;
 
         GamePlayer player = region.getGame().getPlayer(event.getPlayer());
         Material material = event.getBlock().getType();

@@ -20,9 +20,7 @@ public class EntityDamage extends RegionEvent implements RegionListener {
 
     @EventHandler
     public void onEntityDamage(EntityDamageEvent event) {
-        if (!region.inZone(new Point(event.getEntity().getLocation().toVector().toBlockVector()))) {
-            return;
-        }
+        if (!region.inZone(new Point(event.getEntity().getLocation().toVector().toBlockVector()))) return;
 
         EntityDamageEvent.DamageCause cause = event.getCause();
 

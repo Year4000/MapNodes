@@ -1,5 +1,7 @@
 package net.year4000.mapnodes.utils;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import net.minecraft.server.v1_7_R4.EntityLiving;
 import net.minecraft.server.v1_7_R4.EntityProjectile;
 import net.minecraft.server.v1_7_R4.NBTTagCompound;
@@ -15,10 +17,8 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scoreboard.Team;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class NMSHacks {
-    private NMSHacks() {
-    }
-
     /** Is the team registered */
     public static boolean isTeamRegistered(Team team) {
         return team instanceof CraftTeam && ((CraftTeam) team).getScoreboard() != null;

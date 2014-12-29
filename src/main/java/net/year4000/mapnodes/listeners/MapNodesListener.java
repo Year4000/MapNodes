@@ -42,6 +42,7 @@ public final class MapNodesListener implements Listener {
     public void onJoin(PlayerLoginEvent event) {
         NodeGame game = (NodeGame) MapNodes.getCurrentGame();
         Player player = event.getPlayer();
+
         if (game.getPlayers().count() + 1 > game.getRealMaxCount() && !player.hasPermission("theta")) {
             event.disallow(PlayerLoginEvent.Result.KICK_FULL, Msg.locale(player, "server.full") + ' ' + Msg.locale(player, "team.select.non_vip_url"));
         }
@@ -50,7 +51,7 @@ public final class MapNodesListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onJoin(PlayerJoinEvent event) {
         event.setJoinMessage(null);
-        ((NodeGame) MapNodes.getCurrentGame()).join(event.getPlayer());
+        MapNodes.getCurrentGame().join(event.getPlayer());
 
         // Update server name
         if (MapNodesPlugin.getInst().getNetwork().getName().equals(Network.UNKNOWN)) {
@@ -61,7 +62,7 @@ public final class MapNodesListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onQuit(PlayerQuitEvent event) {
         event.setQuitMessage(null);
-        ((NodeGame) MapNodes.getCurrentGame()).quit(event.getPlayer());
+        MapNodes.getCurrentGame().quit(event.getPlayer());
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -76,9 +77,7 @@ public final class MapNodesListener implements Listener {
 
     @EventHandler(ignoreCancelled = true)
     public void onTeleport(PlayerTeleportEvent event) {
-        if (event.getCause() != PlayerTeleportEvent.TeleportCause.PLUGIN) {
-            return;
-        }
+        if (event.getCause() != PlayerTeleportEvent.TeleportCause.PLUGIN) return;
 
         event.setTo(Common.center(event.getTo()));
 
@@ -96,7 +95,7 @@ public final class MapNodesListener implements Listener {
     @EventHandler
     public void onPing(ServerListPingEvent event) {
         Node node = NodeFactory.get().getCurrentGame();
-        NodeGame gm = (NodeGame) node.getGame();
+        NodeGame gm = node.getGame();
 
         // Don't show spectators when game is playing
         if (gm.getStage().isPlaying()) {
@@ -143,12 +142,8 @@ public final class MapNodesListener implements Listener {
     public void onClock(GamePlayerJoinTeamEvent event) {
         NodeGame game = ((NodeGame) MapNodes.getCurrentGame());
 
-        if (event.getTo() instanceof Spectator) {
-            return;
-        }
-        if (!game.getStage().isPreGame()) {
-            return;
-        }
+        if (event.getTo() instanceof Spectator) return;
+        if (!game.getStage().isPreGame()) return;
 
         // Add one as this happens before they fully enter the team
         int size = (int) game.getEntering().count() + 1;

@@ -109,18 +109,14 @@ public abstract class RegionEvent {
 
     /** Teleport the player to a random safe location */
     public void teleportPlayer(GamePlayer player) {
-        if (teleport.size() == 0) {
-            return;
-        }
+        if (teleport.size() == 0) return;
 
         player.getPlayer().teleport(teleport.getSafeRandomSpawn());
     }
 
     /** Send the message to the player */
     public void sendMessage(GamePlayer player) {
-        if (message == null || message.equals("")) {
-            return;
-        }
+        if (message == null || message.equals("")) return;
 
         // Translate by map first
         String translatedMessage = ((NodePlayer) player).getGame().locale(player.getPlayer().getLocale(), message);

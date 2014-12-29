@@ -1,5 +1,7 @@
 package net.year4000.mapnodes.utils;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import net.minecraft.server.v1_7_R4.ChatSerializer;
 import net.minecraft.server.v1_7_R4.IChatBaseComponent;
 import net.minecraft.server.v1_7_R4.Packet;
@@ -13,10 +15,8 @@ import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.spigotmc.ProtocolInjector;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class PacketHacks {
-    private PacketHacks() {
-    }
-
     /** Re-spawn a dead player */
     public static void respawnPlayer(Player player) {
         CraftPlayer craftPlayer = (CraftPlayer) player;
@@ -46,9 +46,7 @@ public final class PacketHacks {
 
     /** Set the tablist header and footer */
     public static void setTabListHeadFoot(Player player, String header, String footer) {
-        if (!isTitleAble(player)) {
-            return;
-        }
+        if (!isTitleAble(player)) return;
 
         CraftPlayer craftPlayer = (CraftPlayer) player;
 

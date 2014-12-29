@@ -63,9 +63,7 @@ public final class SidebarManager {
         for (int i = 0; i < size - 2; i++) {
             String key = prefix.substring(i, i + 2);
 
-            if (ChatColor.COLOR_CHAR != key.charAt(0)) {
-                continue;
-            }
+            if (ChatColor.COLOR_CHAR != key.charAt(0)) continue;
 
             // Match last color
             if (Pattern.matches("[0-9a-fA-F]", String.valueOf(key.charAt(1)))) {

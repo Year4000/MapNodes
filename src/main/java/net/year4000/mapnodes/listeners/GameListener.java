@@ -46,7 +46,7 @@ public final class GameListener implements Listener {
                 ((NodePlayer) player).getClassKit().getKit().giveKit(player);
             }
             else {
-                ((NodeKit) player.getTeam().getKit()).giveKit(player);
+                player.getTeam().getKit().giveKit(player);
             }
 
             ((NodePlayer) player).updateInventory();
@@ -106,7 +106,6 @@ public final class GameListener implements Listener {
             if (event.getMessage().size() > 0) {
                 player.sendMessage("");
                 event.getMessage().forEach(string -> player.sendMessage(Common.textLine(string, size, ' ', "", "&a&o")));
-                ;
             }
 
             player.sendMessage("&7&m******************************************");
@@ -114,7 +113,7 @@ public final class GameListener implements Listener {
         });
 
         // Stop the game
-        ((NodeGame) MapNodes.getCurrentGame()).stop();
+        MapNodes.getCurrentGame().stop();
     }
 
     @EventHandler(priority = EventPriority.HIGH)
@@ -131,9 +130,7 @@ public final class GameListener implements Listener {
             int teamSize = (int) (event.getGame()).getPlayingTeams().count();
 
             // Its a custom game mode let the game mode handle early ends
-            if (teamSize == 1) {
-                return;
-            }
+            if (teamSize == 1) return;
 
             List<String> left = (event.getGame()).getPlayingTeams()
                 .filter(team -> team.getPlaying() > 0)

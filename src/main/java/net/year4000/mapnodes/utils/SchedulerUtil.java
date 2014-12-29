@@ -1,10 +1,13 @@
 package net.year4000.mapnodes.utils;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import net.year4000.mapnodes.MapNodesPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scheduler.BukkitTask;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class SchedulerUtil {
     private static MapNodesPlugin plugin = MapNodesPlugin.getInst();
     private static BukkitScheduler scheduler = Bukkit.getScheduler();

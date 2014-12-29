@@ -1,7 +1,9 @@
 package net.year4000.mapnodes.utils;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import net.year4000.utilities.ChatColor;
 import net.year4000.utilities.bukkit.MessageUtil;
 import org.bukkit.entity.Player;

@@ -47,12 +47,6 @@ public class DestroyTarget implements Validator {
 
     /** The percent to destroy to win */
     private int percent = 100;
-    private transient Stage stage = Stage.START;
-    private transient int maxSize;
-    private transient int currentSize;
-    private transient List<Block> blockList;
-    private transient GameRegion nodeRegion;
-    private String ownerName;
 
     @Override
     public void validate() throws InvalidJsonException {
@@ -60,6 +54,13 @@ public class DestroyTarget implements Validator {
         checkArgument(region != null, Msg.util("destroy.region"));
         checkArgument(percent >= 0 && percent <= 100, Msg.util("destroy.percent"));
     }
+
+    private transient Stage stage = Stage.START;
+    private transient int maxSize;
+    private transient int currentSize;
+    private transient List<Block> blockList;
+    private transient GameRegion nodeRegion;
+    private transient String ownerName;
 
     public void init(GameManager game) {
         World world = MapNodes.getCurrentWorld();

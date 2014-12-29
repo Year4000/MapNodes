@@ -1,5 +1,6 @@
 package net.year4000.mapnodes.utils;
 
+import lombok.NoArgsConstructor;
 import net.minecraft.server.v1_7_R4.*;
 import net.minecraft.util.com.google.common.collect.BiMap;
 
@@ -36,6 +37,7 @@ public class PacketInjector {
         protocolMap.put(packet, protocol);
     }
 
+    @NoArgsConstructor
     public static class PacketTitle extends Packet {
         private Action action;
 
@@ -46,9 +48,6 @@ public class PacketInjector {
         private int fadeIn = -1;
         private int stay = -1;
         private int fadeOut = -1;
-
-        public PacketTitle() {
-        }
 
         public PacketTitle(Action action) {
             this.action = action;

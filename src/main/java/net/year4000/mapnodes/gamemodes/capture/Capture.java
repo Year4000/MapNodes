@@ -185,16 +185,12 @@ public class Capture extends GameModeTemplate implements GameMode {
 
     @EventHandler
     public void onPickupWool(InventoryClickEvent event) {
-        if (!MapNodes.getCurrentGame().getStage().isPlaying() || event.getCurrentItem() == null) {
-            return;
-        }
+        if (!MapNodes.getCurrentGame().getStage().isPlaying() || event.getCurrentItem() == null) return;
 
         GamePlayer player = game.getPlayer((Player) event.getWhoClicked());
         GameTeam team = player.getTeam();
 
-        if (team instanceof Spectator) {
-            return;
-        }
+        if (team instanceof Spectator) return;
 
         checkPickUpCapture(team, player, event.getCurrentItem().getType(), event.getCurrentItem().getData().getData());
     }
@@ -203,14 +199,10 @@ public class Capture extends GameModeTemplate implements GameMode {
     private void checkPickUpCapture(GameTeam team, GamePlayer player, Material material, byte data) {
         for (CaptureConfig.BlockCapture capture : captures.get(team.getId())) {
             // Check material
-            if (material != capture.getBlock()) {
-                continue;
-            }
+            if (material != capture.getBlock()) continue;
 
             // Check data
-            if ((int) data != capture.getData()) {
-                continue;
-            }
+            if ((int) data != capture.getData()) continue;
 
             if (!capture.getGrabbed().contains(player)) {
                 capture.getGrabbed().add(player);

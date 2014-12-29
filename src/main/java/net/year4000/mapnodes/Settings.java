@@ -18,18 +18,6 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = false)
 public class Settings extends Config {
     private static Settings inst = null;
-    @Comment("The url to pull the locales from")
-    private String url = "https://raw.githubusercontent.com/Year4000/Locales/master/net/year4000/mapnodes/locales/";
-    @Comment("The url to pull the locales from")
-    private String systemUrl = "https://raw.githubusercontent.com/Year4000/Locales/master/net/year4000/mapnodes/system/";
-    @Comment("The max number of maps to load per session")
-    private int loadMaps = 10;
-    @Comment("The folders paths to the maps")
-    private List<String> mapsFolder = new ArrayList<String>() {{
-        add("/y4k/maps/");
-    }};
-    @Comment("The json file location to load global kits")
-    private String kits = "/y4k/maps/kits.json";
 
     private Settings() {
         try {
@@ -48,6 +36,23 @@ public class Settings extends Config {
             mapsFolder = Arrays.asList(System.getProperty("maps", null).split("(,|;)"));
         }
     }
+
+    @Comment("The url to pull the locales from")
+    private String url = "https://raw.githubusercontent.com/Year4000/Locales/master/net/year4000/mapnodes/locales/";
+
+    @Comment("The url to pull the locales from")
+    private String systemUrl = "https://raw.githubusercontent.com/Year4000/Locales/master/net/year4000/mapnodes/system/";
+
+    @Comment("The max number of maps to load per session")
+    private int loadMaps = 10;
+
+    @Comment("The folders paths to the maps")
+    private List<String> mapsFolder = new ArrayList<String>() {{
+        add("/y4k/maps/");
+    }};
+
+    @Comment("The json file location to load global kits")
+    private String kits = "/y4k/maps/kits.json";
 
     public static Settings get() {
         if (inst == null) {

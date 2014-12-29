@@ -69,9 +69,7 @@ public class Deathmatch extends GameModeTemplate implements GameMode {
 
     @EventHandler
     public void gameClock(GameClockEvent event) {
-        if (!event.getGame().getStage().isPlaying()) {
-            return;
-        }
+        if (!event.getGame().getStage().isPlaying()) return;
 
         if (gameModeConfig.getTimeLimit() != null) {
             long currentTime = endTime - System.currentTimeMillis();
@@ -110,23 +108,17 @@ public class Deathmatch extends GameModeTemplate implements GameMode {
 
     @EventHandler
     public void onMove(PlayerMoveEvent event) {
-        if (gameModeConfig.getPointBoxes().size() == 0 || !game.getStage().isPlaying()) {
-            return;
-        }
+        if (gameModeConfig.getPointBoxes().size() == 0 || !game.getStage().isPlaying()) return;
 
         Vector v = event.getTo().toVector();
 
         // Skip check if not a new block
-        if (event.getFrom().toVector().toBlockVector().equals(v.toBlockVector())) {
-            return;
-        }
+        if (event.getFrom().toVector().toBlockVector().equals(v.toBlockVector())) return;
 
         Point point = new Point(v.getBlockX(), v.getBlockY(), v.getBlockZ());
         GamePlayer player = game.getPlayer(event.getPlayer());
 
-        if (!player.isPlaying()) {
-            return;
-        }
+        if (!player.isPlaying()) return;
 
         // Add team point
         game.getRegions().values().forEach(region -> {
@@ -153,9 +145,7 @@ public class Deathmatch extends GameModeTemplate implements GameMode {
 
     /** Add the amount of points to a team and set the winner */
     public void addPoint(GameManager game, GameTeam team, int amount) {
-        if (!scores.containsKey(teamId(team))) {
-            return;
-        }
+        if (!scores.containsKey(teamId(team))) return;
 
         int newScore = scores.get(teamId(team)) + amount;
         scores.put(teamId(team), newScore);

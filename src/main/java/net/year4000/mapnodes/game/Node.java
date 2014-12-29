@@ -165,9 +165,8 @@ public class Node {
 
     /** Unregister this node, this includes things related to the world */
     public void unregister() {
-        if (!Bukkit.getPluginManager().isPluginEnabled(MapNodesPlugin.getInst())) {
-            return;
-        }
+        if (!Bukkit.getPluginManager().isPluginEnabled(MapNodesPlugin.getInst())) return;
+
         checkNotNull(world);
 
         SchedulerUtil.runAsync(() -> {

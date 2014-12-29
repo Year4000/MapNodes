@@ -10,7 +10,8 @@ public enum NodeStage implements GameStage {
     STARTING,
     PLAYING,
     ENDING,
-    ENDED;
+    ENDED,
+    ;
 
     /** Is the server running. */
     public boolean isPlaying() {

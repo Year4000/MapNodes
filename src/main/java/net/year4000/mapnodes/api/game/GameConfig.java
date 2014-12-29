@@ -11,52 +11,28 @@ import java.util.List;
 public interface GameConfig {
     /**
      * Get the world environment of the world.
-     *
-     * @return The world environment.
      */
     public World.Environment getEnvironment();
 
     /**
      * Get the difficulty of the world.
-     *
-     * @return The difficulty level.
      */
     public Difficulty getDifficulty();
 
-    /**
-     * Get the time the world should be locked at.
-     *
-     * @return The world time.
-     */
+    /** Get the time the world should be locked at */
     public WorldTime getTimeLock();
 
-    /**
-     * Should the weather be turned on.
-     *
-     * @return The state of the weather.
-     */
+    /** Should the weather be turned on */
     public boolean isWeather();
 
-    /**
-     * Get the max world height of the world.
-     *
-     * @return The world height of the world.
-     */
+    /** Get the max world height of the world */
     public int getWorldHeight();
 
-    /**
-     * Get the URL to the resource pack.
-     *
-     * @return The URL to the resource pack.
-     */
+    /** Get the URL to the resource pack */
     public URL getResourcePack();
 
 
-    /**
-     * The spawn locations when players enter the world.
-     *
-     * @return
-     */
+    /** The spawn locations when players enter the world */
     public List<Location> getSpawn();
 
     public Location getSafeRandomSpawn();

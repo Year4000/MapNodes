@@ -17,15 +17,11 @@ public class Exit extends RegionEvent implements RegionListener {
         BlockVector vector = event.getFrom().toVector().toBlockVector();
 
         // Skip check if not a new block
-        if (event.getTo().toVector().toBlockVector().equals(vector)) {
-            return;
-        }
+        if (event.getTo().toVector().toBlockVector().equals(vector)) return;
 
         Point point = new Point(vector);
 
-        if (!region.inZone(point) || region.inZone(new Point(event.getTo().toVector().toBlockVector()))) {
-            return;
-        }
+        if (!region.inZone(point) || region.inZone(new Point(event.getTo().toVector().toBlockVector()))) return;
 
         GamePlayer player = region.getGame().getPlayer(event.getPlayer());
 

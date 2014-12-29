@@ -31,9 +31,7 @@ public class Build extends RegionEvent implements RegionListener {
 
     @EventHandler
     public void onPlace(BlockPlaceEvent event) {
-        if (!region.inZone(new Point(event.getBlockPlaced().getLocation().toVector().toBlockVector()))) {
-            return;
-        }
+        if (!region.inZone(new Point(event.getBlockPlaced().getLocation().toVector().toBlockVector()))) return;
 
         GamePlayer player = region.getGame().getPlayer(event.getPlayer());
         Material material = event.getBlockPlaced().getType();

@@ -72,9 +72,7 @@ public class Elimination extends GameModeTemplate implements GameMode {
     /** Set the player's spawn to the next spawn in the list */
     @EventHandler
     public void onPlayerJoin(GamePlayerStartEvent event) {
-        if (event.getPlayer().getTeam() instanceof Spectator) {
-            return;
-        }
+        if (event.getPlayer().getTeam() instanceof Spectator) return;
 
         event.setImmortal(false);
         event.setSpawn(spawns.next());
@@ -91,9 +89,7 @@ public class Elimination extends GameModeTemplate implements GameMode {
     /** Don't allow players to select teams when the game started */
     @EventHandler
     public void onTeamSelect(GamePlayerJoinTeamEvent event) {
-        if (event.getTo() instanceof Spectator) {
-            return;
-        }
+        if (event.getTo() instanceof Spectator) return;
 
         if (MapNodes.getCurrentGame().getStage().isPlaying()) {
             event.setCancelled(true);

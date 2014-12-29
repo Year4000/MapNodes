@@ -61,9 +61,7 @@ public final class BungeeConnector implements PluginMessageListener {
 
     @Override
     public void onPluginMessageReceived(String channel, Player player, byte[] bytes) {
-        if (!channel.equals(CHANNEL)) {
-            return;
-        }
+        if (!channel.equals(CHANNEL))  return;
 
         if (requests.size() > 0) {
             ByteArrayDataInput in = ByteStreams.newDataInput(bytes);

@@ -7,9 +7,6 @@ public interface GameComponent extends Validator {
 
     public GameManager getGame();
 
-    /**
-     * Assign node game to the internal class to be used for simple things
-     */
+    /** Assign node game to the internal class to be used for simple things */
     public void assignNodeGame(GameManager game);
-
 }

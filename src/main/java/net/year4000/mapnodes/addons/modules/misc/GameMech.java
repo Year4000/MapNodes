@@ -39,25 +39,25 @@ public class GameMech extends Addon implements Listener {
         .add(Material.DIAMOND_HOE)
         .add(Material.DIAMOND_PICKAXE)
         .add(Material.DIAMOND_SPADE)
-            // Iron 251
+        // Iron 251
         .add(Material.IRON_SWORD)
         .add(Material.IRON_AXE)
         .add(Material.IRON_HOE)
         .add(Material.IRON_PICKAXE)
         .add(Material.IRON_SPADE)
-            // Stone 132
+        // Stone 132
         .add(Material.STONE_SWORD)
         .add(Material.STONE_AXE)
         .add(Material.STONE_HOE)
         .add(Material.STONE_PICKAXE)
         .add(Material.STONE_SPADE)
-            // Wood 60
+        // Wood 60
         .add(Material.WOOD_SWORD)
         .add(Material.WOOD_AXE)
         .add(Material.WOOD_HOE)
         .add(Material.WOOD_PICKAXE)
         .add(Material.WOOD_SPADE)
-            // Gold 33
+        // Gold 33
         .add(Material.GOLD_SWORD)
         .add(Material.GOLD_AXE)
         .add(Material.GOLD_HOE)
@@ -100,9 +100,7 @@ public class GameMech extends Addon implements Listener {
     @EventHandler(priority = EventPriority.HIGH)
     public void onDamage(EntityDamageEvent event) {
         // If not a player don't check
-        if (!(event.getEntity() instanceof Player)) {
-            return;
-        }
+        if (!(event.getEntity() instanceof Player)) return;
 
         // If playing instant kill when damaged by void
         if (MapNodes.getCurrentGame().getPlayer((Player) event.getEntity()).isPlaying()) {
@@ -140,9 +138,7 @@ public class GameMech extends Addon implements Listener {
         ItemStack item = event.getItem().getItemStack();
         PlayerInventory inv = event.getPlayer().getInventory();
 
-        if (!mergeItems.contains(item.getType())) {
-            return;
-        }
+        if (!mergeItems.contains(item.getType())) return;
 
         if (inv.getHelmet() != null && inv.getHelmet().getType() == item.getType()) {
             inv.getHelmet().setDurability(dura(inv.getHelmet(), item));
@@ -175,9 +171,7 @@ public class GameMech extends Addon implements Listener {
         for (int i = 0; i < inv.getSize(); i++) {
             ItemStack itemSlot = inv.getItem(i);
 
-            if (itemSlot == null || itemSlot.getType() != item.getType()) {
-                continue;
-            }
+            if (itemSlot == null || itemSlot.getType() != item.getType()) continue;
             // System.out.println(i + " : " + itemSlot.toString());
 
             itemSlot.setDurability(dura(itemSlot, item));

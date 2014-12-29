@@ -1,9 +1,12 @@
 package net.year4000.mapnodes.utils;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.bukkit.block.Chest;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ChestUtil {
     /** Is the chest empty. */
     public static boolean isEmpty(Chest chest) {

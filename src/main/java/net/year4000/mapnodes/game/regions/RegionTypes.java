@@ -8,7 +8,8 @@ public enum RegionTypes {
     GLOBAL("global"),
     POINT("point"),
     SPHERE("sphere"),
-    VOID("void"),;
+    VOID("void"),
+    ;
 
     private String name;
 

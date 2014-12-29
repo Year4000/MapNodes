@@ -85,9 +85,7 @@ public class TntWars extends GameModeTemplate implements GameMode {
 
     @EventHandler
     public void onPrimed(BlockDispenseEntityEvent event) {
-        if (!(event.getEntity() instanceof TNTPrimed)) {
-            return;
-        }
+        if (!(event.getEntity() instanceof TNTPrimed)) return;
 
         locations.put(event.getEntity().getEntityId(), event.getEntity().getLocation().toVector());
         fromDispenser.add(event.getEntity().getEntityId());
@@ -149,9 +147,7 @@ public class TntWars extends GameModeTemplate implements GameMode {
             .sorted((r, l) -> r.getWeight() < l.getWeight() ? 1 : -1)
             .collect(Collectors.toList());
 
-        if (regionList.size() == 0) {
-            return;
-        }
+        if (regionList.size() == 0) return;
 
         String regionName = regionList.get(0).getId();
         TntWarsConfig.Island island = gameModeConfig.getIsland(regionName);

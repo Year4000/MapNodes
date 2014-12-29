@@ -32,9 +32,7 @@ public class DeathMessages extends Addon implements Listener {
         Player killer = player.getKiller();
 
         // Check if your death was null
-        if (player.getLastDamageCause() == null) {
-            return;
-        }
+        if (player.getLastDamageCause() == null) return;
 
         GamePlayerDeathEvent deathEvent = new GamePlayerDeathEvent(event);
         deathEvent.call();
@@ -68,9 +66,9 @@ public class DeathMessages extends Addon implements Listener {
 
         return MessageUtil.message(
             "&7&o" + Msg.locale(viewer, message,
-                gm.getPlayer(d).getPlayerColor() + "&7&o",
-                gm.getPlayer(k).getPlayerColor() + "&7&o"
-            ));
+            gm.getPlayer(d).getPlayerColor() + "&7&o",
+            gm.getPlayer(k).getPlayerColor() + "&7&o"
+        ));
     }
 
     public String replace(Player k, Player d, Player viewer, String message, Object args) {
@@ -78,10 +76,10 @@ public class DeathMessages extends Addon implements Listener {
 
         return MessageUtil.message(
             "&7&o" + Msg.locale(viewer, message,
-                gm.getPlayer(d).getPlayerColor() + "&7&o",
-                gm.getPlayer(k).getPlayerColor() + "&7&o",
-                String.valueOf(args)
-            ));
+            gm.getPlayer(d).getPlayerColor() + "&7&o",
+            gm.getPlayer(k).getPlayerColor() + "&7&o",
+            String.valueOf(args)
+        ));
     }
 
     /** Format the item so humans can read it. */

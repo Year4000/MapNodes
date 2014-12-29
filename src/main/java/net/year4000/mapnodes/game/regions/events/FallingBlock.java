@@ -28,9 +28,7 @@ public class FallingBlock extends RegionEvent implements RegionListener {
 
     @EventHandler(ignoreCancelled = true)
     public void onStateChange(BlockFallEvent event) {
-        if (!region.inZone(new Point(event.getBlock().getLocation().toVector().toBlockVector()))) {
-            return;
-        }
+        if (!region.inZone(new Point(event.getBlock().getLocation().toVector().toBlockVector()))) return;
 
         if (isAllowSet() && !isAllow()) {
             event.setCancelled(true);
