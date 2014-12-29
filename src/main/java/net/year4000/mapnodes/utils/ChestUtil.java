@@ -8,7 +8,9 @@ public final class ChestUtil {
     /** Is the chest empty. */
     public static boolean isEmpty(Chest chest) {
         for (ItemStack slot : chest.getInventory().getContents()) {
-            if (slot != null) return false;
+            if (slot != null) {
+                return false;
+            }
         }
 
         return true;
@@ -17,7 +19,9 @@ public final class ChestUtil {
     /** Is the inventory empty. */
     public static boolean isEmpty(Inventory inventory) {
         for (ItemStack slot : inventory.getContents()) {
-            if (slot != null) return false;
+            if (slot != null) {
+                return false;
+            }
         }
 
         return true;

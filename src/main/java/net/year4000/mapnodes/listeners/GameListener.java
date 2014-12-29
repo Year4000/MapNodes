@@ -8,12 +8,16 @@ import net.year4000.mapnodes.api.events.game.GameClockEvent;
 import net.year4000.mapnodes.api.events.game.GameWinEvent;
 import net.year4000.mapnodes.api.events.team.GameTeamWinEvent;
 import net.year4000.mapnodes.api.game.GamePlayer;
-import net.year4000.mapnodes.game.*;
-import net.year4000.mapnodes.game.system.Spectator;
+import net.year4000.mapnodes.api.game.GameTeam;
+import net.year4000.mapnodes.api.utils.Spectator;
+import net.year4000.mapnodes.game.NodeGame;
+import net.year4000.mapnodes.game.NodeKit;
+import net.year4000.mapnodes.game.NodePlayer;
+import net.year4000.mapnodes.game.NodeTeam;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.Common;
 import net.year4000.mapnodes.utils.PacketHacks;
-import net.year4000.mapnodes.utils.TimeUtil;
+import net.year4000.mapnodes.utils.typewrappers.LocationList;
 import net.year4000.utilities.ChatColor;
 import net.year4000.utilities.bukkit.FunEffectsUtil;
 import net.year4000.utilities.bukkit.MessageUtil;
@@ -28,7 +32,6 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.*;
 
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -52,8 +55,8 @@ public final class GameListener implements Listener {
             player.getPlayerTasks().add(NodeKit.immortal(event.getPlayer()));
         }
 
-        if(player.getTeam() == null){
-            event.setRespawnLocation(MapNodes.getCurrentGame().getTeams().get("spectator").getSpawns().getSafeRandomSpawn());
+        if (player.getTeam() == null) {
+            event.setRespawnLocation(((LocationList) MapNodes.getCurrentGame().getTeams().get(NodeTeam.SPECTATOR).getSpawns()).getSafeRandomSpawn());
         }
         else {
             event.setRespawnLocation(((NodeTeam) player.getTeam()).getSpawns().getSafeRandomSpawn());
@@ -102,7 +105,8 @@ public final class GameListener implements Listener {
 
             if (event.getMessage().size() > 0) {
                 player.sendMessage("");
-                event.getMessage().forEach(string -> player.sendMessage(Common.textLine(string, size, ' ', "", "&a&o")));;
+                event.getMessage().forEach(string -> player.sendMessage(Common.textLine(string, size, ' ', "", "&a&o")));
+                ;
             }
 
             player.sendMessage("&7&m******************************************");
@@ -124,19 +128,21 @@ public final class GameListener implements Listener {
         // If not in debug mode check if their are still players.
         if (!MapNodesPlugin.getInst().getLog().isDebug()) {
             // Ensure their is at least one player on each team else just end the game
-            int teamSize = (int) ((NodeGame) event.getGame()).getPlayingTeams().count();
+            int teamSize = (int) (event.getGame()).getPlayingTeams().count();
 
             // Its a custom game mode let the game mode handle early ends
-            if (teamSize == 1) return;
+            if (teamSize == 1) {
+                return;
+            }
 
-            List<String> left = ((NodeGame) event.getGame()).getPlayingTeams()
+            List<String> left = (event.getGame()).getPlayingTeams()
                 .filter(team -> team.getPlaying() > 0)
-                .map(NodeTeam::getDisplayName)
+                .map(GameTeam::getDisplayName)
                 .collect(Collectors.toList());
 
             if (left.size() != teamSize) {
                 if (left.size() == 0) {
-                    left.addAll(event.getGame().getTeams().values().stream().filter(t -> t instanceof Spectator).map(NodeTeam::getDisplayName).collect(Collectors.toList()));
+                    left.addAll(event.getGame().getTeams().values().stream().filter(t -> t instanceof Spectator).map(GameTeam::getDisplayName).collect(Collectors.toList()));
                 }
 
                 new GameWinEvent() {{

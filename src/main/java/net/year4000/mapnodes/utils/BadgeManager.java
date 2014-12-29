@@ -13,6 +13,26 @@ import java.util.List;
 public final class BadgeManager {
     public static final int MAX_RANK = Badges.values().length;
 
+    /** Find the badge the player should have */
+    public Badges findBadge(Player player) {
+        List<Badges> ranks = Arrays.asList(Badges.values());
+        Collections.reverse(ranks);
+
+        for (Badges badge : ranks) {
+            if (player.hasPermission(badge.getPermission())) {
+                return badge;
+            }
+        }
+
+        return Badges.ALPHA;
+    }
+
+    /** Get the badge in bracket form */
+    public String getBadge(Player player) {
+        Badges badge = findBadge(player);
+        return MessageUtil.replaceColors("&f[" + badge + "&f]");
+    }
+
     @AllArgsConstructor
     public enum Badges {
         ALPHA(ChatColor.DARK_AQUA, "α", "alpha", 1),
@@ -36,25 +56,5 @@ public final class BadgeManager {
         public String toString() {
             return MessageUtil.replaceColors(color + badge);
         }
-    }
-
-    /** Find the badge the player should have */
-    public Badges findBadge(Player player) {
-        List<Badges> ranks = Arrays.asList(Badges.values());
-        Collections.reverse(ranks);
-
-        for (Badges badge : ranks) {
-            if (player.hasPermission(badge.getPermission())) {
-                return badge;
-            }
-        }
-
-        return Badges.ALPHA;
-    }
-
-    /** Get the badge in bracket form */
-    public String getBadge(Player player) {
-        Badges badge = findBadge(player);
-        return MessageUtil.replaceColors("&f[" + badge + "&f]");
     }
 }

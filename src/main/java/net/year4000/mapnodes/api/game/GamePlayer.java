@@ -24,4 +24,8 @@ public interface GamePlayer {
     public String getPlayerColor();
 
     public Inventory getInventory();
+
+    public void joinTeam(GameTeam gameTeam);
+
+    public void joinSpectatorTeam();
 }

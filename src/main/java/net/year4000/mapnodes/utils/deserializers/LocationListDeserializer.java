@@ -4,7 +4,7 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.*;
 import lombok.AllArgsConstructor;
 import net.year4000.mapnodes.MapNodesPlugin;
-import net.year4000.mapnodes.game.regions.Region;
+import net.year4000.mapnodes.api.game.regions.Region;
 import net.year4000.mapnodes.game.regions.RegionManager;
 import net.year4000.mapnodes.utils.GsonUtil;
 import net.year4000.mapnodes.utils.typewrappers.LocationList;
@@ -25,13 +25,15 @@ public class LocationListDeserializer implements JsonDeserializer<List<Location>
 
         for (JsonElement rawRegion : element.getAsJsonArray()) {
             // Create a hashmap with one element to act like {"": {}}
-            Map<String, JsonObject> map = GsonUtil.GSON.fromJson(rawRegion, new TypeToken<Map<String, JsonObject>>(){}.getType());
+            Map<String, JsonObject> map = GsonUtil.GSON.fromJson(rawRegion, new TypeToken<Map<String, JsonObject>>() {
+            }.getType());
 
             map.forEach((key, value) -> {
                 try {
                     Region region = GsonUtil.createGson(world).fromJson(value, RegionManager.get().getRegionType(key));
                     newList.addAll(region.getLocations(world));
-                } catch (Exception e) {
+                }
+                catch (Exception e) {
                     MapNodesPlugin.log(e, true);
                 }
             });

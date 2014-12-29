@@ -4,11 +4,11 @@ import com.google.common.collect.Iterables;
 import com.google.gson.annotations.SerializedName;
 import lombok.Data;
 import net.year4000.mapnodes.api.events.game.GameStopEvent;
-import net.year4000.mapnodes.game.NodeKit;
-import net.year4000.mapnodes.game.regions.EventType;
+import net.year4000.mapnodes.api.game.GameKit;
+import net.year4000.mapnodes.api.game.regions.EventType;
+import net.year4000.mapnodes.api.game.regions.RegionListener;
 import net.year4000.mapnodes.game.regions.EventTypes;
 import net.year4000.mapnodes.game.regions.RegionEvent;
-import net.year4000.mapnodes.game.regions.RegionListener;
 import net.year4000.mapnodes.game.regions.types.Point;
 import net.year4000.mapnodes.utils.ChestUtil;
 import net.year4000.mapnodes.utils.SchedulerUtil;
@@ -26,7 +26,6 @@ import org.bukkit.util.BlockVector;
 
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.stream.Collectors;
 
 @EventType(EventTypes.CHEST)
 public class Chest extends RegionEvent implements RegionListener {
@@ -49,7 +48,9 @@ public class Chest extends RegionEvent implements RegionListener {
 
             final BlockVector location = event.getClickedBlock().getLocation().toVector().toBlockVector();
 
-            if (!shouldRunEvent(new Point(location)) || chests.contains(location) || placedChests.contains(location)) return;
+            if (!shouldRunEvent(new Point(location)) || chests.contains(location) || placedChests.contains(location)) {
+                return;
+            }
 
 
             /*items.forEach(i -> MapNodesPlugin.log(i.toString()));
@@ -106,15 +107,15 @@ public class Chest extends RegionEvent implements RegionListener {
                     List<ItemStack> chestItems = new ArrayList<>();
 
                     kits.forEach(kit -> {
-                        NodeKit nodeKit = region.getGame().getKits().get(kit.getName());
+                        GameKit nodeKit = region.getGame().getKits().get(kit.getName());
 
                         if (kit.isRepeat()) {
                             for (int i = 0; i < (kit.getAmount() > chest.getSize() ? chest.getSize() : kit.getAmount()); i++) {
-                                chestItems.add(nodeKit.getItems().getNonAirItems().get(Math.abs(rand.nextInt(nodeKit.getItems().getNonAirItems().size()))));
+                                chestItems.add(nodeKit.getNonAirItems().get(Math.abs(rand.nextInt(nodeKit.getNonAirItems().size()))));
                             }
                         }
                         else {
-                            List<ItemStack> itemStacks = nodeKit.getItems().getNonAirItems();
+                            List<ItemStack> itemStacks = nodeKit.getNonAirItems();
                             Collections.shuffle(itemStacks);
 
                             for (int i = 0; i < (kit.getAmount() > chest.getSize() ? chest.getSize() : kit.getAmount()); i++) {
@@ -131,8 +132,8 @@ public class Chest extends RegionEvent implements RegionListener {
                 else {
                     // If one kit treat it like external list
                     if (kit != null) {
-                        NodeKit nodeKit = region.getGame().getKits().get(kit);
-                        items.addAll(nodeKit.getItems().getNonAirItems());
+                        GameKit nodeKit = region.getGame().getKits().get(kit);
+                        items.addAll(nodeKit.getNonAirItems());
                     }
 
                     Iterator<ItemStack> itemIterator = Iterables.cycle(items).iterator();
@@ -169,7 +170,7 @@ public class Chest extends RegionEvent implements RegionListener {
     }
 
     /** Spawn random items into empty chests. */
-    @EventHandler(priority= EventPriority.MONITOR)
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onChest(BlockPlaceEvent event) {
         if (event.getBlock().getState() instanceof org.bukkit.block.Chest) {
             placedChests.add(event.getBlock().getLocation().toVector().toBlockVector());

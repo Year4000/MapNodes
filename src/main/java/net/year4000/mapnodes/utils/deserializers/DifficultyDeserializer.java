@@ -17,7 +17,8 @@ public class DifficultyDeserializer implements JsonDeserializer<Difficulty> {
 
         try {
             return Difficulty.valueOf(name.toUpperCase());
-        } catch (IllegalArgumentException e) {
+        }
+        catch (IllegalArgumentException e) {
             MapNodesPlugin.debug(Msg.util("settings.difficulty", name));
         }
 

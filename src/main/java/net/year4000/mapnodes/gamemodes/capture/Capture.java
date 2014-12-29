@@ -4,15 +4,14 @@ import com.google.common.collect.ImmutableMap;
 import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.events.game.GameLoadEvent;
 import net.year4000.mapnodes.api.events.team.GameTeamWinEvent;
+import net.year4000.mapnodes.api.game.GameManager;
 import net.year4000.mapnodes.api.game.GamePlayer;
+import net.year4000.mapnodes.api.game.GameRegion;
+import net.year4000.mapnodes.api.game.GameTeam;
 import net.year4000.mapnodes.api.game.modes.GameMode;
 import net.year4000.mapnodes.api.game.modes.GameModeInfo;
-import net.year4000.mapnodes.game.NodeGame;
-import net.year4000.mapnodes.game.NodePlayer;
-import net.year4000.mapnodes.game.NodeRegion;
-import net.year4000.mapnodes.game.NodeTeam;
+import net.year4000.mapnodes.api.utils.Spectator;
 import net.year4000.mapnodes.game.regions.types.Point;
-import net.year4000.mapnodes.game.system.Spectator;
 import net.year4000.mapnodes.gamemodes.GameModeTemplate;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.Common;
@@ -64,11 +63,11 @@ public class Capture extends GameModeTemplate implements GameMode {
     // Game Mode vars
     private CaptureConfig gameModeConfig;
     private Map<String, List<CaptureConfig.BlockCapture>> captures = new HashMap<>();
-    private NodeGame game;
+    private GameManager game;
 
     @EventHandler
     public void onLoad(GameLoadEvent event) {
-        game = (NodeGame) event.getGame();
+        game = event.getGame();
         gameModeConfig = getConfig();
         gameModeConfig.validate(); // This will assign the var maps
         game.addStartTime(60);
@@ -100,7 +99,7 @@ public class Capture extends GameModeTemplate implements GameMode {
                 game.addStaticGoal(String.valueOf(team.hashCode()), "");
             }
 
-            NodeTeam nodeTeam = game.getTeams().get(team);
+            GameTeam nodeTeam = game.getTeams().get(team);
             game.addStaticGoal(team + "-capture", team, nodeTeam.getDisplayName() + " Goals");
 
             list.forEach(capture -> game.addStaticGoal(getCaptureID(nodeTeam, capture), " " + getCaptureDisplay(capture)));
@@ -110,11 +109,11 @@ public class Capture extends GameModeTemplate implements GameMode {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onBlockPlace(BlockPlaceEvent event) {
         GamePlayer player = game.getPlayer(event.getPlayer());
-        NodeTeam team = ((NodeTeam) player.getTeam());
+        GameTeam team = player.getTeam();
         Point point = new Point(event.getBlockPlaced().getLocation().toVector().toBlockVector());
 
         captures.values().forEach(c -> c.forEach(capture -> {
-            NodeRegion region = game.getRegions().get(capture.getRegion());
+            GameRegion region = game.getRegions().get(capture.getRegion());
 
             if (capture.getOwner().equals(team.getId()) && region.inZone(point)) {
                 event.setCancelled(true);
@@ -122,7 +121,7 @@ public class Capture extends GameModeTemplate implements GameMode {
         }));
 
         for (CaptureConfig.BlockCapture capture : captures.get(team.getId())) {
-            NodeRegion region = game.getRegions().get(capture.getRegion());
+            GameRegion region = game.getRegions().get(capture.getRegion());
 
             if (region.inZone(point)) {
                 // MapNodesPlugin.log("%s | %s", capture.getData(), event.getBlockPlaced().getData());
@@ -147,7 +146,6 @@ public class Capture extends GameModeTemplate implements GameMode {
                 // Broadcast message
                 game.getPlaying().forEach(p -> {
                     Common.sendAnimatedActionBar(p, Msg.locale(p, "capture.placed", player.getPlayerColor(), team.getDisplayName()));
-                    game.getScoreboardFactory().setGameSidebar((NodePlayer) p);
                     FunEffectsUtil.playSound(p.getPlayer(), Sound.NOTE_PLING);
                 });
 
@@ -174,10 +172,12 @@ public class Capture extends GameModeTemplate implements GameMode {
 
     @EventHandler
     public void onPickupWool(PlayerPickupItemEvent event) {
-        if (!MapNodes.getCurrentGame().getStage().isPlaying()) return;
+        if (!MapNodes.getCurrentGame().getStage().isPlaying()) {
+            return;
+        }
 
-        NodePlayer player = (NodePlayer) game.getPlayer(event.getPlayer());
-        NodeTeam team = player.getTeam();
+        GamePlayer player = game.getPlayer(event.getPlayer());
+        GameTeam team = player.getTeam();
         ItemStack item = event.getItem().getItemStack();
 
         checkPickUpCapture(team, player, item.getType(), item.getData().getData());
@@ -185,18 +185,22 @@ public class Capture extends GameModeTemplate implements GameMode {
 
     @EventHandler
     public void onPickupWool(InventoryClickEvent event) {
-        if (!MapNodes.getCurrentGame().getStage().isPlaying() || event.getCurrentItem() == null) return;
+        if (!MapNodes.getCurrentGame().getStage().isPlaying() || event.getCurrentItem() == null) {
+            return;
+        }
 
-        NodePlayer player = (NodePlayer) game.getPlayer((Player) event.getWhoClicked());
-        NodeTeam team = player.getTeam();
+        GamePlayer player = game.getPlayer((Player) event.getWhoClicked());
+        GameTeam team = player.getTeam();
 
-        if (team instanceof Spectator) return;
+        if (team instanceof Spectator) {
+            return;
+        }
 
         checkPickUpCapture(team, player, event.getCurrentItem().getType(), event.getCurrentItem().getData().getData());
     }
 
     /** Check if the wool has been picked up by a player and do things with it */
-    private void checkPickUpCapture(NodeTeam team, NodePlayer player, Material material, byte data) {
+    private void checkPickUpCapture(GameTeam team, GamePlayer player, Material material, byte data) {
         for (CaptureConfig.BlockCapture capture : captures.get(team.getId())) {
             // Check material
             if (material != capture.getBlock()) {
@@ -215,7 +219,6 @@ public class Capture extends GameModeTemplate implements GameMode {
                 // Show grabbed message
                 game.getPlaying().forEach(p -> {
                     Common.sendAnimatedActionBar(p, Msg.locale(p, "capture.grabbed", player.getPlayerColor(), team.getDisplayName()));
-                    game.getScoreboardFactory().setGameSidebar((NodePlayer) p);
                     FunEffectsUtil.playSound(p.getPlayer(), Sound.NOTE_PLING);
                 });
                 break;
@@ -228,7 +231,7 @@ public class Capture extends GameModeTemplate implements GameMode {
         Point point = new Point(event.getBlock().getLocation().toVector().toBlockVector());
 
         captures.values().forEach(c -> c.forEach(capture -> {
-            NodeRegion region = game.getRegions().get(capture.getRegion());
+            GameRegion region = game.getRegions().get(capture.getRegion());
 
             if (region.inZone(point)) {
                 event.setCancelled(true);
@@ -249,7 +252,7 @@ public class Capture extends GameModeTemplate implements GameMode {
     }
 
     /** Get the capture id to use for goal manager */
-    private String getCaptureID(NodeTeam team, CaptureConfig.BlockCapture capture) {
+    private String getCaptureID(GameTeam team, CaptureConfig.BlockCapture capture) {
         return team.getName() + "-" + capture.getName();
     }
 
@@ -267,6 +270,6 @@ public class Capture extends GameModeTemplate implements GameMode {
             flag = ChatColor.YELLOW + "\u2690";
         }
 
-        return  flag + " " + capture.getPrefix().toString() + stage + capture.getName();
+        return flag + " " + capture.getPrefix().toString() + stage + capture.getName();
     }
 }

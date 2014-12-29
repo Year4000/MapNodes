@@ -14,6 +14,7 @@ public final class MapNodes {
 
     /**
      * Get the current game.
+     *
      * @return The current game.
      */
     public static GameManager getCurrentGame() {
@@ -22,6 +23,7 @@ public final class MapNodes {
 
     /**
      * Get the current game world.
+     *
      * @return The current game world.
      */
     public static World getCurrentWorld() {

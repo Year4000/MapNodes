@@ -17,7 +17,8 @@ public class EntityTypeDeserializer implements JsonDeserializer<EntityType> {
 
         try {
             return EntityType.valueOf(name.toUpperCase());
-        } catch (IllegalArgumentException e) {
+        }
+        catch (IllegalArgumentException e) {
             MapNodesPlugin.debug(Msg.util("settings.entitytype", name));
         }
 

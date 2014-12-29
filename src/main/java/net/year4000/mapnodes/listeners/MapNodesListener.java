@@ -9,13 +9,11 @@ import net.year4000.mapnodes.api.events.game.GameStopEvent;
 import net.year4000.mapnodes.api.events.player.GamePlayerJoinSpectatorEvent;
 import net.year4000.mapnodes.api.events.player.GamePlayerJoinTeamEvent;
 import net.year4000.mapnodes.api.game.GamePlayer;
+import net.year4000.mapnodes.api.utils.Spectator;
 import net.year4000.mapnodes.clocks.StartGame;
 import net.year4000.mapnodes.game.Node;
 import net.year4000.mapnodes.game.NodeGame;
-import net.year4000.mapnodes.game.NodeKit;
 import net.year4000.mapnodes.game.NodePlayer;
-import net.year4000.mapnodes.game.system.Spectator;
-import net.year4000.mapnodes.messages.Locales;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.net.Network;
 import net.year4000.mapnodes.utils.Common;
@@ -38,6 +36,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 @EqualsAndHashCode
 public final class MapNodesListener implements Listener {
+    private AtomicInteger lastSize = new AtomicInteger(0);
+
     @EventHandler(priority = EventPriority.LOWEST)
     public void onJoin(PlayerLoginEvent event) {
         NodeGame game = (NodeGame) MapNodes.getCurrentGame();
@@ -76,7 +76,9 @@ public final class MapNodesListener implements Listener {
 
     @EventHandler(ignoreCancelled = true)
     public void onTeleport(PlayerTeleportEvent event) {
-        if (event.getCause() != PlayerTeleportEvent.TeleportCause.PLUGIN) return;
+        if (event.getCause() != PlayerTeleportEvent.TeleportCause.PLUGIN) {
+            return;
+        }
 
         event.setTo(Common.center(event.getTo()));
 
@@ -136,15 +138,17 @@ public final class MapNodesListener implements Listener {
         }
     }
 
-    private AtomicInteger lastSize = new AtomicInteger(0);
-
     /** Start the game and when another player join reduce the time */
     @EventHandler
     public void onClock(GamePlayerJoinTeamEvent event) {
         NodeGame game = ((NodeGame) MapNodes.getCurrentGame());
 
-        if (event.getTo() instanceof Spectator) return;
-        if (!game.getStage().isPreGame()) return;
+        if (event.getTo() instanceof Spectator) {
+            return;
+        }
+        if (!game.getStage().isPreGame()) {
+            return;
+        }
 
         // Add one as this happens before they fully enter the team
         int size = (int) game.getEntering().count() + 1;
@@ -159,7 +163,8 @@ public final class MapNodesListener implements Listener {
                     // Announcer to players that time was reduce
                     game.getEntering().forEach(p -> p.sendMessage(Msg.locale(p, "clocks.start.reduce", event.getPlayer().getPlayer().getName())));
                 }
-            } else if (game.getStage().isWaiting()) {
+            }
+            else if (game.getStage().isWaiting()) {
                 new StartGame(game.getBaseStartTime()).run();
             }
         }

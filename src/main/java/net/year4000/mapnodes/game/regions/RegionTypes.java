@@ -8,21 +8,12 @@ public enum RegionTypes {
     GLOBAL("global"),
     POINT("point"),
     SPHERE("sphere"),
-    VOID("void"),
-    ;
+    VOID("void"),;
 
     private String name;
 
     RegionTypes(String name) {
         this.name = name;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public boolean isType(String name) {
-        return this.getName().equals(name.toLowerCase());
     }
 
     public static RegionTypes getFromName(String name) {
@@ -32,5 +23,13 @@ public enum RegionTypes {
             }
         }
         return null;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public boolean isType(String name) {
+        return this.getName().equals(name.toLowerCase());
     }
 }

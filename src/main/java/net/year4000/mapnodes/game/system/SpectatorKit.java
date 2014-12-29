@@ -1,5 +1,6 @@
 package net.year4000.mapnodes.game.system;
 
+import net.year4000.mapnodes.api.utils.Spectator;
 import net.year4000.mapnodes.game.NodeKit;
 import net.year4000.mapnodes.utils.typewrappers.PlayerArmorList;
 import net.year4000.mapnodes.utils.typewrappers.PlayerInventoryList;
@@ -11,18 +12,18 @@ import org.bukkit.potion.PotionEffectType;
 
 public class SpectatorKit extends NodeKit implements Spectator {
     public SpectatorKit() {
-        setFly(true);
+        fly = true;
 
-        setGamemode(GameMode.ADVENTURE);
+        gamemode = GameMode.ADVENTURE;
 
-        getEffects().add(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 2));
+        effects.add(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 2));
 
-        setItems(new PlayerInventoryList<ItemStack>() {{
+        items = new PlayerInventoryList<ItemStack>() {{
             for (int i = 0; i < 36; i++) {
                 add(ItemUtil.makeItem("air"));
             }
-        }});
+        }};
 
-        setArmor(new PlayerArmorList<>());
+        armor = new PlayerArmorList<>();
     }
 }

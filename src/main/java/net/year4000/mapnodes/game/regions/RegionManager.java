@@ -1,6 +1,8 @@
 package net.year4000.mapnodes.game.regions;
 
 import net.year4000.mapnodes.MapNodesPlugin;
+import net.year4000.mapnodes.api.game.regions.Region;
+import net.year4000.mapnodes.api.game.regions.RegionType;
 
 import java.security.InvalidParameterException;
 import java.util.HashMap;
@@ -34,7 +36,8 @@ public final class RegionManager {
             try {
                 RegionType typeName = type.getAnnotation(RegionType.class);
                 regionTypes.put(typeName, type);
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 MapNodesPlugin.log(e, false);
             }
         });

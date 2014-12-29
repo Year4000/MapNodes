@@ -4,13 +4,13 @@ import com.google.common.collect.ImmutableList;
 import com.google.gson.annotations.SerializedName;
 import lombok.Data;
 import net.year4000.mapnodes.api.MapNodes;
+import net.year4000.mapnodes.api.exceptions.InvalidJsonException;
 import net.year4000.mapnodes.api.game.GameManager;
-import net.year4000.mapnodes.exceptions.InvalidJsonException;
-import net.year4000.mapnodes.game.NodeRegion;
-import net.year4000.mapnodes.game.regions.Region;
+import net.year4000.mapnodes.api.game.GameRegion;
+import net.year4000.mapnodes.api.game.regions.Region;
+import net.year4000.mapnodes.api.utils.Validator;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.Common;
-import net.year4000.mapnodes.utils.Validator;
 import net.year4000.mapnodes.utils.typewrappers.MaterialList;
 import net.year4000.utilities.ChatColor;
 import org.bukkit.Location;
@@ -47,6 +47,12 @@ public class DestroyTarget implements Validator {
 
     /** The percent to destroy to win */
     private int percent = 100;
+    private transient Stage stage = Stage.START;
+    private transient int maxSize;
+    private transient int currentSize;
+    private transient List<Block> blockList;
+    private transient GameRegion nodeRegion;
+    private String ownerName;
 
     @Override
     public void validate() throws InvalidJsonException {
@@ -54,15 +60,6 @@ public class DestroyTarget implements Validator {
         checkArgument(region != null, Msg.util("destroy.region"));
         checkArgument(percent >= 0 && percent <= 100, Msg.util("destroy.percent"));
     }
-
-    public enum Stage {START, PROGRESS, END}
-
-    private transient Stage stage = Stage.START;
-    private transient int maxSize;
-    private transient int currentSize;
-    private transient List<Block> blockList;
-    private transient NodeRegion nodeRegion;
-    private String ownerName;
 
     public void init(GameManager game) {
         World world = MapNodes.getCurrentWorld();
@@ -138,7 +135,7 @@ public class DestroyTarget implements Validator {
     }
 
     public float getRawPercent() {
-        return ((currentSize / maxSize) * (float)  -0.1);
+        return ((currentSize / maxSize) * (float) -0.1);
     }
 
     public String getDisplay() {
@@ -148,4 +145,6 @@ public class DestroyTarget implements Validator {
     public String getId() {
         return owner + "-" + region;
     }
+
+    public enum Stage {START, PROGRESS, END}
 }

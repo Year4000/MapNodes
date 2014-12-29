@@ -88,7 +88,7 @@ public class RestartServer extends Clocker {
             BossBar.removeBar(player.getPlayer());
         });
 
-        ((NodeGame)MapNodes.getCurrentGame()).setStage(NodeStage.ENDED);
+        ((NodeGame) MapNodes.getCurrentGame()).setStage(NodeStage.ENDED);
 
         SchedulerUtil.runSync(() -> Bukkit.getPluginManager().disablePlugin(MapNodesPlugin.getInst()), 2);
         running = false;

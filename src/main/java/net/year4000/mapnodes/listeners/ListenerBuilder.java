@@ -42,7 +42,8 @@ public class ListenerBuilder {
                 Listener instance = (Listener) listener.newInstance();
                 manager.registerEvents(instance, MapNodesPlugin.getInst());
                 registered.add(instance);
-            } catch (InstantiationException | IllegalAccessException e) {
+            }
+            catch (InstantiationException | IllegalAccessException e) {
                 MapNodesPlugin.debug(e, true);
             }
         });

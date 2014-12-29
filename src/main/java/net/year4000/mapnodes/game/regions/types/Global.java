@@ -2,8 +2,9 @@ package net.year4000.mapnodes.game.regions.types;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import net.year4000.mapnodes.game.regions.Region;
-import net.year4000.mapnodes.game.regions.RegionType;
+import net.year4000.mapnodes.api.game.regions.PointVector;
+import net.year4000.mapnodes.api.game.regions.Region;
+import net.year4000.mapnodes.api.game.regions.RegionType;
 import net.year4000.mapnodes.game.regions.RegionTypes;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -20,12 +21,12 @@ public class Global implements Region {
     }
 
     @Override
-    public List<Point> getPoints() {
+    public List<PointVector> getPoints() {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public boolean inRegion(Point region) {
+    public boolean inRegion(PointVector region) {
         return true;
     }
 }

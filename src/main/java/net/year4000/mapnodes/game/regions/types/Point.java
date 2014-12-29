@@ -3,12 +3,13 @@ package net.year4000.mapnodes.game.regions.types;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import net.year4000.mapnodes.exceptions.InvalidJsonException;
-import net.year4000.mapnodes.game.regions.Region;
-import net.year4000.mapnodes.game.regions.RegionType;
+import net.year4000.mapnodes.api.exceptions.InvalidJsonException;
+import net.year4000.mapnodes.api.game.regions.PointVector;
+import net.year4000.mapnodes.api.game.regions.Region;
+import net.year4000.mapnodes.api.game.regions.RegionType;
+import net.year4000.mapnodes.api.utils.Validator;
 import net.year4000.mapnodes.game.regions.RegionTypes;
 import net.year4000.mapnodes.messages.Msg;
-import net.year4000.mapnodes.utils.Validator;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.util.BlockVector;
@@ -22,7 +23,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 @AllArgsConstructor
 @NoArgsConstructor
 @RegionType(RegionTypes.POINT)
-public class Point implements Region, Validator {
+public class Point implements Region, Validator, PointVector {
     private Integer x = null;
     private Integer y = null;
     private Integer z = null;
@@ -56,8 +57,8 @@ public class Point implements Region, Validator {
     }
 
     @Override
-    public List<Point> getPoints() {
-        List<Point> locations = new ArrayList<>();
+    public List<PointVector> getPoints() {
+        List<PointVector> locations = new ArrayList<>();
 
         locations.add(this);
 
@@ -65,7 +66,7 @@ public class Point implements Region, Validator {
     }
 
     @Override
-    public boolean inRegion(Point region) {
+    public boolean inRegion(PointVector region) {
         return region.getX().equals(x < 0 ? x - 1 : x) && region.getY().equals(y) && region.getZ().equals(z < 0 ? z - 1 : z);
     }
 

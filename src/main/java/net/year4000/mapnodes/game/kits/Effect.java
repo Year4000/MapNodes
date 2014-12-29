@@ -1,10 +1,10 @@
 package net.year4000.mapnodes.game.kits;
 
 import com.google.gson.annotations.Since;
-import net.year4000.mapnodes.exceptions.InvalidJsonException;
+import net.year4000.mapnodes.api.exceptions.InvalidJsonException;
+import net.year4000.mapnodes.api.utils.Validator;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.TimeDuration;
-import net.year4000.mapnodes.utils.Validator;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -27,7 +27,6 @@ public class Effect implements Validator {
 
     /** Wheather or not to show particles. */
     //private boolean showParticles = true;
-
     @Override
     public void validate() throws InvalidJsonException {
         if (duration == null) {

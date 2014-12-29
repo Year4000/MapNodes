@@ -1,10 +1,10 @@
 package net.year4000.mapnodes.game.regions.events;
 
 import net.year4000.mapnodes.api.game.GamePlayer;
-import net.year4000.mapnodes.game.regions.EventType;
+import net.year4000.mapnodes.api.game.regions.EventType;
+import net.year4000.mapnodes.api.game.regions.RegionListener;
 import net.year4000.mapnodes.game.regions.EventTypes;
 import net.year4000.mapnodes.game.regions.RegionEvent;
-import net.year4000.mapnodes.game.regions.RegionListener;
 import net.year4000.mapnodes.game.regions.types.Point;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerMoveEvent;
@@ -17,11 +17,15 @@ public class Enter extends RegionEvent implements RegionListener {
         BlockVector vector = event.getTo().toVector().toBlockVector();
 
         // Skip check if not a new block
-        if (event.getFrom().toVector().toBlockVector().equals(vector)) return;
+        if (event.getFrom().toVector().toBlockVector().equals(vector)) {
+            return;
+        }
 
         Point point = new Point(vector);
 
-        if (!region.inZone(point)) return;
+        if (!region.inZone(point)) {
+            return;
+        }
 
         GamePlayer player = region.getGame().getPlayer(event.getPlayer());
 

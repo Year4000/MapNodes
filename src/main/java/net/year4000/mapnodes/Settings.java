@@ -18,15 +18,29 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = false)
 public class Settings extends Config {
     private static Settings inst = null;
+    @Comment("The url to pull the locales from")
+    private String url = "https://raw.githubusercontent.com/Year4000/Locales/master/net/year4000/mapnodes/locales/";
+    @Comment("The url to pull the locales from")
+    private String systemUrl = "https://raw.githubusercontent.com/Year4000/Locales/master/net/year4000/mapnodes/system/";
+    @Comment("The max number of maps to load per session")
+    private int loadMaps = 10;
+    @Comment("The folders paths to the maps")
+    private List<String> mapsFolder = new ArrayList<String>() {{
+        add("/y4k/maps/");
+    }};
+    @Comment("The json file location to load global kits")
+    private String kits = "/y4k/maps/kits.json";
 
     private Settings() {
         try {
-            CONFIG_HEADER = new String[] { "MapNodes Configuration" };
+            CONFIG_HEADER = new String[]{"MapNodes Configuration"};
             CONFIG_FILE = new File(MapNodesPlugin.getInst().getDataFolder(), "config.yml");
             init();
-        } catch (InvalidConfigurationException e) {
+        }
+        catch (InvalidConfigurationException e) {
             MapNodesPlugin.log(e, true);
-        } catch (NullPointerException e) {
+        }
+        catch (NullPointerException e) {
             // Should only be catch by their is no file by the plugin instance.
         }
 
@@ -45,23 +59,6 @@ public class Settings extends Config {
     public void reload() {
         inst = new Settings();
     }
-
-    @Comment("The url to pull the locales from")
-    private String url = "https://raw.githubusercontent.com/Year4000/Locales/master/net/year4000/mapnodes/locales/";
-
-    @Comment("The url to pull the locales from")
-    private String systemUrl = "https://raw.githubusercontent.com/Year4000/Locales/master/net/year4000/mapnodes/system/";
-
-    @Comment("The max number of maps to load per session")
-    private int loadMaps = 10;
-
-    @Comment("The folders paths to the maps")
-    private List<String> mapsFolder = new ArrayList<String>() {{
-        add("/y4k/maps/");
-    }};
-
-    @Comment("The json file location to load global kits")
-    private String kits = "/y4k/maps/kits.json";
 
     public Reader getGlobalKits() throws FileNotFoundException {
         return new FileReader(new File(kits));

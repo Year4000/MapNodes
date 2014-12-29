@@ -113,7 +113,7 @@ public class NextNode extends Clocker {
 
         Node next = NodeFactory.get().loadNextQueued();
 
-        while(move.peek() != null) {
+        while (move.peek() != null) {
             next.getGame().join(move.poll());
         }
         running = false;

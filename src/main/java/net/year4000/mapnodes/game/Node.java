@@ -10,10 +10,10 @@ import net.minecraft.util.org.apache.commons.io.FileUtils;
 import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.NodeFactory;
 import net.year4000.mapnodes.Settings;
+import net.year4000.mapnodes.api.exceptions.InvalidJsonException;
+import net.year4000.mapnodes.api.exceptions.WorldLoadException;
 import net.year4000.mapnodes.api.game.GameConfig;
 import net.year4000.mapnodes.clocks.RestartServer;
-import net.year4000.mapnodes.exceptions.InvalidJsonException;
-import net.year4000.mapnodes.exceptions.WorldLoadException;
 import net.year4000.mapnodes.game.system.SpectatorKit;
 import net.year4000.mapnodes.game.system.SpectatorTeam;
 import net.year4000.mapnodes.map.MapFolder;
@@ -42,12 +42,10 @@ public class Node {
     private static final File WORLD_CONTAINER = new File(Bukkit.getWorldContainer(), MapNodesPlugin.getInst().getName());
     private static final String TEMPLATE = "%d-%s";
     private static final int ICON_SIZE = 64;
-
-    /** The node's id */
-    private int id;
-
     /** Stores the info about the map's json */
     private final File mapJson;
+    /** The node's id */
+    private int id;
     private CachedServerIcon icon;
     private Image iconImage;
     private NodeGame game;
@@ -66,7 +64,8 @@ public class Node {
         try {
             worldName = String.format(TEMPLATE, id, worldFolder.getName());
             worldFile = new ZipFile(worldFolder.getWorld());
-        } catch (ZipException e) {
+        }
+        catch (ZipException e) {
             MapNodesPlugin.log(e.getMessage());
         }
 
@@ -84,7 +83,8 @@ public class Node {
 
                 icon = Bukkit.loadServerIcon(bufferedIcon);
                 iconImage = bufferedIcon;
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 MapNodesPlugin.debug(e.getMessage());
             }
         }
@@ -99,8 +99,16 @@ public class Node {
 
             // Register the map json to NodeGame
             game = GsonUtil.createGson().fromJson(loadMap(), NodeGame.class);
-        } catch (JsonIOException | JsonSyntaxException e) {
+        }
+        catch (JsonIOException | JsonSyntaxException e) {
             throw new InvalidJsonException(e.getMessage());
+        }
+    }
+
+    /** Delete stray maps created by MapNodes */
+    public static void removeStrayMaps() {
+        if (WORLD_CONTAINER.exists()) {
+            FileUtils.deleteQuietly(WORLD_CONTAINER);
         }
     }
 
@@ -115,27 +123,30 @@ public class Node {
             game = GsonUtil.createGson(getWorld()).fromJson(loadMap(), NodeGame.class);
 
             // register system team and kit
-            if (game.getTeams().containsKey("spectator")) {
-                game.getTeams().remove("spectator");
+            if (game.getTeams().containsKey(NodeTeam.SPECTATOR)) {
+                game.getTeams().remove(NodeTeam.SPECTATOR);
             }
 
-            game.getTeams().put("spectator", new SpectatorTeam(game.getConfig().getSpawn()));
+            game.getTeams().put(NodeTeam.SPECTATOR, new SpectatorTeam(game.getConfig().getSpawn()));
 
-            if (game.getKits().containsKey("spectator")) {
-                game.getKits().remove("spectator");
+            if (game.getKits().containsKey(NodeTeam.SPECTATOR)) {
+                game.getKits().remove(NodeTeam.SPECTATOR);
             }
 
-            game.getKits().put("spectator", new SpectatorKit());
+            game.getKits().put(NodeTeam.SPECTATOR, new SpectatorKit());
 
             // Load global kits
             try {
-                Type kitType = new TypeToken<Map<String, NodeKit>>(){}.getType();
+                Type kitType = new TypeToken<Map<String, NodeKit>>() {
+                }.getType();
                 Map<String, NodeKit> globalKits = GsonUtil.createGson().fromJson(Settings.get().getGlobalKits(), kitType);
                 globalKits.forEach((key, kit) -> game.getKits().put(key, kit));
-            } catch (FileNotFoundException e) {
+            }
+            catch (FileNotFoundException e) {
                 game.getKits().put("default", new NodeKit());
             }
-        } catch (JsonIOException | JsonSyntaxException | WorldLoadException e) {
+        }
+        catch (JsonIOException | JsonSyntaxException | WorldLoadException e) {
             MapNodesPlugin.debug(e, false);
 
             if (game.getStopClock() != null) {
@@ -154,7 +165,9 @@ public class Node {
 
     /** Unregister this node, this includes things related to the world */
     public void unregister() {
-        if (!Bukkit.getPluginManager().isPluginEnabled(MapNodesPlugin.getInst())) return;
+        if (!Bukkit.getPluginManager().isPluginEnabled(MapNodesPlugin.getInst())) {
+            return;
+        }
         checkNotNull(world);
 
         SchedulerUtil.runAsync(() -> {
@@ -178,7 +191,9 @@ public class Node {
                     }
                 }
 
-                if (!online) break;
+                if (!online) {
+                    break;
+                }
             }
 
             unloadWorld();
@@ -190,7 +205,8 @@ public class Node {
     private Reader loadMap() {
         try {
             return new FileReader(mapJson);
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             MapNodesPlugin.debug("Should not see this, you should of ran checks before.");
             MapNodesPlugin.debug(e.getMessage());
         }
@@ -209,7 +225,8 @@ public class Node {
         try {
             worldFile.extractAll(location.getPath());
             MapNodesPlugin.debug(Msg.util("debug.world.unzip", worldName));
-        } catch (ZipException e) {
+        }
+        catch (ZipException e) {
             throw new WorldLoadException(e.getMessage());
         }
     }
@@ -279,15 +296,9 @@ public class Node {
         try {
             FileUtils.deleteDirectory(location);
             MapNodesPlugin.debug(Msg.util("debug.world.deleted", worldName));
-        } catch (IOException e) {
-            MapNodesPlugin.debug(e.getMessage());
         }
-    }
-
-    /** Delete stray maps created by MapNodes */
-    public static void removeStrayMaps() {
-        if (WORLD_CONTAINER.exists()) {
-            FileUtils.deleteQuietly(WORLD_CONTAINER);
+        catch (IOException e) {
+            MapNodesPlugin.debug(e.getMessage());
         }
     }
 }

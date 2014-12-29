@@ -1,45 +1,44 @@
 package net.year4000.mapnodes.game;
 
 import com.google.gson.annotations.Since;
-import lombok.AccessLevel;
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
+import net.year4000.mapnodes.api.exceptions.InvalidJsonException;
 import net.year4000.mapnodes.api.game.GameClass;
-import net.year4000.mapnodes.exceptions.InvalidJsonException;
+import net.year4000.mapnodes.api.game.GameComponent;
+import net.year4000.mapnodes.api.game.GameKit;
+import net.year4000.mapnodes.api.game.GameManager;
 import net.year4000.mapnodes.messages.Msg;
-import net.year4000.mapnodes.utils.AssignNodeGame;
 import net.year4000.mapnodes.utils.NMSHacks;
-import net.year4000.mapnodes.utils.Validator;
 import net.year4000.utilities.MessageUtil;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
-@Data
+@Getter
+@EqualsAndHashCode
 @NoArgsConstructor
 /** Classes to pick from on top of your team. */
-public final class NodeClass implements GameClass, Validator, AssignNodeGame {
+public class NodeClass implements GameClass, GameComponent {
     /** The name of the class. */
     @Since(1.0)
-    private String name = null;
-
+    protected String name = null;
     /** The icon item for the class. */
     @Since(1.0)
-    private Material icon = null;
-
+    protected Material icon = null;
     /** The description of the class. */
     @Since(1.0)
-    private String description = null;
-
+    protected String description = null;
     /** The kit name to use with this class. */
     @Since(1.0)
-    private String kit = null;
+    protected String kit = null;
+
 
     @Override
     public void validate() throws InvalidJsonException {
@@ -64,9 +63,9 @@ public final class NodeClass implements GameClass, Validator, AssignNodeGame {
          Upper Json Settings / Bellow Instance Code
     *///--------------------------------------------//
 
-    private transient NodeGame game;
-    @Setter(AccessLevel.NONE)
-    private transient String id;
+    @Getter(lazy = true)
+    private final transient String id = id();
+    private transient GameManager game;
 
     public NodeClass(NodeGame game, String name, Material icon, String description, String kit) {
         assignNodeGame(game);
@@ -77,26 +76,24 @@ public final class NodeClass implements GameClass, Validator, AssignNodeGame {
     }
 
     /** Assign the game to this region */
-    public void assignNodeGame(NodeGame game) {
+    public void assignNodeGame(GameManager game) {
         this.game = game;
     }
 
     /** Get the id of this class and cache it */
-    public String getId() {
-        if (id == null) {
-            NodeClass thisObject = this;
+    private String id() {
+        NodeClass thisObject = this;
 
-            game.getClasses().forEach((string, object) -> {
-                if (object.equals(thisObject)) {
-                    id = string;
-                }
-            });
+        for (Map.Entry<String, GameClass> entry : game.getClasses().entrySet()) {
+            if (thisObject.equals(entry.getValue())) {
+                return entry.getKey();
+            }
         }
 
-        return id;
+        throw new RuntimeException("Can not find the id of " + this.toString());
     }
 
-    public NodeKit getKit() {
+    public GameKit getKit() {
         return game.getKits().get(kit);
     }
 
@@ -108,7 +105,7 @@ public final class NodeClass implements GameClass, Validator, AssignNodeGame {
         int counter = 0;
 
         for (String word : spited) {
-            counter ++;
+            counter++;
             boolean last = spited.length == counter;
 
             line += word + " ";

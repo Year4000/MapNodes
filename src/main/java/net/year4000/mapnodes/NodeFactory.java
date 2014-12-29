@@ -1,8 +1,8 @@
 package net.year4000.mapnodes;
 
 import lombok.Getter;
-import net.year4000.mapnodes.exceptions.InvalidJsonException;
-import net.year4000.mapnodes.exceptions.WorldLoadException;
+import net.year4000.mapnodes.api.exceptions.InvalidJsonException;
+import net.year4000.mapnodes.api.exceptions.WorldLoadException;
 import net.year4000.mapnodes.game.Node;
 import net.year4000.mapnodes.map.MapFactory;
 import net.year4000.mapnodes.map.MapFolder;
@@ -15,14 +15,11 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 public class NodeFactory {
     private static NodeFactory inst;
-
-    /** The current playing game */
-    private Node currentNode;
-
     /** The games loaded into the queue, thread safe */
     @Getter
     private final Queue<Node> queueNodes = new LinkedBlockingQueue<>();
-
+    /** The current playing game */
+    private Node currentNode;
     /** Internal game id counter */
     private int gameID = 0;
 
@@ -31,7 +28,8 @@ public class NodeFactory {
             if (!world.isDisabled()) {
                 try {
                     addMap(world);
-                } catch (InvalidJsonException | WorldLoadException e) {
+                }
+                catch (InvalidJsonException | WorldLoadException e) {
                     MapNodesPlugin.log(e, true);
                 }
             }
@@ -41,15 +39,15 @@ public class NodeFactory {
         });
     }
 
-    public void addMap(MapFolder world) throws InvalidJsonException, WorldLoadException {
-        queueNodes.add(new Node(getGameID(), world));
-    }
-
     public static NodeFactory get() {
         if (inst == null) {
             inst = new NodeFactory();
         }
         return inst;
+    }
+
+    public void addMap(MapFolder world) throws InvalidJsonException, WorldLoadException {
+        queueNodes.add(new Node(getGameID(), world));
     }
 
     /** Create and return a game id for the node */
@@ -63,7 +61,8 @@ public class NodeFactory {
             try {
                 add(getCurrentGame());
                 addAll(queueNodes);
-            } catch (NullPointerException e) {
+            }
+            catch (NullPointerException e) {
                 MapNodesPlugin.debug(Msg.util("error.world.none"));
                 MapNodesPlugin.debug(e, false);
             }

@@ -4,7 +4,6 @@ import net.year4000.mapnodes.api.events.game.GameLoadEvent;
 import net.year4000.mapnodes.api.game.modes.GameModeInfo;
 import net.year4000.mapnodes.game.NodeClass;
 import net.year4000.mapnodes.game.NodeGame;
-import net.year4000.mapnodes.game.NodePlayer;
 import net.year4000.mapnodes.gamemodes.elimination.Elimination;
 import net.year4000.utilities.bukkit.MessageUtil;
 import org.bukkit.Material;
@@ -62,7 +61,5 @@ public class Skywars extends Elimination {
                 .forEach(name -> game.addStaticGoal(name, "&7(&e" + kills.getOrDefault(name, 0) + "&7) &a" + name));
             dead.forEach(name -> game.addStaticGoal(name, "&7(&e" + kills.getOrDefault(name, 0) + "&7) &c&m" + name));
         }
-
-        game.getScoreboardFactory().setAllGameSidebar();
     }
 }

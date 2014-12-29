@@ -13,8 +13,8 @@ import org.bukkit.entity.Player;
 import java.util.concurrent.TimeUnit;
 
 public final class Msg {
-    private static System util = new System();
     public static String NOTICE = MessageUtil.message(" &7[&e!&7] &e");
+    private static System util = new System();
     @Getter
     private static LoadingCache<Player, String> codes = CacheBuilder.newBuilder()
         .expireAfterAccess(5, TimeUnit.MINUTES)
@@ -65,7 +65,7 @@ public final class Msg {
 
     /** Does the string match the locale or locale key */
     public static boolean matches(String locale, String compare, String key) {
-        return compare.equalsIgnoreCase(key) || compare.equalsIgnoreCase(locale(locale, key, compare));
+        return compare.equalsIgnoreCase(key) || compare.equalsIgnoreCase(locale(locale, key));
     }
 
     /** Does the string match the locale or locale key */

@@ -9,10 +9,10 @@ public final class MathUtil {
     public static int sec(int ticks) {
         checkArgument(ticks >= 0);
 
-        return ticks/TICKS;
+        return ticks / TICKS;
     }
 
-    /** Convert secs to ticks  */
+    /** Convert secs to ticks */
     public static int ticks(int sec) {
         checkArgument(sec >= 0);
 
@@ -21,6 +21,6 @@ public final class MathUtil {
 
     /** Convert integer to a float */
     public static float percent(int total, int position) {
-        return (float) ((double)position / (double)total) * 100;
+        return (float) ((double) position / (double) total) * 100;
     }
 }

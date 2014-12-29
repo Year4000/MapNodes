@@ -4,6 +4,7 @@ import lombok.EqualsAndHashCode;
 import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.events.player.GamePlayerJoinSpectatorEvent;
 import net.year4000.mapnodes.api.events.player.GamePlayerJoinTeamEvent;
+import net.year4000.mapnodes.api.game.GameClass;
 import net.year4000.mapnodes.api.game.GameManager;
 import net.year4000.mapnodes.api.game.GamePlayer;
 import net.year4000.mapnodes.api.game.GameTeam;
@@ -66,21 +67,27 @@ public class SpectatorListener implements Listener {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
     public void onEntityTarget(EntityTargetLivingEntityEvent event) {
-        if (!(event.getTarget() instanceof Player)) return;
+        if (!(event.getTarget() instanceof Player)) {
+            return;
+        }
 
         stopEvent(event, (Player) event.getTarget());
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
     public void onInteract(EntityInteractEvent event) {
-        if (!(event.getEntity() instanceof Player)) return;
+        if (!(event.getEntity() instanceof Player)) {
+            return;
+        }
 
         stopEvent(event, (Player) event.getEntity());
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
     public void onIvnInteract(InventoryClickEvent event) {
-        if (!(event.getWhoClicked() instanceof Player)) return;
+        if (!(event.getWhoClicked() instanceof Player)) {
+            return;
+        }
 
         stopEvent(event, (Player) event.getWhoClicked());
     }
@@ -97,14 +104,18 @@ public class SpectatorListener implements Listener {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
     public void onDamager(EntityDamageByEntityEvent event) {
-        if (!(event.getDamager() instanceof Player)) return;
+        if (!(event.getDamager() instanceof Player)) {
+            return;
+        }
 
         stopEvent(event, (Player) event.getDamager());
     }
-    
+
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
     public void onDamagee(EntityDamageByEntityEvent event) {
-        if (!(event.getEntity() instanceof Player)) return;
+        if (!(event.getEntity() instanceof Player)) {
+            return;
+        }
 
         stopEvent(event, (Player) event.getEntity());
     }
@@ -112,7 +123,9 @@ public class SpectatorListener implements Listener {
     @EventHandler
     public void onDamage(EntityDamageEvent event) {
         // If not a player don't check
-        if (!(event.getEntity() instanceof Player)) return;
+        if (!(event.getEntity() instanceof Player)) {
+            return;
+        }
         Player entity = (Player) event.getEntity();
 
         // If not playing send player back to spawn
@@ -248,16 +261,20 @@ public class SpectatorListener implements Listener {
             ItemStack hand = event.getPlayer().getItemInHand();
             GamePlayer player = MapNodes.getCurrentGame().getPlayer(event.getPlayer());
 
-            if (player.isPlaying()) return;
+            if (player.isPlaying()) {
+                return;
+            }
 
             try {
                 if (PacketHacks.isTitleAble(event.getPlayer()) && hand.getType() == Material.WRITTEN_BOOK) {
                     MapCommands.current(null, event.getPlayer());
                 }
-            } catch (NullPointerException | CommandException e) {
+            }
+            catch (NullPointerException | CommandException e) {
                 /** Not a valid item */
                 // MapNodesPlugin.debug(e, true);
-            } finally {
+            }
+            finally {
                 event.setCancelled(true);
             }
         }
@@ -267,11 +284,13 @@ public class SpectatorListener implements Listener {
 
     @EventHandler
     public void onTeamPicker(InventoryClickEvent event) {
-        Player player = (Player)event.getWhoClicked();
+        Player player = (Player) event.getWhoClicked();
         GamePlayer gPlayer = MapNodes.getCurrentGame().getPlayer(player);
         NodeGame game = (NodeGame) MapNodes.getCurrentGame();
 
-        if (gPlayer.isPlaying()) return;
+        if (gPlayer.isPlaying()) {
+            return;
+        }
 
         if (Msg.matches(gPlayer, event.getInventory().getName(), "team.menu.title")) {
             try {
@@ -280,14 +299,17 @@ public class SpectatorListener implements Listener {
                 FunEffectsUtil.playSound(player, Sound.ITEM_PICKUP);
                 GameTeam team = game.checkAndGetTeam(gPlayer, teamName);
                 ((NodePlayer) gPlayer).joinTeam(team);
-            } catch (IllegalArgumentException e) {
+            }
+            catch (IllegalArgumentException e) {
                 player.sendMessage(Msg.NOTICE + e.getMessage());
                 player.sendMessage(Msg.locale(gPlayer, "team.select.non_vip_url"));
                 event.setCancelled(true);
-            } catch (NullPointerException e) {
+            }
+            catch (NullPointerException e) {
                 /** Not a valid item */
                 // MapNodesPlugin.debug(e, true);
-            } finally {
+            }
+            finally {
                 player.closeInventory();
                 event.setCancelled(true);
             }
@@ -303,16 +325,20 @@ public class SpectatorListener implements Listener {
             ItemStack hand = event.getPlayer().getItemInHand();
             GamePlayer player = MapNodes.getCurrentGame().getPlayer(event.getPlayer());
 
-            if (player.isPlaying()) return;
+            if (player.isPlaying()) {
+                return;
+            }
 
             try {
                 if (Msg.matches(player, hand.getItemMeta().getDisplayName(), "team.menu.item")) {
                     ((NodeGame) MapNodes.getCurrentGame()).openTeamChooserMenu(player);
                 }
-            } catch (NullPointerException e) {
+            }
+            catch (NullPointerException e) {
                 /** Not a valid item */
                 // MapNodesPlugin.debug(e, true);
-            } finally {
+            }
+            finally {
                 event.setCancelled(true);
             }
         }
@@ -322,27 +348,32 @@ public class SpectatorListener implements Listener {
 
     @EventHandler
     public void onClassPicker(InventoryClickEvent event) {
-        Player player = (Player)event.getWhoClicked();
+        Player player = (Player) event.getWhoClicked();
         GamePlayer gPlayer = MapNodes.getCurrentGame().getPlayer(player);
         NodeGame game = (NodeGame) MapNodes.getCurrentGame();
 
-        if (gPlayer.isPlaying()) return;
+        if (gPlayer.isPlaying()) {
+            return;
+        }
 
         if (Msg.matches(gPlayer, event.getInventory().getName(), "class.menu.title")) {
             try {
                 ItemStack item = event.getCurrentItem();
                 String clazzName = item.getItemMeta().getDisplayName();
                 FunEffectsUtil.playSound(player, Sound.ITEM_PICKUP);
-                NodeClass team = game.getClassKit(clazzName);
-                ((NodePlayer) gPlayer).setClassKit(team);
-            } catch (IllegalArgumentException e) {
+                GameClass team = game.getClassKit(clazzName);
+                ((NodePlayer) gPlayer).setClassKit((NodeClass) team);
+            }
+            catch (IllegalArgumentException e) {
                 player.sendMessage(Msg.NOTICE + e.getMessage());
                 player.sendMessage(Msg.locale(gPlayer, "server.non_vip_url"));
                 event.setCancelled(true);
-            } catch (NullPointerException e) {
+            }
+            catch (NullPointerException e) {
                 /** Not a valid item */
                 // MapNodesPlugin.debug(e, true);
-            } finally {
+            }
+            finally {
                 player.closeInventory();
                 event.setCancelled(true);
             }
@@ -358,16 +389,20 @@ public class SpectatorListener implements Listener {
             ItemStack hand = event.getPlayer().getItemInHand();
             GamePlayer player = MapNodes.getCurrentGame().getPlayer(event.getPlayer());
 
-            if (player.isPlaying()) return;
+            if (player.isPlaying()) {
+                return;
+            }
 
             try {
                 if (Msg.matches(player, hand.getItemMeta().getDisplayName(), "class.menu.item")) {
                     ((NodeGame) MapNodes.getCurrentGame()).openClassKitChooserMenu(player);
                 }
-            } catch (NullPointerException e) {
+            }
+            catch (NullPointerException e) {
                 /** Not a valid item */
                 // MapNodesPlugin.debug(e, true);
-            } finally {
+            }
+            finally {
                 event.setCancelled(true);
             }
         }
@@ -393,7 +428,9 @@ public class SpectatorListener implements Listener {
                         last = loc;
 
                         while (last.add(0, 1, 0).getBlock().getType().isSolid()) {
-                            if (last.getY() > 256) break;
+                            if (last.getY() > 256) {
+                                break;
+                            }
 
                             last = last.add(0, 1, 0);
                         }
@@ -405,7 +442,8 @@ public class SpectatorListener implements Listener {
                 }
 
                 player.getPlayer().teleport(last.clone());
-            } catch (IllegalStateException | NullPointerException e) {
+            }
+            catch (IllegalStateException | NullPointerException e) {
                 player.sendMessage(Msg.NOTICE + Msg.locale(player, "items.teleport_hand"));
             }
         }

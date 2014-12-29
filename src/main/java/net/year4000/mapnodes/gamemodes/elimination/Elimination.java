@@ -5,12 +5,12 @@ import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.events.game.GameLoadEvent;
 import net.year4000.mapnodes.api.events.game.GameStartEvent;
 import net.year4000.mapnodes.api.events.player.*;
+import net.year4000.mapnodes.api.game.GameManager;
+import net.year4000.mapnodes.api.game.GamePlayer;
+import net.year4000.mapnodes.api.game.GameTeam;
 import net.year4000.mapnodes.api.game.modes.GameMode;
 import net.year4000.mapnodes.api.game.modes.GameModeInfo;
-import net.year4000.mapnodes.game.NodeGame;
-import net.year4000.mapnodes.game.NodePlayer;
-import net.year4000.mapnodes.game.NodeTeam;
-import net.year4000.mapnodes.game.system.Spectator;
+import net.year4000.mapnodes.api.utils.Spectator;
 import net.year4000.mapnodes.gamemodes.GameModeTemplate;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.Common;
@@ -33,17 +33,17 @@ import java.util.stream.Collectors;
     config = EliminationConfig.class
 )
 public class Elimination extends GameModeTemplate implements GameMode {
-    private EliminationConfig gameModeConfig;
-    protected NodeGame game;
-    protected NodeTeam team;
+    protected GameManager game;
+    protected GameTeam team;
     protected Iterator<Location> spawns;
     protected List<String> alive = new ArrayList<>();
     protected List<String> dead = new ArrayList<>();
+    private EliminationConfig gameModeConfig;
 
     @EventHandler
     public void onLoad(GameLoadEvent event) {
         gameModeConfig = getConfig();
-        game = (NodeGame) event.getGame();
+        game = event.getGame();
 
         if (gameModeConfig.getPlayersTeam() == null) {
             team = game.getPlayingTeams().collect(Collectors.toList()).iterator().next();
@@ -72,7 +72,9 @@ public class Elimination extends GameModeTemplate implements GameMode {
     /** Set the player's spawn to the next spawn in the list */
     @EventHandler
     public void onPlayerJoin(GamePlayerStartEvent event) {
-        if (event.getPlayer().getTeam() instanceof Spectator) return;
+        if (event.getPlayer().getTeam() instanceof Spectator) {
+            return;
+        }
 
         event.setImmortal(false);
         event.setSpawn(spawns.next());
@@ -89,7 +91,9 @@ public class Elimination extends GameModeTemplate implements GameMode {
     /** Don't allow players to select teams when the game started */
     @EventHandler
     public void onTeamSelect(GamePlayerJoinTeamEvent event) {
-        if (event.getTo() instanceof Spectator) return;
+        if (event.getTo() instanceof Spectator) {
+            return;
+        }
 
         if (MapNodes.getCurrentGame().getStage().isPlaying()) {
             event.setCancelled(true);
@@ -108,7 +112,7 @@ public class Elimination extends GameModeTemplate implements GameMode {
     /** Set up the players in the game */
     @EventHandler
     public void onGameStart(GameStartEvent event) {
-        new ArrayList<>(team.getQueue()).forEach(player -> ((NodePlayer) player).joinTeam(null));
+        new ArrayList<>(team.getQueue()).forEach(player -> player.joinTeam(null));
         alive.addAll(team.getPlayers().stream().map(player -> player.getPlayer().getName()).collect(Collectors.toList()));
         buildAndSendList();
 
@@ -137,9 +141,7 @@ public class Elimination extends GameModeTemplate implements GameMode {
 
     /** When players leave count that as a death */
     @EventHandler
-    public void onSwitchTeam(GamePlayerJoinTeamEvent event) {
-        if (event.getFrom() instanceof Spectator) return;
-
+    public void onSwitchTeam(GamePlayerJoinSpectatorEvent event) {
         deadPlayer(event.getPlayer().getPlayer());
     }
 
@@ -160,8 +162,8 @@ public class Elimination extends GameModeTemplate implements GameMode {
             });
 
             if (game.getPlayer(name) != null) {
-                NodePlayer player = (NodePlayer) game.getPlayer(name);
-                player.getPlayerTasks().add(SchedulerUtil.runSync(() -> player.joinTeam(null), 5L));
+                GamePlayer player = game.getPlayer(name);
+                player.getPlayerTasks().add(SchedulerUtil.runSync(player::joinSpectatorTeam, 5L));
             }
         }
 
@@ -170,7 +172,8 @@ public class Elimination extends GameModeTemplate implements GameMode {
                 SchedulerUtil.runSync(() -> {
                     try {
                         new GamePlayerWinEvent(game, game.getPlayer(Bukkit.getPlayer(alive.iterator().next()))).call();
-                    } catch (NoSuchElementException e) {
+                    }
+                    catch (NoSuchElementException e) {
                         game.stop();
                     }
                 }, 8L);
@@ -195,7 +198,5 @@ public class Elimination extends GameModeTemplate implements GameMode {
             alive.forEach(name -> game.addStaticGoal(name, "&a" + name));
             dead.forEach(name -> game.addStaticGoal(name, "&c&m" + name));
         }
-
-        game.getPlaying().forEach(player -> game.getScoreboardFactory().setGameSidebar((NodePlayer) player));
     }
 }

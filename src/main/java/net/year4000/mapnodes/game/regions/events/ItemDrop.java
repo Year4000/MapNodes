@@ -2,10 +2,10 @@ package net.year4000.mapnodes.game.regions.events;
 
 import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.events.game.GameClockEvent;
-import net.year4000.mapnodes.game.regions.EventType;
+import net.year4000.mapnodes.api.game.regions.EventType;
+import net.year4000.mapnodes.api.game.regions.RegionListener;
 import net.year4000.mapnodes.game.regions.EventTypes;
 import net.year4000.mapnodes.game.regions.RegionEvent;
-import net.year4000.mapnodes.game.regions.RegionListener;
 import net.year4000.mapnodes.utils.typewrappers.MaterialList;
 import org.bukkit.Material;
 import org.bukkit.entity.Item;

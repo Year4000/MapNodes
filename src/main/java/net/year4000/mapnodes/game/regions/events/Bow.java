@@ -4,10 +4,10 @@ import com.google.common.annotations.Beta;
 import com.google.gson.annotations.SerializedName;
 import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.game.GamePlayer;
-import net.year4000.mapnodes.game.regions.EventType;
+import net.year4000.mapnodes.api.game.regions.EventType;
+import net.year4000.mapnodes.api.game.regions.RegionListener;
 import net.year4000.mapnodes.game.regions.EventTypes;
 import net.year4000.mapnodes.game.regions.RegionEvent;
-import net.year4000.mapnodes.game.regions.RegionListener;
 import net.year4000.mapnodes.game.regions.types.Point;
 import net.year4000.mapnodes.utils.NMSHacks;
 import net.year4000.mapnodes.utils.typewrappers.MaterialList;
@@ -44,9 +44,13 @@ public class Bow extends RegionEvent implements RegionListener {
 
     @EventHandler(ignoreCancelled = true)
     public void onBowShoot(EntityShootBowEvent event) {
-        if (!(event.getEntity() instanceof Player)) return;
+        if (!(event.getEntity() instanceof Player)) {
+            return;
+        }
 
-        if (!region.inZone(new Point(event.getEntity().getLocation().toVector().toBlockVector()))) return;
+        if (!region.inZone(new Point(event.getEntity().getLocation().toVector().toBlockVector()))) {
+            return;
+        }
 
         GamePlayer player = region.getGame().getPlayer((Player) event.getEntity());
 

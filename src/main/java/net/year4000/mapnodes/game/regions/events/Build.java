@@ -1,10 +1,10 @@
 package net.year4000.mapnodes.game.regions.events;
 
 import net.year4000.mapnodes.api.game.GamePlayer;
-import net.year4000.mapnodes.game.regions.EventType;
+import net.year4000.mapnodes.api.game.regions.EventType;
+import net.year4000.mapnodes.api.game.regions.RegionListener;
 import net.year4000.mapnodes.game.regions.EventTypes;
 import net.year4000.mapnodes.game.regions.RegionEvent;
-import net.year4000.mapnodes.game.regions.RegionListener;
 import net.year4000.mapnodes.game.regions.types.Point;
 import net.year4000.mapnodes.utils.SchedulerUtil;
 import net.year4000.mapnodes.utils.typewrappers.MaterialList;
@@ -31,7 +31,9 @@ public class Build extends RegionEvent implements RegionListener {
 
     @EventHandler
     public void onPlace(BlockPlaceEvent event) {
-        if (!region.inZone(new Point(event.getBlockPlaced().getLocation().toVector().toBlockVector()))) return;
+        if (!region.inZone(new Point(event.getBlockPlaced().getLocation().toVector().toBlockVector()))) {
+            return;
+        }
 
         GamePlayer player = region.getGame().getPlayer(event.getPlayer());
         Material material = event.getBlockPlaced().getType();

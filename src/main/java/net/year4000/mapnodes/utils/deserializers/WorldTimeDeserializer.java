@@ -17,11 +17,6 @@ import java.util.regex.Pattern;
 public class WorldTimeDeserializer implements JsonDeserializer<WorldTime> {
     protected static final Pattern TWELVE_HOUR_TIME = Pattern.compile("^([0-9]+(?::[0-9]+)?)([apmAPM\\.]+)$");
 
-    @Override
-    public WorldTime deserialize(JsonElement element, Type type, JsonDeserializationContext context) throws JsonParseException {
-        return new WorldTime(element.getAsJsonPrimitive().isString() ? worldTime(element.getAsString()) : element.getAsInt());
-    }
-
     public static int worldTime(String timeStr) {
         Matcher matcher;
 
@@ -96,5 +91,10 @@ public class WorldTimeDeserializer implements JsonDeserializer<WorldTime> {
         }
 
         return 0;
+    }
+
+    @Override
+    public WorldTime deserialize(JsonElement element, Type type, JsonDeserializationContext context) throws JsonParseException {
+        return new WorldTime(element.getAsJsonPrimitive().isString() ? worldTime(element.getAsString()) : element.getAsInt());
     }
 }

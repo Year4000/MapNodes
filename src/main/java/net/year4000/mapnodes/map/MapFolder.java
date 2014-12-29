@@ -3,7 +3,7 @@ package net.year4000.mapnodes.map;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Setter;
-import net.year4000.mapnodes.exceptions.InvalidMapException;
+import net.year4000.mapnodes.api.exceptions.InvalidMapException;
 import net.year4000.mapnodes.messages.Msg;
 
 import javax.annotation.Nullable;
@@ -52,7 +52,9 @@ public class MapFolder {
         if (path.exists() && path.isDirectory() && path.canRead()) {
             for (String fileName : files) {
                 File file = new File(path, fileName);
-                if (!(file.exists() && file.isFile() && file.canRead())) return false;
+                if (!(file.exists() && file.isFile() && file.canRead())) {
+                    return false;
+                }
             }
         }
         else {

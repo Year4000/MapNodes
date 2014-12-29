@@ -1,5 +1,6 @@
 package net.year4000.mapnodes.game.system;
 
+import net.year4000.mapnodes.api.utils.Spectator;
 import net.year4000.mapnodes.game.NodeTeam;
 import net.year4000.mapnodes.utils.typewrappers.LocationList;
 import org.bukkit.ChatColor;
@@ -7,16 +8,16 @@ import org.bukkit.Location;
 
 public class SpectatorTeam extends NodeTeam implements Spectator {
     public SpectatorTeam(LocationList<Location> spawns) {
-        setName("Spectator");
+        name = "Spectator";
 
-        setColor(ChatColor.GRAY);
+        color = ChatColor.GRAY;
 
-        setKit("spectator");
+        kit = NodeTeam.SPECTATOR;
 
-        setSize(Integer.MAX_VALUE);
+        size = Integer.MAX_VALUE;
 
-        setSpawns(spawns);
+        this.spawns = spawns;
 
-        setUseScoreboard(false);
+        useScoreboard = false;
     }
 }

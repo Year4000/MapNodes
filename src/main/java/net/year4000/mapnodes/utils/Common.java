@@ -3,16 +3,15 @@ package net.year4000.mapnodes.utils;
 import com.google.common.base.Ascii;
 import lombok.Synchronized;
 import net.year4000.mapnodes.api.game.GamePlayer;
+import net.year4000.mapnodes.api.game.regions.PointVector;
 import net.year4000.mapnodes.clocks.Clocker;
 import net.year4000.mapnodes.game.NodePlayer;
-import net.year4000.mapnodes.game.regions.types.Point;
 import net.year4000.utilities.ChatColor;
 import net.year4000.utilities.bukkit.MessageUtil;
 import org.bukkit.Location;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -20,20 +19,20 @@ import java.util.Random;
 
 public final class Common {
     public static final Random rand = new Random();
+    /** Color numbers based on its percent */
+    private static int toggle = 0;
+    private static Map<NodePlayer, BukkitTask> actionBarAnimations = new HashMap<>();
 
     private Common() {
         // Utility Class
     }
-
-    /** Color numbers based on its percent */
-    private static int toggle = 0;
 
     public static String colorNumber(int current, int total) {
         return MessageUtil.replaceColors(chatColorNumber(current, total) + current);
     }
 
     public static String chatColorNumber(int current, int total) {
-        double percent = ((double)current / (double)total) * 100;
+        double percent = ((double) current / (double) total) * 100;
         ChatColor color;
 
         //LogUtil.log(percent+"");
@@ -182,7 +181,7 @@ public final class Common {
     }
 
     /** Convert a point to a vector */
-    public static Vector pointToVector(Point point) {
+    public static Vector pointToVector(PointVector point) {
         return new Vector(point.getX(), point.getY(), point.getZ());
     }
 
@@ -244,8 +243,10 @@ public final class Common {
     public static int chars(String string) {
         String finalString = "";
 
-        for (int i = 0; i < string.toCharArray().length ; i++) {
-            if (finalString.length() > 6) break;
+        for (int i = 0; i < string.toCharArray().length; i++) {
+            if (finalString.length() > 6) {
+                break;
+            }
 
             finalString += (int) Ascii.toUpperCase(string.toCharArray()[i]);
         }
@@ -257,8 +258,6 @@ public final class Common {
         return new Vector(rand.nextDouble(), rand.nextDouble(), rand.nextDouble());
     }
 
-    private static Map<NodePlayer, BukkitTask> actionBarAnimations = new HashMap<>();
-
     /** Send a cool animated action bar message */
     @Synchronized("actionBarAnimations")
     public static void sendAnimatedActionBar(GamePlayer player, String message) {
@@ -267,8 +266,8 @@ public final class Common {
         Clocker animation = new Clocker(MathUtil.ticks(4)) {
             @Override
             public void runTock(int position) {
-                String[] prefix = new String[] {"&e&l>>> &f", "&e&l>>&0&l> &f", "&e&l>&0&l>&e&l> &f","&0&l>&e&l>> &f"};
-                String[] suffix = new String[] {" &e&l<<<", " &0&l<&e&l<&e&l<", " &e&l<&0&l<&e&l<", " &e&l<<&0&l<"};
+                String[] prefix = new String[]{"&e&l>>> &f", "&e&l>>&0&l> &f", "&e&l>&0&l>&e&l> &f", "&0&l>&e&l>> &f"};
+                String[] suffix = new String[]{" &e&l<<<", " &0&l<&e&l<&e&l<", " &e&l<&0&l<&e&l<", " &e&l<<&0&l<"};
                 int pos = position / 20;
 
                 nodePlayer.sendActionbarMessage(MessageUtil.replaceColors(prefix[pos]) + message + MessageUtil.replaceColors(suffix[pos]));

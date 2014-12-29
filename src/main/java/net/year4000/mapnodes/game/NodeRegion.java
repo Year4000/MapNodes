@@ -2,39 +2,35 @@ package net.year4000.mapnodes.game;
 
 import com.google.gson.annotations.Since;
 import lombok.AccessLevel;
-import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import net.year4000.mapnodes.api.exceptions.InvalidJsonException;
+import net.year4000.mapnodes.api.game.GameComponent;
+import net.year4000.mapnodes.api.game.GameManager;
 import net.year4000.mapnodes.api.game.GameRegion;
-import net.year4000.mapnodes.exceptions.InvalidJsonException;
-import net.year4000.mapnodes.game.regions.Region;
+import net.year4000.mapnodes.api.game.regions.PointVector;
+import net.year4000.mapnodes.api.game.regions.Region;
 import net.year4000.mapnodes.game.regions.RegionEvents;
-import net.year4000.mapnodes.game.regions.types.Point;
-import net.year4000.mapnodes.utils.AssignNodeGame;
-import net.year4000.mapnodes.utils.Validator;
 import net.year4000.mapnodes.utils.typewrappers.RegionList;
 
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
-@Data
-public final class NodeRegion implements GameRegion, Validator, AssignNodeGame {
-    /** Region weight */
-    public NodeRegion() {
-        addEvent();
-    }
-
+@Getter
+@EqualsAndHashCode
+public class NodeRegion implements GameRegion, GameComponent {
     /** The flags for this region optional if just used for zones */
     @Since(2.0)
-    private RegionEvents events = null;
-
+    protected RegionEvents events = null;
     /** The zones that this region contains */
     @Since(2.0)
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
-    private RegionList<Region> zones = new RegionList<>();
+    protected RegionList<Region> zones = new RegionList<>();
 
     @Override
     public void validate() throws InvalidJsonException {
@@ -46,31 +42,34 @@ public final class NodeRegion implements GameRegion, Validator, AssignNodeGame {
          Upper Json Settings / Bellow Instance Code
     *///--------------------------------------------//
 
-    private transient int weight = 0;
     private static transient int totalWeight = 0;
-    private transient NodeGame game;
-    @Setter(AccessLevel.NONE)
-    private transient String id;
+    @Getter(lazy = true)
+    private final transient String id = id();
+    private transient int weight = 0;
+    private transient GameManager game;
     private transient Set<Region> zoneSet = new HashSet<>();
 
+    /** Region weight */
+    public NodeRegion() {
+        addEvent();
+    }
+
     /** Assign the game to this region */
-    public void assignNodeGame(NodeGame game) {
+    public void assignNodeGame(GameManager game) {
         this.game = game;
     }
 
     /** Get the id of this class and cache it */
-    public String getId() {
-        if (id == null) {
-            NodeRegion thisObject = this;
+    private String id() {
+        NodeRegion thisObject = this;
 
-            game.getRegions().forEach((string, object) -> {
-                if (object.equals(thisObject)) {
-                    id = string;
-                }
-            });
+        for (Map.Entry<String, GameRegion> entry : game.getRegions().entrySet()) {
+            if (thisObject.equals(entry.getValue())) {
+                return entry.getKey();
+            }
         }
 
-        return id;
+        throw new RuntimeException("Can not find the id of " + this.toString());
     }
 
     /** Make this event tracked by the event system and give it weight */
@@ -89,7 +88,7 @@ public final class NodeRegion implements GameRegion, Validator, AssignNodeGame {
     }
 
     /** Is the point in the region */
-    public boolean inZone(Point point) {
+    public boolean inZone(PointVector point) {
         return getZones().stream().filter(z -> z.inRegion(point)).count() > 0;
     }
 }

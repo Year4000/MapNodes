@@ -17,7 +17,8 @@ public class GameModesDeserializer implements JsonDeserializer<GameSet<GameMode>
         GameSet<GameMode> newSet = new GameSet<>();
 
         // element is hash map
-        Map<String, JsonObject> modes = GsonUtil.createGson().fromJson(element, new TypeToken<Map<String, JsonObject>>(){}.getType());
+        Map<String, JsonObject> modes = GsonUtil.createGson().fromJson(element, new TypeToken<Map<String, JsonObject>>() {
+        }.getType());
 
         // loop through each element and create a new instance of the game mode
         modes.forEach((name, config) -> {

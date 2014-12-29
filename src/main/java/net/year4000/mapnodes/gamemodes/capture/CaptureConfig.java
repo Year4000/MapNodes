@@ -2,13 +2,13 @@ package net.year4000.mapnodes.gamemodes.capture;
 
 import com.google.gson.annotations.SerializedName;
 import lombok.Data;
+import net.year4000.mapnodes.api.exceptions.InvalidJsonException;
+import net.year4000.mapnodes.api.game.GamePlayer;
 import net.year4000.mapnodes.api.game.modes.GameModeConfig;
 import net.year4000.mapnodes.api.game.modes.GameModeConfigName;
-import net.year4000.mapnodes.exceptions.InvalidJsonException;
-import net.year4000.mapnodes.game.NodePlayer;
+import net.year4000.mapnodes.api.utils.Validator;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.Common;
-import net.year4000.mapnodes.utils.Validator;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 
@@ -46,6 +46,8 @@ public class CaptureConfig implements GameModeConfig {
         // Auto Fields when set it will populate some of the above vars
         private ChatColor wool = null;
         private ChatColor clay = null;
+        private transient boolean done = false;
+        private transient List<GamePlayer> grabbed = new ArrayList<>();
 
         @Override
         public void validate() throws InvalidJsonException {
@@ -78,9 +80,6 @@ public class CaptureConfig implements GameModeConfig {
             checkArgument(block != null, Msg.util("capture.block.block"));
             checkArgument(data != null, Msg.util("capture.block.block"));
         }
-
-        private transient boolean done = false;
-        private transient List<NodePlayer> grabbed = new ArrayList<>();
 
         public void setDone(boolean done) {
             this.done = done;

@@ -5,13 +5,11 @@ import net.year4000.mapnodes.api.events.game.GameClockEvent;
 import net.year4000.mapnodes.api.events.game.GameLoadEvent;
 import net.year4000.mapnodes.api.events.game.GameStartEvent;
 import net.year4000.mapnodes.api.events.team.GameTeamWinEvent;
+import net.year4000.mapnodes.api.game.GameManager;
 import net.year4000.mapnodes.api.game.GamePlayer;
 import net.year4000.mapnodes.api.game.GameTeam;
 import net.year4000.mapnodes.api.game.modes.GameMode;
 import net.year4000.mapnodes.api.game.modes.GameModeInfo;
-import net.year4000.mapnodes.game.NodeGame;
-import net.year4000.mapnodes.game.NodePlayer;
-import net.year4000.mapnodes.game.NodeTeam;
 import net.year4000.mapnodes.game.regions.types.Point;
 import net.year4000.mapnodes.gamemodes.GameModeTemplate;
 import net.year4000.mapnodes.messages.Msg;
@@ -40,7 +38,7 @@ import java.util.stream.Collectors;
 public class Deathmatch extends GameModeTemplate implements GameMode {
     private DeathmatchConfig gameModeConfig;
     private Map<String, Integer> scores = new HashMap<>();
-    private NodeGame game;
+    private GameManager game;
     private GameTeam winner;
     private int winnerScore;
     private long endTime;
@@ -48,7 +46,7 @@ public class Deathmatch extends GameModeTemplate implements GameMode {
     @EventHandler
     public void onLoad(GameLoadEvent event) {
         gameModeConfig = getConfig();
-        game = (NodeGame) event.getGame();
+        game = event.getGame();
         game.addStartTime(60);
 
         // Add max if map has max score
@@ -71,7 +69,9 @@ public class Deathmatch extends GameModeTemplate implements GameMode {
 
     @EventHandler
     public void gameClock(GameClockEvent event) {
-        if (!event.getGame().getStage().isPlaying()) return;
+        if (!event.getGame().getStage().isPlaying()) {
+            return;
+        }
 
         if (gameModeConfig.getTimeLimit() != null) {
             long currentTime = endTime - System.currentTimeMillis();
@@ -86,7 +86,7 @@ public class Deathmatch extends GameModeTemplate implements GameMode {
                 GameTeamWinEvent win = new GameTeamWinEvent(game, winner);
 
                 if (win.getWinner() == null) {
-                    win.setWinnerText(Joiner.on("&7, ").join(game.getPlayingTeams().map(NodeTeam::getDisplayName).collect(Collectors.toList())));
+                    win.setWinnerText(Joiner.on("&7, ").join(game.getPlayingTeams().map(GameTeam::getDisplayName).collect(Collectors.toList())));
                 }
 
                 win.call();
@@ -110,30 +110,36 @@ public class Deathmatch extends GameModeTemplate implements GameMode {
 
     @EventHandler
     public void onMove(PlayerMoveEvent event) {
-        if (gameModeConfig.getPointBoxes().size() == 0 || !game.getStage().isPlaying()) return;
+        if (gameModeConfig.getPointBoxes().size() == 0 || !game.getStage().isPlaying()) {
+            return;
+        }
 
         Vector v = event.getTo().toVector();
 
         // Skip check if not a new block
-        if (event.getFrom().toVector().toBlockVector().equals(v.toBlockVector())) return;
+        if (event.getFrom().toVector().toBlockVector().equals(v.toBlockVector())) {
+            return;
+        }
 
         Point point = new Point(v.getBlockX(), v.getBlockY(), v.getBlockZ());
         GamePlayer player = game.getPlayer(event.getPlayer());
 
-        if (!player.isPlaying()) return;
+        if (!player.isPlaying()) {
+            return;
+        }
 
         // Add team point
         game.getRegions().values().forEach(region -> {
             gameModeConfig.getPointBoxes().stream()
-                .filter(pointRegion -> pointRegion.getChallenger().equals(((NodeTeam) player.getTeam()).getId()))
+                .filter(pointRegion -> pointRegion.getChallenger().equals(player.getTeam().getId()))
                 .filter(pointRegion -> pointRegion.getRegion().equals(region.getId()))
                 .forEach(pointRegion -> {
                     if (region.inZone(point)) {
                         addPoint(game, player.getTeam(), pointRegion.getPoint());
-                        event.setTo(((NodeTeam) player.getTeam()).getSpawns().getSafeRandomSpawn());
+                        event.setTo(player.getTeam().getSafeRandomSpawn());
 
                         game.getPlaying().forEach(p -> {
-                            Common.sendAnimatedActionBar(p, Msg.locale(p, "deathmatch.scored", player.getPlayerColor(), String.valueOf(pointRegion.getPoint()), ((NodeTeam) player.getTeam()).getDisplayName()));
+                            Common.sendAnimatedActionBar(p, Msg.locale(p, "deathmatch.scored", player.getPlayerColor(), String.valueOf(pointRegion.getPoint()), (player.getTeam().getDisplayName())));
                         });
                     }
                 });
@@ -141,18 +147,19 @@ public class Deathmatch extends GameModeTemplate implements GameMode {
     }
 
     /** Add one point to the team */
-    public void addPoint(NodeGame game, GameTeam team) {
+    public void addPoint(GameManager game, GameTeam team) {
         addPoint(game, team, gameModeConfig.getKillPoint());
     }
 
     /** Add the amount of points to a team and set the winner */
-    public void addPoint(NodeGame game, GameTeam team, int amount) {
-        if (!scores.containsKey(teamId(team))) return;
+    public void addPoint(GameManager game, GameTeam team, int amount) {
+        if (!scores.containsKey(teamId(team))) {
+            return;
+        }
 
         int newScore = scores.get(teamId(team)) + amount;
         scores.put(teamId(team), newScore);
         game.getSidebarGoals().get(teamId(team)).setScore(scores.get(teamId(team)));
-        game.getPlaying().forEach(p -> (game.getScoreboardFactory()).setGameSidebar((NodePlayer) p));
 
         // If game team new score is higher than all set as winner
         if (newScore > scores.values().stream().sorted().collect(Collectors.toList()).get(0)) {
@@ -173,10 +180,6 @@ public class Deathmatch extends GameModeTemplate implements GameMode {
     }
 
     public String teamId(GameTeam team) {
-        return ((NodeTeam) team).getId() + "-deathmatch";
-    }
-
-    public String teamId(NodeTeam team) {
         return team.getId() + "-deathmatch";
     }
 }

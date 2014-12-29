@@ -17,7 +17,8 @@ public class EnvironmentDeserializer implements JsonDeserializer<World.Environme
 
         try {
             return World.Environment.valueOf(name.toUpperCase());
-        } catch (IllegalArgumentException e) {
+        }
+        catch (IllegalArgumentException e) {
             MapNodesPlugin.debug(Msg.util("settings.environment", name));
         }
 

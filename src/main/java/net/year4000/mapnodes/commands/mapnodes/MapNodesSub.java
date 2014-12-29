@@ -77,12 +77,12 @@ public final class MapNodesSub {
         );
     }
 
-        /** Simple the git message output */
+    /** Simple the git message output */
     private static void gitQuickSend(CommandSender sender, String head, String body) {
         sender.sendMessage(Msg.locale(sender, head, Msg.git(body)));
     }
 
-    /** Simple the locale message output*/
+    /** Simple the locale message output */
     private static void localeQuickSend(CommandSender sender, String head, String body) {
         sender.sendMessage(Msg.locale(sender, head, Msg.locale(sender, body)));
     }

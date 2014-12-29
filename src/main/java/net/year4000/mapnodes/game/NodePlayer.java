@@ -1,16 +1,14 @@
 package net.year4000.mapnodes.game;
 
 import lombok.Data;
-import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.api.events.player.GamePlayerJoinEvent;
 import net.year4000.mapnodes.api.events.player.GamePlayerJoinSpectatorEvent;
 import net.year4000.mapnodes.api.events.player.GamePlayerJoinTeamEvent;
 import net.year4000.mapnodes.api.events.player.GamePlayerStartEvent;
 import net.year4000.mapnodes.api.game.GamePlayer;
 import net.year4000.mapnodes.api.game.GameTeam;
-import net.year4000.mapnodes.game.system.Spectator;
+import net.year4000.mapnodes.api.utils.Spectator;
 import net.year4000.mapnodes.messages.Msg;
-import net.year4000.mapnodes.net.Network;
 import net.year4000.mapnodes.utils.BadgeManager;
 import net.year4000.mapnodes.utils.Common;
 import net.year4000.mapnodes.utils.PacketHacks;
@@ -38,22 +36,19 @@ import java.util.List;
 public final class NodePlayer implements GamePlayer, Comparable {
     // internals
     public static final BadgeManager badges = new BadgeManager();
+    private static final int INV_SIZE = 45;
     private final NodeGame game;
     private final Player player;
     private NodeTeam team;
     private NodeTeam pendingTeam;
     private NodeClass classKit;
     private List<BukkitTask> playerTasks = new ArrayList<>();
-
     // scoreboard
     private Scoreboard scoreboard;
-
     // player flags (set by methods bellow)
     private boolean spectator;
     private boolean playing;
     private boolean entering;
-
-    private static final int INV_SIZE = 45;
     private Inventory inventory;
 
     /** Constructs a game player */
@@ -100,7 +95,7 @@ public final class NodePlayer implements GamePlayer, Comparable {
         // Event Method Results
         game.getScoreboardFactory().setTeam(this, (NodeTeam) start.getTeam());
         game.getScoreboardFactory().setGameSidebar(this);
-        ((NodeKit) start.getKit()).giveKit(this);
+        start.getKit().giveKit(this);
         player.teleport(start.getSpawn());
 
         // God buffer mode
@@ -222,13 +217,13 @@ public final class NodePlayer implements GamePlayer, Comparable {
             entering = false;
 
             // Join
-            GameTeam spectatorTeam = game.getTeams().get("spectator");
+            GameTeam spectatorTeam = game.getTeams().get(NodeTeam.SPECTATOR);
             GamePlayerJoinSpectatorEvent joinSpectator = new GamePlayerJoinSpectatorEvent(this, spectatorTeam) {{
                 this.setDisplay(false);
                 this.setKit(spectatorTeam.getKit());
             }};
             joinSpectator.call();
-            team = (NodeTeam)joinSpectator.getSpectator();
+            team = (NodeTeam) joinSpectator.getSpectator();
             team.join(this, joinSpectator.isDisplay());
 
             // Auto join spectator team
@@ -240,7 +235,7 @@ public final class NodePlayer implements GamePlayer, Comparable {
             }
 
             // Kit
-            ((NodeKit) joinSpectator.getKit()).giveKit(this);
+            joinSpectator.getKit().giveKit(this);
 
             // Spectator Settings
             player.setCollidesWithEntities(false);
@@ -280,10 +275,14 @@ public final class NodePlayer implements GamePlayer, Comparable {
         }
 
         // Update player's inventory
-        //reopenPlayerInventory();
+        // reopenPlayerInventory();
         // Update team menu
         game.updateTeamChooserMenu();
         player.getPlayer().setDisplayName(getPlayerColor() + ChatColor.WHITE.toString());
+    }
+
+    public void joinSpectatorTeam() {
+        joinTeam(null);
     }
 
     /** Manage how the players see each other. */
@@ -292,7 +291,8 @@ public final class NodePlayer implements GamePlayer, Comparable {
             game.getPlayers().forEach(player -> {
                 if ((player.isSpectator() || player.isEntering()) && gPlayer.isPlaying()) {
                     gPlayer.getPlayer().hidePlayer(player.getPlayer());
-                } else {
+                }
+                else {
                     gPlayer.getPlayer().showPlayer(player.getPlayer());
                 }
             });
@@ -331,7 +331,7 @@ public final class NodePlayer implements GamePlayer, Comparable {
                 // Hot Bar
                 if (i < 9) {
                     boolean empty = pinv.getItem(i) == null;
-                    items[(45-9) + i] = empty ? new ItemStack(Material.AIR) : pinv.getItem(i);
+                    items[(45 - 9) + i] = empty ? new ItemStack(Material.AIR) : pinv.getItem(i);
                 }
                 // Backpack
                 else {
@@ -348,7 +348,7 @@ public final class NodePlayer implements GamePlayer, Comparable {
     private ItemStack getHealth() {
         int health = (int) player.getHealth();
 
-        ItemStack level =  new ItemStack(Material.SPECKLED_MELON, health);
+        ItemStack level = new ItemStack(Material.SPECKLED_MELON, health);
         ItemMeta meta = level.getItemMeta();
         meta.setDisplayName(MessageUtil.message(Msg.locale(player, "inv.health")));
         level.setItemMeta(meta);
@@ -360,7 +360,7 @@ public final class NodePlayer implements GamePlayer, Comparable {
     private ItemStack getHunger() {
         int hunger = player.getFoodLevel();
 
-        ItemStack level =  new ItemStack(Material.COOKED_BEEF, hunger);
+        ItemStack level = new ItemStack(Material.COOKED_BEEF, hunger);
         ItemMeta meta = level.getItemMeta();
         meta.setDisplayName(MessageUtil.message(Msg.locale(player, "inv.hunger")));
         level.setItemMeta(meta);
@@ -401,7 +401,7 @@ public final class NodePlayer implements GamePlayer, Comparable {
     /** Get the split name used to tab list name */
     public String[] getSplitName() {
         String name = MessageUtil.stripColors(player.getDisplayName());
-        return new String[] {name.substring(0, name.length() - 2), name.substring(name.length() - 2)};
+        return new String[]{name.substring(0, name.length() - 2), name.substring(name.length() - 2)};
     }
 
     @Override

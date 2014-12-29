@@ -1,4 +1,6 @@
-package net.year4000.mapnodes.game.regions;
+package net.year4000.mapnodes.api.game.regions;
+
+import net.year4000.mapnodes.game.regions.RegionTypes;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -7,7 +9,7 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface EventType {
+public @interface RegionType {
     /** The name of the type to be used in json markups */
-    public EventTypes value();
+    public RegionTypes value();
 }

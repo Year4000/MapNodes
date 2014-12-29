@@ -2,9 +2,9 @@ package net.year4000.mapnodes.commands.node;
 
 import net.year4000.mapnodes.NodeFactory;
 import net.year4000.mapnodes.api.MapNodes;
+import net.year4000.mapnodes.api.exceptions.InvalidJsonException;
+import net.year4000.mapnodes.api.exceptions.WorldLoadException;
 import net.year4000.mapnodes.api.game.GameStage;
-import net.year4000.mapnodes.exceptions.InvalidJsonException;
-import net.year4000.mapnodes.exceptions.WorldLoadException;
 import net.year4000.mapnodes.game.Node;
 import net.year4000.mapnodes.map.MapFactory;
 import net.year4000.mapnodes.messages.Msg;
@@ -51,7 +51,8 @@ public final class NodeSub {
             try {
                 NodeFactory.get().addMap(MapFactory.getMap(mapName));
                 sender.sendMessage(Msg.locale(sender, "cmd.node.add", mapName));
-            } catch (InvalidJsonException | WorldLoadException e) {
+            }
+            catch (InvalidJsonException | WorldLoadException e) {
                 throw new CommandException(e.getMessage());
             }
         }

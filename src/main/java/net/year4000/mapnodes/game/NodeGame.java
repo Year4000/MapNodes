@@ -9,29 +9,33 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.NodeFactory;
-import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.events.game.GameClockEvent;
 import net.year4000.mapnodes.api.events.game.GameLoadEvent;
 import net.year4000.mapnodes.api.events.game.GameStartEvent;
 import net.year4000.mapnodes.api.events.game.GameStopEvent;
+import net.year4000.mapnodes.api.exceptions.InvalidJsonException;
 import net.year4000.mapnodes.api.game.*;
 import net.year4000.mapnodes.api.game.modes.GameMode;
 import net.year4000.mapnodes.api.game.modes.GameModeConfig;
+import net.year4000.mapnodes.api.game.regions.Region;
+import net.year4000.mapnodes.api.game.scoreboard.GameSidebarGoal;
 import net.year4000.mapnodes.api.utils.Operations;
+import net.year4000.mapnodes.api.utils.Spectator;
+import net.year4000.mapnodes.api.utils.Validator;
 import net.year4000.mapnodes.clocks.Clocker;
 import net.year4000.mapnodes.clocks.NextNode;
 import net.year4000.mapnodes.clocks.RestartServer;
 import net.year4000.mapnodes.clocks.StartGame;
-import net.year4000.mapnodes.exceptions.InvalidJsonException;
-import net.year4000.mapnodes.game.regions.Region;
 import net.year4000.mapnodes.game.regions.RegionEvents;
 import net.year4000.mapnodes.game.scoreboard.ScoreboardFactory;
 import net.year4000.mapnodes.game.scoreboard.SidebarGoal;
-import net.year4000.mapnodes.game.system.Spectator;
 import net.year4000.mapnodes.messages.Message;
 import net.year4000.mapnodes.messages.MessageManager;
 import net.year4000.mapnodes.messages.Msg;
-import net.year4000.mapnodes.utils.*;
+import net.year4000.mapnodes.utils.Common;
+import net.year4000.mapnodes.utils.MathUtil;
+import net.year4000.mapnodes.utils.SchedulerUtil;
+import net.year4000.mapnodes.utils.TimeUtil;
 import net.year4000.mapnodes.utils.typewrappers.GameSet;
 import net.year4000.utilities.bukkit.BukkitUtil;
 import net.year4000.utilities.bukkit.ItemUtil;
@@ -64,32 +68,25 @@ public final class NodeGame implements GameManager, Validator {
     /** Details about the current map. */
     @Since(1.0)
     private NodeMap map = null;
-
     /** General game settings. */
     @Since(1.0)
     @SerializedName("world")
     private NodeConfig config = null;
-
     /** The mini locale system built right into the map.json */
     @Since(1.0)
     private Map<String, Map<String, String>> locales = new ConcurrentHashMap<>();
-
     @Since(1.0)
     @SerializedName("games")
     private GameSet<GameMode> gameModes = new GameSet<>();
-
     /** Manage the items and effects that are given to the player. */
     @Since(1.0)
     private Map<String, NodeKit> kits = new ConcurrentHashMap<>();
-
     /** Manage the regions and zones that can apply effects. */
     @Since(1.0)
     private Map<String, NodeRegion> regions = new ConcurrentHashMap<>();
-
     /** Manages the teams. */
     @Since(1.0)
     private Map<String, NodeTeam> teams = new ConcurrentHashMap<>();
-
     /** Classes to pick from on top of your team. */
     @Since(1.0)
     private Map<String, NodeClass> classes = new ConcurrentHashMap<>();
@@ -121,10 +118,10 @@ public final class NodeGame implements GameManager, Validator {
         checkArgument(teams.size() != 0, Msg.util("settings.team"));
 
         // Validate components
-        teams.values().forEach(NodeTeam::validate);
+        teams.values().forEach(GameTeam::validate);
 
         // Validate components
-        classes.values().forEach(NodeClass::validate);
+        classes.values().forEach(GameClass::validate);
     }
 
     /*//--------------------------------------------//
@@ -140,7 +137,7 @@ public final class NodeGame implements GameManager, Validator {
     private transient Map<Locale, Inventory> teamChooser = new HashMap<>();
     private transient Map<Locale, Inventory> classKitChooser = new HashMap<>();
     private transient ScoreboardFactory scoreboardFactory;
-    private transient Map<String, SidebarGoal> sidebarGoals = new LinkedHashMap<>();
+    private transient Map<String, GameSidebarGoal> sidebarGoals = new LinkedHashMap<>();
     private transient List<Operations> startControls = new CopyOnWriteArrayList<>();
     private transient long startTime, stopTime;
     @Setter(AccessLevel.NONE)
@@ -169,10 +166,18 @@ public final class NodeGame implements GameManager, Validator {
         new GameLoadEvent(this).call();
 
         // Create GUI for all locales
-        for (Locale locale : MessageManager.get().getLocales().keySet()) {
-            teamChooser.put(locale, createTeamChooserMenu(locale));
-            classKitChooser.put(locale, createClassKitChooserMenu(locale));
+        if (MessageManager.get().getLocales().size() == 0) {
+            Locale defaultLocale = new Locale(Message.DEFAULT_LOCALE);
+            teamChooser.put(defaultLocale, createTeamChooserMenu(defaultLocale));
+            classKitChooser.put(defaultLocale, createClassKitChooserMenu(defaultLocale));
         }
+        else {
+            for (Locale locale : MessageManager.get().getLocales().keySet()) {
+                teamChooser.put(locale, createTeamChooserMenu(locale));
+                classKitChooser.put(locale, createClassKitChooserMenu(locale));
+            }
+        }
+
 
         // Run heavy resource tasks
         regions.values().parallelStream().forEach(region -> region.getZoneSet().forEach(Region::getPoints));
@@ -224,23 +229,31 @@ public final class NodeGame implements GameManager, Validator {
     // START Sidebar Things //
 
     /** Add a dynamic goal to the scoreboard */
-    public SidebarGoal addDynamicGoal(String id, String display, int score) {
-        return sidebarGoals.put(id, new SidebarGoal(SidebarGoal.GoalType.DYNAMIC, display, score, ""));
+    public GameSidebarGoal addDynamicGoal(String id, String display, int score) {
+        GameSidebarGoal goal = sidebarGoals.put(id, new SidebarGoal(this, GameSidebarGoal.GoalType.DYNAMIC, display, score, ""));
+        scoreboardFactory.setAllGameSidebar();
+        return goal;
     }
 
     /** Add a dynamic goal to the scoreboard */
-    public SidebarGoal addDynamicGoal(String id, String owner, String display, int score) {
-        return sidebarGoals.put(id, new SidebarGoal(SidebarGoal.GoalType.DYNAMIC, display, score, owner));
+    public GameSidebarGoal addDynamicGoal(String id, String owner, String display, int score) {
+        GameSidebarGoal goal = sidebarGoals.put(id, new SidebarGoal(this, SidebarGoal.GoalType.DYNAMIC, display, score, owner));
+        scoreboardFactory.setAllGameSidebar();
+        return goal;
     }
 
     /** Add a static foal to the scoreboard */
-    public SidebarGoal addStaticGoal(String id, String display) {
-        return sidebarGoals.put(id, new SidebarGoal(SidebarGoal.GoalType.STATIC, display, null, ""));
+    public GameSidebarGoal addStaticGoal(String id, String display) {
+        GameSidebarGoal goal = sidebarGoals.put(id, new SidebarGoal(this, SidebarGoal.GoalType.STATIC, display, null, ""));
+        scoreboardFactory.setAllGameSidebar();
+        return goal;
     }
 
     /** Add a static foal to the scoreboard */
-    public SidebarGoal addStaticGoal(String id, String owner, String display) {
-        return sidebarGoals.put(id, new SidebarGoal(SidebarGoal.GoalType.STATIC, display, null, owner));
+    public GameSidebarGoal addStaticGoal(String id, String owner, String display) {
+        GameSidebarGoal goal = sidebarGoals.put(id, new SidebarGoal(this, SidebarGoal.GoalType.STATIC, display, null, owner));
+        scoreboardFactory.setAllGameSidebar();
+        return goal;
     }
 
     // END Sidebar Things //
@@ -253,6 +266,7 @@ public final class NodeGame implements GameManager, Validator {
         Inventory inv = Bukkit.createInventory(null, base, Common.truncate(Msg.locale(locale.toString(), "class.menu.title"), 32));
 
         ItemStack[] items = classes.values().stream()
+            .map(clazz -> clazz)
             .map(clazz -> clazz.createClassIcon(locale))
             .collect(Collectors.toList())
             .toArray(new ItemStack[base]);
@@ -287,7 +301,7 @@ public final class NodeGame implements GameManager, Validator {
     }
 
     /** Update the team chooser menu for all locales */
-    public void updateTeamChooserMenu() {
+    void updateTeamChooserMenu() {
         teamChooser.forEach(this::updateTeamChooserMenu);
     }
 
@@ -307,7 +321,7 @@ public final class NodeGame implements GameManager, Validator {
         )));
         items[0] = rand;
 
-        Collection<NodeTeam> onlySpectator = new ArrayList<>(getTeams().values());
+        Collection<GameTeam> onlySpectator = new ArrayList<>(getTeams().values());
         onlySpectator.removeAll(getPlayingTeams().collect(Collectors.toList()));
 
         for (GameTeam team : this.teams.values().size() == 2 ? onlySpectator : this.teams.values()) {
@@ -388,8 +402,10 @@ public final class NodeGame implements GameManager, Validator {
         return players.get(player);
     }
 
-    public Stream<NodeTeam> getPlayingTeams() {
-        return teams.values().stream().filter(team -> !(team instanceof Spectator));
+    public Stream<GameTeam> getPlayingTeams() {
+        return teams.values().stream()
+            .filter(team -> !(team instanceof Spectator))
+            .map(team -> (GameTeam) team);
     }
 
     /** Checks if the player can join the specific team */
@@ -415,7 +431,7 @@ public final class NodeGame implements GameManager, Validator {
         }
         // Get by name
         else {
-            List<NodeTeam> stream = teams.values().stream()
+            List<GameTeam> stream = teams.values().stream()
                 .filter(team -> team.getDisplayName().equalsIgnoreCase(name))
                 .collect(Collectors.toList());
 
@@ -428,8 +444,32 @@ public final class NodeGame implements GameManager, Validator {
         }
     }
 
-    public NodeClass getClassKit(String name) {
-        List<NodeClass> stream = classes.values().stream()
+    @SuppressWarnings("unchecked")
+    @Override
+    public Map<String, GameClass> getClasses() {
+        return (Map) classes;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public Map<String, GameTeam> getTeams() {
+        return (Map) teams;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public Map<String, GameRegion> getRegions() {
+        return (Map) regions;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public Map<String, GameKit> getKits() {
+        return (Map) kits;
+    }
+
+    public GameClass getClassKit(String name) {
+        List<GameClass> stream = classes.values().stream()
             .filter(clazz -> clazz.getName().equalsIgnoreCase(MessageUtil.stripColors(name)))
             .collect(Collectors.toList());
 
@@ -518,7 +558,9 @@ public final class NodeGame implements GameManager, Validator {
             .forEach(RegionEvents::registerEvents);
 
         // Assign the events reference the the region they belong to
-        regions.values().stream().filter(region -> region.getEvents() != null).forEach(region -> region.getEvents().assignRegion(region));
+        regions.values().stream()
+            .filter(region -> region.getEvents() != null)
+            .forEach(region -> region.getEvents().assignRegion((NodeRegion) region));
 
         // Close spectator inventories
         Stream.concat(start.getGame().getSpectating(), start.getGame().getEntering()).forEach(player -> player.getPlayer().closeInventory());
@@ -553,13 +595,13 @@ public final class NodeGame implements GameManager, Validator {
 
         stop.getGame().getPlayers().forEach(player -> {
             player.getPlayer().closeInventory();
-            ((NodePlayer) player).joinTeam(null);
+            player.joinSpectatorTeam();
             ((NodeGame) stop.getGame()).getScoreboardFactory().setGameSidebar((NodePlayer) player);
         });
 
         // Unregister region events
         regions.values().stream()
-            .map(NodeRegion::getEvents)
+            .map(region -> region.getEvents())
             .filter(e -> e != null)
             .forEach(RegionEvents::unregisterEvents);
 

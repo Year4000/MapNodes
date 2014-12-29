@@ -31,7 +31,8 @@ public final class MatchSub {
             checkArgument(!MapNodes.getCurrentGame().getStage().isStarting());
             checkArgument(!MapNodes.getCurrentGame().getStage().isPlaying());
             checkArgument(!MapNodes.getCurrentGame().getStage().isEndGame());
-        } catch (IllegalArgumentException e) {
+        }
+        catch (IllegalArgumentException e) {
             throw new CommandException(e.getMessage());
         }
 
@@ -40,7 +41,7 @@ public final class MatchSub {
             ((NodeGame) MapNodes.getCurrentGame()).start();
         }
         // Start the game with the clock
-        else if (args.argsLength() > 0){
+        else if (args.argsLength() > 0) {
             new StartGame(args.getInteger(0)).run();
         }
         else {
@@ -59,13 +60,14 @@ public final class MatchSub {
             try {
                 checkArgument(!MapNodes.getCurrentGame().getStage().isPreGame());
                 checkArgument(!MapNodes.getCurrentGame().getStage().isEndGame());
-            } catch (IllegalArgumentException e) {
+            }
+            catch (IllegalArgumentException e) {
                 throw new CommandException(e.getMessage());
             }
         }
 
         // Stop the game with the clock
-        if (args.argsLength() > 0){
+        if (args.argsLength() > 0) {
             ((NodeGame) MapNodes.getCurrentGame()).stop(args.getInteger(0));
         }
         else {
@@ -84,7 +86,8 @@ public final class MatchSub {
         try {
             checkArgument(!MapNodes.getCurrentGame().getStage().isPreGame());
             checkArgument(!MapNodes.getCurrentGame().getStage().isEndGame());
-        } catch (IllegalArgumentException e) {
+        }
+        catch (IllegalArgumentException e) {
             throw new CommandException(e.getMessage());
         }
 
@@ -106,7 +109,8 @@ public final class MatchSub {
             else {
                 new GameWinEvent().call();
             }
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             throw new CommandException(e);
         }
     }

@@ -45,8 +45,8 @@ public class StartGame extends Clocker {
         }
 
         running = true;
-        ((NodeGame)MapNodes.getCurrentGame()).setStage(NodeStage.STARTING);
-        ((NodeGame)MapNodes.getCurrentGame()).setStartClock(this);
+        ((NodeGame) MapNodes.getCurrentGame()).setStage(NodeStage.STARTING);
+        ((NodeGame) MapNodes.getCurrentGame()).setStartClock(this);
         GameMap map = MapNodes.getCurrentGame().getMap();
 
         MapNodesPlugin.log(Msg.util("clocks.start.first", map.getName(), (new TimeUtil(sec(position) - 1, TimeUnit.SECONDS)).rawOutput()));
@@ -96,7 +96,7 @@ public class StartGame extends Clocker {
             BossBar.removeBar(player.getPlayer());
         });
 
-        ((NodeGame)MapNodes.getCurrentGame()).start();
+        ((NodeGame) MapNodes.getCurrentGame()).start();
         running = false;
     }
 }

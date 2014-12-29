@@ -4,7 +4,7 @@ import com.google.common.collect.Iterables;
 import lombok.Getter;
 import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.Settings;
-import net.year4000.mapnodes.exceptions.InvalidMapException;
+import net.year4000.mapnodes.api.exceptions.InvalidMapException;
 import net.year4000.mapnodes.messages.Msg;
 
 import javax.annotation.Nullable;
@@ -32,12 +32,14 @@ public class MapFactory {
                         try {
                             MapNodesPlugin.debug(Msg.util("debug.map.loaded", world.getName()));
                             folders.put(world.getName(), new MapFolder(world));
-                        } catch (InvalidMapException e) {
+                        }
+                        catch (InvalidMapException e) {
                             MapNodesPlugin.debug(e.getMessage());
                         }
                     }
                 }
-            } catch (SecurityException e) {
+            }
+            catch (SecurityException e) {
                 MapNodesPlugin.debug(e.getMessage());
             }
         });
@@ -74,13 +76,13 @@ public class MapFactory {
     public static List<MapFolder> getMaps(int number) {
         Stream<MapFolder> enabledFolders = folders.values().parallelStream().filter(m -> !m.isDisabled());
         List<MapFolder> maps = new ArrayList<>(enabledFolders.collect(Collectors.toList()));
-        
+
         // Reverse and shuffle the maps based on the number of maps
         for (int i = 0; i < maps.size(); i++) {
             Collections.reverse(maps);
             Collections.shuffle(maps);
         }
-        
+
         Iterator<MapFolder> mapFolderIterator = Iterables.cycle(maps).iterator();
 
         return new ArrayList<MapFolder>() {{

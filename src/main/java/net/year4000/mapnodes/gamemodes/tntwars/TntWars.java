@@ -4,14 +4,12 @@ import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.events.game.GameLoadEvent;
 import net.year4000.mapnodes.api.events.player.GamePlayerStartEvent;
 import net.year4000.mapnodes.api.events.team.GameTeamWinEvent;
+import net.year4000.mapnodes.api.game.GameManager;
 import net.year4000.mapnodes.api.game.GamePlayer;
+import net.year4000.mapnodes.api.game.GameRegion;
 import net.year4000.mapnodes.api.game.GameTeam;
 import net.year4000.mapnodes.api.game.modes.GameMode;
 import net.year4000.mapnodes.api.game.modes.GameModeInfo;
-import net.year4000.mapnodes.game.NodeGame;
-import net.year4000.mapnodes.game.NodePlayer;
-import net.year4000.mapnodes.game.NodeRegion;
-import net.year4000.mapnodes.game.NodeTeam;
 import net.year4000.mapnodes.game.regions.types.Global;
 import net.year4000.mapnodes.game.regions.types.Point;
 import net.year4000.mapnodes.gamemodes.GameModeTemplate;
@@ -43,14 +41,18 @@ import java.util.stream.Collectors;
 public class TntWars extends GameModeTemplate implements GameMode {
     private TntWarsConfig gameModeConfig;
     private Map<String, Integer> scores = new HashMap<>();
-    private NodeGame game;
+    private GameManager game;
     private GameTeam winner;
     private int winnerScore;
+    private Map<Integer, Vector> locations = new HashMap<>();
+    private List<Integer> fromDispenser = new ArrayList<>();
+
+    // Safe TNT //
 
     @EventHandler
     public void onLoad(GameLoadEvent event) {
         gameModeConfig = getConfig();
-        game = (NodeGame) event.getGame();
+        game = event.getGame();
         game.addStartTime(60);
 
         // Add max if map has max score
@@ -76,11 +78,6 @@ public class TntWars extends GameModeTemplate implements GameMode {
         event.setImmortal(false);
     }
 
-    // Safe TNT //
-
-    private Map<Integer, Vector> locations = new HashMap<>();
-    private List<Integer> fromDispenser = new ArrayList<>();
-
     @EventHandler
     public void onPrimed(ExplosionPrimeEvent event) {
         locations.put(event.getEntity().getEntityId(), event.getEntity().getLocation().toVector());
@@ -88,7 +85,9 @@ public class TntWars extends GameModeTemplate implements GameMode {
 
     @EventHandler
     public void onPrimed(BlockDispenseEntityEvent event) {
-        if (!(event.getEntity() instanceof TNTPrimed)) return;
+        if (!(event.getEntity() instanceof TNTPrimed)) {
+            return;
+        }
 
         locations.put(event.getEntity().getEntityId(), event.getEntity().getLocation().toVector());
         fromDispenser.add(event.getEntity().getEntityId());
@@ -122,7 +121,8 @@ public class TntWars extends GameModeTemplate implements GameMode {
                     event.setCancelled(true);
                 }
             }
-        } catch (NullPointerException e) {
+        }
+        catch (NullPointerException e) {
             // Not a proper entity
         }
     }
@@ -143,13 +143,15 @@ public class TntWars extends GameModeTemplate implements GameMode {
     @EventHandler(ignoreCancelled = true)
     public void onTNT(EntityExplodeEvent event) {
         Point point = new Point(event.getLocation().toVector().toBlockVector());
-        List<NodeRegion> regionList = game.getRegions().values().stream()
+        List<GameRegion> regionList = game.getRegions().values().stream()
             .filter(region -> region.getZones().stream().filter(zone -> zone instanceof Global || zone instanceof net.year4000.mapnodes.game.regions.types.Void).count() == 0)
             .filter(region -> region.inZone(point))
             .sorted((r, l) -> r.getWeight() < l.getWeight() ? 1 : -1)
             .collect(Collectors.toList());
 
-        if (regionList.size() == 0) return;
+        if (regionList.size() == 0) {
+            return;
+        }
 
         String regionName = regionList.get(0).getId();
         TntWarsConfig.Island island = gameModeConfig.getIsland(regionName);
@@ -167,11 +169,10 @@ public class TntWars extends GameModeTemplate implements GameMode {
     }
 
     /** Add the amount of points to a team and set the winner */
-    public void addPoint(NodeGame game, GameTeam team, int amount) {
-        int newScore = scores.get(((NodeTeam) team).getId()) + amount;
-        scores.put(((NodeTeam) team).getId(), newScore);
-        game.getSidebarGoals().get(((NodeTeam) team).getId()).setScore(scores.get(((NodeTeam) team).getId()));
-        game.getPlaying().forEach(p -> (game.getScoreboardFactory()).setGameSidebar((NodePlayer) p));
+    public void addPoint(GameManager game, GameTeam team, int amount) {
+        int newScore = scores.get(team.getId()) + amount;
+        scores.put(team.getId(), newScore);
+        game.getSidebarGoals().get(team.getId()).setScore(scores.get(team.getId()));
 
         // If game team new score is higher than all set as winner
         if (newScore > scores.values().stream().sorted().collect(Collectors.toList()).get(0)) {

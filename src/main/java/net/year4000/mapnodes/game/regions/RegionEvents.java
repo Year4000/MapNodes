@@ -1,6 +1,7 @@
 package net.year4000.mapnodes.game.regions;
 
 import net.year4000.mapnodes.MapNodesPlugin;
+import net.year4000.mapnodes.api.game.regions.RegionListener;
 import net.year4000.mapnodes.game.NodeRegion;
 import net.year4000.mapnodes.messages.Msg;
 import org.bukkit.Bukkit;

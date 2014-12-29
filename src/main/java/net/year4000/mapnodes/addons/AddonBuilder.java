@@ -41,9 +41,11 @@ public class AddonBuilder {
                 infos.add(info);
 
                 MapNodesPlugin.debug(Msg.util("addon.start", info.name(), info.version()));
-            } catch (InstantiationException | IllegalAccessException e) {
+            }
+            catch (InstantiationException | IllegalAccessException e) {
                 MapNodesPlugin.debug(e, true);
-            } catch (NullPointerException e) {
+            }
+            catch (NullPointerException e) {
                 MapNodesPlugin.debug(Msg.util("addon.invalid", clazz.getSimpleName()));
             }
         });

@@ -3,12 +3,11 @@ package net.year4000.mapnodes.game;
 import com.google.gson.annotations.Since;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import net.year4000.mapnodes.api.exceptions.InvalidJsonException;
+import net.year4000.mapnodes.api.game.GameManager;
 import net.year4000.mapnodes.api.game.GameMap;
-import net.year4000.mapnodes.exceptions.InvalidJsonException;
 import net.year4000.mapnodes.messages.Msg;
-import net.year4000.mapnodes.utils.AssignNodeGame;
 import net.year4000.mapnodes.utils.Common;
-import net.year4000.mapnodes.utils.Validator;
 import net.year4000.utilities.ChatColor;
 import net.year4000.utilities.bukkit.MessageUtil;
 import org.bukkit.command.CommandSender;
@@ -22,7 +21,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 @Data
 @NoArgsConstructor
 /** Details about the current map. */
-public final class NodeMap implements GameMap, Validator, AssignNodeGame {
+public final class NodeMap implements GameMap {
     /** The name of the current map. */
     @Since(1.0)
     private String name = null;
@@ -38,6 +37,7 @@ public final class NodeMap implements GameMap, Validator, AssignNodeGame {
     /** Any one that has helped with current the map. */
     @Since(1.0)
     private List<String> authors = new ArrayList<>();
+    private transient GameManager game;
 
     @Override
     public void validate() throws InvalidJsonException {
@@ -54,10 +54,8 @@ public final class NodeMap implements GameMap, Validator, AssignNodeGame {
          Upper Json Settings / Bellow Instance Code
     *///--------------------------------------------//
 
-    private transient NodeGame game;
-
     /** Assign the game to this region */
-    public void assignNodeGame(NodeGame game) {
+    public void assignNodeGame(GameManager game) {
         this.game = game;
     }
 
@@ -68,7 +66,7 @@ public final class NodeMap implements GameMap, Validator, AssignNodeGame {
 
     /** Map title includes map name and map version */
     public String title() {
-        return  ChatColor.GREEN + name + " " + Common.formatSeparators(version, ChatColor.GRAY, ChatColor.DARK_GRAY);
+        return ChatColor.GREEN + name + " " + Common.formatSeparators(version, ChatColor.GRAY, ChatColor.DARK_GRAY);
     }
 
     /** Get other authors */
@@ -85,7 +83,7 @@ public final class NodeMap implements GameMap, Validator, AssignNodeGame {
 
     /** Get multi line description */
     public List<String> getMultiLineDescription(String locale) {
-        return  getMultiLineDescription(locale, 6);
+        return getMultiLineDescription(locale, 6);
     }
 
     public List<String> getMultiLineDescription(String locale, int size) {
@@ -96,7 +94,7 @@ public final class NodeMap implements GameMap, Validator, AssignNodeGame {
         int counter = 0;
 
         for (String word : spited) {
-            counter ++;
+            counter++;
             boolean last = spited.length == counter;
 
             line += word + " ";

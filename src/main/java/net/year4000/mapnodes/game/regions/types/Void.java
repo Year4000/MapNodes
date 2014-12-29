@@ -3,8 +3,9 @@ package net.year4000.mapnodes.game.regions.types;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import net.year4000.mapnodes.api.MapNodes;
-import net.year4000.mapnodes.game.regions.Region;
-import net.year4000.mapnodes.game.regions.RegionType;
+import net.year4000.mapnodes.api.game.regions.PointVector;
+import net.year4000.mapnodes.api.game.regions.Region;
+import net.year4000.mapnodes.api.game.regions.RegionType;
 import net.year4000.mapnodes.game.regions.RegionTypes;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -24,12 +25,12 @@ public class Void implements Region {
     }
 
     @Override
-    public List<Point> getPoints() {
+    public List<PointVector> getPoints() {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public boolean inRegion(Point region) {
+    public boolean inRegion(PointVector region) {
         for (int i = 0; i < WORLD_HEIGHT; i++) {
             if (MapNodes.getCurrentWorld().getBlockAt(region.getX(), 0, region.getZ()).getType() != Material.AIR) {
                 return false;

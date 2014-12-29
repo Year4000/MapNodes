@@ -3,21 +3,20 @@ package net.year4000.mapnodes.game;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.annotations.Since;
 import com.google.gson.annotations.Until;
-import lombok.AccessLevel;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.api.MapNodes;
-import net.year4000.mapnodes.api.game.GameKit;
-import net.year4000.mapnodes.api.game.GameMap;
-import net.year4000.mapnodes.api.game.GamePlayer;
-import net.year4000.mapnodes.api.game.GameTeam;
+import net.year4000.mapnodes.api.exceptions.InvalidJsonException;
+import net.year4000.mapnodes.api.game.*;
+import net.year4000.mapnodes.api.utils.Spectator;
 import net.year4000.mapnodes.clocks.Clocker;
-import net.year4000.mapnodes.exceptions.InvalidJsonException;
-import net.year4000.mapnodes.game.system.Spectator;
 import net.year4000.mapnodes.messages.Msg;
-import net.year4000.mapnodes.utils.*;
+import net.year4000.mapnodes.utils.Common;
+import net.year4000.mapnodes.utils.MathUtil;
+import net.year4000.mapnodes.utils.PacketHacks;
+import net.year4000.mapnodes.utils.TimeUtil;
 import net.year4000.mapnodes.utils.typewrappers.LocationList;
 import net.year4000.utilities.bukkit.BukkitUtil;
 import net.year4000.utilities.bukkit.FunEffectsUtil;
@@ -30,48 +29,34 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 import static net.year4000.mapnodes.utils.MathUtil.percent;
 import static net.year4000.mapnodes.utils.MathUtil.ticks;
 
 @Data
 @NoArgsConstructor
-/** Manges the teams. */
-public class NodeTeam implements GameTeam, Validator, AssignNodeGame {
+public class NodeTeam implements GameTeam {
     /** The name of the team. */
     @Since(1.0)
-    private String name = null;
-
+    protected String name = null;
     /** The color of the team. */
     @Since(1.0)
-    private ChatColor color = ChatColor.WHITE;
-
+    protected ChatColor color = ChatColor.WHITE;
     /** The max size of the team. */
     @Since(1.0)
-    private int size = 1;
-
+    protected int size = 1;
     /** Are teammates save from each other. */
     @Since(2.0)
     @SerializedName("friendly_fire")
-    private boolean allowFriendlyFire = false;
-
+    protected boolean allowFriendlyFire = false;
     /** Show each invisible teammates as ghosts. */
     @Since(2.0)
     @SerializedName("friendly_invisibles")
-    private boolean canSeeFriendlyInvisibles = true;
-
+    protected boolean canSeeFriendlyInvisibles = true;
     /** The kit this team will have. */
     @Since(1.0)
-    private String kit = "default"; // todo make a list to allow for multiple kits
-
-    /** Points to where the player can spawn. */
-    @Since(1.0)
-    private LocationList<Location> spawns = new LocationList<>();
-
-    /** Should this team be tracked by the scoreboard. */
-    @Until(1.0)
-    @SerializedName("scoreboard")
-    private boolean useScoreboard = true;
+    protected String kit = "default"; // todo make a list to allow for multiple kits
 
     @Override
     public void validate() throws InvalidJsonException {
@@ -88,10 +73,18 @@ public class NodeTeam implements GameTeam, Validator, AssignNodeGame {
          Upper Json Settings / Bellow Instance Code
     *///--------------------------------------------//
 
-    private transient NodeGame game;
-    @Setter(AccessLevel.NONE)
-    private transient String id;
+    public static final transient String SPECTATOR = "spectator";
     private transient static final String TEAM_FORMAT = "%s%s &7(%s&8/&6%d&7)";
+    @Getter(lazy = true)
+    private final transient String id = id();
+    /** Points to where the player can spawn. */
+    @Since(1.0)
+    protected LocationList<Location> spawns = new LocationList<>();
+    /** Should this team be tracked by the scoreboard. */
+    @Until(1.0)
+    @SerializedName("scoreboard")
+    protected boolean useScoreboard = true;
+    private transient GameManager game;
     private transient List<GamePlayer> players = new ArrayList<>();
     private transient Queue<GamePlayer> queue = new PriorityQueue<>();
 
@@ -101,24 +94,37 @@ public class NodeTeam implements GameTeam, Validator, AssignNodeGame {
         this.spawns = spawns;
     }
 
+    /** Get the book page for this map */
+    public static List<String> getBookPage(Player player) {
+        List<String> lines = new ArrayList<>();
+        Collection<GameTeam> teams = MapNodes.getCurrentGame().getPlayingTeams().collect(Collectors.toList());
+
+        lines.add(MessageUtil.message("&b&l%s&7:\n", Msg.locale(player, "map.teams")));
+        teams.stream().forEach(t -> lines.add(t.prettyPrint()));
+
+        return lines;
+    }
+
     /** Assign the game to this region */
-    public void assignNodeGame(NodeGame game) {
+    public void assignNodeGame(GameManager game) {
         this.game = game;
     }
 
     /** Get the id of this class and cache it */
-    public String getId() {
-        if (id == null) {
-            NodeTeam thisObject = this;
+    private String id() {
+        NodeTeam thisObject = this;
 
-            game.getTeams().forEach((string, object) -> {
-                if (object.equals(thisObject)) {
-                    id = string;
-                }
-            });
+        for (Map.Entry<String, GameTeam> entry : game.getTeams().entrySet()) {
+            if (thisObject.equals(entry.getValue())) {
+                return entry.getKey();
+            }
         }
 
-        return id;
+        throw new RuntimeException("Can not find the id of " + this.toString());
+    }
+
+    public Location getSafeRandomSpawn() {
+        return spawns.getSafeRandomSpawn();
     }
 
     /** Join this team or add to queue */
@@ -248,17 +254,6 @@ public class NodeTeam implements GameTeam, Validator, AssignNodeGame {
         return BukkitUtil.dyeColorToColor(BukkitUtil.chatColorToDyeColor(color));
     }
 
-    /** Get the book page for this map */
-    public static List<String> getBookPage(Player player) {
-        List<String> lines = new ArrayList<>();
-        Collection<NodeTeam> teams = MapNodes.getCurrentGame().getTeams().values();
-
-        lines.add(MessageUtil.message("&b&l%s&7:\n", Msg.locale(player, "map.teams")));
-        teams.stream().filter(NodeTeam::isUseScoreboard).forEach(t -> lines.add(t.prettyPrint()));
-
-        return lines;
-    }
-
     /** Get the icon for this team */
     public ItemStack getTeamIcon(Locale locale) {
         ItemStack i = new ItemStack(Material.LEATHER_CHESTPLATE);
@@ -282,6 +277,6 @@ public class NodeTeam implements GameTeam, Validator, AssignNodeGame {
             )));
         }
 
-        return  i;
+        return i;
     }
 }

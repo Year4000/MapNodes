@@ -4,10 +4,10 @@ import com.google.gson.annotations.SerializedName;
 import com.google.gson.annotations.Since;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import net.year4000.mapnodes.api.exceptions.InvalidJsonException;
 import net.year4000.mapnodes.api.game.GameConfig;
-import net.year4000.mapnodes.exceptions.InvalidJsonException;
+import net.year4000.mapnodes.api.utils.Validator;
 import net.year4000.mapnodes.messages.Msg;
-import net.year4000.mapnodes.utils.Validator;
 import net.year4000.mapnodes.utils.WorldTime;
 import net.year4000.mapnodes.utils.typewrappers.LocationList;
 import org.bukkit.Difficulty;
@@ -71,7 +71,7 @@ public final class NodeConfig implements GameConfig, Validator {
 
     /** Get a random spawn, it may not be safe for a player */
     public Location getRandomSpawn() {
-        return  spawn.get(new Random().nextInt(spawn.size()));
+        return spawn.get(new Random().nextInt(spawn.size()));
     }
 
     /** Try and get a safe random spawn or end with a random spawn that may not be safe */

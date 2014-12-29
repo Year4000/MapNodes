@@ -13,21 +13,12 @@ public enum EventTypes {
     TNT("tnt"),
     BOW("bow"),
     ITEM_DROP("item_drops"),
-    FALLING_BLOCKS("falling_blocks"),
-    ;
+    FALLING_BLOCKS("falling_blocks"),;
 
     private String name;
 
     EventTypes(String name) {
         this.name = name;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public boolean isType(String name) {
-        return this.getName().equals(name.toLowerCase());
     }
 
     public static EventTypes getFromName(String name) {
@@ -37,5 +28,13 @@ public enum EventTypes {
             }
         }
         return null;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public boolean isType(String name) {
+        return this.getName().equals(name.toLowerCase());
     }
 }

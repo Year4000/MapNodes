@@ -1,6 +1,5 @@
-package net.year4000.mapnodes.game.regions;
+package net.year4000.mapnodes.api.game.regions;
 
-import net.year4000.mapnodes.game.regions.types.Point;
 import org.bukkit.Location;
 import org.bukkit.World;
 
@@ -11,8 +10,8 @@ public interface Region {
     public List<Location> getLocations(World world);
 
     /** Get a list of all vector points */
-    public List<Point> getPoints();
+    public List<PointVector> getPoints();
 
     /** Is the point in the region */
-    public boolean inRegion(Point region);
+    public boolean inRegion(PointVector region);
 }

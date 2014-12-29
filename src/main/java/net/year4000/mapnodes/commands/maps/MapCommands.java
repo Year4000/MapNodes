@@ -75,7 +75,7 @@ public class MapCommands {
             throw new CommandException(Msg.locale(sender, "cmd.next.none"));
         }
 
-        sender.sendMessage(map(sender, "cmd.next", (GameManager)NodeFactory.get().peekNextQueued().getGame()));
+        sender.sendMessage(map(sender, "cmd.next", (GameManager) NodeFactory.get().peekNextQueued().getGame()));
     }
 
     /** The string for the map */

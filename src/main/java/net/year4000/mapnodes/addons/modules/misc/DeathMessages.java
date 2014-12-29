@@ -32,7 +32,9 @@ public class DeathMessages extends Addon implements Listener {
         Player killer = player.getKiller();
 
         // Check if your death was null
-        if (player.getLastDamageCause() == null) return;
+        if (player.getLastDamageCause() == null) {
+            return;
+        }
 
         GamePlayerDeathEvent deathEvent = new GamePlayerDeathEvent(event);
         deathEvent.call();
@@ -76,10 +78,10 @@ public class DeathMessages extends Addon implements Listener {
 
         return MessageUtil.message(
             "&7&o" + Msg.locale(viewer, message,
-            gm.getPlayer(d).getPlayerColor() + "&7&o",
-            gm.getPlayer(k).getPlayerColor() + "&7&o",
-            String.valueOf(args)
-        ));
+                gm.getPlayer(d).getPlayerColor() + "&7&o",
+                gm.getPlayer(k).getPlayerColor() + "&7&o",
+                String.valueOf(args)
+            ));
     }
 
     /** Format the item so humans can read it. */
@@ -119,7 +121,7 @@ public class DeathMessages extends Addon implements Listener {
             case LIGHTNING:
                 return replace(k, d, viewer, "death.lighting");
             case PROJECTILE:
-                int distance = (int)Math.sqrt(k.getLocation().distanceSquared(d.getLocation()));
+                int distance = (int) Math.sqrt(k.getLocation().distanceSquared(d.getLocation()));
                 return replace(k, d, viewer, "death.projectile", String.valueOf(distance));
             case MAGIC:
                 return replace(k, d, viewer, "death.magic");

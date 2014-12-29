@@ -1,4 +1,4 @@
-package net.year4000.mapnodes.game.regions;
+package net.year4000.mapnodes.api.game.regions;
 
 import net.year4000.mapnodes.game.NodeRegion;
 import org.bukkit.event.Listener;

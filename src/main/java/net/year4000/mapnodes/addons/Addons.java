@@ -18,7 +18,7 @@ public class Addons {
 
     /** The addon builder */
     public AddonBuilder builder() {
-        return  builder;
+        return builder;
     }
 
     /** Get the class of the addon */

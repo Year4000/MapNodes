@@ -28,7 +28,8 @@ public class DamageCauseListDeserializer implements JsonDeserializer<List<Entity
 
             try {
                 newList.add(EntityDamageEvent.DamageCause.valueOf(itemName.toUpperCase()));
-            } catch (IllegalArgumentException e) {
+            }
+            catch (IllegalArgumentException e) {
                 MapNodesPlugin.debug(Msg.util("settings.damagecause", itemName));
             }
         }

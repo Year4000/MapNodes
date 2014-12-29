@@ -5,10 +5,10 @@ import com.google.common.collect.Iterables;
 import lombok.AllArgsConstructor;
 import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.game.GamePlayer;
+import net.year4000.mapnodes.api.utils.Spectator;
 import net.year4000.mapnodes.game.NodeGame;
 import net.year4000.mapnodes.game.NodePlayer;
 import net.year4000.mapnodes.game.NodeTeam;
-import net.year4000.mapnodes.game.system.Spectator;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.*;
 import net.year4000.utilities.ChatColor;
@@ -32,9 +32,6 @@ import java.util.stream.Stream;
 @AllArgsConstructor
 public class ScoreboardFactory {
     private static final ScoreboardManager manager = Bukkit.getScoreboardManager();
-    private transient final ConcurrentMap<Scoreboard, List<Team>> tabListTeamNames = new ConcurrentHashMap<>();
-    private final NodeGame game;
-
     // Fancy Title
     private static final Set<String> shimmer = ImmutableSet.of("3", "b", "8", "7", "2", "a", "4", "c", "5", "d", "6", "e", "1", "9");
     private static final String NAME = "Year4000";
@@ -65,6 +62,9 @@ public class ScoreboardFactory {
                 });
         }, 20L);
     }
+
+    private transient final ConcurrentMap<Scoreboard, List<Team>> tabListTeamNames = new ConcurrentHashMap<>();
+    private final NodeGame game;
 
     /** Create a scoreboard for the player */
     public Scoreboard createScoreboard(NodePlayer player) {

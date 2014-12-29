@@ -12,9 +12,10 @@ import java.util.List;
 @Getter
 @Setter
 public class PlayerInventoryList<T> extends ArrayList<T> implements List<T> {
-    public PlayerInventoryList(){}
-
     private List<SlotItem> rawItems = new ArrayList<>();
+
+    public PlayerInventoryList() {
+    }
 
     public List<ItemStack> getNonAirItems() {
         List<ItemStack> list = new ArrayList<>();

@@ -33,17 +33,23 @@ public abstract class Clocker {
 
     /** Simple math formula to convert ticks to secs. */
     public int sec(int ticks) {
-        return ticks/20 + 1;
+        return ticks / 20 + 1;
     }
 
     /** Code to ran each clock tock. */
-    public void runFirst(int position) {};
+    public void runFirst(int position) {
+    }
+
+    ;
 
     /** Code to ran each clock tock. */
     public abstract void runTock(int position);
 
     /** Code to be ran on the last clock tick. */
-    public void runLast(int position) {};
+    public void runLast(int position) {
+    }
+
+    ;
 
     public void reduceTime(int time) {
         clock.index -= MathUtil.ticks(time);
@@ -54,9 +60,9 @@ public abstract class Clocker {
     }
 
     public class Clock implements Runnable {
+        public BukkitTask task;
         @Getter
         private int index;
-        public BukkitTask task;
 
         protected Clock(int index) {
             this.index = index;

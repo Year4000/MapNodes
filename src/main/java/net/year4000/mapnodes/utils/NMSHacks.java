@@ -16,7 +16,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.scoreboard.Team;
 
 public final class NMSHacks {
-    private NMSHacks() {}
+    private NMSHacks() {
+    }
 
     /** Is the team registered */
     public static boolean isTeamRegistered(Team team) {

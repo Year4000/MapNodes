@@ -17,7 +17,8 @@ public final class Git {
         try {
             InputStream gitProperties = Git.class.getResourceAsStream(GIT_PROPERTIES);
             git.load(new InputStreamReader(gitProperties, Charsets.UTF_8));
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             MapNodesPlugin.log(e, true);
         }
     }

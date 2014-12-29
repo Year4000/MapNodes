@@ -13,7 +13,7 @@ public final class Network {
     private String name = UNKNOWN;
 
     public void updateName() {
-        String[] header = new String[] {"GetServer"};
+        String[] header = new String[]{"GetServer"};
         final Network network = this;
 
         MapNodesPlugin.getInst().getConnector().send(header, (data, error) -> {

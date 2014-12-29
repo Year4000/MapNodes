@@ -5,11 +5,12 @@ import com.google.gson.annotations.Since;
 import lombok.Getter;
 import lombok.Setter;
 import net.year4000.mapnodes.api.game.GamePlayer;
+import net.year4000.mapnodes.api.game.GameRegion;
+import net.year4000.mapnodes.api.utils.Spectator;
 import net.year4000.mapnodes.game.NodePlayer;
 import net.year4000.mapnodes.game.NodeRegion;
 import net.year4000.mapnodes.game.NodeTeam;
 import net.year4000.mapnodes.game.regions.types.Point;
-import net.year4000.mapnodes.game.system.Spectator;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.Common;
 import net.year4000.mapnodes.utils.typewrappers.ItemStackList;
@@ -64,7 +65,7 @@ public abstract class RegionEvent {
 
     /** Should this event run based on the internal weight system */
     public boolean shouldRunEvent(Point point) {
-        List<NodeRegion> regions = region.getGame().getRegions().values().stream()
+        List<GameRegion> regions = region.getGame().getRegions().values().stream()
             .filter(r -> r.inZone(point))
             .sorted((r, l) -> r.getWeight() < l.getWeight() ? 1 : -1)
             .collect(Collectors.toList());
@@ -108,14 +109,18 @@ public abstract class RegionEvent {
 
     /** Teleport the player to a random safe location */
     public void teleportPlayer(GamePlayer player) {
-        if (teleport.size() == 0) return;
+        if (teleport.size() == 0) {
+            return;
+        }
 
         player.getPlayer().teleport(teleport.getSafeRandomSpawn());
     }
 
     /** Send the message to the player */
     public void sendMessage(GamePlayer player) {
-        if (message == null || message.equals("")) return;
+        if (message == null || message.equals("")) {
+            return;
+        }
 
         // Translate by map first
         String translatedMessage = ((NodePlayer) player).getGame().locale(player.getPlayer().getLocale(), message);

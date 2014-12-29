@@ -2,8 +2,8 @@ package net.year4000.mapnodes.game.kits;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import net.year4000.mapnodes.exceptions.InvalidJsonException;
-import net.year4000.mapnodes.utils.Validator;
+import net.year4000.mapnodes.api.exceptions.InvalidJsonException;
+import net.year4000.mapnodes.api.utils.Validator;
 import org.bukkit.Material;
 
 @Data

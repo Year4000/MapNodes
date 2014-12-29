@@ -17,7 +17,7 @@ import static com.google.common.base.Preconditions.checkArgument;
  *
  * @param <A> The Annotation type must contain a value() method.
  * @param <E> The Enum type that contains the values, this is
- *              the return type of the annotation value() method.
+ *            the return type of the annotation value() method.
  * @param <L> The Listener type the will be registered.
  */
 @Beta
@@ -43,7 +43,8 @@ public abstract class ClassLoaderFactory<A, E, L> {
             try {
                 Annotation typeName = type.getAnnotation(annotationClass);
                 eventTypes.put((A) typeName, type);
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 MapNodesPlugin.log(e, false);
             }
         });
@@ -60,7 +61,8 @@ public abstract class ClassLoaderFactory<A, E, L> {
                 if (((E) type.getClass().getMethod("value").invoke(type)).equals(name.toLowerCase())) {
                     return eventTypes.get(type);
                 }
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 MapNodesPlugin.debug(e, true);
             }
         }

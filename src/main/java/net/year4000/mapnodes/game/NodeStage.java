@@ -29,6 +29,7 @@ public enum NodeStage implements GameStage {
         GameStage stage = MapNodes.getCurrentGame().getStage();
         return stage == NodeStage.ENDED || stage == NodeStage.ENDING;
     }
+
     /** Is the server running. */
     public boolean isWaiting() {
         GameStage stage = MapNodes.getCurrentGame().getStage();
@@ -57,16 +58,21 @@ public enum NodeStage implements GameStage {
     public String getStageColor() {
         String color;
 
-        if (isWaiting())
+        if (isWaiting()) {
             color = "&e";
-        else if (isStarting())
+        }
+        else if (isStarting()) {
             color = "&2";
-        else if (isPlaying())
+        }
+        else if (isPlaying()) {
             color = "&a";
-        else if (isEnding())
+        }
+        else if (isEnding()) {
             color = "&c";
-        else
+        }
+        else {
             color = "&4";
+        }
 
         return MessageUtil.message(color);
     }

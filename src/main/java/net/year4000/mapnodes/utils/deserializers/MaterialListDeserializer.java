@@ -28,7 +28,8 @@ public class MaterialListDeserializer implements JsonDeserializer<List<Material>
 
             try {
                 newList.add(Material.valueOf(itemName.toUpperCase()));
-            } catch (IllegalArgumentException e) {
+            }
+            catch (IllegalArgumentException e) {
                 MapNodesPlugin.debug(Msg.util("settings.material", itemName));
             }
         }

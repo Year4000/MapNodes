@@ -2,15 +2,14 @@ package net.year4000.mapnodes.gamemodes.tntwars;
 
 import com.google.gson.annotations.SerializedName;
 import lombok.Data;
+import net.year4000.mapnodes.api.exceptions.InvalidJsonException;
+import net.year4000.mapnodes.api.game.GameManager;
+import net.year4000.mapnodes.api.game.GameTeam;
 import net.year4000.mapnodes.api.game.modes.GameModeConfig;
 import net.year4000.mapnodes.api.game.modes.GameModeConfigName;
-import net.year4000.mapnodes.exceptions.InvalidJsonException;
-import net.year4000.mapnodes.game.NodeGame;
-import net.year4000.mapnodes.game.NodeTeam;
-import net.year4000.mapnodes.game.regions.Region;
+import net.year4000.mapnodes.api.game.regions.Region;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.Common;
-import net.year4000.mapnodes.utils.TimeDuration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,12 +52,12 @@ public class TntWarsConfig implements GameModeConfig {
 
         /** The damage of the island in float */
         private transient float percent = 100;
-        private transient NodeTeam team;
+        private transient GameTeam team;
         private transient Set<Region> regionObject;
         private transient int initSize;
         private transient int count;
 
-        public void initIsland(NodeGame game) {
+        public void initIsland(GameManager game) {
             team = game.getTeams().get(owner);
             regionObject = game.getRegions().get(region).getZones();
             initSize = (int) regionObject.stream().map(Region::getPoints).map(List::size).count();
@@ -68,7 +67,7 @@ public class TntWarsConfig implements GameModeConfig {
 
         public void updatePercent(int amount) {
             count -= amount;
-            percent = 100 - ((count / initSize) * (float)  -0.1);
+            percent = 100 - ((count / initSize) * (float) -0.1);
             percent = percent < 0 ? 0 : percent;
             // MapNodesPlugin.debug("Island Percent: " + percent);
         }

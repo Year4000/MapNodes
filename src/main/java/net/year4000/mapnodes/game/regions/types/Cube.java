@@ -2,12 +2,13 @@ package net.year4000.mapnodes.game.regions.types;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import net.year4000.mapnodes.exceptions.InvalidJsonException;
-import net.year4000.mapnodes.game.regions.Region;
-import net.year4000.mapnodes.game.regions.RegionType;
+import net.year4000.mapnodes.api.exceptions.InvalidJsonException;
+import net.year4000.mapnodes.api.game.regions.PointVector;
+import net.year4000.mapnodes.api.game.regions.Region;
+import net.year4000.mapnodes.api.game.regions.RegionType;
+import net.year4000.mapnodes.api.utils.Validator;
 import net.year4000.mapnodes.game.regions.RegionTypes;
 import net.year4000.mapnodes.utils.Common;
-import net.year4000.mapnodes.utils.Validator;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.util.Vector;
@@ -29,7 +30,7 @@ public class Cube implements Region, Validator {
     private transient Integer pitch;
 
     // Cached vars
-    private transient List<Point> cachedPoints = null;
+    private transient List<PointVector> cachedPoints = null;
     private transient List<Location> cachedLocations = null;
 
     @Override
@@ -50,9 +51,9 @@ public class Cube implements Region, Validator {
     }
 
     @Override
-    public List<Point> getPoints() {
+    public List<PointVector> getPoints() {
         if (cachedPoints == null) {
-            List<Point> locations = new ArrayList<>();
+            List<PointVector> locations = new ArrayList<>();
             int cx = center.getX();
             int cy = center.getY();
             int cz = center.getZ();
@@ -72,7 +73,7 @@ public class Cube implements Region, Validator {
     }
 
     @Override
-    public boolean inRegion(Point region) {
+    public boolean inRegion(PointVector region) {
         Vector point = Common.pointToVector(region);
 
         return point.isInAABB(Common.pointToVector(getPoints().get(0)), Common.pointToVector(getPoints().get(getPoints().size() - 1)));

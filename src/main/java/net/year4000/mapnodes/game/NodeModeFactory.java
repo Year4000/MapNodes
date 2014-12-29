@@ -14,11 +14,12 @@ import java.util.*;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
-public class NodeModeFactory {
+public final class NodeModeFactory {
     private static NodeModeFactory inst;
     private Set<Class<? extends GameMode>> rawGameModes = new HashSet<>();
     private Map<GameModeInfo, Class<? extends GameMode>> loadedGameModes = new HashMap<>();
     private boolean built = false;
+    private Map<GameModeInfo, ListenerBuilder> enabledListeners = new HashMap<>();
 
     public static NodeModeFactory get() {
         if (inst == null) {
@@ -39,7 +40,8 @@ public class NodeModeFactory {
             try {
                 GameModeInfo info = type.getAnnotation(GameModeInfo.class);
                 loadedGameModes.put(info, type);
-            } catch (NullPointerException e) {
+            }
+            catch (NullPointerException e) {
                 MapNodesPlugin.log(e, false);
             }
         });
@@ -57,7 +59,8 @@ public class NodeModeFactory {
                     GameMode gameMode = mode.getValue().newInstance();
                     gameMode.setConfig(name);
                     return gameMode;
-                } catch (InstantiationException | IllegalAccessException e) {
+                }
+                catch (InstantiationException | IllegalAccessException e) {
                     MapNodesPlugin.log(e, false);
                 }
             }
@@ -78,7 +81,8 @@ public class NodeModeFactory {
                 if (configName.value().equals(name.toLowerCase())) {
                     return info.config();
                 }
-            } catch (NullPointerException e) {
+            }
+            catch (NullPointerException e) {
                 MapNodesPlugin.log(e, false);
             }
         }
@@ -97,8 +101,6 @@ public class NodeModeFactory {
         throw new InvalidParameterException(mode.getCanonicalName() + " is not a valid game mode type.");
     }
 
-    private Map<GameModeInfo, ListenerBuilder> enabledListeners = new HashMap<>();
-
     /** enable the current listeners for the game mode */
     public void registerListeners(GameMode mode) {
         try {
@@ -113,7 +115,8 @@ public class NodeModeFactory {
             builder.addAll(configName.listeners());
             builder.register();
             enabledListeners.put(configName, builder);
-        } catch (NullPointerException e) {
+        }
+        catch (NullPointerException e) {
             MapNodesPlugin.log(e, false);
         }
     }
@@ -124,7 +127,8 @@ public class NodeModeFactory {
             GameModeInfo modeInfo = mode.getClass().getAnnotation(GameModeInfo.class);
 
             enabledListeners.remove(modeInfo).unregister();
-        } catch (NullPointerException e) {
+        }
+        catch (NullPointerException e) {
             MapNodesPlugin.log(e, false);
         }
     }

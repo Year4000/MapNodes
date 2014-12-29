@@ -10,8 +10,9 @@ import java.util.Map;
 public class PacketInjector {
     public static void inject() {
         try {
-            addPacket( EnumProtocol.PLAY, true, 0x45, PacketTitle.class );
-        } catch (IllegalAccessException | NoSuchFieldException e ) {
+            addPacket(EnumProtocol.PLAY, true, 0x45, PacketTitle.class);
+        }
+        catch (IllegalAccessException | NoSuchFieldException e) {
             e.printStackTrace();
         }
     }
@@ -28,8 +29,8 @@ public class PacketInjector {
 
         packets.setAccessible(true);
         BiMap<Integer, Class<? extends Packet>> pMap = (BiMap<Integer, Class<? extends Packet>>) packets.get(protocol);
-        pMap.put( id, packet );
-        Field map = EnumProtocol.class.getDeclaredField( "f" );
+        pMap.put(id, packet);
+        Field map = EnumProtocol.class.getDeclaredField("f");
         map.setAccessible(true);
         Map<Class<? extends Packet>, EnumProtocol> protocolMap = (Map<Class<? extends Packet>, EnumProtocol>) map.get(null);
         protocolMap.put(packet, protocol);
@@ -46,7 +47,8 @@ public class PacketInjector {
         private int stay = -1;
         private int fadeOut = -1;
 
-        public PacketTitle() {}
+        public PacketTitle() {
+        }
 
         public PacketTitle(Action action) {
             this.action = action;
@@ -100,7 +102,8 @@ public class PacketInjector {
         }
 
         @Override
-        public void handle(PacketListener packetlistener) {}
+        public void handle(PacketListener packetlistener) {
+        }
 
         public static enum Action {
             TITLE,

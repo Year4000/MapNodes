@@ -14,7 +14,8 @@ import org.bukkit.entity.Player;
 import org.spigotmc.ProtocolInjector;
 
 public final class PacketHacks {
-    private PacketHacks() {}
+    private PacketHacks() {
+    }
 
     /** Re-spawn a dead player */
     public static void respawnPlayer(Player player) {
@@ -37,7 +38,7 @@ public final class PacketHacks {
     /** Send a message to the Action Bar */
     public static void sendActionBarMessage(Player player, String message) {
         CraftPlayer craftPlayer = (CraftPlayer) player;
-        byte eight = (byte) (isTitleAble(player) ?  2 : 0);
+        byte eight = (byte) (isTitleAble(player) ? 2 : 0);
 
         IChatBaseComponent component = ChatSerializer.a(Common.sanitize(MessageUtil.replaceColors(message)));
         craftPlayer.getHandle().playerConnection.sendPacket(new PacketPlayOutChat(component, eight));
@@ -45,7 +46,9 @@ public final class PacketHacks {
 
     /** Set the tablist header and footer */
     public static void setTabListHeadFoot(Player player, String header, String footer) {
-        if (!isTitleAble(player)) return;
+        if (!isTitleAble(player)) {
+            return;
+        }
 
         CraftPlayer craftPlayer = (CraftPlayer) player;
 
@@ -108,7 +111,7 @@ public final class PacketHacks {
             }
             else {
                 footer = bar.substring(0, 43 + time.length()) + "&5" + bar.substring(43 + time.length());
-                footer = footer.substring(0, percentInt <= 1 ? 2 : percentInt) + "&5" + footer.substring( percentInt <= 1 ? 2 : percentInt);
+                footer = footer.substring(0, percentInt <= 1 ? 2 : percentInt) + "&5" + footer.substring(percentInt <= 1 ? 2 : percentInt);
             }
 
             setTitle(player, "&a" + header, footer);

@@ -1,9 +1,9 @@
 package net.year4000.mapnodes.game.regions.events;
 
-import net.year4000.mapnodes.game.regions.EventType;
+import net.year4000.mapnodes.api.game.regions.EventType;
+import net.year4000.mapnodes.api.game.regions.RegionListener;
 import net.year4000.mapnodes.game.regions.EventTypes;
 import net.year4000.mapnodes.game.regions.RegionEvent;
-import net.year4000.mapnodes.game.regions.RegionListener;
 import net.year4000.mapnodes.game.regions.types.Point;
 import net.year4000.mapnodes.utils.typewrappers.EntityTypeList;
 import org.bukkit.entity.EntityType;
@@ -16,7 +16,9 @@ public class CreatureSpawn extends RegionEvent implements RegionListener {
 
     @EventHandler
     public void onCreatureSpawn(CreatureSpawnEvent event) {
-        if (!region.inZone(new Point(event.getLocation().toVector().toBlockVector()))) return;
+        if (!region.inZone(new Point(event.getLocation().toVector().toBlockVector()))) {
+            return;
+        }
 
         EntityType entityType = event.getEntityType();
 

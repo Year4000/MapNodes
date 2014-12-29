@@ -25,9 +25,6 @@ public final class MenuCommands {
         NodeGame game = (NodeGame) MapNodes.getCurrentGame();
 
 
-
-
-
         try {
             NodePlayer player = ((NodePlayer) game.getPlayer((Player) sender));
 
@@ -38,7 +35,8 @@ public final class MenuCommands {
             }
 
             player.joinTeam(game.checkAndGetTeam(player, args.getString(0)));
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             throw new CommandException(e.getMessage());
         }
     }
@@ -54,7 +52,8 @@ public final class MenuCommands {
         GameManager gm = MapNodes.getCurrentGame();
 
         try {
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             throw new CommandException(e.getMessage());
         }
     }
@@ -66,7 +65,8 @@ public final class MenuCommands {
     public static void spectator(CommandContext args, CommandSender sender) throws CommandException {
         try {
             ((NodePlayer) MapNodes.getCurrentGame().getPlayer((Player) sender)).join();
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             throw new CommandException(e.getMessage());
         }
     }

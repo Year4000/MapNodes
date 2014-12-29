@@ -1,13 +1,11 @@
 package net.year4000.mapnodes.api.game;
 
 import net.year4000.mapnodes.api.game.modes.GameMode;
+import net.year4000.mapnodes.api.game.scoreboard.GameSidebarGoal;
 import net.year4000.mapnodes.api.utils.Operations;
-import net.year4000.mapnodes.game.NodeKit;
-import net.year4000.mapnodes.game.NodeRegion;
-import net.year4000.mapnodes.game.NodeTeam;
-import net.year4000.mapnodes.game.scoreboard.SidebarGoal;
 import org.bukkit.entity.Player;
 
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
@@ -16,21 +14,29 @@ import java.util.stream.Stream;
 public interface GameManager {
     /**
      * Get the info of the map from the json settings.
+     *
      * @return The map settings.
      */
     public GameMap getMap();
 
     /**
      * Get the map config settings.
+     *
      * @return The map config.
      */
     public GameConfig getConfig();
 
-    public Map<String, NodeKit> getKits();
+    public Map<String, GameKit> getKits();
 
-    public Map<String, NodeTeam> getTeams();
+    public Map<String, GameTeam> getTeams();
 
-    public Map<String, NodeRegion> getRegions();
+    public Map<String, GameClass> getClasses();
+
+    public Map<String, GameSidebarGoal> getSidebarGoals();
+
+    public Stream<GameTeam> getPlayingTeams();
+
+    public Map<String, GameRegion> getRegions();
 
     public Stream<GamePlayer> getPlayers();
 
@@ -48,14 +54,57 @@ public interface GameManager {
 
     public GameStage getStage();
 
+    public String defaultLocale(String key);
+
     public String locale(Locale locale, String key);
 
     public String locale(String locale, String key);
 
     public void addStartControl(Operations operation);
 
-    public SidebarGoal addDynamicGoal(String id, String display, int score);
+    public void addStartTime(int time);
 
-    public SidebarGoal addStaticGoal(String id, String display);
+    public void loadTeam(String id, GameTeam team);
 
+    public void loadKit(String id, GameKit kit);
+
+    public void loadClass(String id, GameClass team);
+
+    public void loadRegion(String id, GameRegion team);
+
+    public GameSidebarGoal addDynamicGoal(String id, String display, int score);
+
+    public GameSidebarGoal addDynamicGoal(String id, String owner, String display, int score);
+
+    public GameSidebarGoal addStaticGoal(String id, String display);
+
+    public GameSidebarGoal addStaticGoal(String id, String owner, String display);
+
+    public void openClassKitChooserMenu(GamePlayer player);
+
+    public void openTeamChooserMenu(GamePlayer player);
+
+    public GameClass getClassKit(String name);
+
+    public int getRealMaxCount();
+
+    public String getTabHeader(GamePlayer player);
+
+    public String getTabHeader();
+
+    public String getTabFooter();
+
+    public void join(Player player);
+
+    public void quit(Player player);
+
+    public boolean shouldStart();
+
+    public List<String> getBookPages(Player player);
+
+    public long getStartTime();
+
+    public List<Operations> getStartControls();
+
+    public void stop();
 }

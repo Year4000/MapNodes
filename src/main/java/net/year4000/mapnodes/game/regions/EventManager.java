@@ -1,6 +1,8 @@
 package net.year4000.mapnodes.game.regions;
 
 import net.year4000.mapnodes.MapNodesPlugin;
+import net.year4000.mapnodes.api.game.regions.EventType;
+import net.year4000.mapnodes.api.game.regions.RegionListener;
 
 import java.security.InvalidParameterException;
 import java.util.HashMap;
@@ -34,7 +36,8 @@ public final class EventManager {
             try {
                 EventType typeName = type.getAnnotation(EventType.class);
                 eventTypes.put(typeName, type);
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 MapNodesPlugin.log(e, false);
             }
         });
