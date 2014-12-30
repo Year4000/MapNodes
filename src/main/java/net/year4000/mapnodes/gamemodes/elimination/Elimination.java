@@ -108,7 +108,7 @@ public class Elimination extends GameModeTemplate implements GameMode {
     /** Set up the players in the game */
     @EventHandler
     public void onGameStart(GameStartEvent event) {
-        new ArrayList<>(team.getQueue()).forEach(player -> player.joinTeam(null));
+        new ArrayList<>(team.getQueue()).forEach(GamePlayer::joinSpectatorTeam);
         alive.addAll(team.getPlayers().stream().map(player -> player.getPlayer().getName()).collect(Collectors.toList()));
         buildAndSendList();
 
@@ -143,7 +143,10 @@ public class Elimination extends GameModeTemplate implements GameMode {
 
     /** Handle the dead player */
     public void deadPlayer(Player name) {
-        if (alive.remove(name.getName())) {
+        if (!game.getStage().isPlaying()) return;
+
+        if (alive.size() > 1 && alive.contains(name.getName())) {
+            alive.remove(name.getName());
             dead.add(name.getName());
             buildAndSendList();
             int eliminationSize = alive.size() - 1;
@@ -164,21 +167,17 @@ public class Elimination extends GameModeTemplate implements GameMode {
         }
 
         if (alive.size() == 1) {
-            if (game.getStage().isPlaying()) {
-                SchedulerUtil.runSync(() -> {
-                    try {
-                        new GamePlayerWinEvent(game, game.getPlayer(Bukkit.getPlayer(alive.iterator().next()))).call();
-                    }
-                    catch (NoSuchElementException e) {
-                        game.stop();
-                    }
-                }, 8L);
-            }
+            SchedulerUtil.runSync(() -> {
+                try {
+                    new GamePlayerWinEvent(game, game.getPlayer(Bukkit.getPlayer(alive.iterator().next()))).call();
+                }
+                catch (NoSuchElementException e) {
+                    game.stop();
+                }
+            }, 8L);
         }
         else if (alive.size() == 0) {
-            if (game.getStage().isPlaying()) {
-                game.stop();
-            }
+            game.stop();
         }
     }
 
