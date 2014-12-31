@@ -160,7 +160,10 @@ public class NodeTeam implements GameTeam {
         if (queue.size() > 0) {
             GamePlayer nextPlayer = queue.poll();
             join(nextPlayer, true);
-            start(nextPlayer);
+
+            if (game.getStage().isPlaying()) {
+                start(nextPlayer);
+            }
         }
     }
 
