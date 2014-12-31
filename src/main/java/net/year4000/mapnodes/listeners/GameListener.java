@@ -65,6 +65,8 @@ public final class GameListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onWin(GameWinEvent event) {
+        if (event.getGame().getStage().isEndGame()) return;
+
         final int size = 45;
         // Send messages to players before game end
         // Spectator Messages
