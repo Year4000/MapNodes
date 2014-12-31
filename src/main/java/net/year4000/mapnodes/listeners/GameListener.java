@@ -68,18 +68,6 @@ public final class GameListener implements Listener {
         }
     }
 
-    @EventHandler
-    public void onGameStart(GameStartEvent event) {
-        if (event.getGame().getClasses().size() > 0) {
-            event.getGame().getEntering()
-                .filter(player -> player.getClassKit() != null)
-                .forEach(player -> {
-                    List<String> list = new ArrayList<>(event.getGame().getClasses().keySet());
-                    player.setClassKit(event.getGame().getClasses().get(list.get(new Random().nextInt(list.size()))));
-                });
-        }
-    }
-
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onWin(GameWinEvent event) {
         if (event.getGame().getStage().isEndGame()) return;

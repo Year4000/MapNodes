@@ -15,7 +15,10 @@ import net.year4000.utilities.bukkit.FunEffectsUtil;
 import net.year4000.utilities.bukkit.bossbar.BossBar;
 import org.bukkit.Sound;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 import static net.year4000.mapnodes.utils.MathUtil.percent;
@@ -45,15 +48,22 @@ public class StartGame extends Clocker {
         }
 
         running = true;
-        ((NodeGame) MapNodes.getCurrentGame()).setStage(NodeStage.STARTING);
-        ((NodeGame) MapNodes.getCurrentGame()).setStartClock(this);
-        GameMap map = MapNodes.getCurrentGame().getMap();
+        NodeGame game = (NodeGame) MapNodes.getCurrentGame();
+        game.setStage(NodeStage.STARTING);
+        game.setStartClock(this);
+        GameMap map = game.getMap();
 
         MapNodesPlugin.log(Msg.util("clocks.start.first", map.getName(), (new TimeUtil(sec(position) - 1, TimeUnit.SECONDS)).rawOutput()));
-        MapNodes.getCurrentGame().getPlayers().parallel().forEach(player -> FunEffectsUtil.playSound(
-            player.getPlayer(),
-            Sound.ORB_PICKUP
-        ));
+        game.getPlayers().parallel().forEach(player -> {
+            if (game.getClasses().size() > 0) {
+                if (player.getClassKit() == null) {
+                    List<String> list = new ArrayList<>(game.getClasses().keySet());
+                    player.setClassKit(game.getClasses().get(list.get(new Random().nextInt(list.size()))));
+                }
+            }
+
+            FunEffectsUtil.playSound(player.getPlayer(), Sound.ORB_PICKUP);
+        });
     }
 
     public void runTock(int position) {
