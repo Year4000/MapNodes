@@ -39,6 +39,7 @@ public class Elimination extends GameModeTemplate implements GameMode {
     protected List<String> alive = new ArrayList<>();
     protected List<String> dead = new ArrayList<>();
     private EliminationConfig gameModeConfig;
+    private boolean over = false;
 
     @EventHandler
     public void onLoad(GameLoadEvent event) {
@@ -143,7 +144,7 @@ public class Elimination extends GameModeTemplate implements GameMode {
 
     /** Handle the dead player */
     public void deadPlayer(Player name) {
-        if (!game.getStage().isPlaying()) return;
+        if (!game.getStage().isPlaying() || over) return;
 
         if (alive.size() > 1 && alive.contains(name.getName())) {
             alive.remove(name.getName());
@@ -167,6 +168,7 @@ public class Elimination extends GameModeTemplate implements GameMode {
         }
 
         if (alive.size() == 1) {
+            over = true;
             SchedulerUtil.runSync(() -> {
                 try {
                     new GamePlayerWinEvent(game, game.getPlayer(Bukkit.getPlayer(alive.iterator().next()))).call();
