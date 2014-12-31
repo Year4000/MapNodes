@@ -127,16 +127,6 @@ public final class MapNodesListener implements Listener {
         }
     }
 
-    /** No players stop the game unless in debug mode */
-    @EventHandler
-    public void onClock(GameClockEvent event) {
-        NodeGame game = ((NodeGame) MapNodes.getCurrentGame());
-
-        if (game.getPlayers().count() == 0L && !MapNodesPlugin.getInst().getLog().isDebug()) {
-            game.stop();
-        }
-    }
-
     /** Start the game and when another player join reduce the time */
     @EventHandler
     public void onClock(GamePlayerJoinTeamEvent event) {

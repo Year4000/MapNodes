@@ -120,6 +120,8 @@ public final class GameListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onClock(GameClockEvent event) {
+        if (event.getGame().getStage().isEndGame()) return;
+
         event.getGame().getPlayers().parallel().forEach(player -> {
             if (!PacketHacks.isTitleAble(player.getPlayer()) && !player.isPlaying()) {
                 ((NodeGame) event.getGame()).getScoreboardFactory().setPersonalSidebar((NodePlayer) player);
