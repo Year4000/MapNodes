@@ -194,7 +194,7 @@ public class ScoreboardFactory {
 
         // When game is running show game time length
         if (game.getStage().isPlaying() && !PacketHacks.isTitleAble(nodePlayer.getPlayer())) {
-            long currentTime = System.currentTimeMillis() - game.getStartTime();
+            long currentTime = Common.cleanTimeMillis() - game.getStartTime();
             String time = "&a" + (new TimeUtil(currentTime, TimeUnit.MILLISECONDS)).prettyOutput("&7:&a");
             side.addLine(Msg.locale(nodePlayer, "game.time", time));
             side.addBlank();

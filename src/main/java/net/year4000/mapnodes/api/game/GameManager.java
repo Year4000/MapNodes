@@ -96,7 +96,11 @@ public interface GameManager {
 
     public long getStartTime();
 
+    public long getStopTime();
+
     public List<Operations> getStartControls();
 
     public void stop();
+
+    public void setStopTime(long stopTime);
 }

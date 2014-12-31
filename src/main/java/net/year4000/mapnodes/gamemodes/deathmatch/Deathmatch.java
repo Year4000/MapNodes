@@ -4,6 +4,7 @@ import com.google.common.base.Joiner;
 import net.year4000.mapnodes.api.events.game.GameClockEvent;
 import net.year4000.mapnodes.api.events.game.GameLoadEvent;
 import net.year4000.mapnodes.api.events.game.GameStartEvent;
+import net.year4000.mapnodes.api.events.game.GameStopEvent;
 import net.year4000.mapnodes.api.events.team.GameTeamWinEvent;
 import net.year4000.mapnodes.api.game.GameManager;
 import net.year4000.mapnodes.api.game.GamePlayer;
@@ -63,7 +64,7 @@ public class Deathmatch extends GameModeTemplate implements GameMode {
     @EventHandler
     public void onLoad(GameStartEvent event) {
         if (gameModeConfig.getTimeLimit() != null) {
-            endTime = (System.currentTimeMillis() + 1000) + (TimeUnit.MILLISECONDS.convert(gameModeConfig.getTimeLimit().toSecs(), TimeUnit.SECONDS));
+            endTime = Common.cleanTimeMillis() + (TimeUnit.MILLISECONDS.convert(gameModeConfig.getTimeLimit().toSecs() - 1, TimeUnit.SECONDS));
         }
     }
 
@@ -72,15 +73,15 @@ public class Deathmatch extends GameModeTemplate implements GameMode {
         if (!event.getGame().getStage().isPlaying()) return;
 
         if (gameModeConfig.getTimeLimit() != null) {
-            long currentTime = endTime - System.currentTimeMillis();
-            String color = Common.chatColorNumber((int) System.currentTimeMillis(), (int) endTime);
+            long currentTime = endTime - Common.cleanTimeMillis();
+            String color = Common.chatColorNumber((int) Common.cleanTimeMillis(), (int) endTime);
             String time = color + (new TimeUtil(currentTime, TimeUnit.MILLISECONDS)).prettyOutput("&7:" + color);
 
             game.getPlaying().map(GamePlayer::getPlayer).forEach(player -> {
-                BossBar.setMessage(player, Msg.locale(player, "deathmatch.clocks.time_left", time), MathUtil.percent((int) Math.abs(endTime - game.getStartTime()), (int) Math.abs(endTime - System.currentTimeMillis())));
+                BossBar.setMessage(player, Msg.locale(player, "deathmatch.clocks.time_left", time), MathUtil.percent((int) Math.abs(endTime - game.getStartTime()), (int) Math.abs(currentTime)));
             });
 
-            if (currentTime <= 0L) {
+            if (currentTime < 0L) {
                 GameTeamWinEvent win = new GameTeamWinEvent(game, winner);
 
                 if (win.getWinner() == null) {

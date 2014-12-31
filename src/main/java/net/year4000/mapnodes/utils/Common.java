@@ -29,6 +29,14 @@ public final class Common {
         return MessageUtil.replaceColors(chatColorNumber(current, total) + current);
     }
 
+    public static long cleanTimeMillis(long time) {
+        return time - (time % 1000);
+    }
+
+    public static long cleanTimeMillis() {
+        return cleanTimeMillis(System.currentTimeMillis());
+    }
+
     public static String chatColorNumber(int current, int total) {
         double percent = ((double) current / (double) total) * 100;
         ChatColor color;

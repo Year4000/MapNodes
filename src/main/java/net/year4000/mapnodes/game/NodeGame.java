@@ -139,7 +139,7 @@ public final class NodeGame implements GameManager, Validator {
     private transient ScoreboardFactory scoreboardFactory;
     private transient Map<String, GameSidebarGoal> sidebarGoals = new LinkedHashMap<>();
     private transient List<Operations> startControls = new CopyOnWriteArrayList<>();
-    private transient long startTime, stopTime;
+    private transient long startTime = 0, stopTime;
     @Setter(AccessLevel.NONE)
     private transient int baseStartTime = 10;
 
@@ -494,7 +494,7 @@ public final class NodeGame implements GameManager, Validator {
         String header = getMap().title();
 
         if (stage.isPlaying() && player != null) {
-            long currentTime = System.currentTimeMillis() - getStartTime();
+            long currentTime = Common.cleanTimeMillis() - getStartTime();
             String time = "&a" + (new TimeUtil(currentTime, TimeUnit.MILLISECONDS)).prettyOutput("&7:&a");
 
             header = getMap().title() + " &7- " + Msg.locale(player, "game.time", time);
@@ -569,7 +569,7 @@ public final class NodeGame implements GameManager, Validator {
             .forEach(player -> ((NodePlayer) player).start());
 
         gameClock = SchedulerUtil.repeatAsync(() -> new GameClockEvent(this).call(), 20L);
-        startTime = System.currentTimeMillis();
+        startTime = Common.cleanTimeMillis();
     }
 
     /** Stop the game and cycle to the next with default time */
@@ -584,7 +584,11 @@ public final class NodeGame implements GameManager, Validator {
         }
 
         stage = NodeStage.ENDING;
-        stopTime = System.currentTimeMillis();
+        stopTime = Common.cleanTimeMillis();
+
+        if (startTime == 0) {
+            startTime = stopTime - 1;
+        }
 
         if (gameClock != null) {
             gameClock.cancel();
