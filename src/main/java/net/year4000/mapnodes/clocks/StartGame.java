@@ -2,6 +2,7 @@ package net.year4000.mapnodes.clocks;
 
 import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.api.MapNodes;
+import net.year4000.mapnodes.api.game.GameManager;
 import net.year4000.mapnodes.api.game.GameMap;
 import net.year4000.mapnodes.game.NodeGame;
 import net.year4000.mapnodes.game.NodeStage;
@@ -55,24 +56,24 @@ public class StartGame extends Clocker {
 
         MapNodesPlugin.log(Msg.util("clocks.start.first", map.getName(), (new TimeUtil(sec(position) - 1, TimeUnit.SECONDS)).rawOutput()));
         game.getPlayers().parallel().forEach(player -> {
-            if (game.getClasses().size() > 0) {
+            FunEffectsUtil.playSound(player.getPlayer(), Sound.ORB_PICKUP);
+        });
+    }
+
+    public void runTock(int position) {
+        GameManager game = MapNodes.getCurrentGame();
+        int pos = sec(position);
+        String color = Common.chatColorNumber(pos, sec(getTime()));
+        String time = color + (new TimeUtil(pos, TimeUnit.SECONDS)).prettyOutput("&7:" + color);
+
+        MapNodes.getCurrentGame().getPlayers().forEach(player -> {
+            if (game.getClasses().size() > 0 && position % 20 == 0) {
                 if (player.getClassKit() == null) {
                     List<String> list = new ArrayList<>(game.getClasses().keySet());
                     player.setClassKit(game.getClasses().get(list.get(new Random().nextInt(list.size()))));
                 }
             }
 
-            FunEffectsUtil.playSound(player.getPlayer(), Sound.ORB_PICKUP);
-        });
-    }
-
-    public void runTock(int position) {
-        GameMap map = MapNodes.getCurrentGame().getMap();
-        int pos = sec(position);
-        String color = Common.chatColorNumber(pos, sec(getTime()));
-        String time = color + (new TimeUtil(pos, TimeUnit.SECONDS)).prettyOutput("&7:" + color);
-
-        MapNodes.getCurrentGame().getPlayers().forEach(player -> {
             if (Arrays.asList(ticks).contains(position)) {
                 FunEffectsUtil.playSound(player.getPlayer(), Sound.NOTE_PLING);
             }
