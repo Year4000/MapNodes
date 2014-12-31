@@ -10,6 +10,8 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.block.BlockBurnEvent;
+import org.bukkit.event.block.BlockSpreadEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 
 import java.util.HashMap;
@@ -35,6 +37,18 @@ public class Skywars extends Elimination {
     }
 
     // todo After x time go to sudden death and start blowing up islands
+
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void onFire(BlockSpreadEvent event) {
+        if (event.getSource().getType() == Material.FIRE) {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void onFire(BlockBurnEvent event) {
+        event.setCancelled(true);
+    }
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onKill(PlayerDeathEvent event) {
