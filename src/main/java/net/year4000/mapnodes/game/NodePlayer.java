@@ -5,6 +5,7 @@ import net.year4000.mapnodes.api.events.player.GamePlayerJoinEvent;
 import net.year4000.mapnodes.api.events.player.GamePlayerJoinSpectatorEvent;
 import net.year4000.mapnodes.api.events.player.GamePlayerJoinTeamEvent;
 import net.year4000.mapnodes.api.events.player.GamePlayerStartEvent;
+import net.year4000.mapnodes.api.game.GameClass;
 import net.year4000.mapnodes.api.game.GamePlayer;
 import net.year4000.mapnodes.api.game.GameTeam;
 import net.year4000.mapnodes.api.utils.Spectator;
@@ -65,9 +66,9 @@ public final class NodePlayer implements GamePlayer, Comparable {
     }
 
     /** Set the class kit for this player */
-    public void setClassKit(NodeClass classKit) {
+    public void setClassKit(GameClass classKit) {
         sendMessage(Msg.locale(player, "class.join", "&a" + classKit.getName()));
-        this.classKit = classKit;
+        this.classKit = (NodeClass) classKit;
         game.getScoreboardFactory().setPersonalSidebar(this);
     }
 

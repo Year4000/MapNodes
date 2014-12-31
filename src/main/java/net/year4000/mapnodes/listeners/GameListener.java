@@ -1,10 +1,12 @@
 package net.year4000.mapnodes.listeners;
 
 import com.google.common.base.Joiner;
+import com.google.common.collect.Iterators;
 import lombok.EqualsAndHashCode;
 import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.events.game.GameClockEvent;
+import net.year4000.mapnodes.api.events.game.GameStartEvent;
 import net.year4000.mapnodes.api.events.game.GameWinEvent;
 import net.year4000.mapnodes.api.events.team.GameTeamWinEvent;
 import net.year4000.mapnodes.api.game.GamePlayer;
@@ -31,7 +33,10 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.*;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -60,6 +65,18 @@ public final class GameListener implements Listener {
         }
         else {
             event.setRespawnLocation(((NodeTeam) player.getTeam()).getSpawns().getSafeRandomSpawn());
+        }
+    }
+
+    @EventHandler
+    public void onGameStart(GameStartEvent event) {
+        if (event.getGame().getClasses().size() > 0) {
+            event.getGame().getEntering()
+                .filter(player -> player.getClassKit() != null)
+                .forEach(player -> {
+                    List<String> list = new ArrayList<>(event.getGame().getClasses().keySet());
+                    player.setClassKit(event.getGame().getClasses().get(list.get(new Random().nextInt(list.size()))));
+                });
         }
     }
 

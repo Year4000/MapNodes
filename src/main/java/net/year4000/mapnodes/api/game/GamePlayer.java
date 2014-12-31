@@ -25,6 +25,10 @@ public interface GamePlayer {
 
     public Inventory getInventory();
 
+    public GameClass getClassKit();
+
+    public void setClassKit(GameClass classKit);
+
     public void joinTeam(GameTeam gameTeam);
 
     public void joinSpectatorTeam();
