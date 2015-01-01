@@ -4,7 +4,7 @@ import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import net.year4000.mapnodes.MapNodesPlugin;
-import net.year4000.mapnodes.utils.Callback;
+import net.year4000.utilities.Callback;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.messaging.PluginMessageListener;
@@ -12,7 +12,6 @@ import org.bukkit.plugin.messaging.PluginMessageListener;
 import java.util.AbstractMap;
 import java.util.ArrayDeque;
 import java.util.Deque;
-
 
 public final class BungeeConnector implements PluginMessageListener {
     private static final String CHANNEL = "BungeeCord";
