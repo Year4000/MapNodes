@@ -45,8 +45,8 @@ public class MapNodesPlugin extends BukkitPlugin implements Plugin {
     private static MapNodesPlugin inst = null;
     private Addons addons = new Addons();
     private boolean enable = true;
-    private MessagingChannel connector = new MessagingChannel(this);
-    private Network network = new Network();
+    private MessagingChannel connector;
+    private Network network;
 
     @Override
     public void onLoad() {
@@ -143,7 +143,8 @@ public class MapNodesPlugin extends BukkitPlugin implements Plugin {
             .register();
 
         // Register the bungee plugin message channel
-        connector.register();
+        connector = MessagingChannel.get();
+        network = new Network();
     }
 
     @Override
