@@ -1,9 +1,8 @@
-package net.year4000.mapnodes.net;
+package net.year4000.mapnodes;
 
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Setter;
-import net.year4000.mapnodes.MapNodesPlugin;
 
 @Data
 public final class Network {

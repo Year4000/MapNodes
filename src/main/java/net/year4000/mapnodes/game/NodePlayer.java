@@ -10,7 +10,7 @@ import net.year4000.mapnodes.api.game.GamePlayer;
 import net.year4000.mapnodes.api.game.GameTeam;
 import net.year4000.mapnodes.api.utils.Spectator;
 import net.year4000.mapnodes.messages.Msg;
-import net.year4000.mapnodes.utils.BadgeManager;
+import net.year4000.utilities.bukkit.BadgeManager;
 import net.year4000.mapnodes.utils.Common;
 import net.year4000.mapnodes.utils.PacketHacks;
 import net.year4000.mapnodes.utils.SchedulerUtil;

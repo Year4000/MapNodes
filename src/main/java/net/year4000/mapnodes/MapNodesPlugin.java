@@ -29,8 +29,7 @@ import net.year4000.mapnodes.gamemodes.tntwars.TntWars;
 import net.year4000.mapnodes.listeners.*;
 import net.year4000.mapnodes.map.MapFactory;
 import net.year4000.mapnodes.messages.Msg;
-import net.year4000.mapnodes.net.BungeeConnector;
-import net.year4000.mapnodes.net.Network;
+import net.year4000.utilities.bukkit.MessagingChannel;
 import net.year4000.mapnodes.utils.PacketInjector;
 import net.year4000.utilities.LogUtil;
 import net.year4000.utilities.bukkit.BukkitPlugin;
@@ -46,7 +45,7 @@ public class MapNodesPlugin extends BukkitPlugin implements Plugin {
     private static MapNodesPlugin inst = null;
     private Addons addons = new Addons();
     private boolean enable = true;
-    private BungeeConnector connector = new BungeeConnector();
+    private MessagingChannel connector = new MessagingChannel(this);
     private Network network = new Network();
 
     @Override

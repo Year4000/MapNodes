@@ -8,7 +8,7 @@ import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scheduler.BukkitTask;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class SchedulerUtil {
+public final class SchedulerUtil {
     private static MapNodesPlugin plugin = MapNodesPlugin.getInst();
     private static BukkitScheduler scheduler = Bukkit.getScheduler();
 

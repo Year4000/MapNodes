@@ -2,7 +2,7 @@ package net.year4000.mapnodes.utils;
 
 import java.util.concurrent.TimeUnit;
 
-public class TimeUtil {
+public final class TimeUtil {
     private final String SEPARATOR = ":";
     private TimeUnit unit;
     private long amount;
