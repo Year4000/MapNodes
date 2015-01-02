@@ -3,6 +3,7 @@ package net.year4000.mapnodes.gamemodes.spleef;
 import com.google.common.collect.ImmutableList;
 import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.events.game.GameLoadEvent;
+import net.year4000.mapnodes.api.events.player.GamePlayerDeathEvent;
 import net.year4000.mapnodes.api.game.GamePlayer;
 import net.year4000.mapnodes.api.game.modes.GameModeInfo;
 import net.year4000.mapnodes.clocks.Clocker;
@@ -65,6 +66,11 @@ public class SpleefRunner extends Elimination {
     @EventHandler
     public void onDrop(PlayerDropItemEvent event) {
         event.setCancelled(true);
+    }
+
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onGameDeath(GamePlayerDeathEvent event) {
+        event.getViewers().clear();
     }
 
     @EventHandler(ignoreCancelled = true)
