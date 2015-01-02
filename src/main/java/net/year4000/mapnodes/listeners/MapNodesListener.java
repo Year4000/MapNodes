@@ -54,7 +54,7 @@ public final class MapNodesListener implements Listener {
 
         // Update server name
         if (MapNodesPlugin.getInst().getNetwork().getName().equals(Network.UNKNOWN)) {
-            MapNodesPlugin.getInst().getNetwork().updateName();
+            SchedulerUtil.runSync(() -> MapNodesPlugin.getInst().getNetwork().updateName(), 40L);
         }
     }
 
