@@ -173,7 +173,7 @@ public class Elimination extends GameModeTemplate implements GameMode {
                 try {
                     new GamePlayerWinEvent(game, game.getPlayer(Bukkit.getPlayer(alive.iterator().next()))).call();
                 }
-                catch (NoSuchElementException e) {
+                catch (NoSuchElementException | NullPointerException e) {
                     game.stop();
                 }
             }, 8L);

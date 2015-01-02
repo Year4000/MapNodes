@@ -1,6 +1,7 @@
 package net.year4000.mapnodes.gamemodes.spleef;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.events.game.GameLoadEvent;
 import net.year4000.mapnodes.api.events.player.GamePlayerDeathEvent;
@@ -35,12 +36,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 @GameModeInfo(
     name = "SpleefRunner",
-    version = "1.0",
+    version = "1.1",
     config = SpleefRunnerConfig.class
 )
 public class SpleefRunner extends Elimination {
     private static final int END_STAGE = 0; // todo increase when we can get block cracks
     private static final Random rand = new Random();
+    public static final ImmutableList<BlockFace> FACES = ImmutableList.of(BlockFace.NORTH, BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST, BlockFace.NORTH_EAST, BlockFace.NORTH_WEST, BlockFace.SOUTH_EAST, BlockFace.SOUTH_WEST);
     public static final ImmutableList DATA_BLOCKS = ImmutableList.of(Material.STAINED_CLAY, Material.WOOL, Material.STAINED_GLASS, Material.STAINED_GLASS_PANE);
     private Map<BlockVector, AtomicInteger> blockStages = new HashMap<>();
     private SpleefRunnerConfig spleefConfig;
@@ -144,40 +146,80 @@ public class SpleefRunner extends Elimination {
         if (!player.isPlaying()) return;
 
         Block bellow = event.getTo().getBlock().getRelative(BlockFace.DOWN);
-        BlockVector bellowVector = bellow.getLocation().toVector().toBlockVector();
+        Map.Entry<BlockVector, Integer> tracking = trackBlock(bellow);
+        BlockVector bellowVector = tracking.getKey();
+        int stage = tracking.getValue();
+
+        if (spleefConfig.getBlocks().contains(bellow.getType()) && stage == END_STAGE) {
+            runClock(bellow, bellowVector);
+        }
+        else if (bellow.getType() == Material.AIR && stage == END_STAGE) {
+            for (BlockFace face : FACES) {
+                Block bellowRelative = bellow.getRelative(face);
+                Map.Entry<BlockVector, Integer> trackingRelative = trackBlock(bellowRelative);
+                BlockVector bellowRelativeVector = trackingRelative.getKey();
+                int stageRelative = trackingRelative.getValue();
+
+                if (spleefConfig.getBlocks().contains(bellowRelative.getType()) && stageRelative == END_STAGE) {
+                    runClock(bellowRelative, bellowRelativeVector);
+                }
+            }
+        }
+    }
+
+    private void runClock(Block bellow, BlockVector bellowVector) {
+        new Clocker(MathUtil.ticks(6)) {
+            private byte[] stage = new byte[] {0, 14, 1, 4, 5, 13};
+
+            @Override
+            public void runTock(int position) {
+                if (position % 20 != 0) return;
+
+                if (!DATA_BLOCKS.contains(bellow.getType())) {
+                    bellow.setType(Material.STAINED_CLAY);
+                }
+
+                bellow.setData(stage[MathUtil.sec(position)]);
+                MapNodes.getCurrentWorld().playEffect(bellow.getLocation(), Effect.SNOW_SHOVEL);
+            }
+
+            @Override
+            public void runLast(int position) {
+                FallingBlock fallingBlock = MapNodes.getCurrentWorld().spawnFallingBlock(bellow.getLocation(), bellow.getType(), bellow.getData());
+                bellow.setType(Material.AIR);
+                fallingBlock.setDropItem(false);
+                blockStages.remove(bellowVector);
+
+                MapNodes.getCurrentGame().getPlaying()
+                    .filter(player -> player.getPlayer().getLocation().distance(bellow.getLocation()) < 100)
+                    .map(GamePlayer::getPlayer)
+                    .forEach(player -> player.playSound(bellow.getLocation(), Sound.LAVA_POP, 1F, 1F));
+
+                MapNodes.getCurrentGame().getPlaying()
+                    .filter(player -> player.getPlayer().getLocation().distance(bellow.getLocation()) <= 2)
+                    .map(GamePlayer::getPlayer)
+                    .forEach(player -> {
+                        for (BlockFace face : FACES) {
+                            Block bellowRelative = player.getLocation().getBlock().getRelative(BlockFace.DOWN).getRelative(face);
+                            Map.Entry<BlockVector, Integer> trackingRelative = trackBlock(bellowRelative);
+                            BlockVector bellowRelativeVector = trackingRelative.getKey();
+                            int stageRelative = trackingRelative.getValue();
+
+                            if (spleefConfig.getBlocks().contains(bellowRelative.getType()) && stageRelative == END_STAGE) {
+                                runClock(bellowRelative, bellowRelativeVector);
+                            }
+                        }
+                    });
+            }
+        }.run();
+    }
+
+    private Map.Entry<BlockVector, Integer> trackBlock(Block block) {
+        BlockVector bellowVector = block.getLocation().toVector().toBlockVector();
 
         blockStages.putIfAbsent(bellowVector, new AtomicInteger(0));
         int stage = blockStages.get(bellowVector).getAndIncrement();
 
-        if (spleefConfig.getBlocks().contains(bellow.getType()) && stage == END_STAGE) {
-            new Clocker(MathUtil.ticks(6)) {
-                private byte[] stage = new byte[] {0, 14, 1, 4, 5, 13};
-
-                @Override
-                public void runTock(int position) {
-                    if (position % 20 != 0) return;
-
-                    if (!DATA_BLOCKS.contains(bellow.getType())) {
-                        bellow.setType(Material.STAINED_CLAY);
-                    }
-
-                    bellow.setData(stage[MathUtil.sec(position)]);
-                    MapNodes.getCurrentWorld().playEffect(bellow.getLocation(), Effect.SNOW_SHOVEL);
-                }
-
-                @Override
-                public void runLast(int position) {
-                    FallingBlock fallingBlock = MapNodes.getCurrentWorld().spawnFallingBlock(bellow.getLocation(), bellow.getType(), bellow.getData());
-                    bellow.setType(Material.AIR);
-                    fallingBlock.setDropItem(false);
-                    blockStages.remove(bellowVector);
-
-                    MapNodes.getCurrentGame().getPlaying()
-                        .filter(player -> player.getPlayer().getLocation().distance(bellow.getLocation()) < 100)
-                        .map(GamePlayer::getPlayer)
-                        .forEach(player -> player.playSound(bellow.getLocation(), Sound.LAVA_POP, 1F, 1F));
-                }
-            }.run();
-        }
+        return new AbstractMap.SimpleImmutableEntry<>(bellowVector, stage);
     }
 }
