@@ -1,5 +1,6 @@
 package net.year4000.mapnodes.api.events;
 
+import net.year4000.mapnodes.api.MapNodes;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
@@ -17,6 +18,11 @@ public abstract class EventPlus extends Event {
 
     /** Call the event */
     public void call() {
-        Bukkit.getPluginManager().callEvent(this);
+        try {
+            Bukkit.getPluginManager().callEvent(this);
+        }
+        catch (Exception e) {
+            MapNodes.getLogUtil().debug(e, false);
+        }
     }
 }

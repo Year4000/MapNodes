@@ -184,4 +184,9 @@ public class MapNodesPlugin extends BukkitPlugin implements Plugin {
     public World getCurrentWorld() {
         return NodeFactory.get().getCurrentGame().getWorld();
     }
+
+    @Override
+    public LogUtil getLogUtil() {
+        return log;
+    }
 }

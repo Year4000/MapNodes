@@ -1,6 +1,7 @@
 package net.year4000.mapnodes.api;
 
 import net.year4000.mapnodes.api.game.GameManager;
+import net.year4000.utilities.LogUtil;
 import org.bukkit.World;
 
 public final class MapNodes {
@@ -12,21 +13,18 @@ public final class MapNodes {
         }
     }
 
-    /**
-     * Get the current game.
-     *
-     * @return The current game.
-     */
+    /** Get the current game */
     public static GameManager getCurrentGame() {
         return inst.getCurrentGame();
     }
 
-    /**
-     * Get the current game world.
-     *
-     * @return The current game world.
-     */
+    /** Get the current game world */
     public static World getCurrentWorld() {
         return inst.getCurrentWorld();
+    }
+
+    /** Get the log util to log things */
+    public static LogUtil getLogUtil() {
+        return inst.getLogUtil();
     }
 }
