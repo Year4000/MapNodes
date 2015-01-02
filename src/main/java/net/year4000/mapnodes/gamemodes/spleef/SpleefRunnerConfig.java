@@ -15,6 +15,7 @@ import org.bukkit.Material;
 public class SpleefRunnerConfig extends EliminationConfig implements GameModeConfig {
     private transient ImmutableList<Material> defaultBlockTypes = ImmutableList.<Material>builder()
         .add(Material.CLAY)
+        .add(Material.WOOL)
         .add(Material.HARD_CLAY)
         .add(Material.STAINED_GLASS)
         .add(Material.STAINED_GLASS_PANE)

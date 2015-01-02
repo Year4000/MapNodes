@@ -16,7 +16,8 @@ public class SpectatorKit extends NodeKit implements Spectator {
 
         gamemode = GameMode.ADVENTURE;
 
-        effects.add(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 2));
+        effects.add(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 0));
+        effects.add(new PotionEffect(PotionEffectType.NIGHT_VISION, Integer.MAX_VALUE, 0));
 
         items = new PlayerInventoryList<ItemStack>() {{
             for (int i = 0; i < 36; i++) {
