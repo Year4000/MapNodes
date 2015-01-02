@@ -109,7 +109,7 @@ public class SpleefRunner extends Elimination {
     public void onHit(ProjectileHitEvent e) {
         if (ids.contains(e.getEntity().getEntityId())) {
             Location loc = e.getEntity().getLocation();
-            List<BlockFace> faces = ImmutableList.of(BlockFace.UP, BlockFace.SELF, BlockFace.DOWN);
+            List<BlockFace> faces = ImmutableList.of(BlockFace.UP, BlockFace.SELF, BlockFace.DOWN, BlockFace.NORTH, BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST);
 
             for (BlockFace face : faces) {
                 Block bellow = loc.getBlock().getRelative(face);
