@@ -187,7 +187,7 @@ public class Elimination extends GameModeTemplate implements GameMode {
     public void buildAndSendList() {
         game.getSidebarGoals().clear();
 
-        if (alive.size() + dead.size() > 16) {
+        if (alive.size() + dead.size() > 15) {
             game.addDynamicGoal("alive", MessageUtil.replaceColors("&6Alive&7:"), alive.size());
             game.addDynamicGoal("dead", MessageUtil.replaceColors("&6Dead&7:"), dead.size());
         }

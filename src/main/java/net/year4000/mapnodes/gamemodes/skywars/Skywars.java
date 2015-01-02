@@ -65,7 +65,7 @@ public class Skywars extends Elimination {
         game.getSidebarGoals().clear();
         int total = alive.size() + dead.size();
 
-        if (total > 16) {
+        if (total > 15) {
             game.addDynamicGoal("alive", MessageUtil.replaceColors("&6Alive&7:"), alive.size());
             game.addDynamicGoal("dead", MessageUtil.replaceColors("&6Dead&7:"), dead.size());
         }
