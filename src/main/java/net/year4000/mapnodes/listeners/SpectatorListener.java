@@ -203,7 +203,7 @@ public class SpectatorListener implements Listener {
             gm.getBookPages(player.getPlayer())
         );
 
-        book.setItemMeta(ItemUtil.addMeta(book, "{'display': {'name': '" + ("&b" + gm.getMap().getName() + " &7(" + Msg.locale(player, "action.right") + ")") + "'}}"));
+        book.setItemMeta(ItemUtil.addMeta(book, "{'display': {'name': '" + ("&b&l" + gm.getMap().getName() + " &7(" + Msg.locale(player, "action.right") + ")") + "'}}"));
 
         return book;
     }
