@@ -8,6 +8,8 @@ import net.year4000.utilities.bukkit.MessageUtil;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 public class ArrowTagKit extends NodeKit implements GameKit {
     public static final String NAME = "arrow_tag_kit";
@@ -41,5 +43,7 @@ public class ArrowTagKit extends NodeKit implements GameKit {
         metaAxe.setDisplayName(ITEM_NAME_ALT);
         items.get(AXE_SLOT).setItemMeta(metaAxe);
         items.get(AXE_SLOT).setDurability((short) -3000);
+
+        effects.add(new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 1));
     }
 }
