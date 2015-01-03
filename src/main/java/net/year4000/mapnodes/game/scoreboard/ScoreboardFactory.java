@@ -5,6 +5,7 @@ import com.google.common.collect.Iterables;
 import lombok.AllArgsConstructor;
 import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.game.GamePlayer;
+import net.year4000.mapnodes.api.game.modes.GameModeInfo;
 import net.year4000.mapnodes.api.utils.Spectator;
 import net.year4000.mapnodes.game.NodeGame;
 import net.year4000.mapnodes.game.NodePlayer;
@@ -192,6 +193,11 @@ public class ScoreboardFactory {
         }
 
         SidebarManager side = new SidebarManager();
+
+        // Show Current Game Mode
+        String gameMode = game.getGameModes().iterator().next().getClass().getAnnotation(GameModeInfo.class).name();
+        side.addLine(MessageUtil.replaceColors("&e" + gameMode));
+        side.addBlank();
 
         // When game is running show game time length
         if (game.getStage().isPlaying() && !PacketHacks.isTitleAble(nodePlayer.getPlayer())) {
