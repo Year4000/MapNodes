@@ -173,7 +173,7 @@ public class SpleefRunner extends Elimination {
 
             @Override
             public void runTock(int position) {
-                if (position % 20 != 0) return;
+                if (position % 20 != 0 || !bellow.getType().isSolid()) return;
 
                 if (!DATA_BLOCKS.contains(bellow.getType())) {
                     bellow.setType(Material.STAINED_CLAY);
@@ -185,6 +185,8 @@ public class SpleefRunner extends Elimination {
 
             @Override
             public void runLast(int position) {
+                if (!bellow.getType().isSolid()) return;
+
                 FallingBlock fallingBlock = MapNodes.getCurrentWorld().spawnFallingBlock(bellow.getLocation(), bellow.getType(), bellow.getData());
                 bellow.setType(Material.AIR);
                 fallingBlock.setDropItem(false);
