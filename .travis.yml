@@ -12,7 +12,8 @@ install:
   - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
 after_success:
   - cp ./target/MapNodes.jar ./Games/plugins/MapNodes.jar
+  - SHA = $(git log --pretty=format:'%h' -1)
   - cd ./Games/
   - git add ./plugins/MapNodes.jar
-  - git commit -m "Update MapNodes to $(git log --pretty=format:'%h' -1)"
+  - git commit -m "Update MapNodes to $SHA"
   - git push origin master
