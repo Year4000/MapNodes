@@ -1,7 +1,6 @@
 package net.year4000.mapnodes.gamemodes.spleef;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
 import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.events.game.GameLoadEvent;
 import net.year4000.mapnodes.api.events.player.GamePlayerDeathEvent;

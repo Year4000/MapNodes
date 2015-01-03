@@ -57,7 +57,9 @@ public final class GameListener implements Listener {
             ((NodePlayer) player).updateInventory();
 
             // God buffer mode
-            player.getPlayerTasks().add(NodeKit.immortal(event.getPlayer()));
+            if (player.getPlayer().getLocation().getY() > 0) {
+                player.getPlayerTasks().add(NodeKit.immortal(event.getPlayer()));
+            }
         }
 
         if (player.getTeam() == null) {

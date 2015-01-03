@@ -64,7 +64,7 @@ public final class MapNodesListener implements Listener {
         MapNodes.getCurrentGame().quit(event.getPlayer());
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onRespawn(PlayerRespawnEvent event) {
         event.setRespawnLocation(Common.center(event.getRespawnLocation()));
 
