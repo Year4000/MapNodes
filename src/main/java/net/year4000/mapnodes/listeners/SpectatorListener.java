@@ -198,7 +198,7 @@ public class SpectatorListener implements Listener {
         GameManager gm = MapNodes.getCurrentGame();
 
         ItemStack book = ItemUtil.createBook(
-            "&b" + gm.getMap().getName(),
+            "&b&l" + gm.getMap().getName(),
             "&5&o" + gm.getMap().getMainAuthor(),
             gm.getBookPages(player.getPlayer())
         );
