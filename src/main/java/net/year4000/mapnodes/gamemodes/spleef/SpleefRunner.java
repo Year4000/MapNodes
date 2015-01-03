@@ -34,7 +34,7 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @GameModeInfo(
-    name = "SpleefRunner",
+    name = "Spleef Runner",
     version = "1.1",
     config = SpleefRunnerConfig.class
 )
