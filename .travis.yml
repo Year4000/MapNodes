@@ -10,3 +10,9 @@ before_install:
   - git clone https://github.com/Year4000/Utilities.git ; cd Utilities/ ; mvn clean install ; cd ../
 install:
   - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+after_success:
+  - cp ./target/MapNodes.jar ./Games/plugins/MapNodes.jar
+  - cd ./Games/
+  - git add ./plugins/MapNodes.jar
+  - git commit -m "Update MapNodes to $(git log --pretty=format:'%h' -1)"
+  - git push origin master
