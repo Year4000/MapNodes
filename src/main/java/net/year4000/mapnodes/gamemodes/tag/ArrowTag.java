@@ -1,6 +1,8 @@
 package net.year4000.mapnodes.gamemodes.tag;
 
 import com.google.common.collect.ImmutableSet;
+import net.year4000.mapnodes.api.MapNodes;
+import net.year4000.mapnodes.api.events.game.GameClockEvent;
 import net.year4000.mapnodes.api.events.game.GameLoadEvent;
 import net.year4000.mapnodes.api.events.game.GameStartEvent;
 import net.year4000.mapnodes.api.events.game.GameWinEvent;
@@ -66,7 +68,7 @@ public class ArrowTag extends GameModeTemplate implements GameMode {
 
         team = game.getPlayingTeams().collect(Collectors.toList()).iterator().next();
         team.setAllowFriendlyFire(true); // Force enable so players can kill each other
-        team.setSize(15); // Max of 15 players all ways
+        team.setSize(14); // Max of 14 players all ways
         ((NodeTeam) team).setKit(ArrowTagKit.NAME);
 
         // Add requirements | Their must be at least 2 players to start
@@ -159,6 +161,13 @@ public class ArrowTag extends GameModeTemplate implements GameMode {
     public void onToggleFlight(PlayerToggleFlightEvent event) {
         if (event.getPlayer().getLocation().getY() < 0) {
             event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onLeave(GameClockEvent event) {
+        if (event.getGame().getPlaying().count() <= 1L && !MapNodes.getLogUtil().isDebug()) {
+            game.stop();
         }
     }
 
