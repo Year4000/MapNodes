@@ -44,6 +44,7 @@ public final class NodePlayer implements GamePlayer, Comparable {
     private NodeTeam pendingTeam;
     private NodeClass classKit;
     private List<BukkitTask> playerTasks = new ArrayList<>();
+    private boolean immortal;
     // scoreboard
     private Scoreboard scoreboard;
     // player flags (set by methods bellow)
@@ -100,7 +101,7 @@ public final class NodePlayer implements GamePlayer, Comparable {
         player.teleport(start.getSpawn());
 
         // God buffer mode
-        if (start.isImmortal()) {
+        if (immortal = start.isImmortal()) {
             playerTasks.add(NodeKit.immortal(player));
         }
 
