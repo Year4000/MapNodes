@@ -112,6 +112,11 @@ public class ArrowTag extends GameModeTemplate implements GameMode {
 
     @EventHandler
     public void onDamage(EntityDamageEvent event) {
+        if (event.getEntity().getLocation().getY() < 0) {
+            event.setCancelled(true);
+            return;
+        }
+
         if (!DAMAGE.contains(event.getCause())) {
             event.setCancelled(true);
         }
