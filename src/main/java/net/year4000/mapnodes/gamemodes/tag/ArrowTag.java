@@ -197,13 +197,11 @@ public class ArrowTag extends GameModeTemplate implements GameMode {
             public void runFirst(int position) {
                 player.setAllowFlight(true);
                 player.setFlying(true);
-                player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, MathUtil.ticks(1), 3, true), true);
                 player.setFireTicks(0);
             }
 
             @Override
             public void runTock(int position) {
-                player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, MathUtil.ticks(1), 3, true), true);
                 player.setExp(1);
 
                 if (MathUtil.sec(position) == 0) return;
