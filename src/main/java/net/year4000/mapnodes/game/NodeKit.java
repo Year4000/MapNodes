@@ -138,7 +138,9 @@ public class NodeKit implements GameKit {
             public void runTock(int position) {
                 // If effects were not applied some how just reset player time.
                 if (!player.getActivePotionEffects().stream().map(PotionEffect::getType).collect(Collectors.toList()).containsAll(types)) {
-                    player.resetPlayerTime();
+                    for (PotionEffectType type : types) {
+                        player.addPotionEffect(new PotionEffect(type, getTime(), MathUtil.sec(position), true));
+                    }
                 }
 
                 player.setExp(MathUtil.percent(getTime(), position) / 100);
