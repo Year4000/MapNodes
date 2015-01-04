@@ -7,4 +7,4 @@ The `master` branch gets deployed to the servers when ever their is a new commit
 Make sure the `master` branch works, as this could cause weird server freezes.
 
 ## License ##
-MapNodes is copyright &copy; 2014 [year4000](https://www.year4000.net/)
+MapNodes is copyright &copy; 2015 [year4000](https://www.year4000.net/)
