@@ -99,14 +99,14 @@ public class ArrowTag extends GameModeTemplate implements GameMode {
     @EventHandler()
     public void onStart(GameWinEvent event) {
         List<String> winners = new ArrayList<>(scores.keySet());
-        winners.sort((l, r) -> scores.get(l).get() > scores.get(r).get() ? 1 : -1);
+        winners.sort((l, r) -> scores.get(l).get() < scores.get(r).get() ? 1 : -1);
         List<String> message = event.getMessage();
 
         if (winners.size() < 3) {
             winners.forEach(name -> message.add(MessageUtil.replaceColors("&a" + name.split("-")[1] + " &7(&e" + scores.get(name).get() + "&7)")));
         }
         else {
-            winners.subList(0, 2).forEach(name -> message.add(MessageUtil.replaceColors("&a" + name.split("-")[1] + " &7(&e" + scores.get(name).get() + "&7)")));
+            winners.subList(0, 3).forEach(name -> message.add(MessageUtil.replaceColors("&a" + name.split("-")[1] + " &7(&e" + scores.get(name).get() + "&7)")));
         }
     }
 
