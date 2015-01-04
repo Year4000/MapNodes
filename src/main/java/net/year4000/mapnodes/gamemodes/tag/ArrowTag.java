@@ -30,6 +30,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
@@ -107,6 +108,13 @@ public class ArrowTag extends GameModeTemplate implements GameMode {
         }
         else {
             winners.subList(0, 3).forEach(name -> message.add(MessageUtil.replaceColors("&a" + name.split("-")[1] + " &7(&e" + scores.get(name).get() + "&7)")));
+        }
+    }
+
+    @EventHandler
+    public void onBowUse(EntityShootBowEvent event) {
+        if (event.getEntity().getLocation().getY() < 0) {
+            event.setCancelled(true);
         }
     }
 
