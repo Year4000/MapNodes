@@ -8,7 +8,7 @@ public final class NodeBase {
         aliases = {"node"},
         desc = "Manage the game nodes in the queue"
     )
-    @CommandPermissions({"mapnodes.admin", "mapnodes.*"})
+    @CommandPermissions({"omega", "delta", "mapnodes.admin", "mapnodes.*"})
     @NestedCommand({NodeSub.class})
     public static void node(CommandContext args, CommandSender sender) throws CommandException {
         // Empty used as a base command

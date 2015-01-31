@@ -1,6 +1,7 @@
 package net.year4000.mapnodes.utils;
 
 import com.google.common.base.Ascii;
+import com.google.common.collect.ImmutableSet;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.Synchronized;
@@ -11,12 +12,14 @@ import net.year4000.mapnodes.game.NodePlayer;
 import net.year4000.utilities.ChatColor;
 import net.year4000.utilities.bukkit.MessageUtil;
 import org.bukkit.Location;
+import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class Common {
@@ -24,6 +27,7 @@ public final class Common {
     /** Color numbers based on its percent */
     private static int toggle = 0;
     private static Map<NodePlayer, BukkitTask> actionBarAnimations = new HashMap<>();
+    private static Set<String> VIPS = ImmutableSet.of("theta", "mu", "pi", "sigma", "phi", "delta", "omega");
 
     public static String colorNumber(int current, int total) {
         return MessageUtil.replaceColors(chatColorNumber(current, total) + current);
@@ -294,5 +298,16 @@ public final class Common {
         else {
             nodePlayer.sendMessage(message);
         }
+    }
+
+    /** Is the selected player a VIP */
+    public static boolean isVIP(Player player) {
+        for (String permission : VIPS) {
+            if (player.hasPermission(permission)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

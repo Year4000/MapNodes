@@ -17,7 +17,7 @@ public final class MapNodesSub {
         aliases = {"git"},
         desc = "View info about the git version."
     )
-    @CommandPermissions({"mapnodes.admin", "mapnodes.*"})
+    @CommandPermissions({"omega", "mapnodes.admin", "mapnodes.*"})
     public static void git(CommandContext args, CommandSender sender) throws CommandException {
         sender.sendMessage(Msg.locale(sender, "cmd.git.build"));
         gitQuickSend(sender, "cmd.git.name", "git.build.user.name");
@@ -41,7 +41,7 @@ public final class MapNodesSub {
         localeQuickSend(sender, "cmd.mapnodes.locale.code", "locale.code");
         localeQuickSend(sender, "cmd.mapnodes.locale.name", "locale.name");
 
-        if (sender.hasPermission("mapnodes.admin") || sender.hasPermission("mapnodes.*")) {
+        if (sender.hasPermission("omega") || sender.hasPermission("mapnodes.admin") || sender.hasPermission("mapnodes.*")) {
             sender.sendMessage(Msg.locale(sender, "cmd.mapnodes.locale.locales"));
             MessageManager.get().getLocales().keySet().stream()
                 .map(Locale::toString)

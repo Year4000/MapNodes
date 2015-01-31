@@ -42,7 +42,7 @@ public final class MapNodesListener implements Listener {
         NodeGame game = (NodeGame) MapNodes.getCurrentGame();
         Player player = event.getPlayer();
 
-        if (game.getPlayers().count() + 1 > game.getRealMaxCount() && !player.hasPermission("theta")) {
+        if (game.getPlayers().count() + 1 > game.getRealMaxCount() && !Common.isVIP(player)) {
             event.disallow(PlayerLoginEvent.Result.KICK_FULL, Msg.locale(player, "server.full") + ' ' + Msg.locale(player, "team.select.non_vip_url"));
         }
     }

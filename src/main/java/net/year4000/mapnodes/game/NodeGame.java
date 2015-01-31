@@ -415,7 +415,7 @@ public final class NodeGame implements GameManager, Validator {
             return getTeam(locale, name);
         }
         else {
-            checkArgument(player.getPlayer().hasPermission("theta"), Msg.locale(player, "team.select.non_vip"));
+            checkArgument(Common.isVIP(player.getPlayer()), Msg.locale(player, "team.select.non_vip"));
             return getTeam(locale, name);
         }
     }

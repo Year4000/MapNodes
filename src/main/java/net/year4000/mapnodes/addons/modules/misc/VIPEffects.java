@@ -24,7 +24,7 @@ public class VIPEffects extends Addon implements Listener {
         Location loc = event.getEntity().getLocation().clone().add(0, 1, 0).subtract(Common.randomOffset());
 
         MapNodes.getCurrentGame().getPlaying()
-            .filter(player -> player.getPlayer().hasPermission("theta"))
+            .filter(player -> Common.isVIP(player.getPlayer()))
             .filter(player -> player.getPlayer().getLocation().distance(loc) < 50)
             .forEach(player -> {
                 Location l = event.getEntity().getLocation().clone().add(0, 1, 0);

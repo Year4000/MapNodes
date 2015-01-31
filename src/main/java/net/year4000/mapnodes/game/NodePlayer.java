@@ -412,6 +412,6 @@ public final class NodePlayer implements GamePlayer, Comparable {
             return -1;
         }
 
-        return player.hasPermission("theta") ? 1 : -1;
+        return Common.isVIP(player) ? 1 : -1;
     }
 }
