@@ -15,6 +15,7 @@ import net.year4000.mapnodes.game.NodeKit;
 import net.year4000.mapnodes.game.NodePlayer;
 import net.year4000.mapnodes.game.system.SpectatorKit;
 import net.year4000.mapnodes.messages.Msg;
+import net.year4000.mapnodes.utils.NMSHacks;
 import net.year4000.mapnodes.utils.PacketHacks;
 import net.year4000.mapnodes.utils.SchedulerUtil;
 import net.year4000.utilities.bukkit.FunEffectsUtil;
@@ -224,6 +225,7 @@ public class SpectatorListener implements Listener {
     @EventHandler
     public void onJoin(GamePlayerJoinSpectatorEvent event) {
         NodeKit kit = new SpectatorKit();
+        final Player player  = event.getPlayer().getPlayer();
         boolean classKit = ((NodePlayer) event.getPlayer()).getGame().getClasses().size() > 0;
 
         // Book
@@ -235,6 +237,22 @@ public class SpectatorListener implements Listener {
         // Class Menu
         if (classKit) {
             kit.getItems().set(1, ItemUtil.makeItem("magma_cream", "{'display':{'name':'" + Msg.locale(event.getPlayer(), "class.menu.item") + "'}}"));
+        }
+
+        // Player Head stats
+        String name = "&a&l" + player.getName() + " &7(" + Msg.locale(event.getPlayer(), "action.right") + ")";
+        try {
+            ItemStack head = NMSHacks.setSkullSkin(NMSHacks.makeSkull(player, name), player);
+            kit.getItems().set(7, head);
+        }
+        // Player has not spawned yet set skin later
+        catch (IllegalArgumentException e) {
+            kit.getItems().set(7, NMSHacks.makeSkull(player, name));
+            SchedulerUtil.runAsync(() -> {
+                ItemStack head = NMSHacks.setSkullSkin(NMSHacks.makeSkull(player, name), player);
+                player.getInventory().setItem(7, head);
+                player.updateInventory();
+            }, 40L);
         }
 
         event.setKit(kit);

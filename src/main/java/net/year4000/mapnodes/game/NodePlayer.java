@@ -10,6 +10,7 @@ import net.year4000.mapnodes.api.game.GamePlayer;
 import net.year4000.mapnodes.api.game.GameTeam;
 import net.year4000.mapnodes.api.utils.Spectator;
 import net.year4000.mapnodes.messages.Msg;
+import net.year4000.mapnodes.utils.NMSHacks;
 import net.year4000.utilities.bukkit.BadgeManager;
 import net.year4000.mapnodes.utils.Common;
 import net.year4000.mapnodes.utils.PacketHacks;
@@ -319,10 +320,11 @@ public final class NodePlayer implements GamePlayer, Comparable {
             PlayerInventory pinv = player.getInventory();
 
             // Armor
-            items[0] = pinv.getHelmet();
-            items[1] = pinv.getChestplate();
-            items[2] = pinv.getLeggings();
-            items[3] = pinv.getBoots();
+            items[0] = NMSHacks.setSkullSkin(NMSHacks.makeSkull(player, getPlayerColor()), player);
+            items[1] = pinv.getHelmet();
+            items[2] = pinv.getChestplate();
+            items[3] = pinv.getLeggings();
+            items[4] = pinv.getBoots();
 
             // Health and Food
             items[8] = player.isDead() ? new ItemStack(Material.AIR) : getHunger();
