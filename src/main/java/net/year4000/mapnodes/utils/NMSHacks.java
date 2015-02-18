@@ -92,23 +92,29 @@ public final class NMSHacks {
         checkArgument(skull.getType() == Material.SKULL_ITEM);
         checkArgument(skull.getData().getData() == 3);
 
-        net.minecraft.server.v1_7_R4.ItemStack nms = CraftItemStack.asNMSCopy(skull.clone());
-        NBTTagCompound tag = nms.getTag();
-        NBTTagCompound owner = new NBTTagCompound();
-        NBTTagCompound prop = new NBTTagCompound();
-        NBTTagList textures = new NBTTagList();
-        NBTTagCompound skin = new NBTTagCompound();
+        try {
+            net.minecraft.server.v1_7_R4.ItemStack nms = CraftItemStack.asNMSCopy(skull.clone());
+            NBTTagCompound tag = nms.getTag();
+            NBTTagCompound owner = new NBTTagCompound();
+            NBTTagCompound prop = new NBTTagCompound();
+            NBTTagList textures = new NBTTagList();
+            NBTTagCompound skin = new NBTTagCompound();
 
-        owner.setString("Id", player.getUniqueId().toString());
-        owner.setString("Name", player.getName());
-        skin.setString("Value", player.getSkin().getData());
-        skin.setString("Signature", player.getSkin().getSignature());
-        textures.add(skin);
-        prop.set("textures", textures);
-        owner.set("Properties", prop);
-        tag.set("SkullOwner", owner);
-        nms.setTag(tag);
+            owner.setString("Id", player.getUniqueId().toString());
+            owner.setString("Name", player.getName());
+            skin.setString("Value", player.getSkin().getData());
+            skin.setString("Signature", player.getSkin().getSignature());
+            textures.add(skin);
+            prop.set("textures", textures);
+            owner.set("Properties", prop);
+            tag.set("SkullOwner", owner);
+            nms.setTag(tag);
 
-        return CraftItemStack.asBukkitCopy(nms);
+            return CraftItemStack.asBukkitCopy(nms);
+        }
+        // Server is in offline mode
+        catch (IllegalArgumentException e) {
+            return skull;
+        }
     }
 }

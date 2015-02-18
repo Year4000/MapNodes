@@ -241,19 +241,8 @@ public class SpectatorListener implements Listener {
 
         // Player Head stats
         String name = "&a&l" + player.getName() + " &7(" + Msg.locale(event.getPlayer(), "action.right") + ")";
-        try {
-            ItemStack head = NMSHacks.setSkullSkin(NMSHacks.makeSkull(player, name), player);
-            kit.getItems().set(7, head);
-        }
-        // Player has not spawned yet set skin later
-        catch (IllegalArgumentException e) {
-            kit.getItems().set(7, NMSHacks.makeSkull(player, name));
-            SchedulerUtil.runAsync(() -> {
-                ItemStack head = NMSHacks.setSkullSkin(NMSHacks.makeSkull(player, name), player);
-                player.getInventory().setItem(7, head);
-                player.updateInventory();
-            }, 40L);
-        }
+        ItemStack head = NMSHacks.setSkullSkin(NMSHacks.makeSkull(player, name), player);
+        kit.getItems().set(7, head);
 
         event.setKit(kit);
     }
