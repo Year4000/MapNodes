@@ -320,7 +320,7 @@ public final class NodePlayer implements GamePlayer, Comparable {
             PlayerInventory pinv = player.getInventory();
 
             // Armor
-            items[0] = NMSHacks.setSkullSkin(NMSHacks.makeSkull(player, getPlayerColor()), player);
+            items[0] = NMSHacks.setSkullSkin(NMSHacks.makeSkull(player, getBadge() + " " + getPlayerColor()), player);
             items[1] = pinv.getHelmet();
             items[2] = pinv.getChestplate();
             items[3] = pinv.getLeggings();
