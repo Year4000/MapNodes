@@ -3,10 +3,15 @@ package net.year4000.mapnodes.game.scoreboard;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import lombok.AllArgsConstructor;
+import net.year4000.mapnodes.NodeFactory;
 import net.year4000.mapnodes.api.MapNodes;
+import net.year4000.mapnodes.api.game.GameManager;
 import net.year4000.mapnodes.api.game.GamePlayer;
 import net.year4000.mapnodes.api.game.modes.GameModeInfo;
 import net.year4000.mapnodes.api.utils.Spectator;
+import net.year4000.mapnodes.clocks.Clocker;
+import net.year4000.mapnodes.clocks.NextNode;
+import net.year4000.mapnodes.clocks.RestartServer;
 import net.year4000.mapnodes.game.NodeGame;
 import net.year4000.mapnodes.game.NodePlayer;
 import net.year4000.mapnodes.game.NodeTeam;
@@ -17,10 +22,7 @@ import net.year4000.utilities.ChatColor;
 import net.year4000.utilities.MessageUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.scoreboard.DisplaySlot;
-import org.bukkit.scoreboard.Scoreboard;
-import org.bukkit.scoreboard.ScoreboardManager;
-import org.bukkit.scoreboard.Team;
+import org.bukkit.scoreboard.*;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -29,6 +31,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @AllArgsConstructor
@@ -41,6 +44,7 @@ public class ScoreboardFactory {
     private static final Iterator<String> color = forever.iterator();
 
     static {
+        // Year4000 Flash Logo
         SchedulerUtil.repeatAsync(() -> {
             String b = "&" + color.next() + "&l";
             String name = b + "   [&" + color.next() + "&l" + NAME + b + "]   ";
@@ -63,6 +67,50 @@ public class ScoreboardFactory {
                     );
                 });
         }, 20L);
+
+        // In game scoreboard cycle
+        SchedulerUtil.repeatAsync(() -> {
+            final GameManager game = MapNodes.getCurrentGame();
+            final String shortMapName = Common.shortMessage(22, game.getMap().getName());
+            final String title = "  " + shortMapName + "    ";
+            final int time = game.getMap().getName().length() * 3, length = shortMapName.length() + 3;
+            final List<Objective> objectives = game.getPlaying()
+                .map(GamePlayer::getPlayer)
+                .map(Player::getScoreboard)
+                .map(obj -> obj.getObjective(DisplaySlot.SIDEBAR))
+                .filter(obj -> obj != null)
+                .collect(Collectors.toList());
+            final Clocker revert = new Clocker(time) {
+                @Override
+                public void runTock(int position) {
+                    objectives.forEach(obj -> {
+                        int pos = (int) (length - ((MathUtil.percent(getTime(), position) * 10) / 10) * (length * .01));
+                        String parts = title.substring(0, pos) + "&3" + title.charAt(pos) + "&f" + title.substring(pos + 1);
+                        obj.setDisplayName(Common.truncate(MessageUtil.replaceColors("  &b" + parts), 32));
+                    });
+                }
+            };
+
+            new Clocker(time) {
+                @Override
+                public void runTock(int position) {
+                    if (objectives.size() == 0 || game.getStage().isEndGame()) return;
+
+                    objectives.forEach(obj -> {
+                        int pos = (int) (length - ((MathUtil.percent(getTime(), position) * 10) / 10) * (length * .01));
+                        String parts = title.substring(0, pos) + "&3" + title.charAt(pos) + "&b" + title.substring(pos + 1);
+                        obj.setDisplayName(Common.truncate(MessageUtil.replaceColors("  &f" + parts), 32));
+                    });
+                }
+
+                @Override
+                public void runLast(int position) {
+                    if (objectives.size() == 0 || game.getStage().isEndGame()) return;
+
+                    SchedulerUtil.runAsync(revert::run, 40L);
+                }
+            }.run();
+        }, 1200L);
     }
 
     private transient final ConcurrentMap<Scoreboard, List<Team>> tabListTeamNames = new ConcurrentHashMap<>();
