@@ -626,7 +626,8 @@ public final class NodeGame implements GameManager, Validator {
                     .filter(obj -> obj != null)
                     .forEach(obj -> {
                         int pos = (int) (((MathUtil.percent(getTime(), position) * 10) / 10) * (title.length() * .01));
-                        obj.setDisplayName(Common.truncate(MessageUtil.replaceColors("    &b" + title.substring(0, pos) + "&3" + title.substring(pos) + "    "), 32));
+                        String parts = title.substring(0, pos) + "&3" + (pos == title.length() ? title.substring(pos) : title.charAt(pos) + "&f" + title.substring(pos + 1));
+                        obj.setDisplayName(Common.truncate(MessageUtil.replaceColors("    &b" + parts + "    "), 32));
                     });
             }
 
@@ -637,24 +638,33 @@ public final class NodeGame implements GameManager, Validator {
                     .map(Player::getScoreboard)
                     .map(obj -> obj.getObjective(DisplaySlot.SIDEBAR))
                     .filter(obj -> obj != null)
-                    .forEach(Objective::unregister);
+                    .forEach(obj -> obj.setDisplayName(Common.truncate(MessageUtil.replaceColors("    &f" + title + "    "), 32)));
 
-                if (NodeFactory.get().isQueuedGames()) {
-                    if (time != null) {
-                        stopClock = new NextNode(time).run();
+                SchedulerUtil.runAsync(() -> {
+                    getPlayers()
+                        .map(GamePlayer::getPlayer)
+                        .map(Player::getScoreboard)
+                        .map(obj -> obj.getObjective(DisplaySlot.SIDEBAR))
+                        .filter(obj -> obj != null)
+                        .forEach(Objective::unregister);
+
+                    if (NodeFactory.get().isQueuedGames()) {
+                        if (time != null) {
+                            stopClock = new NextNode(time).run();
+                        }
+                        else {
+                            stopClock = new NextNode().run();
+                        }
                     }
                     else {
-                        stopClock = new NextNode().run();
+                        if (time != null) {
+                            stopClock = new RestartServer(time).run();
+                        }
+                        else {
+                            stopClock = new RestartServer().run();
+                        }
                     }
-                }
-                else {
-                    if (time != null) {
-                        stopClock = new RestartServer(time).run();
-                    }
-                    else {
-                        stopClock = new RestartServer().run();
-                    }
-                }
+                }, 20L);
             }
         }.run();
     }
