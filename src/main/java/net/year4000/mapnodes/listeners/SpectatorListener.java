@@ -244,6 +244,9 @@ public class SpectatorListener implements Listener {
         ItemStack head = NMSHacks.setSkullSkin(NMSHacks.makeSkull(player, name), player);
         kit.getItems().set(7, head);
 
+        // Set spectator hat to that player's head
+        kit.getArmor().set(3, NMSHacks.setSkullSkin(NMSHacks.makeSkull(player), player));
+
         event.setKit(kit);
     }
 

@@ -27,5 +27,9 @@ public class SpectatorKit extends NodeKit implements Spectator {
         }};
 
         armor = new PlayerArmorList<>();
+        armor.add(ItemUtil.makeItem("air"));
+        armor.add(ItemUtil.makeItem("air"));
+        armor.add(ItemUtil.makeItem("air"));
+        armor.add(ItemUtil.makeItem("air"));
     }
 }
