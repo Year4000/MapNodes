@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import net.year4000.mapnodes.api.exceptions.InvalidJsonException;
 import net.year4000.mapnodes.api.game.GameManager;
 import net.year4000.mapnodes.api.game.GameMap;
+import net.year4000.mapnodes.messages.Message;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.Common;
 import net.year4000.utilities.ChatColor;
@@ -137,7 +138,12 @@ public final class NodeMap implements GameMap {
         if (hasOtherAuthors()) {
             int size = getOtherAuthors().size();
 
-            return Msg.locale(locale, "map.authors", getMainAuthor(), String.valueOf(size));
+            if (size == 1) {
+                return Msg.locale(locale, "map.author_duo", getMainAuthor(), getOtherAuthors().get(0));
+            }
+            else {
+                return Msg.locale(locale, "map.authors", getMainAuthor(), String.valueOf(size));
+            }
         }
 
         return Msg.locale(locale, "map.author", getMainAuthor());
@@ -145,12 +151,11 @@ public final class NodeMap implements GameMap {
 
     /** Fancy authors display */
     public String author(CommandSender sender) {
-        if (hasOtherAuthors()) {
-            int size = getOtherAuthors().size();
-
-            return Msg.locale(sender, "map.authors", getMainAuthor(), String.valueOf(size));
+        if (sender instanceof Player) {
+            return author(((Player) sender).getLocale());
         }
-
-        return Msg.locale(sender, "map.author", getMainAuthor());
+        else {
+            return author(Message.DEFAULT_LOCALE);
+        }
     }
 }
