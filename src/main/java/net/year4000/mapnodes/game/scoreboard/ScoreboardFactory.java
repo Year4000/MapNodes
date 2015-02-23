@@ -241,19 +241,14 @@ public class ScoreboardFactory {
         }
 
         SidebarManager side = new SidebarManager();
-        boolean eight = PacketHacks.isTitleAble(nodePlayer.getPlayer());
-        if (eight) {
-            side.enableFastSwitching();
-        }
 
         // Show Current Game Mode
         String gameMode = game.getGameModes().iterator().next().getClass().getAnnotation(GameModeInfo.class).name();
-        side.addLine(Msg.locale(nodePlayer, "game.name"));
-        side.addLine(MessageUtil.replaceColors(" &e" + gameMode));
+        side.addLine(MessageUtil.replaceColors("&e" + gameMode));
         side.addBlank();
 
         // When game is running show game time length
-        if (game.getStage().isPlaying() && !eight) {
+        if (game.getStage().isPlaying() && !PacketHacks.isTitleAble(nodePlayer.getPlayer())) {
             long currentTime = Common.cleanTimeMillis() - game.getStartTime();
             String time = "&a" + (new TimeUtil(currentTime, TimeUnit.MILLISECONDS)).prettyOutput("&7:&a");
             side.addLine(Msg.locale(nodePlayer, "game.time", time));
@@ -315,10 +310,6 @@ public class ScoreboardFactory {
 
     public void setGameSidebar(NodePlayer nodePlayer) {
         SidebarManager side = new SidebarManager();
-
-        if (PacketHacks.isTitleAble(nodePlayer.getPlayer())) {
-            side.enableFastSwitching();
-        }
 
         nodePlayer.getGame().getSidebarGoals().values().forEach(goal -> {
             if (goal.getType() == SidebarGoal.GoalType.DYNAMIC) {
