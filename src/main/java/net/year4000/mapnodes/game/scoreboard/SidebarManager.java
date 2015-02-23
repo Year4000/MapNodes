@@ -1,6 +1,7 @@
 package net.year4000.mapnodes.game.scoreboard;
 
 import com.google.common.base.Splitter;
+import lombok.Setter;
 import net.year4000.mapnodes.utils.Common;
 import net.year4000.utilities.ChatColor;
 import net.year4000.utilities.bukkit.MessageUtil;
@@ -10,10 +11,16 @@ import java.util.*;
 import java.util.regex.Pattern;
 
 public final class SidebarManager {
+    private boolean fastSwitch = false;
     private int blankCounter = 1;
     private Set<String> staticScores = new LinkedHashSet<>();
     private List<String> customTeams = new ArrayList<>();
     private Set<Object[]> dynamicScores = new LinkedHashSet<>();
+
+    /** Enable fast switching mode */
+    public void enableFastSwitching() {
+        fastSwitch = true;
+    }
 
     /** Add a blank line */
     public SidebarManager addBlank() {
@@ -108,19 +115,20 @@ public final class SidebarManager {
 
         // If exists reset scores
         if (scoreboard.getObjective(id) != null) {
-            // todo re-enable this fast switch when full convert to 1.8
-            /*objective = scoreboard.getObjective(id);
+            if (fastSwitch) {
+                objective = scoreboard.getObjective(id);
 
-            objective.setDisplayName(Common.truncate(MessageUtil.replaceColors(title), 32));
-            scoreboard.getEntries().stream()
-                .filter(name -> !staticScores.contains(name))
-                .forEach(scoreboard::resetScores);*/
-
-            // TODO This is a 1.7 client HACK fix... remove when convert to 1.8
-            scoreboard.getObjective(id).unregister();
-            objective = scoreboard.registerNewObjective(id, "dummy");
-            objective.setDisplaySlot(DisplaySlot.SIDEBAR);
-            scoreboard.getObjective(DisplaySlot.SIDEBAR).setDisplayName(Common.truncate(MessageUtil.replaceColors(title), 32));
+                objective.setDisplayName(Common.truncate(MessageUtil.replaceColors(title), 32));
+                scoreboard.getEntries().stream()
+                    .filter(name -> !staticScores.contains(name))
+                    .forEach(scoreboard::resetScores);
+            }
+            else {
+                scoreboard.getObjective(id).unregister();
+                objective = scoreboard.registerNewObjective(id, "dummy");
+                objective.setDisplaySlot(DisplaySlot.SIDEBAR);
+                scoreboard.getObjective(DisplaySlot.SIDEBAR).setDisplayName(Common.truncate(MessageUtil.replaceColors(title), 32));
+            }
 
             buildScores(scoreboard, objective);
         }
@@ -137,18 +145,21 @@ public final class SidebarManager {
     }
 
     public void buildScores(Scoreboard scoreboard, Objective objective) {
+        int count = 0;
         Iterator<String> scores = staticScores.iterator();
 
         // Add static scores that are the order they are in the list
         for (int i = 0; i < staticScores.size(); i++) {
+            if (++count > 15) break;
             Score score = objective.getScore(buildTeam(scoreboard, scores.next()));
             score.setScore(-(i + 1));
         }
 
         // Add dynamic scores that don't depend on statics
         for (Object[] lines : dynamicScores) {
-            // todo re-enable this fast switch when full convert to 1.8
-            //if (scoreboard.getEntries().contains(lines[0])) continue;
+            if (++count > 15) break;
+
+            if (fastSwitch && scoreboard.getEntries().contains(lines[0])) continue;
 
             String scoreId = buildTeam(scoreboard, ((String) lines[0]));
             int scoreInput = (Integer) lines[1];
