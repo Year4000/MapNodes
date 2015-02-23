@@ -244,7 +244,8 @@ public class ScoreboardFactory {
 
         // Show Current Game Mode
         String gameMode = game.getGameModes().iterator().next().getClass().getAnnotation(GameModeInfo.class).name();
-        side.addLine(MessageUtil.replaceColors("&e" + gameMode));
+        side.addLine(Msg.locale(nodePlayer, "game.name"));
+        side.addLine(MessageUtil.replaceColors(" &e" + gameMode));
         side.addBlank();
 
         // When game is running show game time length
