@@ -9,10 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.NodeFactory;
-import net.year4000.mapnodes.api.events.game.GameClockEvent;
-import net.year4000.mapnodes.api.events.game.GameLoadEvent;
-import net.year4000.mapnodes.api.events.game.GameStartEvent;
-import net.year4000.mapnodes.api.events.game.GameStopEvent;
+import net.year4000.mapnodes.api.events.game.*;
 import net.year4000.mapnodes.api.exceptions.InvalidJsonException;
 import net.year4000.mapnodes.api.game.*;
 import net.year4000.mapnodes.api.game.modes.GameMode;
@@ -545,6 +542,8 @@ public final class NodeGame implements GameManager, Validator {
         if (stage == NodeStage.PLAYING) {
             return;
         }
+
+        (new PreGameStartEvent(this)).call();
 
         stage = NodeStage.PLAYING;
 

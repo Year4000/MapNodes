@@ -4,6 +4,7 @@ import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.events.game.GameLoadEvent;
 import net.year4000.mapnodes.api.events.game.GameStartEvent;
+import net.year4000.mapnodes.api.events.game.PreGameStartEvent;
 import net.year4000.mapnodes.api.events.player.*;
 import net.year4000.mapnodes.api.game.GameManager;
 import net.year4000.mapnodes.api.game.GamePlayer;
@@ -29,7 +30,7 @@ import java.util.stream.Collectors;
 
 @GameModeInfo(
     name = "Elimination",
-    version = "1.0",
+    version = "1.1",
     config = EliminationConfig.class
 )
 public class Elimination extends GameModeTemplate implements GameMode {
@@ -106,11 +107,16 @@ public class Elimination extends GameModeTemplate implements GameMode {
         }
     }
 
-    /** Set up the players in the game */
+    /** Set up the players before the game starts */
     @EventHandler
-    public void onGameStart(GameStartEvent event) {
+    public void onPreGameStart(PreGameStartEvent event) {
         new ArrayList<>(team.getQueue()).forEach(GamePlayer::joinSpectatorTeam);
         alive.addAll(team.getPlayers().stream().map(player -> player.getPlayer().getName()).collect(Collectors.toList()));
+    }
+
+    /** Build the sidebar and or end the game when not enuf players */
+    @EventHandler
+    public void onGameStart(GameStartEvent event) {
         buildAndSendList();
 
         if (alive.size() <= 1 && !MapNodesPlugin.getInst().isDebug()) {
@@ -139,7 +145,7 @@ public class Elimination extends GameModeTemplate implements GameMode {
     /** When players leave count that as a death */
     @EventHandler
     public void onSwitchTeam(GamePlayerJoinSpectatorEvent event) {
-        deadPlayer(event.getPlayer().getPlayer());
+            deadPlayer(event.getPlayer().getPlayer());
     }
 
     /** Handle the dead player */
