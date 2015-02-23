@@ -12,6 +12,9 @@ import java.io.File;
 @Data
 @Setter(AccessLevel.MODULE)
 public class MapFolder {
+    /** The name of the parent folder */
+    private String parent;
+
     /** The name of the folder */
     private String name;
 
@@ -34,6 +37,7 @@ public class MapFolder {
             throw new InvalidMapException(Msg.util("error.world.folder", path.getName()));
         }
 
+        parent = path.getParentFile().getName();
         name = path.getName();
         map = new File(path, "map.json");
         world = new File(path, "world.zip");
@@ -62,5 +66,10 @@ public class MapFolder {
         }
 
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return parent + "/" + name + " (" + (disabled ? "Disabled" : "Enabled") + ")";
     }
 }

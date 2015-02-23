@@ -26,26 +26,38 @@ public class MapFactory {
         folders = new ConcurrentHashMap<>();
 
         Settings.get().getMapsFolder().parallelStream().forEach(path -> {
-            try {
-                File maps = new File(path);
-                if (maps.isDirectory()) {
-                    for (File world : checkNotNull(maps.listFiles())) {
-                        try {
-                            MapNodesPlugin.debug(Msg.util("debug.map.loaded", world.getName()));
-                            folders.put(world.getName(), new MapFolder(world));
-                        }
-                        catch (InvalidMapException e) {
-                            MapNodesPlugin.debug(e.getMessage());
-                        }
-                    }
+            File maps = new File(path);
+
+            for (File map : checkNotNull(maps.listFiles())) {
+                try {
+                    maps(folders, map);
                 }
-            }
-            catch (SecurityException e) {
-                MapNodesPlugin.debug(e.getMessage());
+                catch (SecurityException e) {
+                    MapNodesPlugin.debug(e.getMessage());
+                }
             }
         });
 
         //folders.forEach(System.out::println);
+    }
+
+    private static void maps(Map<String, MapFolder> folders, File maps) {
+        try {
+            if (maps.isDirectory()) {
+                for (File world : checkNotNull(maps.listFiles())) {
+                    try {
+                        MapNodesPlugin.debug(Msg.util("debug.map.loaded", world.getName()));
+                        folders.put(world.getName(), new MapFolder(world));
+                    }
+                    catch (InvalidMapException e) {
+                        MapNodesPlugin.debug(e.getMessage());
+                    }
+                }
+            }
+        }
+        catch (SecurityException e) {
+            MapNodesPlugin.debug(e.getMessage());
+        }
     }
 
     /** Get the mapfolder by name */
@@ -75,7 +87,7 @@ public class MapFactory {
 
     /** A shuffle list of allowed maps */
     public static List<MapFolder> getMaps(int number) {
-        Stream<MapFolder> enabledFolders = folders.values().parallelStream().filter(m -> !m.isDisabled());
+        Stream<MapFolder> enabledFolders = folders.values().parallelStream().filter(m -> !m.isDisabled() && (Settings.get().getModes().size() == 0 || Settings.get().getModes().contains(m.getParent())));
         List<MapFolder> maps = new ArrayList<>(enabledFolders.collect(Collectors.toList()));
 
         // Reverse and shuffle the maps based on the number of maps

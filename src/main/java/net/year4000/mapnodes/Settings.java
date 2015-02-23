@@ -35,6 +35,10 @@ public class Settings extends Config {
         if (System.getProperty("maps", null) != null) {
             mapsFolder = Arrays.asList(System.getProperty("maps", null).split("(,|;)"));
         }
+
+        if (System.getProperty("modes", null) != null) {
+            modes = Arrays.asList(System.getProperty("modes", null).split("(,|;)"));
+        }
     }
 
     @Comment("The url to pull the locales from")
@@ -50,6 +54,9 @@ public class Settings extends Config {
     private List<String> mapsFolder = new ArrayList<String>() {{
         add("/y4k/maps/");
     }};
+
+    @Comment("The game modes that this node will auto load")
+    private List<String> modes = new ArrayList<>();
 
     @Comment("The json file location to load global kits")
     private String kits = "/y4k/maps/kits.json";
