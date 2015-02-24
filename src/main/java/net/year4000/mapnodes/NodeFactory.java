@@ -47,7 +47,19 @@ public class NodeFactory {
     }
 
     public void addMap(MapFolder world) throws InvalidJsonException, WorldLoadException {
-        queueNodes.add(new Node(getGameID(), world));
+        addMap(world, false);
+    }
+
+    public void addMap(MapFolder world, boolean next) throws InvalidJsonException, WorldLoadException {
+        if (next) {
+            Queue<Node> maps = new LinkedBlockingQueue<>(queueNodes);
+            queueNodes.clear();
+            queueNodes.add(new Node(getGameID(), world));
+            queueNodes.addAll(maps);
+        }
+        else {
+            queueNodes.add(new Node(getGameID(), world));
+        }
     }
 
     /** Create and return a game id for the node */

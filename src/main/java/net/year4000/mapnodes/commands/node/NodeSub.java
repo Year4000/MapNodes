@@ -33,7 +33,7 @@ public final class NodeSub {
 
     @Command(
         aliases = {"add"},
-        flags = "f",
+        flags = "fn",
         max = 1,
         min = 1,
         desc = "Add a map to the node queue."
@@ -49,7 +49,7 @@ public final class NodeSub {
 
         if (MapFactory.isMap(mapName, args.hasFlag('f'))) {
             try {
-                NodeFactory.get().addMap(MapFactory.getMap(mapName));
+                NodeFactory.get().addMap(MapFactory.getMap(mapName), args.hasFlag('n'));
                 sender.sendMessage(Msg.locale(sender, "cmd.node.add", mapName));
             }
             catch (InvalidJsonException | WorldLoadException e) {
