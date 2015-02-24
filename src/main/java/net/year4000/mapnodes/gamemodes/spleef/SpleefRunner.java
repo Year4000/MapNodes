@@ -4,12 +4,16 @@ import com.google.common.collect.ImmutableList;
 import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.events.game.GameLoadEvent;
 import net.year4000.mapnodes.api.events.player.GamePlayerDeathEvent;
+import net.year4000.mapnodes.api.events.player.GamePlayerStartEvent;
 import net.year4000.mapnodes.api.game.GamePlayer;
 import net.year4000.mapnodes.api.game.modes.GameModeInfo;
 import net.year4000.mapnodes.clocks.Clocker;
 import net.year4000.mapnodes.gamemodes.elimination.Elimination;
+import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.MathUtil;
+import net.year4000.mapnodes.utils.PacketHacks;
 import net.year4000.mapnodes.utils.SchedulerUtil;
+import net.year4000.utilities.bukkit.MessageUtil;
 import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -20,6 +24,7 @@ import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.Snowball;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
@@ -27,6 +32,8 @@ import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.util.BlockVector;
 import org.bukkit.util.Vector;
 
@@ -35,11 +42,12 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 @GameModeInfo(
     name = "Spleef Runner",
-    version = "1.1",
-    config = SpleefRunnerConfig.class
+    version = "2.0",
+    config = SpleefRunnerConfig.class,
+    listeners = {SpleefPowerUp.class}
 )
 public class SpleefRunner extends Elimination {
-    private static final int END_STAGE = 0; // todo increase when we can get block cracks
+    private static final int END_STAGE = 3;
     private static final Random rand = new Random();
     public static final ImmutableList<BlockFace> FACES = ImmutableList.of(BlockFace.NORTH, BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST, BlockFace.NORTH_EAST, BlockFace.NORTH_WEST, BlockFace.SOUTH_EAST, BlockFace.SOUTH_WEST);
     public static final ImmutableList DATA_BLOCKS = ImmutableList.of(Material.STAINED_CLAY, Material.WOOL, Material.STAINED_GLASS, Material.STAINED_GLASS_PANE);
@@ -50,6 +58,14 @@ public class SpleefRunner extends Elimination {
     @EventHandler(priority = EventPriority.HIGH)
     public void onLoadSpleefRunner(GameLoadEvent event) {
         spleefConfig = getConfig();
+    }
+
+    @EventHandler
+    public void onJoin(GamePlayerStartEvent event) {
+        ItemStack item = event.getKit().getItems().get(0);
+        ItemMeta meta = item.getItemMeta();
+        meta.setDisplayName(MessageUtil.replaceColors(meta.getDisplayName() + " &7(" + Msg.locale(event.getPlayer(), "action.right") + ")"));
+        item.setItemMeta(meta);
     }
 
     @EventHandler
@@ -100,6 +116,11 @@ public class SpleefRunner extends Elimination {
 
     @EventHandler
     public void use(PlayerInteractEvent event) {
+        if (event.getAction() == Action.LEFT_CLICK_BLOCK || event.getAction() == Action.LEFT_CLICK_AIR)  {
+            event.setCancelled(true);
+            return;
+        }
+
         if (game.getStage().isPlaying() && event.getPlayer().getItemInHand().getType() == Material.IRON_HOE) {
             Snowball entity = event.getPlayer().launchProjectile(Snowball.class);
             ids.add(entity.getEntityId());
@@ -144,15 +165,18 @@ public class SpleefRunner extends Elimination {
 
         if (!player.isPlaying()) return;
 
+        // Track the current block id and give crack value
         Block bellow = event.getTo().getBlock().getRelative(BlockFace.DOWN);
         Map.Entry<BlockVector, Integer> tracking = trackBlock(bellow);
         BlockVector bellowVector = tracking.getKey();
         int stage = tracking.getValue();
+        PacketHacks.crackBlock(bellow, stage);
 
         if (spleefConfig.getBlocks().contains(bellow.getType()) && stage == END_STAGE) {
             runClock(bellow, bellowVector);
         }
-        else if (bellow.getType() == Material.AIR && stage == END_STAGE) {
+        // Disabled for block cracks
+        /*else if (bellow.getType() == Material.AIR && stage == END_STAGE) {
             for (BlockFace face : FACES) {
                 Block bellowRelative = bellow.getRelative(face);
                 Map.Entry<BlockVector, Integer> trackingRelative = trackBlock(bellowRelative);
@@ -163,7 +187,7 @@ public class SpleefRunner extends Elimination {
                     runClock(bellowRelative, bellowRelativeVector);
                 }
             }
-        }
+        }*/
     }
 
     private void runClock(Block bellow, BlockVector bellowVector) {
@@ -179,7 +203,9 @@ public class SpleefRunner extends Elimination {
                 }
 
                 bellow.setData(stage[MathUtil.sec(position)]);
-                MapNodes.getCurrentWorld().playEffect(bellow.getLocation(), Effect.SNOW_SHOVEL);
+                if (rand.nextBoolean()) {
+                    MapNodes.getCurrentWorld().playEffect(bellow.getLocation(), Effect.SNOW_SHOVEL);
+                }
             }
 
             @Override

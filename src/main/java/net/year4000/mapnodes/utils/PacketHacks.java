@@ -2,21 +2,27 @@ package net.year4000.mapnodes.utils;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import net.minecraft.server.v1_7_R4.ChatSerializer;
-import net.minecraft.server.v1_7_R4.IChatBaseComponent;
-import net.minecraft.server.v1_7_R4.Packet;
-import net.minecraft.server.v1_7_R4.PacketPlayOutChat;
+import net.minecraft.server.v1_7_R4.*;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.utilities.MessageUtil;
 import net.year4000.utilities.bukkit.bossbar.BossBar;
 import org.bukkit.Bukkit;
+import org.bukkit.block.Block;
 import org.bukkit.craftbukkit.v1_7_R4.CraftServer;
 import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPlayer;
 import org.bukkit.entity.Player;
+import org.bukkit.util.BlockVector;
 import org.spigotmc.ProtocolInjector;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class PacketHacks {
+    private static final AtomicInteger CRACK_COUNTER = new AtomicInteger(0);
+    private static final Map<BlockVector, Integer> CRACK_IDS = new HashMap<>();
+
     /** Re-spawn a dead player */
     public static void respawnPlayer(Player player) {
         CraftPlayer craftPlayer = (CraftPlayer) player;
@@ -114,5 +120,21 @@ public final class PacketHacks {
 
             setTitle(player, "&a" + header, footer);
         }
+    }
+
+    /** Crack the block with the given damage */
+    public static void crackBlock(Block block, int damage) {
+        BlockVector vector = block.getLocation().toVector().toBlockVector();
+        CRACK_IDS.putIfAbsent(vector, CRACK_COUNTER.getAndIncrement());
+        PacketPlayOutBlockBreakAnimation animation = new PacketPlayOutBlockBreakAnimation(
+            CRACK_IDS.get(vector),
+            block.getX(), block.getY(), block.getZ(),
+            damage
+        );
+
+        Bukkit.getOnlinePlayers().parallelStream()
+            .filter(player -> player.getLocation().distance(block.getLocation()) < 50)
+            .map(player -> (CraftPlayer) player)
+            .forEach(craftPlayer -> craftPlayer.getHandle().playerConnection.sendPacket(animation));
     }
 }
