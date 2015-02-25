@@ -99,6 +99,7 @@ public class Node {
 
             // Register the map json to NodeGame
             game = GsonUtil.createGson().fromJson(loadMap(), NodeGame.class);
+            game.getMap().convertAuthors(); // Fetches UUIDs for cache
         }
         catch (JsonIOException | JsonSyntaxException e) {
             throw new InvalidJsonException(e.getMessage());
@@ -121,6 +122,7 @@ public class Node {
             }
 
             game = GsonUtil.createGson(getWorld()).fromJson(loadMap(), NodeGame.class);
+            game.getMap().convertAuthors(); // Uses cached UUIDs
 
             // register system team and kit
             if (game.getTeams().containsKey(NodeTeam.SPECTATOR)) {

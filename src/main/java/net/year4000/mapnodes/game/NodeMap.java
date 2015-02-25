@@ -1,21 +1,30 @@
 package net.year4000.mapnodes.game;
 
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
+import com.google.gson.JsonObject;
 import com.google.gson.annotations.Since;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.api.exceptions.InvalidJsonException;
 import net.year4000.mapnodes.api.game.GameManager;
 import net.year4000.mapnodes.api.game.GameMap;
+import net.year4000.mapnodes.backend.APIFetcher;
 import net.year4000.mapnodes.messages.Message;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.Common;
 import net.year4000.utilities.ChatColor;
 import net.year4000.utilities.bukkit.MessageUtil;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
+import org.bukkit.craftbukkit.v1_7_R4.CraftServer;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
@@ -23,6 +32,23 @@ import static com.google.common.base.Preconditions.checkArgument;
 @NoArgsConstructor
 /** Details about the current map. */
 public final class NodeMap implements GameMap {
+    private static final String ACCOUNT_BASE = "https://api.year4000.net/accounts/";
+    private static final LoadingCache<UUID, String> UUID_NAMES = CacheBuilder.<UUID, String>newBuilder()
+    .build(new CacheLoader<UUID, String>() {
+        @Override
+        public String load(UUID uuid) throws Exception {
+            // Replace Authors UUID with their name
+            try {
+                JsonObject data = APIFetcher.get(ACCOUNT_BASE + uuid.toString(), JsonObject.class);
+                return data.get("minecraft").getAsJsonObject().get("username").getAsString();
+            }
+            catch (Exception e) {
+                MapNodesPlugin.log(e, false);
+                return Bukkit.getOfflinePlayer(uuid).getName();
+            }
+        }
+    });
+
     /** The name of the current map. */
     @Since(1.0)
     private String name = null;
@@ -54,6 +80,23 @@ public final class NodeMap implements GameMap {
     /*//--------------------------------------------//
          Upper Json Settings / Bellow Instance Code
     *///--------------------------------------------//
+
+    /** Convert authors's uuid */
+    public void convertAuthors() {
+        List<String> names = new ArrayList<>();
+
+        for (String name : authors) {
+            if (name.contains("-")) {
+                String author = UUID_NAMES.getUnchecked(UUID.fromString(name));
+                names.add(author == null ? "unknown" : author);
+            }
+            else {
+                names.add(name);
+            }
+        }
+
+        authors = names;
+    }
 
     /** Assign the game to this region */
     public void assignNodeGame(GameManager game) {
