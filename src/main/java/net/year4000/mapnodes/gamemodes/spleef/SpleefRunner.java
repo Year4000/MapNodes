@@ -42,7 +42,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 @GameModeInfo(
     name = "Spleef Runner",
-    version = "2.0",
+    version = "2.1",
     config = SpleefRunnerConfig.class,
     listeners = {SpleefPowerUp.class}
 )
@@ -62,10 +62,14 @@ public class SpleefRunner extends Elimination {
 
     @EventHandler
     public void onJoin(GamePlayerStartEvent event) {
-        ItemStack item = event.getKit().getItems().get(0);
+        ItemStack item = event.getKit().getItems().get(0).clone();
         ItemMeta meta = item.getItemMeta();
         meta.setDisplayName(MessageUtil.replaceColors(meta.getDisplayName() + " &7(" + Msg.locale(event.getPlayer(), "action.right") + ")"));
         item.setItemMeta(meta);
+
+        event.getPlayer().getPlayerTasks().add(SchedulerUtil.runSync(() -> {
+            event.getPlayer().getInventory().setItem(0, item);
+        }));
     }
 
     @EventHandler
