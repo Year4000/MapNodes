@@ -21,6 +21,7 @@ import net.year4000.utilities.bukkit.BadgeManager;
 import net.year4000.utilities.ChatColor;
 import net.year4000.utilities.MessageUtil;
 import org.bukkit.Bukkit;
+import org.bukkit.craftbukkit.v1_7_R4.scoreboard.CraftObjective;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.*;
 
@@ -83,11 +84,13 @@ public class ScoreboardFactory {
             final Clocker revert = new Clocker(time) {
                 @Override
                 public void runTock(int position) {
-                    objectives.forEach(obj -> {
-                        int pos = (int) (length - ((MathUtil.percent(getTime(), position) * 10) / 10) * (length * .01));
-                        String parts = title.substring(0, pos) + "&3" + title.charAt(pos) + "&f" + title.substring(pos + 1);
-                        obj.setDisplayName(Common.truncate(MessageUtil.replaceColors("  &b" + parts), 32));
-                    });
+                    objectives.stream()
+                        .filter(obj -> obj.getScoreboard() != null)
+                        .forEach(obj -> {
+                            int pos = (int) (length - ((MathUtil.percent(getTime(), position) * 10) / 10) * (length * .01));
+                            String parts = title.substring(0, pos) + "&3" + title.charAt(pos) + "&f" + title.substring(pos + 1);
+                            obj.setDisplayName(Common.truncate(MessageUtil.replaceColors("  &b" + parts), 32));
+                        });
                 }
             };
 
@@ -96,7 +99,9 @@ public class ScoreboardFactory {
                 public void runTock(int position) {
                     if (objectives.size() == 0 || game.getStage().isEndGame()) return;
 
-                    objectives.forEach(obj -> {
+                    objectives.stream()
+                        .filter(obj -> obj.getScoreboard() != null)
+                        .forEach(obj -> {
                         int pos = (int) (length - ((MathUtil.percent(getTime(), position) * 10) / 10) * (length * .01));
                         String parts = title.substring(0, pos) + "&3" + title.charAt(pos) + "&b" + title.substring(pos + 1);
                         obj.setDisplayName(Common.truncate(MessageUtil.replaceColors("  &f" + parts), 32));
