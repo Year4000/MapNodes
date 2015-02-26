@@ -319,8 +319,17 @@ public final class NodePlayer implements GamePlayer, Comparable {
             Player player = getPlayer();
             PlayerInventory pinv = player.getInventory();
 
-            // Armor
+            // Head and Stats
             items[0] = NMSHacks.setSkullSkin(NMSHacks.makeSkull(player, getBadge() + " " + getPlayerColor()), player);
+            ItemMeta meta = items[0].getItemMeta();
+            meta.getLore().add(Msg.locale(player, "team.name") + " " + getTeam().getDisplayName());
+
+            if (hasClassKit()) {
+                meta.getLore().add(Msg.locale(player, "class.name") + " " + getClassKit().getName());
+            }
+
+            items[0].setItemMeta(meta);
+            // Armor
             items[1] = pinv.getHelmet();
             items[2] = pinv.getChestplate();
             items[3] = pinv.getLeggings();
