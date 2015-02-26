@@ -322,10 +322,11 @@ public final class NodePlayer implements GamePlayer, Comparable {
             // Head and Stats
             items[0] = NMSHacks.setSkullSkin(NMSHacks.makeSkull(player, getBadge() + " " + getPlayerColor()), player);
             ItemMeta meta = items[0].getItemMeta();
-            meta.getLore().add(Msg.locale(player, "team.name") + " " + getTeam().getDisplayName());
+            meta.setLore(new ArrayList<>());
+            meta.getLore().add(Msg.locale(player, "team.name") + " " + team.getDisplayName());
 
             if (hasClassKit()) {
-                meta.getLore().add(Msg.locale(player, "class.name") + " " + getClassKit().getName());
+                meta.getLore().add(Msg.locale(player, "class.name") + " " + classKit.getName());
             }
 
             items[0].setItemMeta(meta);
