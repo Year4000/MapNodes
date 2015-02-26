@@ -69,7 +69,8 @@ public class SpleefRunner extends Elimination {
 
         event.getPlayer().getPlayerTasks().add(SchedulerUtil.runSync(() -> {
             event.getPlayer().getPlayer().getInventory().setItem(0, item);
-        }));
+            event.getPlayer().getPlayer().updateInventory();
+        }, 10L));
     }
 
     @EventHandler
