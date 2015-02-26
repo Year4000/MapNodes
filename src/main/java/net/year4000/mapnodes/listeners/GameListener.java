@@ -54,7 +54,7 @@ public final class GameListener implements Listener {
                 player.getTeam().getKit().giveKit(player);
             }
 
-            ((NodePlayer) player).updateInventory();
+            ((NodePlayer) player).updateInventories();
 
             // God buffer mode
             if (((NodePlayer) player).isImmortal()) {
@@ -182,7 +182,7 @@ public final class GameListener implements Listener {
     public void updateInventory(EntityDamageEvent event) {
         if (event.getEntity() instanceof Player) {
             GamePlayer player = MapNodes.getCurrentGame().getPlayer((Player) event.getEntity());
-            ((NodePlayer) player).updateInventory();
+            ((NodePlayer) player).updateInventories();
         }
     }
 
@@ -190,31 +190,31 @@ public final class GameListener implements Listener {
     public void updateInventory(InventoryClickEvent event) {
         if (event.getWhoClicked() instanceof Player) {
             GamePlayer player = MapNodes.getCurrentGame().getPlayer((Player) event.getWhoClicked());
-            ((NodePlayer) player).updateInventory();
+            ((NodePlayer) player).updateInventories();
         }
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void updateInventory(PlayerPickupItemEvent event) {
         GamePlayer player = MapNodes.getCurrentGame().getPlayer(event.getPlayer());
-        ((NodePlayer) player).updateInventory();
+        ((NodePlayer) player).updateInventories();
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void updateInventory(PlayerDropItemEvent event) {
         GamePlayer player = MapNodes.getCurrentGame().getPlayer(event.getPlayer());
-        ((NodePlayer) player).updateInventory();
+        ((NodePlayer) player).updateInventories();
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void updateInventory(PlayerItemConsumeEvent event) {
         GamePlayer player = MapNodes.getCurrentGame().getPlayer(event.getPlayer());
-        ((NodePlayer) player).updateInventory();
+        ((NodePlayer) player).updateInventories();
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void updateInventory(PlayerItemBreakEvent event) {
         GamePlayer player = MapNodes.getCurrentGame().getPlayer(event.getPlayer());
-        ((NodePlayer) player).updateInventory();
+        ((NodePlayer) player).updateInventories();
     }
 }

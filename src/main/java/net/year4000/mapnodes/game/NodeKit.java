@@ -225,7 +225,7 @@ public class NodeKit implements GameKit {
         Player rawPlayer = player.getPlayer();
 
         player.getPlayerTasks().add(SchedulerUtil.runSync(() -> {
-            Inventory inv = player.getInventory();
+            Inventory inv = player.getPlayer().getInventory();
             // Apply the items to the player if it has a slot set that slot if not just add it
             items.getRawItems().forEach(slotItem -> {
                 if (slotItem.getSlot() == -1) {

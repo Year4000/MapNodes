@@ -1,5 +1,6 @@
 package net.year4000.mapnodes.game;
 
+import com.google.common.base.Preconditions;
 import lombok.Data;
 import net.year4000.mapnodes.api.events.player.GamePlayerJoinEvent;
 import net.year4000.mapnodes.api.events.player.GamePlayerJoinSpectatorEvent;
@@ -9,6 +10,7 @@ import net.year4000.mapnodes.api.game.GameClass;
 import net.year4000.mapnodes.api.game.GamePlayer;
 import net.year4000.mapnodes.api.game.GameTeam;
 import net.year4000.mapnodes.api.utils.Spectator;
+import net.year4000.mapnodes.messages.MessageManager;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.NMSHacks;
 import net.year4000.utilities.bukkit.BadgeManager;
@@ -31,8 +33,7 @@ import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Scoreboard;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Data
 public final class NodePlayer implements GamePlayer, Comparable {
@@ -52,7 +53,7 @@ public final class NodePlayer implements GamePlayer, Comparable {
     private boolean spectator;
     private boolean playing;
     private boolean entering;
-    private Inventory inventory;
+    private Map<Locale, Inventory> inventory = new HashMap<>();
 
     /** Constructs a game player */
     public NodePlayer(NodeGame game, Player player) {
@@ -128,9 +129,8 @@ public final class NodePlayer implements GamePlayer, Comparable {
         // Player Settings
         player.setCollidesWithEntities(true);
         player.getPlayer().setDisplayName(getPlayerColor() + ChatColor.WHITE.toString());
-        reopenPlayerInventory();
         updateHiddenSpectator();
-        updateInventory();
+        updateInventories();
     }
 
     public void join() {
@@ -138,7 +138,7 @@ public final class NodePlayer implements GamePlayer, Comparable {
 
         joinTeam(null);
 
-        inventory = Bukkit.createInventory(null, INV_SIZE, getBadge() + " " + getPlayerColor());
+        updateInventories();
 
         if (PacketHacks.isTitleAble(player.getPlayer())) {
             PacketHacks.setTitle(
@@ -302,34 +302,47 @@ public final class NodePlayer implements GamePlayer, Comparable {
         });
     }
 
-    /** Reopen player's inventory when they switch teams */
-    public void reopenPlayerInventory() {
-        if (inventory != null) {
-            List<HumanEntity> viewers = inventory.getViewers();
-            viewers.forEach(HumanEntity::closeInventory);
-            inventory = Bukkit.createInventory(null, INV_SIZE, getBadge() + " " + getPlayerColor());
-            viewers.forEach(e -> e.openInventory(inventory));
-        }
+    /** Get the inventory for the player by locale */
+    public Inventory getInventory(Locale locale) {
+        return Preconditions.checkNotNull(inventory.get(locale));
+    }
+
+    /** Update all know inventories for that locale */
+    public void updateInventories() {
+        MessageManager.get().getLocales().keySet().forEach(locale -> {
+            inventory.putIfAbsent(locale, Bukkit.createInventory(null, INV_SIZE, getBadge() + " " + getPlayerColor()));
+
+            if (!inventory.get(locale).getTitle().equals(getBadge() + " " + getPlayerColor())) {
+                inventory.put(locale, Bukkit.createInventory(null, INV_SIZE, getBadge() + " " + getPlayerColor()));
+            }
+
+            updateInventory(locale);
+        });
     }
 
     /** Create an inventory of the player stats. */
-    public void updateInventory() {
+    public void updateInventory(Locale locale) {
         playerTasks.add(SchedulerUtil.runSync(() -> {
             ItemStack[] items = new ItemStack[INV_SIZE];
             Player player = getPlayer();
             PlayerInventory pinv = player.getInventory();
 
             // Head and Stats
-            items[0] = NMSHacks.setSkullSkin(NMSHacks.makeSkull(player, getBadge() + " " + getPlayerColor()), player);
-            ItemMeta meta = items[0].getItemMeta();
-            meta.setLore(new ArrayList<>());
-            meta.getLore().add(Msg.locale(player, "team.name") + " " + team.getDisplayName());
+            ItemStack head = NMSHacks.setSkullSkin(NMSHacks.makeSkull(player, getBadge() + " " + getPlayerColor()), player);
+            ItemMeta meta = head.getItemMeta();
+            List<String> lines = new ArrayList<>();
+            lines.add(Msg.locale(locale.toString(), "team.name") + " " + team.getDisplayName());
 
             if (hasClassKit()) {
-                meta.getLore().add(Msg.locale(player, "class.name") + " " + classKit.getName());
+                lines.add(Msg.locale(locale.toString(), "class.name") + " " + classKit.getName());
             }
 
-            items[0].setItemMeta(meta);
+            lines.add("");
+            lines.add(MessageUtil.replaceColors("&6&o" + player.getName() + ".y4k.me"));
+            meta.setLore(lines);
+            head.setItemMeta(meta);
+            items[0] = head;
+
             // Armor
             items[1] = pinv.getHelmet();
             items[2] = pinv.getChestplate();
@@ -337,8 +350,8 @@ public final class NodePlayer implements GamePlayer, Comparable {
             items[4] = pinv.getBoots();
 
             // Health and Food
-            items[8] = player.isDead() ? new ItemStack(Material.AIR) : getHunger();
-            items[7] = player.isDead() ? new ItemStack(Material.AIR) : getHealth();
+            items[8] = player.isDead() ? new ItemStack(Material.AIR) : getHunger(locale);
+            items[7] = player.isDead() ? new ItemStack(Material.AIR) : getHealth(locale);
 
             // Items
             for (int i = 0; i < 36; i++) {
@@ -354,29 +367,29 @@ public final class NodePlayer implements GamePlayer, Comparable {
                 }
             }
 
-            inventory.setContents(items);
+            inventory.get(locale).setContents(items);
         }, 3L));
     }
 
     /** Get the heal for the player. */
-    private ItemStack getHealth() {
+    private ItemStack getHealth(Locale locale) {
         int health = (int) player.getHealth();
 
         ItemStack level = new ItemStack(Material.SPECKLED_MELON, health);
         ItemMeta meta = level.getItemMeta();
-        meta.setDisplayName(MessageUtil.message(Msg.locale(player, "inv.health")));
+        meta.setDisplayName(MessageUtil.message(Msg.locale(locale.toString(), "inv.health")));
         level.setItemMeta(meta);
 
         return level;
     }
 
     /** Get the hunger for the player. */
-    private ItemStack getHunger() {
+    private ItemStack getHunger(Locale locale) {
         int hunger = player.getFoodLevel();
 
         ItemStack level = new ItemStack(Material.COOKED_BEEF, hunger);
         ItemMeta meta = level.getItemMeta();
-        meta.setDisplayName(MessageUtil.message(Msg.locale(player, "inv.hunger")));
+        meta.setDisplayName(MessageUtil.message(Msg.locale(locale.toString(), "inv.hunger")));
         level.setItemMeta(meta);
 
         return level;

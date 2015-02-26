@@ -5,6 +5,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.util.List;
+import java.util.Locale;
 
 public interface GamePlayer {
     public Player getPlayer();
@@ -23,7 +24,7 @@ public interface GamePlayer {
 
     public String getPlayerColor();
 
-    public Inventory getInventory();
+    public Inventory getInventory(Locale locale);
 
     public GameClass getClassKit();
 

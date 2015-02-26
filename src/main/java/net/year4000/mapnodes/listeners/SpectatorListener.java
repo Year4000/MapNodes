@@ -14,6 +14,7 @@ import net.year4000.mapnodes.game.NodeGame;
 import net.year4000.mapnodes.game.NodeKit;
 import net.year4000.mapnodes.game.NodePlayer;
 import net.year4000.mapnodes.game.system.SpectatorKit;
+import net.year4000.mapnodes.messages.Message;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.NMSHacks;
 import net.year4000.mapnodes.utils.PacketHacks;
@@ -45,6 +46,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.BlockIterator;
 
 import java.util.Iterator;
+import java.util.Locale;
 
 @EqualsAndHashCode
 public class SpectatorListener implements Listener {
@@ -159,7 +161,14 @@ public class SpectatorListener implements Listener {
                 GamePlayer rightClicked = gm.getPlayer((Player) event.getRightClicked());
 
                 if (rightClicked != null && rightClicked.isPlaying()) {
-                    gPlayer.getPlayer().openInventory(rightClicked.getInventory());
+                    try {
+                        Locale locale = new Locale(gPlayer.getPlayer().getLocale());
+                        gPlayer.getPlayer().openInventory(rightClicked.getInventory(locale));
+                    }
+                    catch (Exception e) {
+                        Locale locale = new Locale(Message.DEFAULT_LOCALE);
+                        gPlayer.getPlayer().openInventory(rightClicked.getInventory(locale));
+                    }
                 }
             }
         }
