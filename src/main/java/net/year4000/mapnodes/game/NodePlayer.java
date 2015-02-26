@@ -138,7 +138,7 @@ public final class NodePlayer implements GamePlayer, Comparable {
 
         joinTeam(null);
 
-        inventory = Bukkit.createInventory(null, INV_SIZE, getPlayerColor());
+        inventory = Bukkit.createInventory(null, INV_SIZE, getBadge() + " " + getPlayerColor());
 
         if (PacketHacks.isTitleAble(player.getPlayer())) {
             PacketHacks.setTitle(
@@ -307,7 +307,7 @@ public final class NodePlayer implements GamePlayer, Comparable {
         if (inventory != null) {
             List<HumanEntity> viewers = inventory.getViewers();
             viewers.forEach(HumanEntity::closeInventory);
-            inventory = Bukkit.createInventory(null, INV_SIZE, getPlayerColor());
+            inventory = Bukkit.createInventory(null, INV_SIZE, getBadge() + " " + getPlayerColor());
             viewers.forEach(e -> e.openInventory(inventory));
         }
     }
