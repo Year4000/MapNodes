@@ -1,6 +1,7 @@
 package net.year4000.mapnodes;
 
 import lombok.Getter;
+import net.minecraft.util.com.mojang.authlib.yggdrasil.response.User;
 import net.year4000.mapnodes.addons.Addons;
 import net.year4000.mapnodes.addons.modules.misc.DeathMessages;
 import net.year4000.mapnodes.addons.modules.misc.GameMech;
@@ -46,6 +47,7 @@ public class MapNodesPlugin extends BukkitPlugin implements Plugin {
     @Getter
     private static MapNodesPlugin inst = null;
     private Addons addons = new Addons();
+    private UserCache usercache;
     private boolean enable = true;
     private MessagingChannel connector;
     private Network network;
@@ -54,6 +56,7 @@ public class MapNodesPlugin extends BukkitPlugin implements Plugin {
     public void onLoad() {
         inst = this;
         log = new LogUtil(getLogger());
+        usercache = new UserCache();
         MapNodes.init(inst);
         PacketInjector.inject();
 
