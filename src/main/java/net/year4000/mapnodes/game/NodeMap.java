@@ -62,7 +62,7 @@ public final class NodeMap implements GameMap {
                     return name;
                 }
                 catch (Exception ex) {
-                    return Bukkit.getOfflinePlayer(uuid).getName();
+                    return "";
                 }
             }
         }
@@ -107,7 +107,7 @@ public final class NodeMap implements GameMap {
         for (String name : authors) {
             if (name.contains("-")) {
                 String author = UUID_NAMES.getUnchecked(UUID.fromString(name));
-                names.add(author == null ? "unknown" : author);
+                names.add(author.equals("") ? "unknown" : author);
             }
             else {
                 names.add(name);
