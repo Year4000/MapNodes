@@ -94,7 +94,12 @@ public class NodeFactory {
     /** Load the next game */
     public Node loadNextQueued() {
         if (currentNode != null) {
-            currentNode.unregister();
+            try {
+                currentNode.unregister();
+            }
+            catch(Exception e) {
+                MapNodesPlugin.log(Msg.util("error.unload.fail"));
+            }
         }
 
         Node newNode = queueNodes.poll();
