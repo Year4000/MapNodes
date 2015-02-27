@@ -55,10 +55,15 @@ public final class NodeMap implements GameMap {
                 }
             }
             catch (Exception e) {
-                JsonObject data = APIFetcher.get(BACKUP_BASE + uuid.toString().replaceAll("-", ""), JsonObject.class);
-                String name = data.get("name").getAsString();
-                cache.addPlayer(uuid, name);
-                return name;
+                try {
+                    JsonObject data = APIFetcher.get(BACKUP_BASE + uuid.toString().replaceAll("-", ""), JsonObject.class);
+                    String name = data.get("name").getAsString();
+                    cache.addPlayer(uuid, name);
+                    return name;
+                }
+                catch (Exception ex) {
+                    return Bukkit.getOfflinePlayer(uuid).getName();
+                }
             }
         }
     });
