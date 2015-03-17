@@ -484,7 +484,7 @@ public final class NodeGame implements GameManager, Validator {
     }
 
     public int getRealMaxCount() {
-        return getMaxPlayers() + (getMaxPlayers() / 2) + 5;
+        return getMaxPlayers() + 1;
     }
 
     public String getTabHeader(GamePlayer player) {
