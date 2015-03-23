@@ -55,6 +55,16 @@ public class Backend extends API {
                 nodePlayer.getCache().setNextExperienceLevel((int) (1000 * Math.pow(level + 1, AccountCache.TWO_THIRDS) * (level + 1)));
                 nodePlayer.getCache().setLastExperienceLevel((int) (1000 * Math.pow(level == 0 ? 0 : level - 1, AccountCache.TWO_THIRDS) * (level == 0 ? 0 : level - 1)));
                 nodePlayer.getCache().setCurrentExperienceLevel((int) (1000 * Math.pow(level, AccountCache.TWO_THIRDS) * (level)));
+
+                // If spectator update exp
+                if (nodePlayer.isSpectator()) {
+                    nodePlayer.getPlayer().setLevel(nodePlayer.getCache().getLevel());
+                    nodePlayer.getPlayer().setTotalExperience(nodePlayer.getCache().getExperience());
+                    float current = nodePlayer.getCache().getExperience() - nodePlayer.getCache().getCurrentExperienceLevel();
+                    float next = nodePlayer.getCache().getNextExperienceLevel() - nodePlayer.getCache().getLastExperienceLevel();
+                    float exp = (current / next);
+                    nodePlayer.getPlayer().setExp(exp);
+                }
             }
             else {
                 MapNodesPlugin.log(new Exception(error), false);
