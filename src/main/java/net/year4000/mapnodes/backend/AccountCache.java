@@ -35,7 +35,6 @@ public class AccountCache {
         this.currentExperienceLevel = (int) (1000 * Math.pow(level, TWO_THIRDS) * (level));
         this.nextExperienceLevel = (int) (1000 * Math.pow(level + 1, TWO_THIRDS) * (level + 1));
         cache.put(uuid, this);
-        MapNodesPlugin.debug(this.toString());
     }
 
     public static AccountCache getAccount(NodePlayer player) {

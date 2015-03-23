@@ -32,7 +32,7 @@ public class Backend extends API {
                 accounts.putIfAbsent(accountUuid, response.get("id").getAsString());
             }
             else {
-                MapNodesPlugin.debug(new Exception(error), false);
+                MapNodesPlugin.log(new Exception(error), false);
             }
         });
     }

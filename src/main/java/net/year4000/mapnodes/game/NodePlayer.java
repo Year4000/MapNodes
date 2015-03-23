@@ -290,7 +290,6 @@ public final class NodePlayer implements GamePlayer, Comparable {
         float current = cache.getExperience() - cache.getCurrentExperienceLevel();
         float next = cache.getNextExperienceLevel() - cache.getLastExperienceLevel();
         float exp = (current / next);
-        MapNodesPlugin.debug("EXP PERCENT: " + exp);
         player.setExp(exp);
 
         // Update team menu
