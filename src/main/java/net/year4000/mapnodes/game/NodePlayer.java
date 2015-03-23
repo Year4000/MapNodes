@@ -2,6 +2,7 @@ package net.year4000.mapnodes.game;
 
 import com.google.common.base.Preconditions;
 import lombok.Data;
+import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.api.events.player.GamePlayerJoinEvent;
 import net.year4000.mapnodes.api.events.player.GamePlayerJoinSpectatorEvent;
 import net.year4000.mapnodes.api.events.player.GamePlayerJoinTeamEvent;
@@ -10,10 +11,11 @@ import net.year4000.mapnodes.api.game.GameClass;
 import net.year4000.mapnodes.api.game.GamePlayer;
 import net.year4000.mapnodes.api.game.GameTeam;
 import net.year4000.mapnodes.api.utils.Spectator;
+import net.year4000.mapnodes.backend.AccountCache;
+import net.year4000.mapnodes.backend.MapNodesBadgeManager;
 import net.year4000.mapnodes.messages.MessageManager;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.NMSHacks;
-import net.year4000.utilities.bukkit.BadgeManager;
 import net.year4000.mapnodes.utils.Common;
 import net.year4000.mapnodes.utils.PacketHacks;
 import net.year4000.mapnodes.utils.SchedulerUtil;
@@ -22,7 +24,6 @@ import net.year4000.utilities.bukkit.bossbar.BossBar;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
@@ -38,7 +39,7 @@ import java.util.*;
 @Data
 public final class NodePlayer implements GamePlayer, Comparable {
     // internals
-    public static final BadgeManager badges = new BadgeManager();
+    public static final MapNodesBadgeManager badges = new MapNodesBadgeManager();
     private static final int INV_SIZE = 45;
     private final NodeGame game;
     private final Player player;
@@ -54,11 +55,14 @@ public final class NodePlayer implements GamePlayer, Comparable {
     private boolean playing;
     private boolean entering;
     private Map<Locale, Inventory> inventory = new HashMap<>();
+    // backend database
+    private AccountCache cache;
 
     /** Constructs a game player */
     public NodePlayer(NodeGame game, Player player) {
         this.game = game;
         this.player = player;
+        this.cache = AccountCache.getAccount(this);
         scoreboard = game.getScoreboardFactory().createScoreboard(this);
         player.setScoreboard(scoreboard);
     }
@@ -279,6 +283,16 @@ public final class NodePlayer implements GamePlayer, Comparable {
 
         // Update player's inventory
         // reopenPlayerInventory();
+
+        // Update network level and experience
+        player.setLevel(cache.getLevel());
+        player.setTotalExperience(cache.getExperience());
+        float current = cache.getExperience() - cache.getCurrentExperienceLevel();
+        float next = cache.getNextExperienceLevel() - cache.getLastExperienceLevel();
+        float exp = (current / next);
+        MapNodesPlugin.debug("EXP PERCENT: " + exp);
+        player.setExp(exp);
+
         // Update team menu
         game.updateTeamChooserMenu();
         player.getPlayer().setDisplayName(getPlayerColor() + ChatColor.WHITE.toString());
@@ -417,12 +431,12 @@ public final class NodePlayer implements GamePlayer, Comparable {
 
     /** Get the badge of this player */
     public String getBadge() {
-        return badges.getBadge(player);
+        return badges.getBadge(this);
     }
 
     /** Get the badge rank of this player */
     public int getBadgeRank() {
-        return badges.findBadge(player).getRank();
+        return badges.findBadge(this).getRank();
     }
 
     /** Get the split name used to tab list name */

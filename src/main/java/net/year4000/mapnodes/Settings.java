@@ -61,6 +61,9 @@ public class Settings extends Config {
     @Comment("The json file location to load global kits")
     private String kits = "/y4k/maps/kits.json";
 
+    @Comment("The api key to interact with the database")
+    private String key = "UUID_KEY";
+
     public static Settings get() {
         if (inst == null) {
             inst = new Settings();

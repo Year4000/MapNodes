@@ -9,19 +9,16 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.UserCache;
-import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.exceptions.InvalidJsonException;
 import net.year4000.mapnodes.api.game.GameManager;
 import net.year4000.mapnodes.api.game.GameMap;
-import net.year4000.mapnodes.backend.APIFetcher;
 import net.year4000.mapnodes.messages.Message;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.Common;
 import net.year4000.utilities.ChatColor;
 import net.year4000.utilities.bukkit.MessageUtil;
-import org.bukkit.Bukkit;
+import net.year4000.utilities.sdk.HttpFetcher;
 import org.bukkit.command.CommandSender;
-import org.bukkit.craftbukkit.v1_7_R4.CraftServer;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -34,7 +31,6 @@ import static com.google.common.base.Preconditions.checkArgument;
 @NoArgsConstructor
 /** Details about the current map. */
 public final class NodeMap implements GameMap {
-    private static final String ACCOUNT_BASE = "https://api.year4000.net/accounts/";
     private static final String BACKUP_BASE = "https://sessionserver.mojang.com/session/minecraft/profile/";
     private static final LoadingCache<UUID, String> UUID_NAMES = CacheBuilder.<UUID, String>newBuilder()
     .build(new CacheLoader<UUID, String>() {
@@ -48,15 +44,14 @@ public final class NodeMap implements GameMap {
                     return cache.getPlayer(uuid);
                 }
                 else {
-                    JsonObject data = APIFetcher.get(ACCOUNT_BASE + uuid.toString(), JsonObject.class);
-                    String name = data.get("minecraft").getAsJsonObject().get("username").getAsString();
+                    String name = MapNodesPlugin.getInst().getApi().getAccount(uuid.toString()).getUsername();
                     cache.addPlayer(uuid, name);
                     return name;
                 }
             }
             catch (Exception e) {
                 try {
-                    JsonObject data = APIFetcher.get(BACKUP_BASE + uuid.toString().replaceAll("-", ""), JsonObject.class);
+                    JsonObject data = HttpFetcher.get(BACKUP_BASE + uuid.toString().replaceAll("-", ""), JsonObject.class);
                     String name = data.get("name").getAsString();
                     cache.addPlayer(uuid, name);
                     return name;

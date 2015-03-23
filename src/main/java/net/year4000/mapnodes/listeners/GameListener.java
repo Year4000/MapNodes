@@ -8,6 +8,7 @@ import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.events.game.GameClockEvent;
 import net.year4000.mapnodes.api.events.game.GameStartEvent;
 import net.year4000.mapnodes.api.events.game.GameWinEvent;
+import net.year4000.mapnodes.api.events.player.GamePlayerWinEvent;
 import net.year4000.mapnodes.api.events.team.GameTeamWinEvent;
 import net.year4000.mapnodes.api.game.GamePlayer;
 import net.year4000.mapnodes.api.game.GameTeam;
@@ -93,15 +94,23 @@ public final class GameListener implements Listener {
             player.sendMessage("");
             player.sendMessage(Common.textLine(Msg.locale(player, "game.end"), 40, '*'));
             String winnerText = event.getWinnerText(), endComment = null;
+            int xp = 250;
 
             // Color winnerText and add endComment
             if (event instanceof GameTeamWinEvent) {
                 if (player.getTeam().equals(((GameTeamWinEvent) event).getWinner())) {
                     winnerText = Common.fcolor(ChatColor.ITALIC, winnerText);
                     endComment = Msg.locale(player, "game.end.team_winner");
+                    xp += 300;
                 }
                 else {
                     endComment = Msg.locale(player, "game.end.team_loser");
+                    xp += 100;
+                }
+            }
+            else if (event instanceof GamePlayerWinEvent) {
+                if (player.equals(((GamePlayerWinEvent) event).getWinner())) {
+                    xp += 300;
                 }
             }
 
@@ -117,6 +126,15 @@ public final class GameListener implements Listener {
                 event.getMessage().forEach(string -> player.sendMessage(Common.textLine(string, size, ' ', "", "&a&o")));
             }
 
+            player.sendMessage("&7&m******************************************");
+            if (MapNodesPlugin.getInst().isDebug()) {
+                player.sendMessage(Common.textLine("&7(DEBUG) &a+" + xp + " &6xp", size, ' ', "", ""));
+                MapNodesPlugin.debug("Would have added " + xp + " to " + player.getPlayerColor());
+            }
+            else {
+                player.sendMessage(Common.textLine("&a+" + xp + " &6xp", size, ' ', "", ""));
+                MapNodesPlugin.getInst().getApi().addExperience(player, xp);
+            }
             player.sendMessage("&7&m******************************************");
             player.sendMessage("");
         });

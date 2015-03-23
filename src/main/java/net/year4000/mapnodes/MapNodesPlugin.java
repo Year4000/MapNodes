@@ -9,6 +9,7 @@ import net.year4000.mapnodes.addons.modules.misc.VIPEffects;
 import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.Plugin;
 import net.year4000.mapnodes.api.game.GameManager;
+import net.year4000.mapnodes.backend.Backend;
 import net.year4000.mapnodes.commands.CommandBuilder;
 import net.year4000.mapnodes.commands.mapnodes.MapNodesBase;
 import net.year4000.mapnodes.commands.maps.MapCommands;
@@ -37,6 +38,7 @@ import net.year4000.mapnodes.utils.PacketInjector;
 import net.year4000.utilities.LogUtil;
 import net.year4000.utilities.bukkit.BukkitPlugin;
 import net.year4000.utilities.bukkit.MessageUtil;
+import net.year4000.utilities.sdk.API;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 
@@ -51,12 +53,14 @@ public class MapNodesPlugin extends BukkitPlugin implements Plugin {
     private boolean enable = true;
     private MessagingChannel connector;
     private Network network;
+    private Backend api;
 
     @Override
     public void onLoad() {
         inst = this;
         log = new LogUtil(getLogger());
         usercache = new UserCache();
+        api = new Backend();
         MapNodes.init(inst);
         PacketInjector.inject();
 

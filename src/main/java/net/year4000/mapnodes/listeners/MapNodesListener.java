@@ -9,6 +9,7 @@ import net.year4000.mapnodes.api.events.player.GamePlayerJoinSpectatorEvent;
 import net.year4000.mapnodes.api.events.player.GamePlayerJoinTeamEvent;
 import net.year4000.mapnodes.api.game.GamePlayer;
 import net.year4000.mapnodes.api.utils.Spectator;
+import net.year4000.mapnodes.backend.AccountCache;
 import net.year4000.mapnodes.clocks.StartGame;
 import net.year4000.mapnodes.game.Node;
 import net.year4000.mapnodes.game.NodeGame;
@@ -21,6 +22,7 @@ import net.year4000.mapnodes.utils.PacketHacks;
 import net.year4000.mapnodes.utils.SchedulerUtil;
 import net.year4000.utilities.bukkit.FunEffectsUtil;
 import net.year4000.utilities.bukkit.MessageUtil;
+import net.year4000.utilities.sdk.routes.accounts.AccountRoute;
 import org.bukkit.Effect;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -31,6 +33,7 @@ import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.event.server.ServerListPingEvent;
 
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @EqualsAndHashCode
@@ -38,12 +41,16 @@ public final class MapNodesListener implements Listener {
     private AtomicInteger lastSize = new AtomicInteger(0);
 
     @EventHandler(priority = EventPriority.LOWEST)
-    public void onJoin(PlayerLoginEvent event) {
+    public void onJoin(AsyncPlayerPreLoginEvent event) {
         NodeGame game = (NodeGame) MapNodes.getCurrentGame();
-        Player player = event.getPlayer();
+        UUID uuid = event.getUniqueId();
+        AccountRoute account = MapNodesPlugin.getInst().getApi().getAccount(uuid.toString());
+        String rank = account.getRank().toLowerCase();
+        String locale = account.getRawResponse().get("locale").toString();
+        AccountCache.createAccount(uuid, account.getRawResponse());
 
-        if (game.getPlayers().count() + 1 > game.getRealMaxCount() && !Common.isVIP(player)) {
-            event.disallow(PlayerLoginEvent.Result.KICK_FULL, Msg.locale(player, "server.full") + ' ' + Msg.locale(player, "team.select.non_vip_url"));
+        if (game.getPlayers().count() >= game.getRealMaxCount() && rank.equals("alpha")) {
+            event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_FULL, Msg.locale(locale, "server.full") + ' ' + Msg.locale(locale, "team.select.non_vip_url"));
         }
     }
 
