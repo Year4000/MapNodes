@@ -57,7 +57,7 @@ public class Backend extends API {
                 nodePlayer.getCache().setCurrentExperienceLevel((int) (1000 * Math.pow(level, AccountCache.TWO_THIRDS) * (level)));
             }
             else {
-                MapNodesPlugin.debug(new Exception(error), false);
+                MapNodesPlugin.log(new Exception(error), false);
             }
         });
     }
