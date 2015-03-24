@@ -3,6 +3,7 @@ package net.year4000.mapnodes.gamemodes.tntwars;
 import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.events.game.GameLoadEvent;
+import net.year4000.mapnodes.api.events.player.GamePlayerDeathEvent;
 import net.year4000.mapnodes.api.events.player.GamePlayerStartEvent;
 import net.year4000.mapnodes.api.events.team.GameTeamWinEvent;
 import net.year4000.mapnodes.api.game.GameManager;
@@ -104,7 +105,7 @@ public class TntWars extends GameModeTemplate implements GameMode {
                 Vector current = event.getLocation().toVector();
                 Vector old = locations.remove(event.getEntity().getEntityId());
 
-                if (Math.abs(current.getBlockZ() - old.getBlockZ()) < 10 && Math.abs(current.getBlockX() - old.getBlockX()) < 10) {
+                if (Math.abs(current.getBlockZ() - old.getBlockZ()) < 5 && Math.abs(current.getBlockX() - old.getBlockX()) < 5) {
 
                     if (fromDispenser.remove((Integer) event.getEntity().getEntityId())) {
                         Block baseBlock = old.toLocation(MapNodes.getCurrentWorld()).getBlock();
@@ -134,12 +135,34 @@ public class TntWars extends GameModeTemplate implements GameMode {
     // Game Points //
 
     @EventHandler
+    public void onDeath(GamePlayerDeathEvent event) {
+        event.getViewers().clear();
+        event.getViewers().addAll(game.getPlayers().collect(Collectors.toList()));
+    }
+
+    @EventHandler
     public void onDeath(PlayerDeathEvent event) {
         GamePlayer player = game.getPlayer(event.getEntity());
 
         game.getPlayingTeams().forEach(team -> {
             if (team != player.getTeam()) {
                 addPoint(game, team, 25);
+
+                // Add tokens for other players deaths
+                team.getPlayers().forEach(tPlayer -> {
+                    if (MapNodesPlugin.getInst().isDebug()) {
+                        String tokens = MessageUtil.replaceColors("&7(DEBUG) &b+2 &6tokens ");
+                        tPlayer.sendMessage(tokens);
+                        MapNodesPlugin.debug(tPlayer.getPlayerColor() + " " + tokens);
+                        ((NodePlayer) tPlayer).getCreditsMultiplier().incrementAndGet();
+                    }
+                    else {
+                        tPlayer.sendMessage(MessageUtil.replaceColors("&b+2 &6tokens"));
+                        MapNodesPlugin.getInst().getApi().addTokens(tPlayer, 2);
+                        ((NodePlayer) tPlayer).getCreditsMultiplier().incrementAndGet();
+                    }
+                });
+
             }
         });
     }
