@@ -59,6 +59,11 @@ public final class NMSHacks {
         ((CraftTNTPrimed) entity).getHandle().projectileSource = source;
     }
 
+    /** Add the source to the tnt */
+    public static LivingEntity getTNTSource(Entity entity) {
+        return (LivingEntity) ((CraftTNTPrimed) entity).getHandle().projectileSource;
+    }
+
     /** Add a shooter to the projectile */
     public static void addShooter(Entity entity, LivingEntity shooter) {
         EntityProjectile projectile = ((CraftProjectile) entity).getHandle();

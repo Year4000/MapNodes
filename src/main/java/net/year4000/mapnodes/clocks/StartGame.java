@@ -67,12 +67,13 @@ public class StartGame extends Clocker {
         String time = color + (new TimeUtil(pos, TimeUnit.SECONDS)).prettyOutput("&7:" + color);
 
         MapNodes.getCurrentGame().getPlayers().forEach(player -> {
-            if (game.getClasses().size() > 0 && position % 20 == 0) {
+            // Classes need VIP to use
+            /*if (game.getClasses().size() > 0 && position % 20 == 0) {
                 if (player.getClassKit() == null) {
                     List<String> list = new ArrayList<>(game.getClasses().keySet());
                     player.setClassKit(game.getClasses().get(list.get(new Random().nextInt(list.size()))));
                 }
-            }
+            }*/
 
             if (Arrays.asList(ticks).contains(position)) {
                 FunEffectsUtil.playSound(player.getPlayer(), Sound.NOTE_PLING);

@@ -1,5 +1,6 @@
 package net.year4000.mapnodes.gamemodes.destory;
 
+import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.api.events.game.GameLoadEvent;
 import net.year4000.mapnodes.api.events.team.GameTeamWinEvent;
 import net.year4000.mapnodes.api.game.GameManager;
@@ -8,12 +9,14 @@ import net.year4000.mapnodes.api.game.GameRegion;
 import net.year4000.mapnodes.api.game.GameTeam;
 import net.year4000.mapnodes.api.game.modes.GameMode;
 import net.year4000.mapnodes.api.game.modes.GameModeInfo;
+import net.year4000.mapnodes.game.NodePlayer;
 import net.year4000.mapnodes.game.regions.types.Point;
 import net.year4000.mapnodes.gamemodes.GameModeTemplate;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.Common;
 import net.year4000.mapnodes.utils.SchedulerUtil;
 import net.year4000.utilities.bukkit.FunEffectsUtil;
+import net.year4000.utilities.bukkit.MessageUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
@@ -120,6 +123,19 @@ public class Destroy extends GameModeTemplate implements GameMode {
                 Common.sendAnimatedActionBar(player, Msg.locale(player, "destroy.damage", gamePlayer.getPlayerColor(), target.getOwnerName(), target.getName()));
             }
         });
+
+        // Tokens
+        if (MapNodesPlugin.getInst().isDebug()) {
+            String tokens = MessageUtil.replaceColors("&7(DEBUG) &b+10 &6tokens ");
+            gamePlayer.sendMessage(tokens);
+            MapNodesPlugin.debug(gamePlayer.getPlayerColor() + " " + tokens);
+            ((NodePlayer) gamePlayer).getCreditsMultiplier().incrementAndGet();
+        }
+        else {
+            gamePlayer.sendMessage(MessageUtil.replaceColors("&b+10 &6tokens"));
+            MapNodesPlugin.getInst().getApi().addTokens(gamePlayer, 10);
+            ((NodePlayer) gamePlayer).getCreditsMultiplier().incrementAndGet();
+        }
 
         SchedulerUtil.runSync(this::shouldWin);
     }

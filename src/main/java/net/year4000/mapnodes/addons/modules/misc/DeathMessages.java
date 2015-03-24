@@ -1,11 +1,13 @@
 package net.year4000.mapnodes.addons.modules.misc;
 
+import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.addons.Addon;
 import net.year4000.mapnodes.addons.AddonInfo;
 import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.events.player.GamePlayerDeathEvent;
 import net.year4000.mapnodes.api.game.GameManager;
 import net.year4000.mapnodes.api.game.GamePlayer;
+import net.year4000.mapnodes.game.NodePlayer;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.utilities.bukkit.MessageUtil;
 import org.bukkit.entity.Player;
@@ -45,8 +47,21 @@ public class DeathMessages extends Addon implements Listener {
                 .filter(v -> !v.getPlayer().getName().equals(killer.getName())) // not killer
                 .forEach(v -> v.sendMessage(getMessage(v.getPlayer(), player, killer)));
 
-            killer.sendMessage(getMessage(killer, player, killer));
+            NodePlayer gameKiller = (NodePlayer) MapNodes.getCurrentGame().getPlayer(killer);
             player.sendMessage(getMessage(player, player, killer));
+
+            if (MapNodesPlugin.getInst().isDebug()) {
+                String tokens = MessageUtil.replaceColors("&7(DEBUG) &b+10 &6tokens &7| ");
+                killer.sendMessage(tokens + getMessage(killer, player, killer));
+                MapNodesPlugin.debug(gameKiller.getPlayerColor() + " " + tokens);
+                gameKiller.getCreditsMultiplier().incrementAndGet();
+            }
+            else {
+                String tokens = MessageUtil.replaceColors("&b+10 &6tokens &7| ");
+                killer.sendMessage(tokens + getMessage(killer, player, killer));
+                MapNodesPlugin.getInst().getApi().addTokens(gameKiller, 10);
+                gameKiller.getCreditsMultiplier().incrementAndGet();
+            }
         }
         else {
             GamePlayer gPlayer = MapNodes.getCurrentGame().getPlayer(player);

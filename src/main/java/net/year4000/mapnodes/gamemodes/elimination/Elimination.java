@@ -12,6 +12,7 @@ import net.year4000.mapnodes.api.game.GameTeam;
 import net.year4000.mapnodes.api.game.modes.GameMode;
 import net.year4000.mapnodes.api.game.modes.GameModeInfo;
 import net.year4000.mapnodes.api.utils.Spectator;
+import net.year4000.mapnodes.game.NodePlayer;
 import net.year4000.mapnodes.gamemodes.GameModeTemplate;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.Common;
@@ -170,6 +171,29 @@ public class Elimination extends GameModeTemplate implements GameMode {
             if (game.getPlayer(name) != null) {
                 GamePlayer player = game.getPlayer(name);
                 player.getPlayerTasks().add(SchedulerUtil.runSync(player::joinSpectatorTeam, 5L));
+
+                player.sendMessage("&7&m******************************************");
+                NodePlayer nodePlayer = (NodePlayer) player;
+                final int size = 45;
+                int xp = 20;
+                int tokens = 10;
+                xp = (int) Math.sqrt(xp * nodePlayer.getCreditsMultiplier().get()) * nodePlayer.getCreditsMultiplier().get();
+
+                // Add to database or debug it
+                if (MapNodesPlugin.getInst().isDebug()) {
+                    player.sendMessage(Common.textLine("&7(DEBUG) &a+" + xp + " &6xp", size, ' ', "", ""));
+                    player.sendMessage(Common.textLine("&7(DEBUG) &b+" + tokens + " &6tokens", size, ' ', "", ""));
+                    MapNodesPlugin.debug("Would have added " + xp + " xp to " + player.getPlayerColor());
+                    MapNodesPlugin.debug("Would have added " + tokens + " tokens to " + player.getPlayerColor());
+                }
+                else {
+                    player.sendMessage(Common.textLine("&a+" + xp + " &6xp", size, ' ', "", ""));
+                    MapNodesPlugin.getInst().getApi().addExperience(player, xp);
+                    player.sendMessage(Common.textLine("&b+" + tokens + " &6tokens", size, ' ', "", ""));
+                    MapNodesPlugin.getInst().getApi().addTokens(player, tokens);
+                }
+                player.sendMessage("&7&m******************************************");
+                player.sendMessage("");
             }
         }
 

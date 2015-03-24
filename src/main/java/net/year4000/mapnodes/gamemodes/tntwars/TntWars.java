@@ -1,5 +1,6 @@
 package net.year4000.mapnodes.gamemodes.tntwars;
 
+import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.events.game.GameLoadEvent;
 import net.year4000.mapnodes.api.events.player.GamePlayerStartEvent;
@@ -10,14 +11,19 @@ import net.year4000.mapnodes.api.game.GameRegion;
 import net.year4000.mapnodes.api.game.GameTeam;
 import net.year4000.mapnodes.api.game.modes.GameMode;
 import net.year4000.mapnodes.api.game.modes.GameModeInfo;
+import net.year4000.mapnodes.game.NodePlayer;
 import net.year4000.mapnodes.game.regions.types.Global;
 import net.year4000.mapnodes.game.regions.types.Point;
 import net.year4000.mapnodes.gamemodes.GameModeTemplate;
+import net.year4000.mapnodes.utils.NMSHacks;
 import net.year4000.mapnodes.utils.SchedulerUtil;
+import net.year4000.utilities.bukkit.MessageUtil;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -162,6 +168,25 @@ public class TntWars extends GameModeTemplate implements GameMode {
             }
         });
 
+        // Tokens
+        LivingEntity livingEntity = NMSHacks.getTNTSource(event.getEntity());
+
+        if (livingEntity instanceof Player) {
+            GamePlayer player = MapNodes.getCurrentGame().getPlayer((Player) livingEntity);
+            if (player != null) {
+                if (MapNodesPlugin.getInst().isDebug()) {
+                    String tokens = MessageUtil.replaceColors("&7(DEBUG) &b+2 &6tokens ");
+                    player.sendMessage(tokens);
+                    MapNodesPlugin.debug(player.getPlayerColor() + " " + tokens);
+                    ((NodePlayer) player).getCreditsMultiplier().incrementAndGet();
+                }
+                else {
+                    player.sendMessage(MessageUtil.replaceColors("&b+2 &6tokens"));
+                    MapNodesPlugin.getInst().getApi().addTokens(player, 2);
+                    ((NodePlayer) player).getCreditsMultiplier().incrementAndGet();
+                }
+            }
+        }
     }
 
     /** Add the amount of points to a team and set the winner */

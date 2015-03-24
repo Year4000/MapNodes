@@ -1,6 +1,7 @@
 package net.year4000.mapnodes.gamemodes.deathmatch;
 
 import com.google.common.base.Joiner;
+import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.api.events.game.GameClockEvent;
 import net.year4000.mapnodes.api.events.game.GameLoadEvent;
 import net.year4000.mapnodes.api.events.game.GameStartEvent;
@@ -11,6 +12,7 @@ import net.year4000.mapnodes.api.game.GamePlayer;
 import net.year4000.mapnodes.api.game.GameTeam;
 import net.year4000.mapnodes.api.game.modes.GameMode;
 import net.year4000.mapnodes.api.game.modes.GameModeInfo;
+import net.year4000.mapnodes.game.NodePlayer;
 import net.year4000.mapnodes.game.regions.types.Point;
 import net.year4000.mapnodes.gamemodes.GameModeTemplate;
 import net.year4000.mapnodes.messages.Msg;
@@ -19,6 +21,7 @@ import net.year4000.mapnodes.utils.MathUtil;
 import net.year4000.mapnodes.utils.SchedulerUtil;
 import net.year4000.mapnodes.utils.TimeUtil;
 import net.year4000.utilities.bukkit.FunEffectsUtil;
+import net.year4000.utilities.bukkit.MessageUtil;
 import net.year4000.utilities.bukkit.bossbar.BossBar;
 import org.bukkit.Sound;
 import org.bukkit.event.EventHandler;
@@ -134,6 +137,19 @@ public class Deathmatch extends GameModeTemplate implements GameMode {
                         game.getPlaying().forEach(p -> {
                             Common.sendAnimatedActionBar(p, Msg.locale(p, "deathmatch.scored", player.getPlayerColor(), String.valueOf(pointRegion.getPoint()), (player.getTeam().getDisplayName())));
                         });
+
+                        // Tokens
+                        if (MapNodesPlugin.getInst().isDebug()) {
+                            String tokens = MessageUtil.replaceColors("&7(DEBUG) &b+10 &6tokens ");
+                            player.sendMessage(tokens);
+                            MapNodesPlugin.debug(player.getPlayerColor() + " " + tokens);
+                            ((NodePlayer) player).getCreditsMultiplier().incrementAndGet();
+                        }
+                        else {
+                            player.sendMessage(MessageUtil.replaceColors("&b+10 &6tokens"));
+                            MapNodesPlugin.getInst().getApi().addTokens(player, 10);
+                            ((NodePlayer) player).getCreditsMultiplier().incrementAndGet();
+                        }
                     }
                 });
         });

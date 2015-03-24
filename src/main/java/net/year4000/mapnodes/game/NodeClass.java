@@ -38,7 +38,9 @@ public class NodeClass implements GameClass, GameComponent {
     /** The kit name to use with this class. */
     @Since(1.0)
     protected String kit = null;
-
+    /** The kit name to use with this class. */
+    @Since(1.0)
+    protected String permission = null;
 
     @Override
     public void validate() throws InvalidJsonException {
@@ -68,11 +70,16 @@ public class NodeClass implements GameClass, GameComponent {
     private transient GameManager game;
 
     public NodeClass(NodeGame game, String name, Material icon, String description, String kit) {
+        this(game, name, icon, description, kit, null);
+    }
+
+    public NodeClass(NodeGame game, String name, Material icon, String description, String kit, String permission) {
         assignNodeGame(game);
         this.name = name;
         this.icon = icon;
         this.description = description;
         this.kit = kit;
+        this.permission = permission;
     }
 
     /** Assign the game to this region */

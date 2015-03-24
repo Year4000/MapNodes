@@ -131,9 +131,13 @@ public final class GameListener implements Listener {
             }
 
             player.sendMessage("&7&m******************************************");
+            NodePlayer nodePlayer = (NodePlayer) player;
+            xp += (int) Math.sqrt(xp * nodePlayer.getCreditsMultiplier().get()) * nodePlayer.getCreditsMultiplier().get();
+
+            // Add to database or debug it
             if (MapNodesPlugin.getInst().isDebug()) {
                 player.sendMessage(Common.textLine("&7(DEBUG) &a+" + xp + " &6xp", size, ' ', "", ""));
-                player.sendMessage(Common.textLine("&7(DEBUG) &a+" + tokens + " &6tokens", size, ' ', "", ""));
+                player.sendMessage(Common.textLine("&7(DEBUG) &b+" + tokens + " &6tokens", size, ' ', "", ""));
                 MapNodesPlugin.debug("Would have added " + xp + " xp to " + player.getPlayerColor());
                 MapNodesPlugin.debug("Would have added " + tokens + " tokens to " + player.getPlayerColor());
             }

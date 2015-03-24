@@ -35,6 +35,7 @@ import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Scoreboard;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Data
 public final class NodePlayer implements GamePlayer, Comparable {
@@ -57,6 +58,7 @@ public final class NodePlayer implements GamePlayer, Comparable {
     private Map<Locale, Inventory> inventory = new HashMap<>();
     // backend database
     private AccountCache cache;
+    private AtomicInteger creditsMultiplier = new AtomicInteger(1);
 
     /** Constructs a game player */
     public NodePlayer(NodeGame game, Player player) {

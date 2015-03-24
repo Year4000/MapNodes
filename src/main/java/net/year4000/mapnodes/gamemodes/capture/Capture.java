@@ -1,6 +1,7 @@
 package net.year4000.mapnodes.gamemodes.capture;
 
 import com.google.common.collect.ImmutableMap;
+import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.events.game.GameLoadEvent;
 import net.year4000.mapnodes.api.events.team.GameTeamWinEvent;
@@ -11,6 +12,7 @@ import net.year4000.mapnodes.api.game.GameTeam;
 import net.year4000.mapnodes.api.game.modes.GameMode;
 import net.year4000.mapnodes.api.game.modes.GameModeInfo;
 import net.year4000.mapnodes.api.utils.Spectator;
+import net.year4000.mapnodes.game.NodePlayer;
 import net.year4000.mapnodes.game.regions.types.Point;
 import net.year4000.mapnodes.gamemodes.GameModeTemplate;
 import net.year4000.mapnodes.messages.Msg;
@@ -18,6 +20,7 @@ import net.year4000.mapnodes.utils.Common;
 import net.year4000.mapnodes.utils.SchedulerUtil;
 import net.year4000.utilities.bukkit.BukkitUtil;
 import net.year4000.utilities.bukkit.FunEffectsUtil;
+import net.year4000.utilities.bukkit.MessageUtil;
 import org.bukkit.*;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
@@ -163,6 +166,19 @@ public class Capture extends GameModeTemplate implements GameMode {
                 meta.setPower(0);
                 firework.setFireworkMeta(meta);
 
+                // Tokens
+                if (MapNodesPlugin.getInst().isDebug()) {
+                    String tokens = MessageUtil.replaceColors("&7(DEBUG) &b+10 &6tokens ");
+                    player.sendMessage(tokens);
+                    MapNodesPlugin.debug(player.getPlayerColor() + " " + tokens);
+                    ((NodePlayer) player).getCreditsMultiplier().incrementAndGet();
+                }
+                else {
+                    player.sendMessage(MessageUtil.replaceColors("&b+10 &6tokens"));
+                    MapNodesPlugin.getInst().getApi().addTokens(player, 10);
+                    ((NodePlayer) player).getCreditsMultiplier().incrementAndGet();
+                }
+
                 // Check is should win then break loop
                 SchedulerUtil.runSync(this::shouldWin);
                 break;
@@ -213,6 +229,20 @@ public class Capture extends GameModeTemplate implements GameMode {
                     Common.sendAnimatedActionBar(p, Msg.locale(p, "capture.grabbed", player.getPlayerColor(), team.getDisplayName()));
                     FunEffectsUtil.playSound(p.getPlayer(), Sound.NOTE_PLING);
                 });
+
+                // Tokens
+                if (MapNodesPlugin.getInst().isDebug()) {
+                    String tokens = MessageUtil.replaceColors("&7(DEBUG) &b+10 &6tokens ");
+                    player.sendMessage(tokens);
+                    MapNodesPlugin.debug(player.getPlayerColor() + " " + tokens);
+                    ((NodePlayer) player).getCreditsMultiplier().incrementAndGet();
+                }
+                else {
+                    player.sendMessage(MessageUtil.replaceColors("&b+10 &6tokens"));
+                    MapNodesPlugin.getInst().getApi().addTokens(player, 10);
+                    ((NodePlayer) player).getCreditsMultiplier().incrementAndGet();
+                }
+
                 break;
             }
         }

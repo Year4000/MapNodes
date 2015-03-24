@@ -8,6 +8,7 @@ import net.year4000.mapnodes.api.game.GameClass;
 import net.year4000.mapnodes.api.game.GameManager;
 import net.year4000.mapnodes.api.game.GamePlayer;
 import net.year4000.mapnodes.api.game.GameTeam;
+import net.year4000.mapnodes.backend.AccountCache;
 import net.year4000.mapnodes.commands.maps.MapCommands;
 import net.year4000.mapnodes.game.NodeClass;
 import net.year4000.mapnodes.game.NodeGame;
@@ -362,7 +363,13 @@ public class SpectatorListener implements Listener {
                 String clazzName = item.getItemMeta().getDisplayName();
                 FunEffectsUtil.playSound(player, Sound.ITEM_PICKUP);
                 GameClass team = game.getClassKit(clazzName);
-                ((NodePlayer) gPlayer).setClassKit((NodeClass) team);
+
+                // Has permissions
+                if (AccountCache.getAccount((NodePlayer) gPlayer).getRank().equalsIgnoreCase("Alpha")) {
+                    throw new IllegalArgumentException("You need to have VIP(" + ((NodeClass) team).getPermission() + ")");
+                }
+
+                gPlayer.setClassKit(team);
             }
             catch (IllegalArgumentException e) {
                 player.sendMessage(Msg.NOTICE + e.getMessage());
