@@ -14,7 +14,7 @@ import java.util.UUID;
 @Data
 public class AccountCache {
     private static final Map<UUID, AccountCache> cache = new HashMap<>();
-    public static final Double TWO_THIRDS = .666666666;
+    public static final Double TWO_THIRDS = .650000001;
 
     private UUID uuid;
     private String rank;
