@@ -132,7 +132,8 @@ public final class GameListener implements Listener {
 
             player.sendMessage("&7&m******************************************");
             NodePlayer nodePlayer = (NodePlayer) player;
-            xp += (int) Math.sqrt(xp * nodePlayer.getCreditsMultiplier().get()) * nodePlayer.getCreditsMultiplier().get();
+            xp += (int) Math.sqrt(xp * nodePlayer.getCreditsMultiplier().get()) + Math.pow(nodePlayer.getCreditsMultiplier().get(), 2);
+            tokens += nodePlayer.getCreditsMultiplier().get();
 
             // Add to database or debug it
             if (MapNodesPlugin.getInst().isDebug()) {
