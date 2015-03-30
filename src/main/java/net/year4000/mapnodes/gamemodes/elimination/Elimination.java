@@ -177,7 +177,7 @@ public class Elimination extends GameModeTemplate implements GameMode {
                 final int size = 45;
                 int xp = 20;
                 int tokens = 10;
-                xp = (int) Math.sqrt(xp * nodePlayer.getCreditsMultiplier().get()) * nodePlayer.getCreditsMultiplier().get();
+                xp += (int) Math.sqrt(xp * nodePlayer.getCreditsMultiplier().get()) + Math.pow(nodePlayer.getCreditsMultiplier().get(), 2)
 
                 // Add to database or debug it
                 if (MapNodesPlugin.getInst().isDebug()) {
