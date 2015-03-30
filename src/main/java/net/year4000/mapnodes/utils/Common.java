@@ -251,15 +251,15 @@ public final class Common {
     }
 
     public static int chars(String string) {
-        String finalString = "";
+        int length = string.toCharArray().length;
+        int xor = (int) Ascii.toUpperCase(string.toCharArray()[0]) << 4;
 
-        for (int i = 0; i < string.toCharArray().length; i++) {
-            if (finalString.length() > 6)  break;
+        for (int i = 1; i < length; i++) {
 
-            finalString += (int) Ascii.toUpperCase(string.toCharArray()[i]);
+            xor ^= ((int) Ascii.toUpperCase(string.toCharArray()[i])) & 0xFFF;
         }
 
-        return Integer.valueOf(finalString);
+        return xor;
     }
 
     public static Vector randomOffset() {
