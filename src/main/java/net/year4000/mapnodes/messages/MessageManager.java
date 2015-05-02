@@ -6,7 +6,7 @@ import net.year4000.utilities.locale.URLLocaleManager;
 
 public class MessageManager extends URLLocaleManager {
     private static QuickCache<MessageManager> inst = QuickCache.builder(MessageManager.class).build();
-    private static String url = Settings.get().getUrl();
+    private static String url = Settings.get().getClientLocales();
 
     public MessageManager() {
         super(url, parseJson(url + LOCALES_JSON));

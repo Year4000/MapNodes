@@ -9,7 +9,7 @@ public class Addons {
     private AddonBuilder builder = new AddonBuilder();
 
     /** This this addon instance */
-    private static Addons get() {
+    public static Addons get() {
         if (inst == null) {
             inst = new Addons();
         }

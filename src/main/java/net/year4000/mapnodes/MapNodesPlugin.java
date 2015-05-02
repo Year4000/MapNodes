@@ -48,7 +48,7 @@ import java.util.List;
 public class MapNodesPlugin extends BukkitPlugin implements Plugin {
     @Getter
     private static MapNodesPlugin inst = null;
-    private Addons addons = new Addons();
+    private Addons addons = Addons.get();
     private UserCache usercache;
     private boolean enable = true;
     private MessagingChannel connector;

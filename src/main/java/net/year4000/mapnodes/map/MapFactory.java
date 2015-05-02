@@ -25,7 +25,7 @@ public class MapFactory {
     public MapFactory() {
         folders = new ConcurrentHashMap<>();
 
-        Settings.get().getMapsFolder().parallelStream().forEach(path -> {
+        Settings.get().getMaps().parallelStream().forEach(path -> {
             File maps = new File(path);
 
             for (File map : checkNotNull(maps.listFiles())) {

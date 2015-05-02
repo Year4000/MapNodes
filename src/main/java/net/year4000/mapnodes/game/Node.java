@@ -138,14 +138,11 @@ public class Node {
             game.getKits().put(NodeTeam.SPECTATOR, new SpectatorKit());
 
             // Load global kits
-            try {
-                Type kitType = new TypeToken<Map<String, NodeKit>>() {
-                }.getType();
-                Map<String, NodeKit> globalKits = GsonUtil.createGson().fromJson(Settings.get().getGlobalKits(), kitType);
+            Type kitType = new TypeToken<Map<String, NodeKit>>() {
+            }.getType();
+            Map<String, NodeKit> globalKits = GsonUtil.createGson().fromJson(Settings.get().getKits(), kitType);
+            if (globalKits != null) {
                 globalKits.forEach((key, kit) -> game.getKits().put(key, kit));
-            }
-            catch (FileNotFoundException e) {
-                game.getKits().put("default", new NodeKit());
             }
         }
         catch (JsonIOException | JsonSyntaxException | WorldLoadException e) {
@@ -209,10 +206,8 @@ public class Node {
         }
         catch (IOException e) {
             MapNodesPlugin.debug("Should not see this, you should of ran checks before.");
-            MapNodesPlugin.debug(e.getMessage());
+            throw new RuntimeException(e);
         }
-
-        return null;
     }
 
     /** Unzip the map's files */

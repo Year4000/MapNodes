@@ -1,81 +1,59 @@
 package net.year4000.mapnodes;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import net.year4000.utilities.config.Comment;
-import net.year4000.utilities.config.Config;
-import net.year4000.utilities.config.InvalidConfigurationException;
+import com.google.gson.JsonObject;
+import com.google.gson.annotations.SerializedName;
+import lombok.Getter;
+import lombok.NonNull;
+import lombok.ToString;
+import net.year4000.mapnodes.backend.Backend;
+import net.year4000.utilities.URLBuilder;
+import net.year4000.utilities.sdk.API;
+import net.year4000.utilities.sdk.HttpFetcher;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.Reader;
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
-@Data
-@EqualsAndHashCode(callSuper = false)
-public class Settings extends Config {
-    private static Settings inst = null;
+@Getter
+@ToString
+public class Settings {
+    private static transient Settings inst = null;
 
-    private Settings() {
-        try {
-            CONFIG_HEADER = new String[]{"MapNodes Configuration"};
-            CONFIG_FILE = new File(MapNodesPlugin.getInst().getDataFolder(), "config.yml");
-            init();
-        }
-        catch (InvalidConfigurationException e) {
-            MapNodesPlugin.log(e, true);
-        }
-        catch (NullPointerException e) {
-            // Should only be catch by their is no file by the plugin instance.
-        }
+    @NonNull
+    @SerializedName("client_locales")
+    private String clientLocales;
 
-        if (System.getProperty("maps", null) != null) {
-            mapsFolder = Arrays.asList(System.getProperty("maps", null).split("(,|;)"));
-        }
+    @NonNull
+    @SerializedName("system_locales")
+    private String systemLocales;
 
-        if (System.getProperty("modes", null) != null) {
-            modes = Arrays.asList(System.getProperty("modes", null).split("(,|;)"));
-        }
-    }
+    @NonNull
+    @SerializedName("load_maps")
+    private Integer loadMaps;
 
-    @Comment("The url to pull the locales from")
-    private String url = "https://raw.githubusercontent.com/Year4000/Locales/master/net/year4000/mapnodes/locales/";
+    @NonNull
+    private JsonObject kits;
 
-    @Comment("The url to pull the locales from")
-    private String systemUrl = "https://raw.githubusercontent.com/Year4000/Locales/master/net/year4000/mapnodes/system/";
+    // todo remove this, was added for backwards compatibly
+    private transient List<String> maps = Collections.singletonList("/y4k/maps/");
 
-    @Comment("The max number of maps to load per session")
-    private int loadMaps = 10;
+    // todo remove this, was added for backwards compatibly
+    private transient List<String> modes = Arrays.asList(System.getProperty("modes", ",").split("(,|;)"));
 
-    @Comment("The folders paths to the maps")
-    private List<String> mapsFolder = new ArrayList<String>() {{
-        add("/y4k/maps/");
-    }};
-
-    @Comment("The game modes that this node will auto load")
-    private List<String> modes = new ArrayList<>();
-
-    @Comment("The json file location to load global kits")
-    private String kits = "/y4k/maps/kits.json";
-
-    @Comment("The api key to interact with the database")
-    private String key = "UUID_KEY";
+    // todo remove this, was added for backwards compatibly
+    public transient String key = System.getenv("Y4K_KEY");
 
     public static Settings get() {
         if (inst == null) {
-            inst = new Settings();
+            try {
+                URLBuilder url = URLBuilder.builder(API.BASE_URL).addPath("configs").addPath("mapnodes");
+                inst = HttpFetcher.get(url.build(), Settings.class);
+            }
+            catch (Exception e) {
+                throw new RuntimeException(e);
+            }
         }
+
         return inst;
-    }
-
-    public void reload() {
-        inst = new Settings();
-    }
-
-    public Reader getGlobalKits() throws FileNotFoundException {
-        return new FileReader(new File(kits));
     }
 }
