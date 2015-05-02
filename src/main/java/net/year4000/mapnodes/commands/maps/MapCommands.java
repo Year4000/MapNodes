@@ -5,7 +5,7 @@ import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.game.GameManager;
 import net.year4000.mapnodes.game.Node;
 import net.year4000.mapnodes.map.MapFactory;
-import net.year4000.mapnodes.map.MapFolder;
+import net.year4000.mapnodes.map.MapObject;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.Common;
 import net.year4000.utilities.ChatColor;
@@ -68,14 +68,14 @@ public class MapCommands {
     public static void loaded(CommandContext args, CommandSender sender) throws CommandException {
         final int MAX_PER_PAGE = 8;
 
-        new SimplePaginatedResult<MapFolder>(null, MAX_PER_PAGE) {
+        new SimplePaginatedResult<MapObject>(null, MAX_PER_PAGE) {
             @Override
             public String formatHeader(int page, int maxPages) {
                 return Msg.locale(sender, "cmd.maps.header", String.valueOf(page), String.valueOf(maxPages));
             }
 
             @Override
-            public String format(MapFolder folder, int index) {
+            public String format(MapObject folder, int index) {
 
                 return MessageUtil.replaceColors("&7" + (index + 1) + " &a" + folder.toString().replaceAll("(/|\\(|\\))", "&7$1&a"));
             }

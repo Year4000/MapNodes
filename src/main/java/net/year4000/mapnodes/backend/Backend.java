@@ -1,15 +1,21 @@
 package net.year4000.mapnodes.backend;
 
 import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.Settings;
 import net.year4000.mapnodes.api.game.GamePlayer;
 import net.year4000.mapnodes.game.NodePlayer;
+import net.year4000.mapnodes.map.CoreMapObject;
+import net.year4000.mapnodes.map.MapObject;
+import net.year4000.mapnodes.messages.Msg;
 import net.year4000.utilities.URLBuilder;
 import net.year4000.utilities.sdk.API;
 import net.year4000.utilities.sdk.HttpFetcher;
 
+import java.lang.reflect.Type;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -70,5 +76,30 @@ public class Backend extends API {
                 MapNodesPlugin.log(new Exception(error), false);
             }
         });
+    }
+
+    /** Get a list of all possible maps */
+    public List<MapObject> getMaps() {
+        Type type = new TypeToken<List<MapObject>>() {}.getType();
+        String url = api().addPath("maps").build();
+        try {
+            return HttpFetcher.get(url, type);
+        }
+        catch (Exception e) {
+            MapNodesPlugin.log(Msg.util("maps.fetch.fail"));
+            throw new RuntimeException(e);
+        }
+    }
+
+    /** Get a map from the category and name */
+    public CoreMapObject getMap(String category, String name) {
+        String url = api().addPath("maps").addPath(category).addPath(name).build();
+        try {
+            return HttpFetcher.get(url, CoreMapObject.class);
+        }
+        catch (Exception e) {
+            MapNodesPlugin.log(Msg.util("maps.fetch.fail"));
+            throw new RuntimeException(e);
+        }
     }
 }

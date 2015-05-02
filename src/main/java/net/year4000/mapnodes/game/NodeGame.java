@@ -147,6 +147,7 @@ public final class NodeGame implements GameManager, Validator {
 
     /** Init things that happen before load is playable */
     public void load() {
+        MapNodesPlugin.debug(Msg.util("node.game.load"));
         scoreboardFactory = new ScoreboardFactory(this);
 
         // Assign this game to child objects

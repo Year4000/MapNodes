@@ -2,6 +2,7 @@ package net.year4000.mapnodes.game;
 
 import com.google.common.reflect.TypeToken;
 import com.google.gson.JsonIOException;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import lombok.Getter;
 import net.lingala.zip4j.core.ZipFile;
@@ -16,7 +17,7 @@ import net.year4000.mapnodes.api.game.GameConfig;
 import net.year4000.mapnodes.clocks.RestartServer;
 import net.year4000.mapnodes.game.system.SpectatorKit;
 import net.year4000.mapnodes.game.system.SpectatorTeam;
-import net.year4000.mapnodes.map.MapFolder;
+import net.year4000.mapnodes.map.CoreMapObject;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.GsonUtil;
 import net.year4000.mapnodes.utils.MathUtil;
@@ -32,6 +33,8 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.lang.reflect.Type;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Map;
 
 import static com.google.common.base.Preconditions.checkArgument;
@@ -43,37 +46,38 @@ public class Node {
     private static final String TEMPLATE = "%d-%s";
     private static final int ICON_SIZE = 64;
     /** Stores the info about the map's json */
-    private final File mapJson;
+    private final JsonObject mapJson;
     /** The node's id */
     private int id;
     private CachedServerIcon icon;
     private Image iconImage;
     private NodeGame game;
-
     /** Manages the node's worlds */
     private String worldName;
     private ZipFile worldFile;
     private World world;
+    private URL worldUrl;
+    private File worldCache;
 
-    public Node(int id, MapFolder worldFolder) throws WorldLoadException, InvalidJsonException {
+    public Node(int id, CoreMapObject worldFolder) throws WorldLoadException, InvalidJsonException {
         this.id = id;
         mapJson = worldFolder.getMap();
 
-        // Load the world
-
         try {
-            worldName = String.format(TEMPLATE, id, worldFolder.getName());
-            worldFile = new ZipFile(worldFolder.getWorld());
+            worldName = String.format(TEMPLATE, id, worldFolder.getObject().getURLName());
+            worldUrl = new URL(worldFolder.getWorld().getUrl() + "?key=" + Settings.get().getKey());
+            worldCache = new File(new File(WORLD_CONTAINER, worldName), "world.zip");
+            worldFile = new ZipFile(worldCache);
         }
-        catch (ZipException e) {
-            MapNodesPlugin.log(e.getMessage());
+        catch (MalformedURLException | ZipException e) {
+            // Can not happen unless api is broke
         }
 
         // Load icon if one
         if (worldFolder.getIcon() != null) {
             try {
                 // Original size
-                BufferedImage bufferedImage = ImageIO.read(worldFolder.getIcon());
+                BufferedImage bufferedImage = ImageIO.read(new URL(worldFolder.getIcon().getUrl()));
 
                 // Resize to 64 x 64
                 BufferedImage bufferedIcon = new BufferedImage(ICON_SIZE, ICON_SIZE, BufferedImage.TYPE_INT_RGB);
@@ -91,14 +95,14 @@ public class Node {
 
         // Load Map.json
         try {
-            MapNodesPlugin.debug(Msg.util("debug.map.validate", worldFolder.getName()));
+            MapNodesPlugin.debug(Msg.util("debug.map.validate", worldFolder.getObject().getName()));
 
             // Validate the map with the default world for validation that needs world locations
             World world = Bukkit.getWorlds().get(0);
-            GsonUtil.createGson(world).fromJson(loadMap(), NodeGame.class).validate();
+            GsonUtil.createGson(world).fromJson(mapJson, NodeGame.class).validate();
 
             // Register the map json to NodeGame
-            game = GsonUtil.createGson().fromJson(loadMap(), NodeGame.class);
+            game = GsonUtil.createGson().fromJson(mapJson, NodeGame.class);
             game.getMap().convertAuthors(); // Fetches UUIDs for cache
         }
         catch (JsonIOException | JsonSyntaxException e) {
@@ -115,13 +119,14 @@ public class Node {
 
     /** Register this node */
     public void register() {
+        MapNodesPlugin.debug(Msg.util("node.register"));
         try {
             if (getWorld() == null) {
                 unZip();
                 createWorld();
             }
 
-            game = GsonUtil.createGson(getWorld()).fromJson(loadMap(), NodeGame.class);
+            game = GsonUtil.createGson(getWorld()).fromJson(mapJson, NodeGame.class);
             game.getMap().convertAuthors(); // Uses cached UUIDs
 
             // register system team and kit
@@ -199,17 +204,6 @@ public class Node {
         });
     }
 
-    /** Reads the map.json and return the reader stream */
-    private Reader loadMap() {
-        try {
-            return new FileReader(mapJson);
-        }
-        catch (IOException e) {
-            MapNodesPlugin.debug("Should not see this, you should of ran checks before.");
-            throw new RuntimeException(e);
-        }
-    }
-
     /** Unzip the map's files */
     public void unZip() throws WorldLoadException {
         File location = new File(WORLD_CONTAINER, worldName);
@@ -219,10 +213,12 @@ public class Node {
         }
 
         try {
+            FileUtils.copyURLToFile(worldUrl, worldCache);
+
             worldFile.extractAll(location.getPath());
             MapNodesPlugin.debug(Msg.util("debug.world.unzip", worldName));
         }
-        catch (ZipException e) {
+        catch (ZipException | IOException e) {
             throw new WorldLoadException(e.getMessage());
         }
     }

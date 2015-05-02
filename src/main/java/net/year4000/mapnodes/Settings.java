@@ -35,9 +35,6 @@ public class Settings {
     private JsonObject kits;
 
     // todo remove this, was added for backwards compatibly
-    private transient List<String> maps = Collections.singletonList("/y4k/maps/");
-
-    // todo remove this, was added for backwards compatibly
     private transient List<String> modes = Arrays.asList(System.getProperty("modes", ",").split("(,|;)"));
 
     // todo remove this, was added for backwards compatibly

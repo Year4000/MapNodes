@@ -19,50 +19,23 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 public class MapFactory {
     @Getter
-    private static Map<String, MapFolder> folders;
+    private static Map<String, MapObject> folders;
 
     /** Find and load all maps */
     public MapFactory() {
         folders = new ConcurrentHashMap<>();
 
-        Settings.get().getMaps().parallelStream().forEach(path -> {
-            File maps = new File(path);
-
-            for (File map : checkNotNull(maps.listFiles())) {
-                try {
-                    maps(folders, map);
-                }
-                catch (SecurityException e) {
-                    MapNodesPlugin.debug(e.getMessage());
-                }
-            }
+        MapNodesPlugin.getInst().getApi().getMaps().forEach(path -> {
+            String id = path.getName().toLowerCase().replace(" ", "-");
+            folders.put(id, path);
         });
 
         //folders.forEach(System.out::println);
     }
 
-    private static void maps(Map<String, MapFolder> folders, File maps) {
-        try {
-            if (maps.isDirectory()) {
-                for (File world : checkNotNull(maps.listFiles())) {
-                    try {
-                        MapNodesPlugin.debug(Msg.util("debug.map.loaded", world.getName()));
-                        folders.put(world.getName(), new MapFolder(world));
-                    }
-                    catch (InvalidMapException e) {
-                        MapNodesPlugin.debug(e.getMessage());
-                    }
-                }
-            }
-        }
-        catch (SecurityException e) {
-            MapNodesPlugin.debug(e.getMessage());
-        }
-    }
-
     /** Get the mapfolder by name */
     @Nullable
-    public static MapFolder getMap(String name) {
+    public static MapObject getMap(String name) {
         if (isMap(name, true)) {
             return folders.get(name);
         }
@@ -86,9 +59,9 @@ public class MapFactory {
     }
 
     /** A shuffle list of allowed maps */
-    public static List<MapFolder> getMaps(int number) {
-        Stream<MapFolder> enabledFolders = folders.values().parallelStream().filter(m -> !m.isDisabled() && (Settings.get().getModes().size() == 0 || Settings.get().getModes().contains(m.getParent())));
-        List<MapFolder> maps = new ArrayList<>(enabledFolders.collect(Collectors.toList()));
+    public static List<MapObject> getMaps(int number) {
+        Stream<MapObject> enabledFolders = folders.values().parallelStream().filter(m -> !m.isDisabled() && (Settings.get().getModes().size() == 0 || Settings.get().getModes().contains(m.getCategory())));
+        List<MapObject> maps = new ArrayList<>(enabledFolders.collect(Collectors.toList()));
 
         // Reverse and shuffle the maps based on the number of maps
         for (int i = 0; i < maps.size(); i++) {
@@ -96,8 +69,8 @@ public class MapFactory {
             Collections.shuffle(maps);
         }
 
-        Iterator<MapFolder> mapFolderIterator = Iterables.cycle(maps).iterator();
-        ArrayList<MapFolder> loadedMaps = new ArrayList<>();
+        Iterator<MapObject> mapFolderIterator = Iterables.cycle(maps).iterator();
+        ArrayList<MapObject> loadedMaps = new ArrayList<>();
 
         for (int i = 0; i < number; i++) {
             if (mapFolderIterator.hasNext()) {

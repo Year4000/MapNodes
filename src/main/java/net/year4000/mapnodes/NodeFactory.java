@@ -4,8 +4,9 @@ import lombok.Getter;
 import net.year4000.mapnodes.api.exceptions.InvalidJsonException;
 import net.year4000.mapnodes.api.exceptions.WorldLoadException;
 import net.year4000.mapnodes.game.Node;
+import net.year4000.mapnodes.map.CoreMapObject;
 import net.year4000.mapnodes.map.MapFactory;
-import net.year4000.mapnodes.map.MapFolder;
+import net.year4000.mapnodes.map.MapObject;
 import net.year4000.mapnodes.messages.Msg;
 
 import java.util.ArrayList;
@@ -24,13 +25,13 @@ public class NodeFactory {
     private int gameID = 0;
 
     private NodeFactory() {
-        MapFactory.getMaps(Settings.get().getLoadMaps()).forEach(world -> {
+        MapFactory.getMaps(Settings.get().getLoadMaps()).parallelStream().forEach(world -> {
             if (!world.isDisabled()) {
                 try {
                     addMap(world);
                 }
                 catch (InvalidJsonException | WorldLoadException e) {
-                    MapNodesPlugin.log(e, true);
+                    MapNodesPlugin.log(e, false);
                 }
             }
             else {
@@ -46,11 +47,23 @@ public class NodeFactory {
         return inst;
     }
 
-    public void addMap(MapFolder world) throws InvalidJsonException, WorldLoadException {
+    public void addMap(MapObject world) throws InvalidJsonException, WorldLoadException {
+        CoreMapObject core = MapNodesPlugin.getInst().getApi().getMap(world.getURLCategory(), world.getURLName());
+        core.setObject(world);
+        addMap(core, false);
+    }
+
+    public void addMap(MapObject world, boolean next) throws InvalidJsonException, WorldLoadException {
+        CoreMapObject core = MapNodesPlugin.getInst().getApi().getMap(world.getURLCategory(), world.getURLName());
+        core.setObject(world);
+        addMap(core, next);
+    }
+
+    public void addMap(CoreMapObject world) throws InvalidJsonException, WorldLoadException {
         addMap(world, false);
     }
 
-    public void addMap(MapFolder world, boolean next) throws InvalidJsonException, WorldLoadException {
+    public void addMap(CoreMapObject world, boolean next) throws InvalidJsonException, WorldLoadException {
         if (next) {
             Queue<Node> maps = new LinkedBlockingQueue<>(queueNodes);
             queueNodes.clear();
