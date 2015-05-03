@@ -58,6 +58,7 @@ public class Node {
     private World world;
     private URL worldUrl;
     private File worldCache;
+    private int worldSize;
 
     public Node(int id, CoreMapObject worldFolder) throws WorldLoadException, InvalidJsonException {
         this.id = id;
@@ -68,6 +69,7 @@ public class Node {
             worldUrl = new URL(worldFolder.getWorld().getUrl() + "?key=" + Settings.get().getKey());
             worldCache = new File(new File(WORLD_CONTAINER, worldName), "world.zip");
             worldFile = new ZipFile(worldCache);
+            worldSize = worldFolder.getWorld().getSize();
         }
         catch (MalformedURLException | ZipException e) {
             // Can not happen unless api is broke

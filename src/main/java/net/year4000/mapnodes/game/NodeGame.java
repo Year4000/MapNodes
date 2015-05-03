@@ -578,7 +578,7 @@ public final class NodeGame implements GameManager, Validator {
     }
 
     /** Stop the game anc cycle to the next with a time */
-    public void stop(@Nullable Integer time) {
+    private void stop(@Nullable Integer time) {
         if (stage == NodeStage.ENDING) {
             return;
         }
@@ -612,8 +612,16 @@ public final class NodeGame implements GameManager, Validator {
         // Unregister game mode listeners
         gameModes.forEach(NodeModeFactory.get()::unregisterListeners);
 
+        // Decide how long to register the map
+        int size = NodeFactory.get().peekNextQueued().getWorldSize();
+        int waitTime = (int) (Math.log(size) * 1.5);
+        int waitTicks = MathUtil.ticks(waitTime < 1 ? 1 : waitTime);
+
+        // register map in its own thread
+        SchedulerUtil.runAsync(() -> NodeFactory.get().peekNextQueued().register());
+
         // Cycle game or restart server
-        new Clocker(165) {
+        new Clocker(NodeFactory.get().isQueuedGames() ? waitTicks : MathUtil.ticks(5)) {
             String shortMapName = Common.shortMessage(22, getMap().getName());
             String title = shortMapName;
 

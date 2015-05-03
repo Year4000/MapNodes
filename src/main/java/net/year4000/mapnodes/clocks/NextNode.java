@@ -7,10 +7,7 @@ import net.year4000.mapnodes.api.game.GameMap;
 import net.year4000.mapnodes.game.Node;
 import net.year4000.mapnodes.messages.Message;
 import net.year4000.mapnodes.messages.Msg;
-import net.year4000.mapnodes.utils.Common;
-import net.year4000.mapnodes.utils.MathUtil;
-import net.year4000.mapnodes.utils.PacketHacks;
-import net.year4000.mapnodes.utils.TimeUtil;
+import net.year4000.mapnodes.utils.*;
 import net.year4000.utilities.bukkit.FunEffectsUtil;
 import net.year4000.utilities.bukkit.bossbar.BossBar;
 import org.bukkit.Sound;
@@ -35,11 +32,11 @@ public class NextNode extends Clocker {
     };
 
     public NextNode() {
-        this(20);
+        this(10);
     }
 
     public NextNode(int time) {
-        super(MathUtil.ticks(MapNodesPlugin.getInst().getLog().isDebug() ? 15 : time));
+        super(MathUtil.ticks(time));
     }
 
     public void runFirst(int position) {
@@ -56,9 +53,6 @@ public class NextNode extends Clocker {
             player.getPlayer(),
             Sound.ORB_PICKUP
         ));
-
-        // Load and register map in its own thread
-        NodeFactory.get().peekNextQueued().register();
     }
 
     public void runTock(int position) {
