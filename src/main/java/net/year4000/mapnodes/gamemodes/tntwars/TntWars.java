@@ -192,21 +192,23 @@ public class TntWars extends GameModeTemplate implements GameMode {
         });
 
         // Tokens
-        LivingEntity livingEntity = NMSHacks.getTNTSource(event.getEntity());
+        if (event.getEntity() != null) {
+            LivingEntity livingEntity = NMSHacks.getTNTSource(event.getEntity());
 
-        if (livingEntity instanceof Player) {
-            GamePlayer player = MapNodes.getCurrentGame().getPlayer((Player) livingEntity);
-            if (player != null) {
-                if (MapNodesPlugin.getInst().isDebug()) {
-                    String tokens = MessageUtil.replaceColors("&7(DEBUG) &b+2 &6tokens ");
-                    player.sendMessage(tokens);
-                    MapNodesPlugin.debug(player.getPlayerColor() + " " + tokens);
-                    ((NodePlayer) player).getCreditsMultiplier().incrementAndGet();
-                }
-                else {
-                    player.sendMessage(MessageUtil.replaceColors("&b+2 &6tokens"));
-                    MapNodesPlugin.getInst().getApi().addTokens(player, 2);
-                    ((NodePlayer) player).getCreditsMultiplier().incrementAndGet();
+            if (livingEntity instanceof Player) {
+                GamePlayer player = MapNodes.getCurrentGame().getPlayer((Player) livingEntity);
+                if (player != null) {
+                    if (MapNodesPlugin.getInst().isDebug()) {
+                        String tokens = MessageUtil.replaceColors("&7(DEBUG) &b+2 &6tokens ");
+                        player.sendMessage(tokens);
+                        MapNodesPlugin.debug(player.getPlayerColor() + " " + tokens);
+                        ((NodePlayer) player).getCreditsMultiplier().incrementAndGet();
+                    }
+                    else {
+                        player.sendMessage(MessageUtil.replaceColors("&b+2 &6tokens"));
+                        MapNodesPlugin.getInst().getApi().addTokens(player, 2);
+                        ((NodePlayer) player).getCreditsMultiplier().incrementAndGet();
+                    }
                 }
             }
         }
