@@ -34,6 +34,7 @@ import net.year4000.mapnodes.utils.MathUtil;
 import net.year4000.mapnodes.utils.SchedulerUtil;
 import net.year4000.mapnodes.utils.TimeUtil;
 import net.year4000.mapnodes.utils.typewrappers.GameSet;
+import net.year4000.utilities.Callback;
 import net.year4000.utilities.bukkit.BukkitUtil;
 import net.year4000.utilities.bukkit.ItemUtil;
 import net.year4000.utilities.bukkit.MessageUtil;
@@ -52,6 +53,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -139,6 +141,7 @@ public final class NodeGame implements GameManager, Validator {
     private transient long startTime = 0, stopTime;
     @Setter(AccessLevel.NONE)
     private transient int baseStartTime = 10;
+    private transient AtomicReference<BukkitTask> endingLoadingClock;
 
     /** The start time for the game */
     public void addStartTime(int time) {
@@ -612,16 +615,55 @@ public final class NodeGame implements GameManager, Validator {
         // Unregister game mode listeners
         gameModes.forEach(NodeModeFactory.get()::unregisterListeners);
 
-        // Decide how long to register the map
-        int size = NodeFactory.get().peekNextQueued().getWorldSize();
-        int waitTime = (int) (Math.log(size) * 1.5);
-        int waitTicks = MathUtil.ticks(waitTime < 1 ? 1 : waitTime);
+        // Run after the world has been registered
+        Callback<BukkitTask> callback = (d, e) -> {
+            // Game has fully ended
+            stage = NodeStage.ENDED;
+
+            // End the graphic
+            d.cancel();
+            String shortMapName = Common.shortMessage(22, getMap().getName());
+            getPlayers()
+                .map(GamePlayer::getPlayer)
+                .map(Player::getScoreboard)
+                .map(obj -> obj.getObjective(DisplaySlot.SIDEBAR))
+                .filter(obj -> obj != null)
+                .forEach(obj -> obj.setDisplayName(Common.truncate(MessageUtil.replaceColors("    &f" + shortMapName + "    "), 32)));
+
+            // Load next game
+            getPlayers()
+                .map(GamePlayer::getPlayer)
+                .map(Player::getScoreboard)
+                .map(obj -> obj.getObjective(DisplaySlot.SIDEBAR))
+                .filter(obj -> obj != null)
+                .forEach(Objective::unregister);
+
+            if (NodeFactory.get().isQueuedGames()) {
+                if (time != null) {
+                    stopClock = new NextNode(time).run();
+                }
+                else {
+                    stopClock = new NextNode().run();
+                }
+            }
+            else {
+                if (time != null) {
+                    stopClock = new RestartServer(time).run();
+                }
+                else {
+                    stopClock = new RestartServer().run();
+                }
+            }
+        };
 
         // register map in its own thread
-        SchedulerUtil.runAsync(() -> NodeFactory.get().peekNextQueued().register());
+        SchedulerUtil.runAsync(() -> {
+            NodeFactory.get().peekNextQueued().register();
+            callback.callback(endingLoadingClock.get());
+        });
 
         // Cycle game or restart server
-        new Clocker(NodeFactory.get().isQueuedGames() ? waitTicks : MathUtil.ticks(5)) {
+        Clocker clocker = new Clocker(20) {
             String shortMapName = Common.shortMessage(22, getMap().getName());
             String title = shortMapName;
 
@@ -647,34 +689,13 @@ public final class NodeGame implements GameManager, Validator {
                     .map(obj -> obj.getObjective(DisplaySlot.SIDEBAR))
                     .filter(obj -> obj != null)
                     .forEach(obj -> obj.setDisplayName(Common.truncate(MessageUtil.replaceColors("    &f" + title + "    "), 32)));
-
-                SchedulerUtil.runAsync(() -> {
-                    getPlayers()
-                        .map(GamePlayer::getPlayer)
-                        .map(Player::getScoreboard)
-                        .map(obj -> obj.getObjective(DisplaySlot.SIDEBAR))
-                        .filter(obj -> obj != null)
-                        .forEach(Objective::unregister);
-
-                    if (NodeFactory.get().isQueuedGames()) {
-                        if (time != null) {
-                            stopClock = new NextNode(time).run();
-                        }
-                        else {
-                            stopClock = new NextNode().run();
-                        }
-                    }
-                    else {
-                        if (time != null) {
-                            stopClock = new RestartServer(time).run();
-                        }
-                        else {
-                            stopClock = new RestartServer().run();
-                        }
-                    }
-                }, 20L);
             }
-        }.run();
+        };
+
+        // Keep looping until end
+        while (!stage.isEnded()) {
+            endingLoadingClock.set(clocker.run());
+        }
     }
 
     // STOP Game Controls //
