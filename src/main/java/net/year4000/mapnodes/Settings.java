@@ -35,7 +35,7 @@ public class Settings {
     private JsonObject kits;
 
     // todo remove this, was added for backwards compatibly
-    private transient List<String> modes = Arrays.asList(System.getProperty("modes", ",").split("(,|;)"));
+    private transient List<String> modes = Arrays.asList(System.getProperty("modes", ",").toLowerCase().split("(,|;)"));
 
     // todo remove this, was added for backwards compatibly
     public transient String key = System.getenv("Y4K_KEY");

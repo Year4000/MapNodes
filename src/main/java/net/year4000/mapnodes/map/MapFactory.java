@@ -60,7 +60,7 @@ public class MapFactory {
 
     /** A shuffle list of allowed maps */
     public static List<MapObject> getMaps(int number) {
-        Stream<MapObject> enabledFolders = folders.values().parallelStream().filter(m -> !m.isDisabled() && (Settings.get().getModes().size() == 0 || Settings.get().getModes().contains(m.getCategory())));
+        Stream<MapObject> enabledFolders = folders.values().parallelStream().filter(m -> !m.isDisabled() && (Settings.get().getModes().size() == 0 || Settings.get().getModes().contains(m.getCategory().toLowerCase())));
         List<MapObject> maps = new ArrayList<>(enabledFolders.collect(Collectors.toList()));
 
         // Reverse and shuffle the maps based on the number of maps
