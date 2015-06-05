@@ -18,6 +18,10 @@ public final class UserCache {
     private Storage db = new Storage();
 
     public UserCache() {
+        if (!MapNodesPlugin.getInst().getDataFolder().exists()) {
+            MapNodesPlugin.getInst().getDataFolder().mkdir();
+        }
+
         if (!STORAGE.exists()) {
             write(STORAGE);
         }
