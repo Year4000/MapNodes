@@ -141,7 +141,7 @@ public final class NodeGame implements GameManager, Validator {
     private transient long startTime = 0, stopTime;
     @Setter(AccessLevel.NONE)
     private transient int baseStartTime = 10;
-    private transient AtomicReference<BukkitTask> endingLoadingClock;
+    private transient AtomicReference<BukkitTask> endingLoadingClock = new AtomicReference<>();
 
     /** The start time for the game */
     public void addStartTime(int time) {
