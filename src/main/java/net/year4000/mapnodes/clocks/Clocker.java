@@ -45,12 +45,12 @@ public abstract class Clocker {
     /** Code to be ran on the last clock tick */
     public void runLast(int position) {}
 
-    public void reduceTime(int time) {
-        clock.index -= MathUtil.ticks(time);
+    public int reduceTime(int time) {
+        return clock.index -= MathUtil.ticks(time);
     }
 
-    public void increaseTime(int time) {
-        clock.index += MathUtil.ticks(time);
+    public int increaseTime(int time) {
+        return clock.index += MathUtil.ticks(time);
     }
 
     public class Clock implements Runnable {
@@ -64,15 +64,20 @@ public abstract class Clocker {
 
         @Override
         public void run() {
+            // What stage to run
             if (index <= 0) {
                 runLast(index);
-                task.cancel();
             }
             else if (index == time) {
                 runFirst(index);
             }
             else {
                 runTock(index);
+            }
+
+            // After stage should we cancel
+            if (index <= 0) {
+                task.cancel();
             }
 
             index--;
