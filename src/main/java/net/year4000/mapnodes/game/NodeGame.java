@@ -141,7 +141,6 @@ public final class NodeGame implements GameManager, Validator {
     private transient long startTime = 0, stopTime;
     @Setter(AccessLevel.NONE)
     private transient int baseStartTime = 10;
-    private transient AtomicReference<BukkitTask> endingLoadingClock = new AtomicReference<>();
 
     /** The start time for the game */
     public void addStartTime(int time) {
@@ -656,29 +655,23 @@ public final class NodeGame implements GameManager, Validator {
             }
         };
 
-        // register map in its own thread
-        SchedulerUtil.runAsync(() -> {
-            NodeFactory.get().peekNextQueued().register();
-            callback.callback(endingLoadingClock.get());
-        });
-
         // Cycle game or restart server
-        Clocker clocker = new Clocker(20) {
+        BukkitTask clocker = new Clocker(40) {
             String shortMapName = Common.shortMessage(22, getMap().getName());
             String title = shortMapName;
+            int lastTime = 0;
 
             @Override
             public void runTock(int position) {
+                int pos = (int) (((MathUtil.percent(getTime() + lastTime, position) * 10) / 10) * (title.length() * .01));
+                String parts = title.substring(0, pos) + "&3" + (pos == title.length() ? title.substring(pos) : title.charAt(pos) + "&f" + title.substring(pos + 1));
+
                 getPlayers()
                     .map(GamePlayer::getPlayer)
                     .map(Player::getScoreboard)
                     .map(obj -> obj.getObjective(DisplaySlot.SIDEBAR))
                     .filter(obj -> obj != null)
-                    .forEach(obj -> {
-                        int pos = (int) (((MathUtil.percent(getTime(), position) * 10) / 10) * (title.length() * .01));
-                        String parts = title.substring(0, pos) + "&3" + (pos == title.length() ? title.substring(pos) : title.charAt(pos) + "&f" + title.substring(pos + 1));
-                        obj.setDisplayName(Common.truncate(MessageUtil.replaceColors("    &b" + parts + "    "), 32));
-                    });
+                    .forEach(obj -> obj.setDisplayName(Common.truncate(MessageUtil.replaceColors("    &b" + parts + "    "), 32)));
             }
 
             @Override
@@ -689,13 +682,17 @@ public final class NodeGame implements GameManager, Validator {
                     .map(obj -> obj.getObjective(DisplaySlot.SIDEBAR))
                     .filter(obj -> obj != null)
                     .forEach(obj -> obj.setDisplayName(Common.truncate(MessageUtil.replaceColors("    &f" + title + "    "), 32)));
-            }
-        };
 
-        // Keep looping until end
-        while (!stage.isEnded()) {
-            endingLoadingClock.set(clocker.run());
-        }
+                lastTime = 1;
+                increaseTime(2);
+            }
+        }.run();
+
+        // Register map in its own async thread
+        SchedulerUtil.runAsync(() -> {
+            NodeFactory.get().peekNextQueued().register();
+            SchedulerUtil.runSync(() -> callback.callback(clocker));
+        });
     }
 
     // STOP Game Controls //
