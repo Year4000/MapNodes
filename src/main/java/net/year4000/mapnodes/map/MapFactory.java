@@ -60,6 +60,12 @@ public class MapFactory {
 
     /** A shuffle list of allowed maps */
     public static List<MapObject> getMaps(int number) {
+        // Number is 0 use empty array list
+        if (number == 0) {
+            return new ArrayList<>();
+        }
+
+        // Enabled maps
         Stream<MapObject> enabledFolders = folders.values().parallelStream().filter(m -> !m.isDisabled() && (Settings.get().getModes().size() == 0 || Settings.get().getModes().contains(m.getCategory().toLowerCase())));
         List<MapObject> maps = new ArrayList<>(enabledFolders.collect(Collectors.toList()));
 
@@ -69,6 +75,7 @@ public class MapFactory {
             Collections.shuffle(maps);
         }
 
+        // Loaded maps
         Iterator<MapObject> mapFolderIterator = Iterables.cycle(maps).iterator();
         ArrayList<MapObject> loadedMaps = new ArrayList<>();
 

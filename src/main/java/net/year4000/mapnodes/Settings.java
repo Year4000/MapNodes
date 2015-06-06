@@ -21,18 +21,18 @@ public class Settings {
 
     @NonNull
     @SerializedName("client_locales")
-    private String clientLocales;
+    private String clientLocales = "https://raw.githubusercontent.com/Year4000/Locales/master/net/year4000/mapnodes/locales/";
 
     @NonNull
     @SerializedName("system_locales")
-    private String systemLocales;
+    private String systemLocales = "https://raw.githubusercontent.com/Year4000/Locales/master/net/year4000/mapnodes/system/";
 
     @NonNull
     @SerializedName("load_maps")
-    private Integer loadMaps;
+    private Integer loadMaps = 0;
 
     @NonNull
-    private JsonObject kits;
+    private JsonObject kits = new JsonObject();
 
     // todo remove this, was added for backwards compatibly
     private transient List<String> modes = Arrays.asList(System.getProperty("modes", ",").toLowerCase().split("(,|;)"));
@@ -47,7 +47,8 @@ public class Settings {
                 inst = HttpFetcher.get(url.build(), Settings.class);
             }
             catch (Exception e) {
-                throw new RuntimeException(e);
+                MapNodesPlugin.log(e, false);
+                inst = new Settings();
             }
         }
 

@@ -14,10 +14,7 @@ import net.year4000.utilities.sdk.API;
 import net.year4000.utilities.sdk.HttpFetcher;
 
 import java.lang.reflect.Type;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public class Backend extends API {
     private Map<UUID, String> accounts = new HashMap<>();
@@ -87,7 +84,7 @@ public class Backend extends API {
         }
         catch (Exception e) {
             MapNodesPlugin.log(Msg.util("maps.fetch.fail"));
-            throw new RuntimeException(e);
+            return new ArrayList<>();
         }
     }
 
@@ -99,7 +96,7 @@ public class Backend extends API {
         }
         catch (Exception e) {
             MapNodesPlugin.log(Msg.util("maps.fetch.fail"));
-            throw new RuntimeException(e);
+            return null;
         }
     }
 }
