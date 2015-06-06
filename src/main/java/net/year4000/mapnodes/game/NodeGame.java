@@ -694,6 +694,14 @@ public final class NodeGame implements GameManager, Validator {
             if (NodeFactory.get().isQueuedGames()) {
                 NodeFactory.get().peekNextQueued().register();
             }
+            else {
+                try {
+                    TimeUnit.SECONDS.sleep(2);
+                }
+                catch (InterruptedException e) {
+                    MapNodesPlugin.log(e, true);
+                }
+            }
 
             SchedulerUtil.runSync(() -> callback.callback(clocker));
         });
