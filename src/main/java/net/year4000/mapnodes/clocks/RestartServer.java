@@ -59,16 +59,7 @@ public class RestartServer extends Clocker {
                 FunEffectsUtil.playSound(player.getPlayer(), Sound.NOTE_PLING);
             }
 
-            if (PacketHacks.isTitleAble(player.getPlayer())) {
-                PacketHacks.countTitle(player.getPlayer(), Msg.locale(player, "clocks.restart.tock.new"), time, percent(getTime(), position));
-            }
-            else {
-                PacketHacks.title(
-                    player.getPlayer(),
-                    Msg.locale(player, "clocks.restart.tock", time),
-                    percent(getTime(), position)
-                );
-            }
+            PacketHacks.countTitle(player.getPlayer(), Msg.locale(player, "clocks.restart.tock.new"), time, percent(getTime(), position));
         });
     }
 
@@ -78,12 +69,7 @@ public class RestartServer extends Clocker {
         MapNodes.getCurrentGame().getPlayers().forEach(player -> {
             FunEffectsUtil.playSound(player.getPlayer(), Sound.NOTE_BASS);
 
-            if (PacketHacks.isTitleAble(player.getPlayer())) {
-                PacketHacks.setTitle(player.getPlayer(), Msg.locale(player, "clocks.restart.last.new"), "");
-            }
-            else {
-                PacketHacks.title(player.getPlayer(), Msg.locale(player, "clocks.restart.last"), 1);
-            }
+            PacketHacks.setTitle(player.getPlayer(), Msg.locale(player, "clocks.restart.last.new"), "");
 
             BossBar.removeBar(player.getPlayer());
         });

@@ -95,10 +95,12 @@ public class SpectatorListener implements Listener {
         stopEvent(event, event.getPlayer());
     }
 
+/*
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
     public void onPickUp(PlayerPickupExperienceEvent event) {
         stopEvent(event, event.getPlayer());
     }
+*/
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
     public void onDamager(EntityDamageByEntityEvent event) {
@@ -163,7 +165,7 @@ public class SpectatorListener implements Listener {
 
                 if (rightClicked != null && rightClicked.isPlaying()) {
                     try {
-                        Locale locale = new Locale(gPlayer.getPlayer().getLocale());
+                        Locale locale = gPlayer.getLocale();
                         gPlayer.getPlayer().openInventory(rightClicked.getInventory(locale));
                     }
                     catch (Exception e) {
@@ -273,9 +275,7 @@ public class SpectatorListener implements Listener {
             if (player.isPlaying()) return;
 
             try {
-                if (PacketHacks.isTitleAble(event.getPlayer()) && hand.getType() == Material.WRITTEN_BOOK) {
-                    MapCommands.current(null, event.getPlayer());
-                }
+                MapCommands.current(null, event.getPlayer());
             }
             catch (NullPointerException | CommandException e) {
                 /** Not a valid item */

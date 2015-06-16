@@ -287,17 +287,11 @@ public final class Common {
             }
         };
 
-        // Make sure the player is running 1.8 or newer
-        if (PacketHacks.isTitleAble(player.getPlayer())) {
-            if (actionBarAnimations.containsKey(nodePlayer)) {
-                actionBarAnimations.remove(nodePlayer).cancel();
-            }
+        if (actionBarAnimations.containsKey(nodePlayer)) {
+            actionBarAnimations.remove(nodePlayer).cancel();
+        }
 
-            actionBarAnimations.put(nodePlayer, animation.run());
-        }
-        else {
-            nodePlayer.sendMessage(message);
-        }
+        actionBarAnimations.put(nodePlayer, animation.run());
     }
 
     /** Is the selected player a VIP */

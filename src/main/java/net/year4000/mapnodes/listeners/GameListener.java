@@ -161,9 +161,7 @@ public final class GameListener implements Listener {
         if (event.getGame().getStage().isEndGame()) return;
 
         event.getGame().getPlayers().parallel().forEach(player -> {
-            if (!PacketHacks.isTitleAble(player.getPlayer()) && !player.isPlaying()) {
-                ((NodeGame) event.getGame()).getScoreboardFactory().setPersonalSidebar((NodePlayer) player);
-            }
+            ((NodeGame) event.getGame()).getScoreboardFactory().setPersonalSidebar((NodePlayer) player);
         });
 
         // If not in debug mode check if their are still players.

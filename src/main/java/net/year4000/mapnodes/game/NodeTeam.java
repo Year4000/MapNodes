@@ -194,27 +194,13 @@ public class NodeTeam implements GameTeam {
                     String color = Common.chatColorNumber(currentTime, sec(getTime()));
                     String time = color + (new TimeUtil(currentTime, TimeUnit.SECONDS)).prettyOutput("&7:" + color);
 
-                    if (PacketHacks.isTitleAble(player.getPlayer())) {
-                        PacketHacks.countTitle(player.getPlayer(), Msg.locale(player, "clocks.join.tock.new"), time, percent(getTime(), position));
-                    }
-                    else {
-                        PacketHacks.title(
-                            player.getPlayer(),
-                            Msg.locale(player, "clocks.join.tock", map.getName(), time),
-                            percent(getTime(), position)
-                        );
-                    }
+                    PacketHacks.countTitle(player.getPlayer(), Msg.locale(player, "clocks.join.tock.new"), time, percent(getTime(), position));
                 }
 
                 public void runLast(int position) {
                     FunEffectsUtil.playSound(player.getPlayer(), Sound.NOTE_BASS);
 
-                    if (PacketHacks.isTitleAble(player.getPlayer())) {
-                        PacketHacks.setTitle(player.getPlayer(), Msg.locale(player, "clocks.join.last.new"), "");
-                    }
-                    else {
-                        PacketHacks.title(player.getPlayer(), Msg.locale(player, "clocks.join.last"), 1);
-                    }
+                    PacketHacks.setTitle(player.getPlayer(), Msg.locale(player, "clocks.join.last.new"), "");
 
                     BossBar.removeBar(player.getPlayer());
                     ((NodePlayer) player).start();

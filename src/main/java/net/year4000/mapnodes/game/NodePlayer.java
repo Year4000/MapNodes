@@ -24,6 +24,7 @@ import net.year4000.utilities.bukkit.bossbar.BossBar;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
@@ -67,6 +68,16 @@ public final class NodePlayer implements GamePlayer, Comparable {
         this.cache = AccountCache.getAccount(this);
         scoreboard = game.getScoreboardFactory().createScoreboard(this);
         player.setScoreboard(scoreboard);
+    }
+
+    /** Get the locale of the player */
+    public Locale getLocale() {
+        return Locale.US;
+    }
+
+    /** Get the locale of the player */
+    public String getRawLocale() {
+        return getLocale().toString();
     }
 
     /** Does this player have a class kit */
@@ -119,8 +130,8 @@ public final class NodePlayer implements GamePlayer, Comparable {
             sendMessage("");
             sendMessage(Common.textLine(game.getMap().title(), 40, '*'));
 
-            sendMessage(Common.textLine(Msg.locale(player, "map.created") + game.getMap().author(player.getLocale()), size, ' ', "", "&7&o"));
-            game.getMap().getMultiLineDescription(player.getLocale(), 6)
+            sendMessage(Common.textLine(Msg.locale(player, "map.created") + game.getMap().author(getRawLocale()), size, ' ', "", "&7&o"));
+            game.getMap().getMultiLineDescription(getRawLocale(), 6)
                 .forEach(string -> sendMessage(Common.textLine(string, size, ' ', "", "&a&o")));
 
             if (start.getMessage().size() > 0) {
@@ -133,7 +144,7 @@ public final class NodePlayer implements GamePlayer, Comparable {
         }
 
         // Player Settings
-        player.setCollidesWithEntities(true);
+        player.spigot().setCollidesWithEntities(true);
         player.getPlayer().setDisplayName(getPlayerColor() + ChatColor.WHITE.toString());
         updateHiddenSpectator();
         updateInventories();
@@ -146,21 +157,16 @@ public final class NodePlayer implements GamePlayer, Comparable {
 
         updateInventories();
 
-        if (PacketHacks.isTitleAble(player.getPlayer())) {
-            PacketHacks.setTitle(
-                player.getPlayer(),
-                "&a" + game.getMap().getName(),
-                Msg.locale(player, "map.created") + game.getMap().author(player.getPlayer().getLocale()),
-                0,
-                55,
-                0
-            );
+        PacketHacks.setTitle(
+            player.getPlayer(),
+            "&a" + game.getMap().getName(),
+            Msg.locale(player, "map.created") + game.getMap().author(getRawLocale()),
+            0,
+            55,
+            0
+        );
 
-            PacketHacks.setTabListHeadFoot(player, game.getTabHeader(), game.getTabFooter());
-        }
-        else {
-            sendMessage(Msg.NOTICE + Msg.locale(player, "game.new.recommend"));
-        }
+        PacketHacks.setTabListHeadFoot(player, game.getTabHeader(), game.getTabFooter());
 
         GamePlayerJoinEvent join = new GamePlayerJoinEvent(this) {{
             this.setSpawn(game.getConfig().getSafeRandomSpawn());
@@ -247,7 +253,7 @@ public final class NodePlayer implements GamePlayer, Comparable {
             joinSpectator.getKit().giveKit(this);
 
             // Spectator Settings
-            player.setCollidesWithEntities(false);
+            player.spigot().setCollidesWithEntities(false);
             updateHiddenSpectator();
         }
         // join new team

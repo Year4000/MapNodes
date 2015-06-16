@@ -208,12 +208,7 @@ public class ArrowTag extends GameModeTemplate implements GameMode {
 
                 String counter = MessageUtil.replaceColors("&a" + MathUtil.sec(position));
 
-                if (PacketHacks.isTitleAble(player)) {
-                    PacketHacks.setTitle(player, counter, "");
-                }
-                else {
-                    BossBar.setMessage(player, counter, 0.001F);
-                }
+                PacketHacks.setTitle(player, counter, "");
             }
 
             @Override

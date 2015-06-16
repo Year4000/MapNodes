@@ -107,7 +107,7 @@ public class NodeKit implements GameKit {
         player.resetPlayerWeather();
         player.setFireTicks(0);
         player.setFallDistance(0);
-        player.setArrowsStuck(0);
+        // todo Spigot player.setArrowsStuck(0);
     }
 
     /** Immortal starter kit */

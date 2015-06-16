@@ -166,9 +166,9 @@ public class ScoreboardFactory {
         // set how the display looks
         String color = player.getTeam().getColor().toString();
         String badgePrefix = MessageUtil.replaceColors(player.getBadge() + " " + color);
-        String prefix = PacketHacks.isTitleAble(viewer.getPlayer()) ? MessageUtil.replaceColors(color) : badgePrefix;
+        String prefix = MessageUtil.replaceColors(color);
         player.getPlayer().setPlayerListName(player.getSplitName()[0]);
-        player.getPlayer().setPlayerListDisplayName(badgePrefix + player.getPlayer().getName());
+        // todo Spigot player.getPlayer().setPlayerListDisplayName(badgePrefix + player.getPlayer().getName());
         Scoreboard scoreboard = viewer.getScoreboard();
 
         // Create record in Map
@@ -178,7 +178,7 @@ public class ScoreboardFactory {
             // Copy the list, find old teams and remove them from map and unregister them.
             new ArrayList<>(tabListTeamNames.get(scoreboard)).stream()
                 .filter(NMSHacks::isTeamRegistered)
-                .filter(team -> team.has(player.getSplitName()[0]))
+                .filter(team -> team.hasEntry(player.getSplitName()[0]))
                 .forEach(team -> {
                     tabListTeamNames.get(scoreboard).remove(team);
                     team.unregister();
@@ -189,12 +189,12 @@ public class ScoreboardFactory {
             tabListTeamNames.get(scoreboard).add(team);
             team.setPrefix(prefix);
             team.setSuffix(player.getSplitName()[1]);
-            team.add(player.getSplitName()[0]);
+            team.addEntry(player.getSplitName()[0]);
         }
         else {
             Team team = scoreboard.getTeam(hash);
             team.setPrefix(prefix);
-            team.add(player.getSplitName()[0]);
+            team.addEntry(player.getSplitName()[0]);
         }
     }
 
@@ -252,14 +252,6 @@ public class ScoreboardFactory {
         side.addLine(Msg.locale(nodePlayer, "game.name"));
         side.addLine(MessageUtil.replaceColors(" &e" + gameMode));
         side.addBlank();
-
-        // When game is running show game time length
-        if (game.getStage().isPlaying() && !PacketHacks.isTitleAble(nodePlayer.getPlayer())) {
-            long currentTime = Common.cleanTimeMillis() - game.getStartTime();
-            String time = "&a" + (new TimeUtil(currentTime, TimeUnit.MILLISECONDS)).prettyOutput("&7:&a");
-            side.addLine(Msg.locale(nodePlayer, "game.time", time));
-            side.addBlank();
-        }
 
         // Team Selection
         side.addLine(Msg.locale(nodePlayer, "team.name"));

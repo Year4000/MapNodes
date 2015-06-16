@@ -209,7 +209,7 @@ public class SpleefRunner extends Elimination {
 
                 bellow.setData(stage[MathUtil.sec(position)]);
                 if (rand.nextBoolean()) {
-                    MapNodes.getCurrentWorld().playEffect(bellow.getLocation(), Effect.SNOW_SHOVEL);
+                    MapNodes.getCurrentWorld().spigot().playEffect(bellow.getLocation(), Effect.SNOW_SHOVEL);
                 }
             }
 

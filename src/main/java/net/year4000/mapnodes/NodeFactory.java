@@ -8,6 +8,7 @@ import net.year4000.mapnodes.map.CoreMapObject;
 import net.year4000.mapnodes.map.MapFactory;
 import net.year4000.mapnodes.map.MapObject;
 import net.year4000.mapnodes.messages.Msg;
+import net.year4000.mapnodes.utils.SchedulerUtil;
 
 import java.util.ArrayList;
 import java.util.List;

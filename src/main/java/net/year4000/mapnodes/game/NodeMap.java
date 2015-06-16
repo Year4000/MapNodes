@@ -208,11 +208,12 @@ public final class NodeMap implements GameMap {
 
     /** Fancy authors display */
     public String author(CommandSender sender) {
-        if (sender instanceof Player) {
-            return author(((Player) sender).getLocale());
+        /*if (sender instanceof Player) {
+            return author(((Player) sender).spigot().getLocale());
         }
         else {
             return author(Message.DEFAULT_LOCALE);
-        }
+        }*/
+        return author(Message.DEFAULT_LOCALE);
     }
 }

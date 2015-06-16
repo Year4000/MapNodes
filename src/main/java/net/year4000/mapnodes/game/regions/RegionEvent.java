@@ -119,7 +119,7 @@ public abstract class RegionEvent {
         if (message == null || message.equals("")) return;
 
         // Translate by map first
-        String translatedMessage = ((NodePlayer) player).getGame().locale(player.getPlayer().getLocale(), message);
+        String translatedMessage = ((NodePlayer) player).getGame().locale(player.getRawLocale(), message);
         // Translate by MapNodes
         translatedMessage = Msg.locale(player, translatedMessage);
         player.sendMessage(Msg.NOTICE + translatedMessage);

@@ -2,17 +2,15 @@ package net.year4000.mapnodes.utils;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import net.minecraft.server.v1_7_R4.*;
+import net.minecraft.server.v1_8_R3.*;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.utilities.MessageUtil;
-import net.year4000.utilities.bukkit.bossbar.BossBar;
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
-import org.bukkit.craftbukkit.v1_7_R4.CraftServer;
-import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_8_R3.CraftServer;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.util.BlockVector;
-import org.spigotmc.ProtocolInjector;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -44,29 +42,22 @@ public final class PacketHacks {
     /** Send a message to the Action Bar */
     public static void sendActionBarMessage(Player player, String message) {
         CraftPlayer craftPlayer = (CraftPlayer) player;
-        byte eight = (byte) (isTitleAble(player) ? 2 : 0);
+        byte eight = (byte) 2;
 
-        IChatBaseComponent component = ChatSerializer.a(Common.sanitize(MessageUtil.replaceColors(message)));
+        IChatBaseComponent component = IChatBaseComponent.ChatSerializer.a(Common.sanitize(MessageUtil.replaceColors(message)));
         craftPlayer.getHandle().playerConnection.sendPacket(new PacketPlayOutChat(component, eight));
     }
 
     /** Set the tablist header and footer */
     public static void setTabListHeadFoot(Player player, String header, String footer) {
-        if (!isTitleAble(player)) return;
-
         CraftPlayer craftPlayer = (CraftPlayer) player;
+        IChatBaseComponent headTitle = IChatBaseComponent.ChatSerializer.a(Common.sanitize(MessageUtil.replaceColors(header)));
 
-        Packet headFoot = new ProtocolInjector.PacketPlayOutPlayerListHeaderFooter(
-            Common.sanitize(header),
-            Common.sanitize(footer)
+        Packet headFoot = new PacketPlayOutPlayerListHeaderFooter(
+            headTitle
         );
 
         craftPlayer.getHandle().playerConnection.sendPacket(headFoot);
-    }
-
-    /** Send BossBar or new Title Packets when client is 1.8 */
-    public static boolean isTitleAble(Player player) {
-        return ((CraftPlayer) player).getHandle().playerConnection.networkManager.getVersion() >= 47;
     }
 
     public static void setTitle(Player player, String title, String sub) {
@@ -76,50 +67,39 @@ public final class PacketHacks {
     public static void setTitle(Player player, String title, String sub, int fadeIn, int delay, int fadeOut) {
         CraftPlayer craftPlayer = (CraftPlayer) player;
 
-        if (isTitleAble(player)) {
-            IChatBaseComponent headTitle = ChatSerializer.a(Common.sanitize(MessageUtil.replaceColors(title)));
-            IChatBaseComponent subTitle = ChatSerializer.a(Common.sanitize(MessageUtil.replaceColors(sub)));
+        IChatBaseComponent headTitle = IChatBaseComponent.ChatSerializer.a(Common.sanitize(MessageUtil.replaceColors(title)));
+        IChatBaseComponent subTitle = IChatBaseComponent.ChatSerializer.a(Common.sanitize(MessageUtil.replaceColors(sub)));
 
-            craftPlayer.getHandle().playerConnection.sendPacket(new PacketInjector.PacketTitle(PacketInjector.PacketTitle.Action.TIMES, fadeIn, delay, fadeOut));
-            craftPlayer.getHandle().playerConnection.sendPacket(new PacketInjector.PacketTitle(PacketInjector.PacketTitle.Action.TITLE, headTitle));
-            craftPlayer.getHandle().playerConnection.sendPacket(new PacketInjector.PacketTitle(PacketInjector.PacketTitle.Action.SUBTITLE, subTitle));
-        }
+        craftPlayer.getHandle().playerConnection.sendPacket(new PacketPlayOutTitle(fadeIn, delay, fadeOut));
+        craftPlayer.getHandle().playerConnection.sendPacket(new PacketPlayOutTitle(PacketPlayOutTitle.EnumTitleAction.TITLE, headTitle));
+        craftPlayer.getHandle().playerConnection.sendPacket(new PacketPlayOutTitle(PacketPlayOutTitle.EnumTitleAction.SUBTITLE, subTitle));
     }
 
     public static void title(Player player, String message, float percent) {
-        // Boss bar
-        if (!isTitleAble(player)) {
-            BossBar.setMessage(player, message, percent);
-        }
-        // Title bar
-        else {
-            percent = ((percent * 10) / 10) - 1;
-            String sub = "....................................................................................................";
-            setTitle(player, message, "&d" + sub.substring(0, (int) percent) + "&5" + sub.substring((int) percent, sub.length()));
-        }
+        percent = ((percent * 10) / 10) - 1;
+        String sub = "....................................................................................................";
+        setTitle(player, message, "&d" + sub.substring(0, (int) percent) + "&5" + sub.substring((int) percent, sub.length()));
     }
 
     public static void countTitle(Player player, String header, String time, float percent) {
-        if (isTitleAble(player)) {
-            int percentInt = (int) (((percent * 10) / 10) * .80);
-            String bar = Common.textLine(time, 80, '.', "&d", "");
-            String footer;
+        int percentInt = (int) (((percent * 10) / 10) * .80);
+        String bar = Common.textLine(time, 80, '.', "&d", "");
+        String footer;
 
-            // If percent is bigger than no no zone print normal
-            if (percentInt > 43 + time.length()) {
-                footer = bar.substring(0, percentInt) + "&5" + bar.substring(percentInt);
-            }
-            // Don't show position in clock
-            else if (percentInt > 40 && percentInt < 44 + time.length()) {
-                footer = bar.substring(0, 43 + time.length()) + "&5" + bar.substring(43 + time.length());
-            }
-            else {
-                footer = bar.substring(0, 43 + time.length()) + "&5" + bar.substring(43 + time.length());
-                footer = footer.substring(0, percentInt <= 1 ? 2 : percentInt) + "&5" + footer.substring(percentInt <= 1 ? 2 : percentInt);
-            }
-
-            setTitle(player, "&a" + header, footer);
+        // If percent is bigger than no no zone print normal
+        if (percentInt > 43 + time.length()) {
+            footer = bar.substring(0, percentInt) + "&5" + bar.substring(percentInt);
         }
+        // Don't show position in clock
+        else if (percentInt > 40 && percentInt < 44 + time.length()) {
+            footer = bar.substring(0, 43 + time.length()) + "&5" + bar.substring(43 + time.length());
+        }
+        else {
+            footer = bar.substring(0, 43 + time.length()) + "&5" + bar.substring(43 + time.length());
+            footer = footer.substring(0, percentInt <= 1 ? 2 : percentInt) + "&5" + footer.substring(percentInt <= 1 ? 2 : percentInt);
+        }
+
+        setTitle(player, "&a" + header, footer);
     }
 
     /** Crack the block with the given damage */
@@ -128,7 +108,7 @@ public final class PacketHacks {
         CRACK_IDS.putIfAbsent(vector, CRACK_COUNTER.getAndIncrement());
         PacketPlayOutBlockBreakAnimation animation = new PacketPlayOutBlockBreakAnimation(
             CRACK_IDS.get(vector),
-            block.getX(), block.getY(), block.getZ(),
+            new BlockPosition(block.getX(), block.getY(), block.getZ()),
             damage
         );
 

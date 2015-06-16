@@ -1,7 +1,6 @@
 package net.year4000.mapnodes;
 
 import lombok.Getter;
-import net.minecraft.util.com.mojang.authlib.yggdrasil.response.User;
 import net.year4000.mapnodes.addons.Addons;
 import net.year4000.mapnodes.addons.modules.misc.DeathMessages;
 import net.year4000.mapnodes.addons.modules.misc.GameMech;
@@ -34,11 +33,9 @@ import net.year4000.mapnodes.listeners.*;
 import net.year4000.mapnodes.map.MapFactory;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.utilities.bukkit.MessagingChannel;
-import net.year4000.mapnodes.utils.PacketInjector;
 import net.year4000.utilities.LogUtil;
 import net.year4000.utilities.bukkit.BukkitPlugin;
 import net.year4000.utilities.bukkit.MessageUtil;
-import net.year4000.utilities.sdk.API;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 
@@ -62,7 +59,6 @@ public class MapNodesPlugin extends BukkitPlugin implements Plugin {
         usercache = new UserCache();
         api = new Backend();
         MapNodes.init(inst);
-        PacketInjector.inject();
 
         // Register region types to be used during map.json parsing
         RegionManager.get()

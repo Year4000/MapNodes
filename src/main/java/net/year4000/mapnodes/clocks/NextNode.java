@@ -67,16 +67,7 @@ public class NextNode extends Clocker {
                 FunEffectsUtil.playSound(player.getPlayer(), Sound.NOTE_PLING);
             }
 
-            if (PacketHacks.isTitleAble(player.getPlayer())) {
-                PacketHacks.countTitle(player.getPlayer(), map.getName(), time, percent(getTime(), position));
-            }
-            else {
-                PacketHacks.title(
-                    player.getPlayer(),
-                    Msg.locale(player, "clocks.next.tock", map.getName(), time),
-                    percent(getTime(), position)
-                );
-            }
+            PacketHacks.countTitle(player.getPlayer(), map.getName(), time, percent(getTime(), position));
         });
     }
 
@@ -90,16 +81,7 @@ public class NextNode extends Clocker {
         MapNodes.getCurrentGame().getPlayers().forEach(player -> {
             FunEffectsUtil.playSound(player.getPlayer(), Sound.NOTE_BASS);
 
-            if (PacketHacks.isTitleAble(player.getPlayer())) {
-                PacketHacks.setTitle(player.getPlayer(), "&a" + map.getName(), Msg.locale(player, "map.created") + map.author(player.getPlayer().getLocale()));
-            }
-            else {
-                PacketHacks.title(
-                    player.getPlayer(),
-                    Msg.locale(player, "clocks.next.last", map.getName()),
-                    1
-                );
-            }
+            PacketHacks.setTitle(player.getPlayer(), "&a" + map.getName(), Msg.locale(player, "map.created") + map.author(player.getRawLocale()));
 
             BossBar.removeBar(player.getPlayer());
             move.add(player.getPlayer());

@@ -278,8 +278,8 @@ public final class NodeGame implements GameManager, Validator {
 
     /** Open the menu if they can */
     public void openClassKitChooserMenu(GamePlayer player) {
-        Locale locale = new Locale(player.getPlayer().getLocale());
-        Inventory menu = MessageManager.get().isLocale(player.getPlayer().getLocale()) ? classKitChooser.get(locale) : classKitChooser.get(new Locale(Message.DEFAULT_LOCALE));
+        Locale locale = player.getLocale();
+        Inventory menu = MessageManager.get().isLocale(player.getRawLocale()) ? classKitChooser.get(locale) : classKitChooser.get(new Locale(Message.DEFAULT_LOCALE));
 
         if (!stage.isEndGame()) {
             player.getPlayer().openInventory(menu);
@@ -335,8 +335,8 @@ public final class NodeGame implements GameManager, Validator {
 
     /** Open the menu if they can */
     public void openTeamChooserMenu(GamePlayer player) {
-        Locale locale = new Locale(player.getPlayer().getLocale());
-        Inventory menu = MessageManager.get().isLocale(player.getPlayer().getLocale()) ? teamChooser.get(locale) : teamChooser.get(new Locale(Message.DEFAULT_LOCALE));
+        Locale locale = player.getLocale();
+        Inventory menu = MessageManager.get().isLocale(player.getRawLocale()) ? teamChooser.get(locale) : teamChooser.get(new Locale(Message.DEFAULT_LOCALE));
 
         if (!stage.isEndGame()) {
             player.getPlayer().openInventory(menu);
@@ -410,7 +410,7 @@ public final class NodeGame implements GameManager, Validator {
 
     /** Checks if the player can join the specific team */
     public GameTeam checkAndGetTeam(GamePlayer player, String name) throws IllegalArgumentException {
-        Locale locale = new Locale(player.getPlayer().getLocale());
+        Locale locale = player.getLocale();
         if (Msg.matches(locale.toString(), name, "team.menu.join.random") || MessageUtil.stripColors(name).equalsIgnoreCase("Spectator")) {
             return getTeam(locale, name);
         }
@@ -689,7 +689,7 @@ public final class NodeGame implements GameManager, Validator {
         }.run();
 
         // Register map in its own async thread
-        SchedulerUtil.runAsync(() -> {
+        SchedulerUtil.runSync(() -> {
             // Only register next map if it exists
             if (NodeFactory.get().isQueuedGames()) {
                 NodeFactory.get().peekNextQueued().register();
@@ -703,7 +703,7 @@ public final class NodeGame implements GameManager, Validator {
                 }
             }
 
-            SchedulerUtil.runSync(() -> callback.callback(clocker));
+            callback.callback(clocker);
         });
     }
 

@@ -33,4 +33,8 @@ public interface GamePlayer {
     public void joinTeam(GameTeam gameTeam);
 
     public void joinSpectatorTeam();
+
+    Locale getLocale();
+
+    String getRawLocale();
 }

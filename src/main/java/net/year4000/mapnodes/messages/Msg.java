@@ -4,6 +4,7 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import lombok.Getter;
+import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.game.GamePlayer;
 import net.year4000.utilities.bukkit.BukkitLocale;
 import net.year4000.utilities.bukkit.MessageUtil;
@@ -21,7 +22,8 @@ public final class Msg {
         .build(new CacheLoader<Player, String>() {
             @Override
             public String load(Player player) throws Exception {
-                return player.getLocale() == null ? BukkitLocale.DEFAULT_LOCALE : player.getLocale();
+                GamePlayer gamePlayer = MapNodes.getCurrentGame().getPlayer(player);
+                return gamePlayer == null ? BukkitLocale.DEFAULT_LOCALE : gamePlayer.getRawLocale();
             }
         });
 

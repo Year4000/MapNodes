@@ -104,13 +104,14 @@ public final class MapNodesListener implements Listener {
         NodeGame gm = node.getGame();
 
         // Don't show spectators when game is playing
-        if (gm.getStage().isPlaying()) {
+        // todo Spigot
+        /*if (gm.getStage().isPlaying()) {
             event.setNumPlayers((int) gm.getPlayers().filter(GamePlayer::isPlaying).count());
         }
         // Show all players any time else
         else {
             event.setNumPlayers((int) gm.getPlayers().count());
-        }
+        }*/
 
         event.setMaxPlayers(gm.getMaxPlayers());
 
@@ -180,7 +181,7 @@ public final class MapNodesListener implements Listener {
         event.setCancelled(true);
     }
 
-    @EventHandler
+/*    @EventHandler
     public void onLocaleChange(PlayerLocaleChangeEvent event) {
         if (event.getNewLocale() != null && !event.getNewLocale().equals(event.getOldLocale())) {
             Msg.getCodes().refresh(event.getPlayer());
@@ -193,5 +194,5 @@ public final class MapNodesListener implements Listener {
                 player.getGame().getScoreboardFactory().setGameSidebar(player);
             }
         }
-    }
+    }*/
 }
