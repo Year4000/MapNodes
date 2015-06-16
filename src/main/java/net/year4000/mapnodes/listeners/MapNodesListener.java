@@ -43,14 +43,12 @@ public final class MapNodesListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onJoin(AsyncPlayerPreLoginEvent event) {
         NodeGame game = (NodeGame) MapNodes.getCurrentGame();
-        MapNodesPlugin.debugging("Pulling account from api.year4000.net for " + event.getName());
         UUID uuid = event.getUniqueId();
         AccountRoute account = MapNodesPlugin.getInst().getApi().getAccount(uuid.toString());
         String rank = account.getRank().toLowerCase();
         String locale = account.getRawResponse().get("locale").toString();
         AccountCache.createAccount(uuid, account.getRawResponse());
 
-        MapNodesPlugin.debugging("Checking full and VIP status for " + event.getName());
         if (game.getPlayers().count() >= game.getRealMaxCount() && rank.equals("alpha")) {
             event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_FULL, Msg.locale(locale, "server.full") + ' ' + Msg.locale(locale, "team.select.non_vip_url"));
         }
@@ -58,12 +56,10 @@ public final class MapNodesListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onJoin(PlayerJoinEvent event) {
-        MapNodesPlugin.debugging(event.getPlayer().getName() + " joining the game");
         event.setJoinMessage(null);
         MapNodes.getCurrentGame().join(event.getPlayer());
 
         // Update server name
-        MapNodesPlugin.debugging("Fetching server name as defined in BungeeCord");
         if (MapNodesPlugin.getInst().getNetwork().getName().equals(Network.UNKNOWN)) {
             SchedulerUtil.runSync(() -> MapNodesPlugin.getInst().getNetwork().updateName(), 40L);
         }
@@ -71,7 +67,6 @@ public final class MapNodesListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onQuit(PlayerQuitEvent event) {
-        MapNodesPlugin.debugging(event.getPlayer().getName() + " quitting the game");
         event.setQuitMessage(null);
         MapNodes.getCurrentGame().quit(event.getPlayer());
     }

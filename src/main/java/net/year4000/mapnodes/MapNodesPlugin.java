@@ -38,6 +38,7 @@ import net.year4000.utilities.bukkit.BukkitPlugin;
 import net.year4000.utilities.bukkit.MessageUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
+import org.spigotmc.ProtocolInjector;
 
 import java.util.List;
 
@@ -59,6 +60,7 @@ public class MapNodesPlugin extends BukkitPlugin implements Plugin {
         usercache = new UserCache();
         api = new Backend();
         MapNodes.init(inst);
+        //ProtocolInjector.inject();
 
         // Register region types to be used during map.json parsing
         RegionManager.get()

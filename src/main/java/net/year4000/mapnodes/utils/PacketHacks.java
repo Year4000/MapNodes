@@ -1,8 +1,11 @@
 package net.year4000.mapnodes.utils;
 
+import com.google.common.base.Preconditions;
+import com.google.gson.Gson;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import net.minecraft.server.v1_8_R3.*;
+import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.utilities.MessageUtil;
 import org.bukkit.Bukkit;
@@ -11,9 +14,13 @@ import org.bukkit.craftbukkit.v1_8_R3.CraftServer;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.util.BlockVector;
+import org.spigotmc.ProtocolInjector;
 
+import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.WeakHashMap;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -50,14 +57,26 @@ public final class PacketHacks {
 
     /** Set the tablist header and footer */
     public static void setTabListHeadFoot(Player player, String header, String footer) {
-/*        CraftPlayer craftPlayer = (CraftPlayer) player;
+        Preconditions.checkNotNull(player);
+        Preconditions.checkNotNull(header);
+        Preconditions.checkNotNull(footer);
+
+        CraftPlayer craftPlayer = (CraftPlayer) player;
         IChatBaseComponent headTitle = IChatBaseComponent.ChatSerializer.a(Common.sanitize(MessageUtil.replaceColors(header)));
+        IChatBaseComponent footTitle = IChatBaseComponent.ChatSerializer.a(Common.sanitize(MessageUtil.replaceColors(footer)));
 
-        Packet headFoot = new PacketPlayOutPlayerListHeaderFooter(
-            headTitle
-        );
+        PacketPlayOutPlayerListHeaderFooter headFoot = new PacketPlayOutPlayerListHeaderFooter();
+        try {
+            Field head = headFoot.getClass().getDeclaredField("a");
+            head.setAccessible(true);
+            head.set(headFoot, headTitle);
+            Field foot = headFoot.getClass().getDeclaredField("b");
+            foot.setAccessible(true);
+            foot.set(headFoot, footTitle);
+        }
+        catch (NoSuchFieldException | IllegalAccessException e) {}
 
-        craftPlayer.getHandle().playerConnection.sendPacket(headFoot);*/
+        craftPlayer.getHandle().playerConnection.sendPacket(headFoot);
     }
 
     public static void setTitle(Player player, String title, String sub) {
