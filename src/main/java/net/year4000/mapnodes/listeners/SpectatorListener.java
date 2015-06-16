@@ -262,31 +262,6 @@ public class SpectatorListener implements Listener {
         event.setKit(kit);
     }
 
-    // 1.8 clients have a bug where the books change the nbt data and broke books
-    @EventHandler
-    public void onBookClick(PlayerInteractEvent event) {
-        boolean rightAir = event.getAction() == Action.RIGHT_CLICK_AIR;
-        boolean rightBlock = event.getAction() == Action.RIGHT_CLICK_BLOCK;
-
-        if (rightAir || rightBlock) {
-            ItemStack hand = event.getPlayer().getItemInHand();
-            GamePlayer player = MapNodes.getCurrentGame().getPlayer(event.getPlayer());
-
-            if (player.isPlaying()) return;
-
-            try {
-                MapCommands.current(null, event.getPlayer());
-            }
-            catch (NullPointerException | CommandException e) {
-                /** Not a valid item */
-                // MapNodesPlugin.debug(e, true);
-            }
-            finally {
-                event.setCancelled(true);
-            }
-        }
-    }
-
     // Team picker GUI //
 
     @EventHandler

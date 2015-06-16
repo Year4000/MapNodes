@@ -72,12 +72,12 @@ public final class NodePlayer implements GamePlayer, Comparable {
 
     /** Get the locale of the player */
     public Locale getLocale() {
-        return Locale.US;
+        return new Locale(getRawLocale());
     }
 
     /** Get the locale of the player */
     public String getRawLocale() {
-        return getLocale().toString();
+        return player.spigot().getLocale();
     }
 
     /** Does this player have a class kit */
@@ -178,7 +178,7 @@ public final class NodePlayer implements GamePlayer, Comparable {
         player.teleport(join.getSpawn());
 
         // Update player's info
-        playerTasks.add(SchedulerUtil.runAsync(() -> {
+        playerTasks.add(SchedulerUtil.runSync(() -> {
             game.getPlayers().map(player -> (NodePlayer) player).forEach(player -> {
                 game.getScoreboardFactory().setOrUpdateListName(player, this);
                 game.getScoreboardFactory().setOrUpdateListName(this, player);
@@ -186,7 +186,7 @@ public final class NodePlayer implements GamePlayer, Comparable {
         }, 25L));
 
         // start menu
-        playerTasks.add(SchedulerUtil.runAsync(() -> {
+        playerTasks.add(SchedulerUtil.runSync(() -> {
             if (join.isMenu() && player.getOpenInventory().getType() == InventoryType.CRAFTING) {
                 game.openTeamChooserMenu(this);
             }

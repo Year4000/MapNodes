@@ -50,14 +50,14 @@ public final class PacketHacks {
 
     /** Set the tablist header and footer */
     public static void setTabListHeadFoot(Player player, String header, String footer) {
-        CraftPlayer craftPlayer = (CraftPlayer) player;
+/*        CraftPlayer craftPlayer = (CraftPlayer) player;
         IChatBaseComponent headTitle = IChatBaseComponent.ChatSerializer.a(Common.sanitize(MessageUtil.replaceColors(header)));
 
         Packet headFoot = new PacketPlayOutPlayerListHeaderFooter(
             headTitle
         );
 
-        craftPlayer.getHandle().playerConnection.sendPacket(headFoot);
+        craftPlayer.getHandle().playerConnection.sendPacket(headFoot);*/
     }
 
     public static void setTitle(Player player, String title, String sub) {

@@ -108,19 +108,12 @@ public final class SidebarManager {
 
         // If exists reset scores
         if (scoreboard.getObjective(id) != null) {
-            // todo re-enable this fast switch when full convert to 1.8
-            /*objective = scoreboard.getObjective(id);
+            objective = scoreboard.getObjective(id);
 
             objective.setDisplayName(Common.truncate(MessageUtil.replaceColors(title), 32));
             scoreboard.getEntries().stream()
                 .filter(name -> !staticScores.contains(name))
-                .forEach(scoreboard::resetScores);*/
-
-            // TODO This is a 1.7 client HACK fix... remove when convert to 1.8
-            scoreboard.getObjective(id).unregister();
-            objective = scoreboard.registerNewObjective(id, "dummy");
-            objective.setDisplaySlot(DisplaySlot.SIDEBAR);
-            scoreboard.getObjective(DisplaySlot.SIDEBAR).setDisplayName(Common.truncate(MessageUtil.replaceColors(title), 32));
+                .forEach(scoreboard::resetScores);
 
             buildScores(scoreboard, objective);
         }
@@ -147,8 +140,7 @@ public final class SidebarManager {
 
         // Add dynamic scores that don't depend on statics
         for (Object[] lines : dynamicScores) {
-            // todo re-enable this fast switch when full convert to 1.8
-            //if (scoreboard.getEntries().contains(lines[0])) continue;
+            if (scoreboard.getEntries().contains(lines[0])) continue;
 
             String scoreId = buildTeam(scoreboard, ((String) lines[0]));
             int scoreInput = (Integer) lines[1];
