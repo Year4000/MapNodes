@@ -1,3 +1,7 @@
+/*
+ * Copyright 2015 Year4000. All Rights Reserved.
+ */
+
 package net.year4000.mapnodes.commands.mapnodes;
 
 import net.year4000.mapnodes.MapNodesPlugin;
@@ -6,7 +10,6 @@ import net.year4000.mapnodes.messages.MessageManager;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.Common;
 import net.year4000.utilities.ChatColor;
-import net.year4000.utilities.bukkit.commands.*;
 import net.year4000.utilities.bukkit.pagination.SimplePaginatedResult;
 import org.bukkit.command.CommandSender;
 

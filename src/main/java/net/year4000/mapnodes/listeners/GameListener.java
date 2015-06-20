@@ -1,12 +1,14 @@
+/*
+ * Copyright 2015 Year4000. All Rights Reserved.
+ */
+
 package net.year4000.mapnodes.listeners;
 
 import com.google.common.base.Joiner;
-import com.google.common.collect.Iterators;
 import lombok.EqualsAndHashCode;
 import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.events.game.GameClockEvent;
-import net.year4000.mapnodes.api.events.game.GameStartEvent;
 import net.year4000.mapnodes.api.events.game.GameWinEvent;
 import net.year4000.mapnodes.api.events.player.GamePlayerWinEvent;
 import net.year4000.mapnodes.api.events.team.GameTeamWinEvent;
@@ -19,7 +21,6 @@ import net.year4000.mapnodes.game.NodePlayer;
 import net.year4000.mapnodes.game.NodeTeam;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.Common;
-import net.year4000.mapnodes.utils.PacketHacks;
 import net.year4000.mapnodes.utils.typewrappers.LocationList;
 import net.year4000.utilities.ChatColor;
 import net.year4000.utilities.bukkit.FunEffectsUtil;
@@ -34,10 +35,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.*;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 

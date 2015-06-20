@@ -1,11 +1,13 @@
+/*
+ * Copyright 2015 Year4000. All Rights Reserved.
+ */
+
 package net.year4000.mapnodes.utils;
 
 import com.google.common.base.Preconditions;
-import com.google.gson.Gson;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import net.minecraft.server.v1_8_R3.*;
-import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.utilities.MessageUtil;
 import org.bukkit.Bukkit;
@@ -14,13 +16,10 @@ import org.bukkit.craftbukkit.v1_8_R3.CraftServer;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.util.BlockVector;
-import org.spigotmc.ProtocolInjector;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.WeakHashMap;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)

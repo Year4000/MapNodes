@@ -1,3 +1,7 @@
+/*
+ * Copyright 2015 Year4000. All Rights Reserved.
+ */
+
 package net.year4000.mapnodes;
 
 import lombok.Getter;
@@ -32,13 +36,12 @@ import net.year4000.mapnodes.gamemodes.tntwars.TntWars;
 import net.year4000.mapnodes.listeners.*;
 import net.year4000.mapnodes.map.MapFactory;
 import net.year4000.mapnodes.messages.Msg;
-import net.year4000.utilities.bukkit.MessagingChannel;
 import net.year4000.utilities.LogUtil;
 import net.year4000.utilities.bukkit.BukkitPlugin;
 import net.year4000.utilities.bukkit.MessageUtil;
+import net.year4000.utilities.bukkit.MessagingChannel;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
-import org.spigotmc.ProtocolInjector;
 
 import java.util.List;
 

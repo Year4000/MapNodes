@@ -1,3 +1,7 @@
+/*
+ * Copyright 2015 Year4000. All Rights Reserved.
+ */
+
 package net.year4000.mapnodes.clocks;
 
 import net.year4000.mapnodes.MapNodesPlugin;
@@ -7,7 +11,10 @@ import net.year4000.mapnodes.api.game.GameMap;
 import net.year4000.mapnodes.game.Node;
 import net.year4000.mapnodes.messages.Message;
 import net.year4000.mapnodes.messages.Msg;
-import net.year4000.mapnodes.utils.*;
+import net.year4000.mapnodes.utils.Common;
+import net.year4000.mapnodes.utils.MathUtil;
+import net.year4000.mapnodes.utils.PacketHacks;
+import net.year4000.mapnodes.utils.TimeUtil;
 import net.year4000.utilities.bukkit.FunEffectsUtil;
 import net.year4000.utilities.bukkit.bossbar.BossBar;
 import org.bukkit.Sound;

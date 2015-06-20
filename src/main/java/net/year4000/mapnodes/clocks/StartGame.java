@@ -1,3 +1,7 @@
+/*
+ * Copyright 2015 Year4000. All Rights Reserved.
+ */
+
 package net.year4000.mapnodes.clocks;
 
 import net.year4000.mapnodes.MapNodesPlugin;
@@ -16,10 +20,7 @@ import net.year4000.utilities.bukkit.FunEffectsUtil;
 import net.year4000.utilities.bukkit.bossbar.BossBar;
 import org.bukkit.Sound;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 import static net.year4000.mapnodes.utils.MathUtil.percent;

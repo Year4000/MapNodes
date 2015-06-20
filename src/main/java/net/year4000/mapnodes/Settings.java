@@ -1,3 +1,7 @@
+/*
+ * Copyright 2015 Year4000. All Rights Reserved.
+ */
+
 package net.year4000.mapnodes;
 
 import com.google.gson.JsonObject;
@@ -5,13 +9,11 @@ import com.google.gson.annotations.SerializedName;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.ToString;
-import net.year4000.mapnodes.backend.Backend;
 import net.year4000.utilities.URLBuilder;
 import net.year4000.utilities.sdk.API;
 import net.year4000.utilities.sdk.HttpFetcher;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 @Getter

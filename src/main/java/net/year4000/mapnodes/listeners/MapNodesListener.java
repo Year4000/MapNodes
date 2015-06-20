@@ -1,21 +1,23 @@
+/*
+ * Copyright 2015 Year4000. All Rights Reserved.
+ */
+
 package net.year4000.mapnodes.listeners;
 
 import lombok.EqualsAndHashCode;
 import net.year4000.mapnodes.MapNodesPlugin;
+import net.year4000.mapnodes.Network;
 import net.year4000.mapnodes.NodeFactory;
 import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.events.game.GameStopEvent;
 import net.year4000.mapnodes.api.events.player.GamePlayerJoinSpectatorEvent;
 import net.year4000.mapnodes.api.events.player.GamePlayerJoinTeamEvent;
-import net.year4000.mapnodes.api.game.GamePlayer;
 import net.year4000.mapnodes.api.utils.Spectator;
 import net.year4000.mapnodes.backend.AccountCache;
 import net.year4000.mapnodes.clocks.StartGame;
 import net.year4000.mapnodes.game.Node;
 import net.year4000.mapnodes.game.NodeGame;
-import net.year4000.mapnodes.game.NodePlayer;
 import net.year4000.mapnodes.messages.Msg;
-import net.year4000.mapnodes.Network;
 import net.year4000.mapnodes.utils.Common;
 import net.year4000.mapnodes.utils.MathUtil;
 import net.year4000.mapnodes.utils.PacketHacks;
@@ -25,7 +27,6 @@ import net.year4000.utilities.bukkit.MessageUtil;
 import net.year4000.utilities.sdk.routes.accounts.AccountRoute;
 import org.bukkit.Effect;
 import org.bukkit.Sound;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;

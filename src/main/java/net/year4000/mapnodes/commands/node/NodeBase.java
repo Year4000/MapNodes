@@ -1,6 +1,9 @@
+/*
+ * Copyright 2015 Year4000. All Rights Reserved.
+ */
+
 package net.year4000.mapnodes.commands.node;
 
-import net.year4000.utilities.bukkit.commands.*;
 import org.bukkit.command.CommandSender;
 
 public final class NodeBase {

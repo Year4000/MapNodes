@@ -1,3 +1,7 @@
+/*
+ * Copyright 2015 Year4000. All Rights Reserved.
+ */
+
 package net.year4000.mapnodes.listeners;
 
 import lombok.EqualsAndHashCode;
@@ -20,7 +24,6 @@ import net.year4000.mapnodes.utils.NMSHacks;
 import net.year4000.mapnodes.utils.SchedulerUtil;
 import net.year4000.utilities.bukkit.FunEffectsUtil;
 import net.year4000.utilities.bukkit.ItemUtil;
-import net.year4000.utilities.bukkit.commands.CommandException;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Sound;

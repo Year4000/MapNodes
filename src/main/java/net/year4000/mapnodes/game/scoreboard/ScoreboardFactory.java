@@ -1,27 +1,27 @@
+/*
+ * Copyright 2015 Year4000. All Rights Reserved.
+ */
+
 package net.year4000.mapnodes.game.scoreboard;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import lombok.AllArgsConstructor;
-import net.year4000.mapnodes.NodeFactory;
 import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.game.GameManager;
 import net.year4000.mapnodes.api.game.GamePlayer;
 import net.year4000.mapnodes.api.game.modes.GameModeInfo;
 import net.year4000.mapnodes.api.utils.Spectator;
 import net.year4000.mapnodes.clocks.Clocker;
-import net.year4000.mapnodes.clocks.NextNode;
-import net.year4000.mapnodes.clocks.RestartServer;
 import net.year4000.mapnodes.game.NodeGame;
 import net.year4000.mapnodes.game.NodePlayer;
 import net.year4000.mapnodes.game.NodeTeam;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.*;
-import net.year4000.utilities.bukkit.BadgeManager;
 import net.year4000.utilities.ChatColor;
 import net.year4000.utilities.MessageUtil;
+import net.year4000.utilities.bukkit.BadgeManager;
 import org.bukkit.Bukkit;
-import org.bukkit.craftbukkit.v1_7_R4.scoreboard.CraftObjective;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.*;
 
@@ -31,7 +31,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -168,7 +167,7 @@ public class ScoreboardFactory {
         String badgePrefix = MessageUtil.replaceColors(player.getBadge() + " " + color);
         String prefix = MessageUtil.replaceColors(color);
         player.getPlayer().setPlayerListName(player.getSplitName()[0]);
-        // todo Spigot player.getPlayer().setPlayerListDisplayName(badgePrefix + player.getPlayer().getName());
+        player.getPlayer().spigot().setPlayerListDisplayName(badgePrefix + player.getPlayer().getName());
         Scoreboard scoreboard = viewer.getScoreboard();
 
         // Create record in Map
@@ -249,36 +248,35 @@ public class ScoreboardFactory {
 
         // Show Current Game Mode
         String gameMode = game.getGameModes().iterator().next().getClass().getAnnotation(GameModeInfo.class).name();
-        side.addLine(Msg.locale(nodePlayer, "game.name"));
-        side.addLine(MessageUtil.replaceColors(" &e" + gameMode));
+        side.addLine(Msg.locale(nodePlayer, "game.name") + " &e" + gameMode);
         side.addBlank();
 
         // Team Selection
-        side.addLine(Msg.locale(nodePlayer, "team.name"));
         String name;
         if (nodePlayer.getPendingTeam() != null) {
-            name = " " + nodePlayer.getPendingTeam().getDisplayName();
+            name = nodePlayer.getPendingTeam().getDisplayName();
         }
         else {
-            name = " " + nodePlayer.getTeam().getDisplayName();
+            name = nodePlayer.getTeam().getDisplayName();
         }
 
         if (queue) {
             name = Common.fcolor(ChatColor.BOLD, name);
         }
-
-        side.addLine(name);
+        side.addLine(Msg.locale(nodePlayer, "team.name") + " " + name);
 
         // When the map has classes
         if (game.getClasses().size() > 0) {
             side.addBlank();
-            side.addLine(Msg.locale(nodePlayer, "class.name"));
+            String kit;
             if (nodePlayer.hasClassKit()) {
-                side.addLine(" &a" + nodePlayer.getClassKit().getName());
+                kit = "&a" + nodePlayer.getClassKit().getName();
             }
             else {
-                side.addLine(" " + Msg.locale(nodePlayer, "class.default"));
+                kit =  Msg.locale(nodePlayer, "class.default");
             }
+
+            side.addLine(Msg.locale(nodePlayer, "class.name") + " " + kit);
         }
 
         side.addBlank();
@@ -296,6 +294,9 @@ public class ScoreboardFactory {
 
                 side.addLine(" &7(" + teamSize + "&7) " + teamName);
             });
+
+        side.addBlank();
+        side.addLine(" &bwww&3.&byear4000&3.&bnet ");
 
         side.buildSidebar(nodePlayer.getScoreboard(), header);
     }

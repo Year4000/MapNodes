@@ -1,9 +1,12 @@
+/*
+ * Copyright 2015 Year4000. All Rights Reserved.
+ */
+
 package net.year4000.mapnodes.backend;
 
 import com.google.common.base.Preconditions;
 import com.google.gson.JsonObject;
 import lombok.Data;
-import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.game.NodePlayer;
 import net.year4000.utilities.AbstractBadgeManager;
 

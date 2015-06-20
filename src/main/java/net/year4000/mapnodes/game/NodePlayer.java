@@ -1,8 +1,11 @@
+/*
+ * Copyright 2015 Year4000. All Rights Reserved.
+ */
+
 package net.year4000.mapnodes.game;
 
 import com.google.common.base.Preconditions;
 import lombok.Data;
-import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.api.events.player.GamePlayerJoinEvent;
 import net.year4000.mapnodes.api.events.player.GamePlayerJoinSpectatorEvent;
 import net.year4000.mapnodes.api.events.player.GamePlayerJoinTeamEvent;
@@ -15,8 +18,8 @@ import net.year4000.mapnodes.backend.AccountCache;
 import net.year4000.mapnodes.backend.MapNodesBadgeManager;
 import net.year4000.mapnodes.messages.MessageManager;
 import net.year4000.mapnodes.messages.Msg;
-import net.year4000.mapnodes.utils.NMSHacks;
 import net.year4000.mapnodes.utils.Common;
+import net.year4000.mapnodes.utils.NMSHacks;
 import net.year4000.mapnodes.utils.PacketHacks;
 import net.year4000.mapnodes.utils.SchedulerUtil;
 import net.year4000.utilities.bukkit.MessageUtil;
@@ -24,7 +27,6 @@ import net.year4000.utilities.bukkit.bossbar.BossBar;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;

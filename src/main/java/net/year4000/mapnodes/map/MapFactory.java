@@ -1,21 +1,19 @@
+/*
+ * Copyright 2015 Year4000. All Rights Reserved.
+ */
+
 package net.year4000.mapnodes.map;
 
 import com.google.common.collect.Iterables;
 import lombok.Getter;
 import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.Settings;
-import net.year4000.mapnodes.api.exceptions.InvalidMapException;
-import net.year4000.mapnodes.messages.Msg;
 
 import javax.annotation.Nullable;
-import java.io.File;
-import java.lang.reflect.Array;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import static com.google.common.base.Preconditions.checkNotNull;
 
 public class MapFactory {
     @Getter

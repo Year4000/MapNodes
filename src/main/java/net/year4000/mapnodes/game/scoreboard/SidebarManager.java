@@ -1,3 +1,7 @@
+/*
+ * Copyright 2015 Year4000. All Rights Reserved.
+ */
+
 package net.year4000.mapnodes.game.scoreboard;
 
 import com.google.common.base.Splitter;
@@ -108,12 +112,10 @@ public final class SidebarManager {
 
         // If exists reset scores
         if (scoreboard.getObjective(id) != null) {
-            objective = scoreboard.getObjective(id);
-
-            objective.setDisplayName(Common.truncate(MessageUtil.replaceColors(title), 32));
-            scoreboard.getEntries().stream()
-                .filter(name -> !staticScores.contains(name))
-                .forEach(scoreboard::resetScores);
+            scoreboard.getObjective(id).unregister();
+            objective = scoreboard.registerNewObjective(id, "dummy");
+            objective.setDisplaySlot(DisplaySlot.SIDEBAR);
+            scoreboard.getObjective(DisplaySlot.SIDEBAR).setDisplayName(Common.truncate(MessageUtil.replaceColors(title), 32));
 
             buildScores(scoreboard, objective);
         }
@@ -140,8 +142,6 @@ public final class SidebarManager {
 
         // Add dynamic scores that don't depend on statics
         for (Object[] lines : dynamicScores) {
-            if (scoreboard.getEntries().contains(lines[0])) continue;
-
             String scoreId = buildTeam(scoreboard, ((String) lines[0]));
             int scoreInput = (Integer) lines[1];
 
