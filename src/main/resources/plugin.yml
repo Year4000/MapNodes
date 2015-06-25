@@ -1,6 +1,0 @@
-name: ${project.name}
-author: Year4000
-version: ${project.version}-git(${git.commit.id.abbrev})
-description: ${git.commit.message.short}
-main: ${plugin.class}
-depend: [Utilities]

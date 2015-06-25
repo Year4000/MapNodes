@@ -1,26 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xmlns="http://maven.apache.org/POM/4.0.0"
+<!--
+  ~ Copyright 2015 Year4000. All Rights Reserved.
+  -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <groupId>net.year4000</groupId>
+        <artifactId>mapnodes-parent</artifactId>
+        <version>2.0.0-SNAPSHOT</version>
+    </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>net.year4000</groupId>
-    <artifactId>mapnodes-parent</artifactId>
-    <packaging>pom</packaging>
-    <name>MapNodes Parent</name>
-    <version>2.0.0-SNAPSHOT</version>
+    <name>MapNodes</name>
+    <artifactId>mapnodes</artifactId>
 
-    <modules>
-        <module>api</module>
-        <module>mapnodes</module>
-    </modules>
-
-    <!--<distributionManagement>
-        <snapshotRepository>
-            <id>year4000-deployment</id>
-            <url>http://repo.year4000.net/content/repositories/private/</url>
-        </snapshotRepository>
-    </distributionManagement>-->
+    <properties>
+        <plugin.name>MapNodesPlugin</plugin.name>
+        <plugin.class>${project.groupId}.${project.artifactId}.${plugin.name}</plugin.class>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
 
     <build>
         <defaultGoal>clean install</defaultGoal>
@@ -32,25 +32,6 @@
             </resource>
         </resources>
         <plugins>
-            <!-- Compile Classes -->
-            <plugin>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.1</version>
-                <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
-                </configuration>
-            </plugin>
-
-            <!-- Add Resources to Jar -->
-            <plugin>
-                <artifactId>maven-resources-plugin</artifactId>
-                <version>2.6</version>
-                <configuration>
-                    <encoding>UTF-8</encoding>
-                </configuration>
-            </plugin>
-
             <!-- Shade API into MapNodes -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -65,6 +46,7 @@
                         <configuration>
                             <artifactSet>
                                 <includes>
+                                    <include>com.sk89q:command-framework-bukkit</include>
                                     <include>net.year4000:mapnodes-api</include>
                                 </includes>
                             </artifactSet>
@@ -111,68 +93,32 @@
                         <skip>true</skip>
                     </gitDescribe>
                 </configuration>
-
-            </plugin>
-
-            <!-- Unit Tests -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.10</version>
             </plugin>
         </plugins>
     </build>
 
     <repositories>
         <repository>
-            <id>spigot-repo</id>
-            <url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
+            <id>oc-tc</id>
+            <url>https://repo.oc.tc/content/repositories/public</url>
         </repository>
     </repositories>
 
     <dependencies>
-        <!-- Spigot Server -->
+        <!-- MapNodes API -->
         <dependency>
-            <groupId>org.spigotmc</groupId>
-            <artifactId>spigot</artifactId>
-            <version>1.8.7-R0.1-SNAPSHOT</version>
-        </dependency>
-
-        <!-- Common Utilities -->
-        <dependency>
-            <groupId>net.year4000.utilities</groupId>
-            <artifactId>bukkit</artifactId>
-            <version>1.4-SNAPSHOT</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.bukkit</groupId>
-                    <artifactId>bukkit</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
-        <!-- Getter and Setters -->
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>1.14.8</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <!-- @Nullable ect -->
-        <dependency>
-            <groupId>com.google.code.findbugs</groupId>
-            <artifactId>jsr305</artifactId>
-            <version>1.3.9</version>
+            <groupId>net.year4000</groupId>
+            <artifactId>mapnodes-api</artifactId>
+            <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>
 
-        <!-- Unit Testing -->
+        <!-- Use this while Utilities is switching to Intake -->
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.8.1</version>
-            <scope>test</scope>
+            <groupId>com.sk89q</groupId>
+            <artifactId>command-framework-bukkit</artifactId>
+            <version>0.5-SNAPSHOT</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 </project>

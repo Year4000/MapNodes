@@ -1,6 +1,6 @@
 # Maven
 target/
-src/main/resources/git.properties
+mapnodes/src/main/resources/git.properties
 
 # IDE's
 .idea/
