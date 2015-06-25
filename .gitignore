@@ -1,6 +1,7 @@
 # Maven
 target/
-mapnodes/src/main/resources/git.properties
+*git.properties
+*dependency-reduced-pom.xml
 
 # IDE's
 .idea/
