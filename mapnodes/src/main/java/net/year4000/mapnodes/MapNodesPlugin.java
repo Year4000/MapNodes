@@ -4,6 +4,9 @@
 
 package net.year4000.mapnodes;
 
+import com.sk89q.bukkit.util.BukkitCommandsManager;
+import com.sk89q.bukkit.util.CommandsManagerRegistration;
+import com.sk89q.minecraft.util.commands.*;
 import lombok.Getter;
 import net.year4000.mapnodes.addons.Addons;
 import net.year4000.mapnodes.addons.modules.misc.DeathMessages;
@@ -30,14 +33,20 @@ import net.year4000.mapnodes.listeners.*;
 import net.year4000.mapnodes.map.MapFactory;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.Common;
+import net.year4000.utilities.ChatColor;
 import net.year4000.utilities.LogUtil;
 import net.year4000.utilities.bukkit.BukkitPlugin;
 import net.year4000.utilities.bukkit.MessageUtil;
 import net.year4000.utilities.bukkit.MessagingChannel;
+import net.year4000.utilities.bukkit.locale.MessageLocale;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.jar.JarEntry;
@@ -209,24 +218,61 @@ public class MapNodesPlugin extends BukkitPlugin implements Plugin {
         }
     }
 
-    /*public void getGameClasses(File file, Set<Class<? extends GameMode>> games) throws ClassNotFoundException {
-        checkArgument(checkNotNull(file).exists());
-        checkNotNull(games);
+    // todo Command Manager only here until Utilities Support Intake START //
+    private final BukkitCommandsManager _commands = new BukkitCommandsManager();
 
-        for (File child : file.listFiles()) {
-            if (child.isDirectory()) {
-                getGameClasses(file, games);
+    @Override
+    /** Register a command for this plugin */
+    public void registerCommand(Class<?> commandClass) {
+        new CommandsManagerRegistration(this, _commands).register(commandClass);
+    }
+
+    @Override
+    public boolean onCommand(CommandSender sender, Command cmd, String commandName, String[] args) {
+        List<String> msg = new ArrayList<>();
+
+        MessageLocale locale = new MessageLocale(sender);
+
+        try {
+            _commands.execute(cmd.getName(), args, sender, sender);
+        }
+        catch (CommandPermissionsException e) {
+            msg.add(locale.get("error.cmd.permission"));
+        }
+        catch (MissingNestedCommandException e) {
+            msg.add(locale.get("error.cmd.usage", e.getUsage()));
+        }
+        catch (CommandUsageException e) {
+            msg.add(ChatColor.RED + e.getMessage());
+            msg.add(locale.get("error.cmd.usage", e.getUsage()));
+        }
+        catch (WrappedCommandException e) {
+            if (e.getCause() instanceof NumberFormatException) {
+                msg.add(locale.get("error.cmd.number"));
             }
             else {
-                Class<?> clazz = MapNodesPlugin.class.getClassLoader().loadClass(child.getName());
+                msg.add(locale.get("error.cmd.error"));
+                e.printStackTrace();
+            }
+        }
+        catch (CommandException e) {
+            msg.add(ChatColor.RED + e.getMessage());
+        }
+        finally {
+            Iterator<String> line = msg.listIterator();
 
-                if (clazz.isAssignableFrom(GameMode.class) && clazz.isAnnotationPresent(GameModeInfo.class)) {
-                    games.add((Class<? extends GameMode>) clazz);
-                    MapNodesPlugin.log(Msg.util("games.class.load", clazz.toString()));
+            if (line.hasNext()) {
+                sender.sendMessage(MessageUtil.message(" &7[&e!&7] &e") + line.next());
+
+                while (line.hasNext()) {
+                    sender.sendMessage(line.next());
                 }
             }
         }
-    }*/
+
+        return true;
+    }
+    // todo Command Manager only here until Utilities Support Intake END //
 
     /*//----------------------------//
          Current Node Quick Methods
