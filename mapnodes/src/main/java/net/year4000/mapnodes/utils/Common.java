@@ -308,4 +308,10 @@ public final class Common {
 
         return false;
     }
+
+    /** Format the path */
+    public static String formatPath(String path) {
+        if (path.length() < 6) return path;
+        return path.substring(0, path.length() - 6).replaceAll("/", ".");
+    }
 }

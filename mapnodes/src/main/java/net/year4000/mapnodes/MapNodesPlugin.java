@@ -12,6 +12,7 @@ import net.year4000.mapnodes.addons.modules.misc.VIPEffects;
 import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.Plugin;
 import net.year4000.mapnodes.api.game.GameManager;
+import net.year4000.mapnodes.api.game.modes.GameMode;
 import net.year4000.mapnodes.backend.Backend;
 import net.year4000.mapnodes.commands.CommandBuilder;
 import net.year4000.mapnodes.commands.mapnodes.MapNodesBase;
@@ -25,17 +26,10 @@ import net.year4000.mapnodes.game.regions.EventManager;
 import net.year4000.mapnodes.game.regions.RegionManager;
 import net.year4000.mapnodes.game.regions.events.*;
 import net.year4000.mapnodes.game.regions.types.*;
-import net.year4000.mapnodes.gamemodes.capture.Capture;
-import net.year4000.mapnodes.gamemodes.deathmatch.Deathmatch;
-import net.year4000.mapnodes.gamemodes.destory.Destroy;
-import net.year4000.mapnodes.gamemodes.elimination.Elimination;
-import net.year4000.mapnodes.gamemodes.skywars.Skywars;
-import net.year4000.mapnodes.gamemodes.spleef.SpleefRunner;
-import net.year4000.mapnodes.gamemodes.tag.ArrowTag;
-import net.year4000.mapnodes.gamemodes.tntwars.TntWars;
 import net.year4000.mapnodes.listeners.*;
 import net.year4000.mapnodes.map.MapFactory;
 import net.year4000.mapnodes.messages.Msg;
+import net.year4000.mapnodes.utils.Common;
 import net.year4000.utilities.LogUtil;
 import net.year4000.utilities.bukkit.BukkitPlugin;
 import net.year4000.utilities.bukkit.MessageUtil;
@@ -43,7 +37,12 @@ import net.year4000.utilities.bukkit.MessagingChannel;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 
+import java.io.File;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
+import java.util.stream.Collectors;
 
 @Getter
 public class MapNodesPlugin extends BukkitPlugin implements Plugin {
@@ -94,16 +93,7 @@ public class MapNodesPlugin extends BukkitPlugin implements Plugin {
             .build();
 
         // Register game modes that MapNodes can support
-        NodeModeFactory.get()
-            .add(Capture.class)
-            .add(Deathmatch.class)
-            .add(Destroy.class)
-            .add(Skywars.class)
-            .add(TntWars.class)
-            .add(Elimination.class)
-            .add(SpleefRunner.class)
-            .add(ArrowTag.class)
-            .build();
+        getGames().build();
 
         // Clean out old maps
         Node.removeStrayMaps();
@@ -180,6 +170,63 @@ public class MapNodesPlugin extends BukkitPlugin implements Plugin {
         Bukkit.getScheduler().cancelTasks(this);
         Bukkit.shutdown();
     }
+
+    public NodeModeFactory getGames() {
+        try {
+            NodeModeFactory factory = NodeModeFactory.get();
+            JarFile appJar = new JarFile(new File(getDataFolder().getParentFile(), "MapNodes.jar"));
+
+            String tmpPackageName = MapNodesPlugin.class.getPackage().getName();
+            String packageName = tmpPackageName.substring(tmpPackageName.indexOf(' ') + 1).replaceAll("\\.", "/");
+            MapNodesPlugin.debug(tmpPackageName);
+            MapNodesPlugin.debug(packageName);
+            List<Class<? extends GameMode>> pendingRegister = new LinkedList<>();
+            List<JarEntry> entries = appJar.stream()
+                            .filter(jar -> jar.toString().startsWith(packageName))
+                            .collect(Collectors.toList());
+
+            for (JarEntry entry : entries) {
+                boolean routes = entry.toString().startsWith(packageName + "/gamemodes/");
+                String entryName = Common.formatPath(entry.getName());
+
+                    if (routes && !entry.isDirectory()) {
+                        Class<?> clazz = Class.forName(entryName, false, MapNodesPlugin.class.getClassLoader());
+
+                        // If its a class that is an route handle add it to the list to be sorted
+                        if (clazz != null && GameMode.class.isAssignableFrom(clazz)) {
+                            MapNodesPlugin.debug("Adding instance: " + clazz.getCanonicalName());
+                            pendingRegister.add((Class<? extends GameMode>) clazz);
+                        }
+                    }
+            }
+
+            pendingRegister.forEach(factory::add);
+
+            return factory;
+        }
+        catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /*public void getGameClasses(File file, Set<Class<? extends GameMode>> games) throws ClassNotFoundException {
+        checkArgument(checkNotNull(file).exists());
+        checkNotNull(games);
+
+        for (File child : file.listFiles()) {
+            if (child.isDirectory()) {
+                getGameClasses(file, games);
+            }
+            else {
+                Class<?> clazz = MapNodesPlugin.class.getClassLoader().loadClass(child.getName());
+
+                if (clazz.isAssignableFrom(GameMode.class) && clazz.isAnnotationPresent(GameModeInfo.class)) {
+                    games.add((Class<? extends GameMode>) clazz);
+                    MapNodesPlugin.log(Msg.util("games.class.load", clazz.toString()));
+                }
+            }
+        }
+    }*/
 
     /*//----------------------------//
          Current Node Quick Methods
