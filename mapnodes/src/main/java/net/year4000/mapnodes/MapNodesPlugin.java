@@ -195,7 +195,7 @@ public class MapNodesPlugin extends BukkitPlugin implements Plugin {
                             .collect(Collectors.toList());
 
             for (JarEntry entry : entries) {
-                boolean routes = entry.toString().startsWith(packageName + "/gamemodes/");
+                boolean routes = entry.toString().startsWith(packageName + "/games/");
                 String entryName = Common.formatPath(entry.getName());
 
                     if (routes && !entry.isDirectory()) {

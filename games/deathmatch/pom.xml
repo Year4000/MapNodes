@@ -3,12 +3,12 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <groupId>net.year4000</groupId>
-        <artifactId>mapnodes-parent</artifactId>
+        <groupId>net.year4000.mapnodes.games</groupId>
+        <artifactId>games</artifactId>
         <version>2.0.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <name>MapNodes-API</name>
-    <artifactId>mapnodes-api</artifactId>
+    <name>Deathmatch</name>
+    <artifactId>deathmatch</artifactId>
 </project>
