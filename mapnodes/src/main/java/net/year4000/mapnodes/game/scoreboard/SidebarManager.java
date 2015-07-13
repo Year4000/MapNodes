@@ -112,10 +112,9 @@ public final class SidebarManager {
 
         // If exists reset scores
         if (scoreboard.getObjective(id) != null) {
-            scoreboard.getObjective(id).unregister();
-            objective = scoreboard.registerNewObjective(id, "dummy");
-            objective.setDisplaySlot(DisplaySlot.SIDEBAR);
+            objective = scoreboard.getObjective(id);
             scoreboard.getObjective(DisplaySlot.SIDEBAR).setDisplayName(Common.truncate(MessageUtil.replaceColors(title), 32));
+            objective.getScoreboard().getEntries().forEach(scoreboard::resetScores);
 
             buildScores(scoreboard, objective);
         }
@@ -142,6 +141,8 @@ public final class SidebarManager {
 
         // Add dynamic scores that don't depend on statics
         for (Object[] lines : dynamicScores) {
+            if (scoreboard.getEntries().contains(lines[0])) continue;
+
             String scoreId = buildTeam(scoreboard, ((String) lines[0]));
             int scoreInput = (Integer) lines[1];
 
