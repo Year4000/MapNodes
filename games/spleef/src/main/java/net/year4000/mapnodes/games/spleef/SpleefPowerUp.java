@@ -117,7 +117,7 @@ public class SpleefPowerUp implements Listener {
         if (event.getTo().toVector().toBlockVector().equals(event.getFrom().toVector().toBlockVector())) return;
 
         if (RAND.nextInt(100) == 5 && MapNodes.getCurrentGame().getStage().isPlaying()) {
-            SchedulerUtil.runAsync(() -> dropPowerUp(Common.center(event.getFrom().clone())), 60L);
+            SchedulerUtil.runSync(() -> dropPowerUp(Common.center(event.getFrom().clone())), 60L);
         }
     }
 }

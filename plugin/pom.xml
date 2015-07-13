@@ -87,7 +87,15 @@
             <artifactId>mapnodes</artifactId>
             <version>${project.version}</version>
         </dependency>
+
         <!-- MapNodes Games -->
+        <dependency>
+            <groupId>net.year4000.mapnodes.games</groupId>
+            <artifactId>tnt-wars</artifactId>
+            <version>${project.version}</version>
+            <optional>true</optional>
+        </dependency>
+
         <dependency>
             <groupId>net.year4000.mapnodes.games</groupId>
             <artifactId>deathmatch</artifactId>
