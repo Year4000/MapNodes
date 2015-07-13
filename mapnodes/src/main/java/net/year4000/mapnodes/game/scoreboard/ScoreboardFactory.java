@@ -165,9 +165,7 @@ public class ScoreboardFactory {
         // set how the display looks
         String color = player.getTeam().getColor().toString();
         String badgePrefix = MessageUtil.replaceColors(player.getBadge() + " " + color);
-        String prefix = MessageUtil.replaceColors(color);
-        player.getPlayer().setPlayerListName(player.getSplitName()[0]);
-        // todo spigot player.getPlayer().spigot().setPlayerListDisplayName(badgePrefix + player.getPlayer().getName());
+        player.getPlayer().setPlayerListName(badgePrefix + player.getPlayer().getName());
         Scoreboard scoreboard = viewer.getScoreboard();
 
         // Create record in Map
@@ -177,7 +175,7 @@ public class ScoreboardFactory {
             // Copy the list, find old teams and remove them from map and unregister them.
             new ArrayList<>(tabListTeamNames.get(scoreboard)).stream()
                 .filter(NMSHacks::isTeamRegistered)
-                .filter(team -> team.hasEntry(player.getSplitName()[0]))
+                .filter(team -> team.hasEntry(player.getPlayer().getName()))
                 .forEach(team -> {
                     tabListTeamNames.get(scoreboard).remove(team);
                     team.unregister();
@@ -186,14 +184,11 @@ public class ScoreboardFactory {
             // Create new team and assign player to it
             Team team = scoreboard.registerNewTeam(hash);
             tabListTeamNames.get(scoreboard).add(team);
-            team.setPrefix(prefix);
-            team.setSuffix(player.getSplitName()[1]);
-            team.addEntry(player.getSplitName()[0]);
+            team.addEntry(player.getPlayer().getName());
         }
         else {
             Team team = scoreboard.getTeam(hash);
-            team.setPrefix(prefix);
-            team.addEntry(player.getSplitName()[0]);
+            team.addEntry(player.getPlayer().getName());
         }
     }
 
