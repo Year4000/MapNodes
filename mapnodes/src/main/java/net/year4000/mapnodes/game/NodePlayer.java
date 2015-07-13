@@ -297,10 +297,7 @@ public final class NodePlayer implements GamePlayer, Comparable {
         // Update network level and experience
         player.setLevel(cache.getLevel());
         player.setTotalExperience(cache.getExperience());
-        float current = cache.getExperience() - cache.getCurrentExperienceLevel();
-        float next = cache.getNextExperienceLevel() - cache.getLastExperienceLevel();
-        float exp = (current / next);
-        player.setExp(exp);
+        player.setExp(cache.getNextExperienceLevel());
 
         // Update team menu
         game.updateTeamChooserMenu();

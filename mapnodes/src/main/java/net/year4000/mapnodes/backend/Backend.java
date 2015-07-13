@@ -16,6 +16,7 @@ import net.year4000.mapnodes.messages.Msg;
 import net.year4000.utilities.URLBuilder;
 import net.year4000.utilities.sdk.API;
 import net.year4000.utilities.sdk.HttpFetcher;
+import net.year4000.utilities.sdk.routes.accounts.AccountRoute;
 
 import java.lang.reflect.Type;
 import java.util.*;
@@ -56,21 +57,19 @@ public class Backend extends API {
                 accounts.putIfAbsent(accountUuid, response.get("id").getAsString());
                 NodePlayer nodePlayer = (NodePlayer) player;
                 int xp = response.get("new_amount").getAsInt();
-                int level = (int) Math.floor(Math.pow(xp, AccountCache.TWO_THIRDS) / 100);
                 nodePlayer.getCache().setExperience(xp);
-                nodePlayer.getCache().setLevel(level);
-                nodePlayer.getCache().setNextExperienceLevel((int) (1000 * Math.pow(level + 1, AccountCache.TWO_THIRDS) * (level + 1)));
-                nodePlayer.getCache().setLastExperienceLevel((int) (1000 * Math.pow(level == 0 ? 0 : level - 1, AccountCache.TWO_THIRDS) * (level == 0 ? 0 : level - 1)));
-                nodePlayer.getCache().setCurrentExperienceLevel((int) (1000 * Math.pow(level, AccountCache.TWO_THIRDS) * (level)));
 
                 // If spectator update exp
                 if (nodePlayer.isSpectator()) {
-                    nodePlayer.getPlayer().setLevel(nodePlayer.getCache().getLevel());
-                    nodePlayer.getPlayer().setTotalExperience(nodePlayer.getCache().getExperience());
-                    float current = nodePlayer.getCache().getExperience() - nodePlayer.getCache().getCurrentExperienceLevel();
-                    float next = nodePlayer.getCache().getNextExperienceLevel() - nodePlayer.getCache().getLastExperienceLevel();
-                    float exp = (current / next);
-                    nodePlayer.getPlayer().setExp(exp);
+                    AccountRoute route = getAccount(accountUuid.toString());
+                    int level = route.getRawResponse().get("level").getAsInt();
+                    int experience = route.getRawResponse().get("experience").getAsInt();
+                    float experienceLevel = route.getRawResponse().get("experience_level").getAsFloat();
+                    nodePlayer.getPlayer().setLevel(level);
+                    nodePlayer.getPlayer().setTotalExperience(experience);
+                    nodePlayer.getPlayer().setExp(experienceLevel);
+                    nodePlayer.getCache().setNextExperienceLevel(experienceLevel);
+                    nodePlayer.getCache().setLevel(level);
                 }
             }
             else {

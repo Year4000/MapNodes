@@ -24,9 +24,7 @@ public class AccountCache {
     private AbstractBadgeManager.Badges badge;
     private int level;
     private int experience;
-    private int nextExperienceLevel;
-    private int currentExperienceLevel;
-    private int lastExperienceLevel;
+    private float nextExperienceLevel;
 
     private AccountCache(UUID uuid, JsonObject object) {
         this.uuid = uuid;
@@ -34,9 +32,7 @@ public class AccountCache {
         this.badge = AbstractBadgeManager.Badges.valueOf(rank.toUpperCase());
         this.level = object.get("level").getAsInt();
         this.experience = object.get("experience").getAsInt();
-        this.lastExperienceLevel = (int) (1000 * Math.pow(level == 0 ? 0 : level - 1, TWO_THIRDS) * (level == 0 ? 0 : level - 1));
-        this.currentExperienceLevel = (int) (1000 * Math.pow(level, TWO_THIRDS) * (level));
-        this.nextExperienceLevel = (int) (1000 * Math.pow(level + 1, TWO_THIRDS) * (level + 1));
+        this.nextExperienceLevel = object.get("experience_level").getAsFloat();
         cache.put(uuid, this);
     }
 
