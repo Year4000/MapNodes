@@ -184,10 +184,12 @@ public class ScoreboardFactory {
             // Create new team and assign player to it
             Team team = scoreboard.registerNewTeam(hash);
             tabListTeamNames.get(scoreboard).add(team);
+            team.setPrefix(color);
             team.addEntry(player.getPlayer().getName());
         }
         else {
             Team team = scoreboard.getTeam(hash);
+            team.setPrefix(color);
             team.addEntry(player.getPlayer().getName());
         }
     }
