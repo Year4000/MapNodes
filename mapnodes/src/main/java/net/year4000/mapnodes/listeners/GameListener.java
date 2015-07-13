@@ -92,7 +92,7 @@ public final class GameListener implements Listener {
             player.sendMessage("");
             player.sendMessage(Common.textLine(Msg.locale(player, "game.end"), 40, '*'));
             String winnerText = event.getWinnerText(), endComment = null;
-            int xp = 250;
+            int xp = 75;
             int tokens = 10;
 
             // Color winnerText and add endComment
@@ -100,18 +100,18 @@ public final class GameListener implements Listener {
                 if (player.getTeam().equals(((GameTeamWinEvent) event).getWinner())) {
                     winnerText = Common.fcolor(ChatColor.ITALIC, winnerText);
                     endComment = Msg.locale(player, "game.end.team_winner");
-                    xp += 300;
+                    xp += 150;
                     tokens += 25;
                 }
                 else {
                     endComment = Msg.locale(player, "game.end.team_loser");
-                    xp += 100;
+                    xp += 50;
                     tokens += 5;
                 }
             }
             else if (event instanceof GamePlayerWinEvent) {
                 if (player.equals(((GamePlayerWinEvent) event).getWinner())) {
-                    xp += 300;
+                    xp += 150;
                     tokens += 25;
                 }
             }
