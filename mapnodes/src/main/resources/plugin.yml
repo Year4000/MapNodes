@@ -1,4 +1,4 @@
-name: ${project.name}
+name: ${plugin.display}
 author: Year4000
 version: ${project.version}-git(${git.commit.id.abbrev})
 description: ${git.commit.message.short}

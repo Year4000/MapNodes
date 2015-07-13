@@ -13,6 +13,7 @@
     <artifactId>mapnodes</artifactId>
 
     <properties>
+        <plugin.display>MapNodes</plugin.display>
         <plugin.name>MapNodesPlugin</plugin.name>
         <plugin.class>${project.groupId}.${project.artifactId}.${plugin.name}</plugin.class>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
