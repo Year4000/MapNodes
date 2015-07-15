@@ -106,28 +106,21 @@ public final class SidebarManager {
         return result;
     }
 
-    public Objective buildSidebar(Scoreboard scoreboard, String title) {
-        String id = String.valueOf(title.hashCode());
-        Objective objective;
+    public void buildSidebar(Scoreboard scoreboard, String title) {
+        String hex = "sb:", nanoTime = String.valueOf(System.nanoTime());
 
-        // If exists reset scores
-        if (scoreboard.getObjective(id) != null) {
-            objective = scoreboard.getObjective(id);
-            scoreboard.getObjective(DisplaySlot.SIDEBAR).setDisplayName(Common.truncate(MessageUtil.replaceColors(title), 32));
-            objective.getScoreboard().getEntries().forEach(scoreboard::resetScores);
-
-            buildScores(scoreboard, objective);
-        }
-        else {
-            // Register it
-            objective = scoreboard.registerNewObjective(id, "dummy");
-            objective.setDisplaySlot(DisplaySlot.SIDEBAR);
-            scoreboard.getObjective(DisplaySlot.SIDEBAR).setDisplayName(Common.truncate(MessageUtil.replaceColors(title), 32));
-
-            buildScores(scoreboard, objective);
+        for (String part : Splitter.fixedLength(4).split(nanoTime)) {
+            hex += Integer.toHexString(Integer.valueOf(part));
         }
 
-        return objective;
+        // Create a buffer that is updated and set it to use that
+        Optional<Objective> sidebar = Optional.ofNullable(scoreboard.getObjective(DisplaySlot.SIDEBAR));
+        Objective buffer = scoreboard.registerNewObjective(hex, "dummy");
+        buffer.setDisplayName(Common.truncate(MessageUtil.replaceColors(title), 32));
+
+        buildScores(scoreboard, buffer);
+        buffer.setDisplaySlot(DisplaySlot.SIDEBAR);
+        sidebar.ifPresent(Objective::unregister);
     }
 
     public void buildScores(Scoreboard scoreboard, Objective objective) {
@@ -141,8 +134,6 @@ public final class SidebarManager {
 
         // Add dynamic scores that don't depend on statics
         for (Object[] lines : dynamicScores) {
-            if (scoreboard.getEntries().contains(lines[0])) continue;
-
             String scoreId = buildTeam(scoreboard, ((String) lines[0]));
             int scoreInput = (Integer) lines[1];
 
