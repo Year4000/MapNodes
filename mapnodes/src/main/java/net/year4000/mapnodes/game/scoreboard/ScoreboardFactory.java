@@ -55,6 +55,7 @@ public class ScoreboardFactory {
                 .map(Player::getScoreboard)
                 .map(obj -> obj.getObjective(DisplaySlot.SIDEBAR))
                 .filter(obj -> obj != null)
+                .filter(Objective::isModifiable)
                 .forEach(obj -> obj.setDisplayName(MessageUtil.replaceColors(name)));
 
             MapNodes.getCurrentGame().getPlayers()
@@ -74,17 +75,18 @@ public class ScoreboardFactory {
             final String shortMapName = Common.shortMessage(22, game.getMap().getName());
             final String title = "  " + shortMapName + "    ";
             final int time = game.getMap().getName().length() * 3, length = shortMapName.length() + 3;
-            final List<Objective> objectives = game.getPlaying()
+            final List<Player> players = game.getPlaying()
                 .map(GamePlayer::getPlayer)
-                .map(Player::getScoreboard)
-                .map(obj -> obj.getObjective(DisplaySlot.SIDEBAR))
-                .filter(obj -> obj != null)
+                .filter(obj -> obj.getScoreboard() != null)
                 .collect(Collectors.toList());
+
             final Clocker revert = new Clocker(time) {
                 @Override
                 public void runTock(int position) {
-                    objectives.stream()
-                        .filter(obj -> obj.getScoreboard() != null)
+                    players.stream()
+                        .map(Player::getScoreboard)
+                        .map(sb -> sb.getObjective(DisplaySlot.SIDEBAR))
+                        .filter(Objective::isModifiable)
                         .forEach(obj -> {
                             int pos = (int) (length - ((MathUtil.percent(getTime(), position) * 10) / 10) * (length * .01));
                             String parts = title.substring(0, pos) + "&3" + title.charAt(pos) + "&f" + title.substring(pos + 1);
@@ -96,22 +98,24 @@ public class ScoreboardFactory {
             new Clocker(time) {
                 @Override
                 public void runTock(int position) {
-                    if (objectives.size() == 0 || game.getStage().isEndGame()) return;
+                    if (players.size() == 0 || game.getStage().isEndGame()) return;
 
-                    objectives.stream()
-                        .filter(obj -> obj.getScoreboard() != null)
+                    players.stream()
+                        .map(Player::getScoreboard)
+                        .map(sb -> sb.getObjective(DisplaySlot.SIDEBAR))
+                        .filter(Objective::isModifiable)
                         .forEach(obj -> {
-                        int pos = (int) (length - ((MathUtil.percent(getTime(), position) * 10) / 10) * (length * .01));
-                        String parts = title.substring(0, pos) + "&3" + title.charAt(pos) + "&b" + title.substring(pos + 1);
-                        obj.setDisplayName(Common.truncate(MessageUtil.replaceColors("  &f" + parts), 32));
-                    });
+                            int pos = (int) (length - ((MathUtil.percent(getTime(), position) * 10) / 10) * (length * .01));
+                            String parts = title.substring(0, pos) + "&3" + title.charAt(pos) + "&b" + title.substring(pos + 1);
+                            obj.setDisplayName(Common.truncate(MessageUtil.replaceColors("  &f" + parts), 32));
+                        });
                 }
 
                 @Override
                 public void runLast(int position) {
-                    if (objectives.size() == 0 || game.getStage().isEndGame()) return;
+                    if (players.size() == 0 || game.getStage().isEndGame()) return;
 
-                    SchedulerUtil.runAsync(revert::run, 40L);
+                    SchedulerUtil.runSync(revert::run, 40L);
                 }
             }.run();
         }, 1200L);
