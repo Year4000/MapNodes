@@ -158,10 +158,6 @@ public final class GameListener implements Listener {
     public void onClock(GameClockEvent event) {
         if (event.getGame().getStage().isEndGame()) return;
 
-        event.getGame().getPlayers().parallel().forEach(player -> {
-            ((NodeGame) event.getGame()).getScoreboardFactory().setPersonalSidebar((NodePlayer) player);
-        });
-
         // If not in debug mode check if their are still players.
         if (!MapNodesPlugin.getInst().getLog().isDebug()) {
             // Ensure their is at least one player on each team else just end the game
