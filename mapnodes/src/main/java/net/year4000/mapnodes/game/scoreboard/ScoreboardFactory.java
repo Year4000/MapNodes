@@ -86,11 +86,14 @@ public class ScoreboardFactory {
                     players.stream()
                         .map(Player::getScoreboard)
                         .map(sb -> sb.getObjective(DisplaySlot.SIDEBAR))
-                        .filter(Objective::isModifiable)
                         .forEach(obj -> {
                             int pos = (int) (length - ((MathUtil.percent(getTime(), position) * 10) / 10) * (length * .01));
                             String parts = title.substring(0, pos) + "&3" + title.charAt(pos) + "&f" + title.substring(pos + 1);
-                            obj.setDisplayName(Common.truncate(MessageUtil.replaceColors("  &b" + parts), 32));
+                            obj = obj.isModifiable() ? obj : obj.getScoreboard().getObjective(DisplaySlot.SIDEBAR);
+
+                            if (obj.isModifiable()) {
+                                obj.setDisplayName(Common.truncate(MessageUtil.replaceColors("  &b" + parts), 32));
+                            }
                         });
                 }
             };
@@ -103,11 +106,14 @@ public class ScoreboardFactory {
                     players.stream()
                         .map(Player::getScoreboard)
                         .map(sb -> sb.getObjective(DisplaySlot.SIDEBAR))
-                        .filter(Objective::isModifiable)
                         .forEach(obj -> {
                             int pos = (int) (length - ((MathUtil.percent(getTime(), position) * 10) / 10) * (length * .01));
                             String parts = title.substring(0, pos) + "&3" + title.charAt(pos) + "&b" + title.substring(pos + 1);
-                            obj.setDisplayName(Common.truncate(MessageUtil.replaceColors("  &f" + parts), 32));
+                            obj = obj.isModifiable() ? obj : obj.getScoreboard().getObjective(DisplaySlot.SIDEBAR);
+
+                            if (obj.isModifiable()) {
+                                obj.setDisplayName(Common.truncate(MessageUtil.replaceColors("  &f" + parts), 32));
+                            }
                         });
                 }
 
