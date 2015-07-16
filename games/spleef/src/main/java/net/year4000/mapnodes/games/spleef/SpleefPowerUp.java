@@ -93,24 +93,26 @@ public class SpleefPowerUp implements Listener {
     @EventHandler
     public void onStop(GameStartEvent event) {
         heads = Optional.of(SchedulerUtil.repeatSync(() -> PowerUp.powerups.forEach(PowerUp::rotate), 2));
-        powers = Optional.of(SchedulerUtil.repeatSync(() -> {
-            List<Location> locations = positions.stream().collect(Collectors.toList());
-            Collections.shuffle(locations);
-            locations.stream().findAny().ifPresent(this::createPowerUp);
-        }, 20 * 10));
-        notification = Optional.of(SchedulerUtil.repeatSync(() -> {
-            MapNodes.getCurrentGame().getPlaying().forEach(player -> {
-                int last = player.getPlayer().getLevel();
-                if (last <= 1) {
-                    player.getPlayer().setExp(1);
-                    player.getPlayer().setLevel(10);
-                }
-                else {
-                    player.getPlayer().setLevel(last - 1);
-                    player.getPlayer().setExp(0);
-                }
-            });
-        }, 20));
+        SchedulerUtil.runSync(() -> {
+            powers = Optional.of(SchedulerUtil.repeatSync(() -> {
+                List<Location> locations = positions.stream().collect(Collectors.toList());
+                Collections.shuffle(locations);
+                locations.stream().findAny().ifPresent(this::createPowerUp);
+            }, 20 * 10));
+            notification = Optional.of(SchedulerUtil.repeatSync(() -> {
+                MapNodes.getCurrentGame().getPlaying().forEach(player -> {
+                    int last = player.getPlayer().getLevel();
+                    if (last <= 1) {
+                        player.getPlayer().setExp(1);
+                        player.getPlayer().setLevel(10);
+                    }
+                    else {
+                        player.getPlayer().setLevel(last - 1);
+                        player.getPlayer().setExp(0);
+                    }
+                });
+            }, 20));
+        }, 20 * 5);
     }
 
     @EventHandler
