@@ -98,13 +98,13 @@ public class SpleefPowerUp implements Listener {
                 List<Location> locations = positions.stream().collect(Collectors.toList());
                 Collections.shuffle(locations);
                 locations.stream().findAny().ifPresent(this::createPowerUp);
-            }, 20 * 10));
+            }, 20 * 15));
             notification = Optional.of(SchedulerUtil.repeatSync(() -> {
                 MapNodes.getCurrentGame().getPlaying().forEach(player -> {
                     int last = player.getPlayer().getLevel();
                     if (last <= 1) {
                         player.getPlayer().setExp(1);
-                        player.getPlayer().setLevel(10);
+                        player.getPlayer().setLevel(15);
                     }
                     else {
                         player.getPlayer().setLevel(last - 1);
