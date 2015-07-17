@@ -33,6 +33,8 @@ import net.year4000.mapnodes.listeners.*;
 import net.year4000.mapnodes.map.MapFactory;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.Common;
+import net.year4000.mapnodes.utils.SchedulerUtil;
+import net.year4000.servermenu.ServerMenu;
 import net.year4000.utilities.ChatColor;
 import net.year4000.utilities.LogUtil;
 import net.year4000.utilities.bukkit.BukkitPlugin;
@@ -156,6 +158,16 @@ public class MapNodesPlugin extends BukkitPlugin implements Plugin {
         // Register the bungee plugin message channel
         connector = MessagingChannel.get();
         network = new Network();
+
+        // Only run ServerMenu when their are spectators
+        SchedulerUtil.runAsync(() -> {
+            try {
+                ServerMenu.inst.getProcessing().setWait(() -> getCurrentGame().getSpectating().count() == 0);
+            }
+            catch (NoClassDefFoundError e) {
+                log(Msg.util("mapnodes.servermenu.error"));
+            }
+        }, 20 * 30);
     }
 
     @Override

@@ -31,6 +31,7 @@
                                     <include>com.sk89q:command-framework-bukkit</include>
                                     <include>net.year4000:*</include>
                                     <include>net.year4000.mapnodes.games:*</include>
+                                    <include>net.year4000.modules.bukkit:servermenu</include>
                                 </includes>
                             </artifactSet>
                         </configuration>

@@ -55,6 +55,14 @@
     </repositories>
 
     <dependencies>
+        <!-- ServerMenu Module -->
+        <dependency>
+            <groupId>net.year4000.modules.bukkit</groupId>
+            <artifactId>servermenu</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+
         <!-- MapNodes API -->
         <dependency>
             <groupId>net.year4000</groupId>
