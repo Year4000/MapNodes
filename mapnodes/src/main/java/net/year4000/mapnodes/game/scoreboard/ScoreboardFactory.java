@@ -86,12 +86,15 @@ public class ScoreboardFactory {
                     players.stream()
                         .map(Player::getScoreboard)
                         .map(sb -> sb.getObjective(DisplaySlot.SIDEBAR))
+                        .filter(obj -> obj != null)
                         .forEach(obj -> {
                             int pos = (int) (length - ((MathUtil.percent(getTime(), position) * 10) / 10) * (length * .01));
                             String parts = title.substring(0, pos) + "&3" + title.charAt(pos) + "&f" + title.substring(pos + 1);
-                            obj = obj.isModifiable() ? obj : obj.getScoreboard().getObjective(DisplaySlot.SIDEBAR);
 
                             if (obj.isModifiable()) {
+                                obj.setDisplayName(Common.truncate(MessageUtil.replaceColors("  &b" + parts), 32));
+                            }
+                            else if (obj.getScoreboard() != null && obj.getScoreboard().getObjective(DisplaySlot.SIDEBAR).isModifiable()) {
                                 obj.setDisplayName(Common.truncate(MessageUtil.replaceColors("  &b" + parts), 32));
                             }
                         });
@@ -106,12 +109,15 @@ public class ScoreboardFactory {
                     players.stream()
                         .map(Player::getScoreboard)
                         .map(sb -> sb.getObjective(DisplaySlot.SIDEBAR))
+                        .filter(obj -> obj != null)
                         .forEach(obj -> {
                             int pos = (int) (length - ((MathUtil.percent(getTime(), position) * 10) / 10) * (length * .01));
                             String parts = title.substring(0, pos) + "&3" + title.charAt(pos) + "&b" + title.substring(pos + 1);
-                            obj = obj.isModifiable() ? obj : obj.getScoreboard().getObjective(DisplaySlot.SIDEBAR);
 
                             if (obj.isModifiable()) {
+                                obj.setDisplayName(Common.truncate(MessageUtil.replaceColors("  &f" + parts), 32));
+                            }
+                            else if (obj.getScoreboard() != null && obj.getScoreboard().getObjective(DisplaySlot.SIDEBAR).isModifiable()) {
                                 obj.setDisplayName(Common.truncate(MessageUtil.replaceColors("  &f" + parts), 32));
                             }
                         });
