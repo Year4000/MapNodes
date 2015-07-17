@@ -5,6 +5,7 @@
 package net.year4000.mapnodes.games.spleef;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.events.game.GameLoadEvent;
@@ -28,7 +29,6 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.FallingBlock;
-import org.bukkit.entity.Snowball;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
@@ -44,6 +44,7 @@ import org.bukkit.util.Vector;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 @GameModeInfo(
     name = "Spleef Runner",
@@ -140,8 +141,42 @@ public class SpleefRunner extends Elimination {
         }
 
         if (game.getStage().isPlaying() && event.getPlayer().getItemInHand().getType() == Material.IRON_HOE) {
-            Snowball entity = event.getPlayer().launchProjectile(Snowball.class);
-            entity.setMetadata("SpleefRunner", new FixedMetadataValue(MapNodesPlugin.getInst(), true));
+            GamePlayer gamePlayer = MapNodes.getCurrentGame().getPlayer(event.getPlayer());
+            UserData data = gamePlayer.getPlayerData(UserData.class);
+            Location loc = event.getPlayer().getEyeLocation().clone().add(event.getPlayer().getLocation().getDirection().normalize());
+            List<Map.Entry<Vector, Location>> snowballs = Lists.newArrayList();
+
+            if (data.getAmount() == 2) {
+                Location right = loc.clone();
+                right.setYaw(loc.getYaw() + 5);
+                snowballs.add(new AbstractMap.SimpleImmutableEntry<>(right.getDirection(), loc));
+
+                Location left = loc.clone();
+                left.setYaw(loc.getYaw() - 5);
+                snowballs.add(new AbstractMap.SimpleImmutableEntry<>(left.getDirection(), loc));
+            }
+            else if (data.getAmount() == 3) {
+                Location right = loc.clone();
+                right.setYaw(loc.getYaw() + 10);
+                snowballs.add(new AbstractMap.SimpleImmutableEntry<>(right.getDirection(), loc));
+
+                snowballs.add(new AbstractMap.SimpleImmutableEntry<>(loc.getDirection(), loc));
+
+                Location left = loc.clone();
+                left.setYaw(loc.getYaw() - 10);
+                snowballs.add(new AbstractMap.SimpleImmutableEntry<>(left.getDirection(), loc));
+            }
+            else {
+                snowballs.add(new AbstractMap.SimpleImmutableEntry<>(loc.getDirection(), loc));
+            }
+
+            snowballs.stream()
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))
+                .forEach((velocity, location) -> {
+                    Entity snowball = loc.getWorld().spawnEntity(location, EntityType.SNOWBALL);
+                    snowball.setMetadata("SpleefRunner", new FixedMetadataValue(MapNodesPlugin.getInst(), true));
+                    snowball.setVelocity(velocity.multiply(data.getPower()));
+                });
         }
     }
 

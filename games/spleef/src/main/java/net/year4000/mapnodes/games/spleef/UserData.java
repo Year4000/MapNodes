@@ -5,6 +5,7 @@
 package net.year4000.mapnodes.games.spleef;
 
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 import net.year4000.mapnodes.api.game.GamePlayer;
 import net.year4000.mapnodes.messages.Msg;
@@ -22,6 +23,9 @@ public class UserData {
     private final GamePlayer gamePlayer;
     private final Player player;
     private Optional<BukkitTask> speed = Optional.empty();
+    private double power = 1.25;
+    @Setter
+    private int amount = 1;
 
     public UserData(GamePlayer player) {
         this.gamePlayer = checkNotNull(player);

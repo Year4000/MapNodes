@@ -39,6 +39,7 @@ public class SpleefPowerUp implements Listener {
             player.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SPEED, ticks, 1), true);
             player.sendMessage(Msg.locale(player, "spleef.power.given", power.getDisplay(), String.valueOf(MathUtil.sec(ticks))));
             UserData data = player.getPlayerData(UserData.class);
+            data.setAmount(1);
             data.addSpeed("spleef.power.expire", power.getDisplay(), ticks);
         }))
         .add(new PowerUp("&a&lSpeed II", Material.GOLD_BLOCK, Color.ORANGE, (player, power) -> {
@@ -46,6 +47,7 @@ public class SpleefPowerUp implements Listener {
             player.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SPEED, ticks, 1), true);
             player.sendMessage(Msg.locale(player, "spleef.power.given", power.getDisplay(), String.valueOf(MathUtil.sec(ticks))));
             UserData data = player.getPlayerData(UserData.class);
+            data.setAmount(1);
             data.addSpeed("spleef.power.expire", power.getDisplay(), ticks);
 
         }))
@@ -53,6 +55,24 @@ public class SpleefPowerUp implements Listener {
             player.getPlayer().getInventory().addItem(ItemUtil.makeItem("tnt", "{'display': {'name': '&aSpleef &6Runner'}}"));
             player.getPlayer().getInventory().addItem(ItemUtil.makeItem("tnt", "{'display': {'name': '&aSpleef &6Runner'}}"));
             player.sendMessage(Msg.locale(player, "spleef.tnt.received"));
+            UserData data = player.getPlayerData(UserData.class);
+            data.setAmount(1);
+        }))
+        .add(new PowerUp("&a&lTri Power", Material.GLOWSTONE, Color.AQUA, (player, power) -> {
+            UserData data = player.getPlayerData(UserData.class);
+            data.setAmount(3);
+            player.sendMessage(Msg.locale(player, "spleef.tri_power.activated"));
+        }))
+        .add(new PowerUp("&a&lBi Power", Material.SEA_LANTERN, Color.YELLOW, (player, power) -> {
+            UserData data = player.getPlayerData(UserData.class);
+            data.setAmount(2);
+            player.sendMessage(Msg.locale(player, "spleef.bi_power.activated"));
+        }))
+        .add(new PowerUp("&a&lEnder Power", Material.ENDER_STONE, Color.NAVY, (player, power) -> {
+            player.getPlayer().getInventory().addItem(ItemUtil.makeItem("ender_pearl"));
+            player.sendMessage(Msg.locale(player, "spleef.ender.received"));
+            UserData data = player.getPlayerData(UserData.class);
+            data.setAmount(1);
         }))
         .build();
 
