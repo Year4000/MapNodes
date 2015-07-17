@@ -5,6 +5,7 @@
 package net.year4000.mapnodes.games.spleef;
 
 import com.google.common.collect.ImmutableList;
+import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.events.game.GameLoadEvent;
 import net.year4000.mapnodes.api.events.player.GamePlayerDeathEvent;
@@ -24,6 +25,7 @@ import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.Snowball;
@@ -36,6 +38,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.util.BlockVector;
 import org.bukkit.util.Vector;
 
@@ -44,7 +47,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 @GameModeInfo(
     name = "Spleef Runner",
-    version = "2.1",
+    version = "2.2",
     config = SpleefRunnerConfig.class,
     listeners = {SpleefPowerUp.class}
 )
@@ -55,7 +58,6 @@ public class SpleefRunner extends Elimination {
     public static final ImmutableList DATA_BLOCKS = ImmutableList.of(Material.STAINED_CLAY, Material.WOOL, Material.STAINED_GLASS, Material.STAINED_GLASS_PANE);
     private Map<BlockVector, AtomicInteger> blockStages = new HashMap<>();
     private SpleefRunnerConfig spleefConfig;
-    private List<Integer> ids = new ArrayList<>();
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onLoadSpleefRunner(GameLoadEvent event) {
@@ -137,36 +139,31 @@ public class SpleefRunner extends Elimination {
 
         if (game.getStage().isPlaying() && event.getPlayer().getItemInHand().getType() == Material.IRON_HOE) {
             Snowball entity = event.getPlayer().launchProjectile(Snowball.class);
-            ids.add(entity.getEntityId());
+            entity.setMetadata("SpleefRunner", new FixedMetadataValue(MapNodesPlugin.getInst(), true));
         }
     }
 
     @EventHandler
-    public void onHit(ProjectileHitEvent e) {
-        if (ids.contains(e.getEntity().getEntityId())) {
-            Location loc = e.getEntity().getLocation();
-            List<BlockFace> faces = ImmutableList.of(BlockFace.UP, BlockFace.SELF, BlockFace.DOWN, BlockFace.NORTH, BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST);
+    public void onHit(ProjectileHitEvent event) {
+        Entity entity = event.getEntity();
+        if (!entity.hasMetadata("SpleefRunner")) return;
 
-            for (BlockFace face : faces) {
-                Block bellow = loc.getBlock().getRelative(face);
-                BlockVector bellowVector = bellow.getLocation().toVector().toBlockVector();
+        Vector projectile = entity.getVelocity().normalize();
+        Location loc = entity.getLocation().add(projectile);
 
-                if (spleefConfig.getBlocks().contains(bellow.getType())) {
-                    FallingBlock fallingBlock = MapNodes.getCurrentWorld().spawnFallingBlock(bellow.getLocation(), bellow.getType(), bellow.getData());
-                    bellow.setType(Material.AIR);
-                    fallingBlock.setDropItem(false);
-                }
-
-                blockStages.remove(bellowVector);
-            }
-
-            MapNodes.getCurrentGame().getPlaying()
-                .filter(player -> player.getPlayer().getLocation().distance(loc) < 100)
-                .map(GamePlayer::getPlayer)
-                .forEach(player -> player.playSound(loc, Sound.CHICKEN_EGG_POP, 1F, 1F));
-
-            ids.remove((Integer) e.getEntity().getEntityId());
+        // Convert block to falling block
+        Block bellow = entity.getWorld().getBlockAt(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
+        if (spleefConfig.getBlocks().contains(bellow.getType())) {
+            FallingBlock fallingBlock = MapNodes.getCurrentWorld().spawnFallingBlock(loc, bellow.getType(), bellow.getData());
+            bellow.setType(Material.AIR);
+            fallingBlock.setDropItem(false);
         }
+
+        // Play sound to players
+        MapNodes.getCurrentGame().getPlaying()
+            .filter(player -> player.getPlayer().getLocation().distance(loc) < 100)
+            .map(GamePlayer::getPlayer)
+            .forEach(player -> player.playSound(loc, Sound.CHICKEN_EGG_POP, 1F, 1F));
     }
 
     @EventHandler
@@ -186,22 +183,9 @@ public class SpleefRunner extends Elimination {
         int stage = tracking.getValue();
         PacketHacks.crackBlock(bellow, stage);
 
-        if (spleefConfig.getBlocks().contains(bellow.getType()) && stage == END_STAGE) {
+        if (spleefConfig.getBlocks().contains(bellow.getType()) && stage >= END_STAGE) {
             runClock(bellow, bellowVector);
         }
-        // Disabled for block cracks
-        /*else if (bellow.getType() == Material.AIR && stage == END_STAGE) {
-            for (BlockFace face : FACES) {
-                Block bellowRelative = bellow.getRelative(face);
-                Map.Entry<BlockVector, Integer> trackingRelative = trackBlock(bellowRelative);
-                BlockVector bellowRelativeVector = trackingRelative.getKey();
-                int stageRelative = trackingRelative.getValue();
-
-                if (spleefConfig.getBlocks().contains(bellowRelative.getType()) && stageRelative == END_STAGE) {
-                    runClock(bellowRelative, bellowRelativeVector);
-                }
-            }
-        }*/
     }
 
     private void runClock(Block bellow, BlockVector bellowVector) {
@@ -259,7 +243,7 @@ public class SpleefRunner extends Elimination {
         BlockVector bellowVector = block.getLocation().toVector().toBlockVector();
 
         blockStages.putIfAbsent(bellowVector, new AtomicInteger(0));
-        int stage = blockStages.get(bellowVector).getAndIncrement();
+        int stage = blockStages.get(bellowVector).getAndAdd(3);
 
         return new AbstractMap.SimpleImmutableEntry<>(bellowVector, stage);
     }
