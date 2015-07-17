@@ -96,6 +96,12 @@ public class SpleefPowerUp implements Listener {
     public void onMove(PlayerMoveEvent event) {
         if (!MapNodes.getCurrentGame().getStage().isPlaying()) return;
         if (event.getTo().toVector().toBlockVector().equals(event.getFrom().toVector().toBlockVector())) return;
+        GamePlayer player = MapNodes.getCurrentGame().getPlayer(event.getPlayer());
+
+        if (!player.isPlaying()) {
+            return;
+        }
+
         Location from = event.getFrom();
 
         // Find power up and pick it up
