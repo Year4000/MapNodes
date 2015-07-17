@@ -66,11 +66,13 @@ public class SpleefRunner extends Elimination {
 
     @EventHandler
     public void onJoin(GamePlayerStartEvent event) {
+        GamePlayer player = event.getPlayer();
         ItemStack item = event.getKit().getItems().get(0).clone();
         ItemMeta meta = item.getItemMeta();
         meta.setDisplayName(MessageUtil.replaceColors(meta.getDisplayName() + " &7(" + Msg.locale(event.getPlayer(), "action.right") + ")"));
         item.setItemMeta(meta);
 
+        player.addPlayerData(UserData.class, new UserData(player));
         event.getPlayer().getPlayerTasks().add(SchedulerUtil.runSync(() -> {
             event.getPlayer().getPlayer().getInventory().setItem(0, item);
             event.getPlayer().getPlayer().updateInventory();
