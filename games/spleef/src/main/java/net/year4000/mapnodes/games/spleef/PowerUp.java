@@ -3,6 +3,7 @@ package net.year4000.mapnodes.games.spleef;
 import com.google.common.collect.Lists;
 import lombok.Getter;
 import net.year4000.mapnodes.api.MapNodes;
+import net.year4000.mapnodes.api.game.GamePlayer;
 import net.year4000.mapnodes.utils.Common;
 import net.year4000.utilities.MessageUtil;
 import net.year4000.utilities.bukkit.FunEffectsUtil;
@@ -11,7 +12,6 @@ import org.bukkit.*;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Firework;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.util.EulerAngle;
@@ -30,14 +30,14 @@ public class PowerUp {
     private final String display;
     @Getter
     private final Material icon;
-    private final BiConsumer<Player, PowerUp> action;
+    private final BiConsumer<GamePlayer, PowerUp> action;
     private final boolean copy;
     private ArmorStand stand;
     private int x, y, z;
     private double step = 0;
 
     /** Create the power up */
-    public PowerUp(String display, Material icon, Color color, BiConsumer<Player, PowerUp> action) {
+    public PowerUp(String display, Material icon, Color color, BiConsumer<GamePlayer, PowerUp> action) {
         this.display = MessageUtil.replaceColors(checkNotNull(display));
         this.color = checkNotNull(color);
         this.icon = checkNotNull(icon);
@@ -46,7 +46,7 @@ public class PowerUp {
     }
 
     /** Create the power up */
-    private PowerUp(boolean copy, String display, Material icon, Color color, BiConsumer<Player, PowerUp> action) {
+    private PowerUp(boolean copy, String display, Material icon, Color color, BiConsumer<GamePlayer, PowerUp> action) {
         this.display = MessageUtil.replaceColors(checkNotNull(display));
         this.color = checkNotNull(color);
         this.icon = checkNotNull(icon);
@@ -101,7 +101,7 @@ public class PowerUp {
     }
 
     /** Run the action tided to power up instance */
-    public void run(Player player) {
+    public void run(GamePlayer player) {
         checkState(copy, "not a copy");
         action.accept(player, this);
         stand.remove();

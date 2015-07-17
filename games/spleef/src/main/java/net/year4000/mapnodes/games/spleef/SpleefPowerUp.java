@@ -10,6 +10,7 @@ import com.google.common.collect.Sets;
 import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.events.game.GameStartEvent;
 import net.year4000.mapnodes.api.events.game.GameStopEvent;
+import net.year4000.mapnodes.api.game.GamePlayer;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.*;
 import net.year4000.utilities.bukkit.ItemUtil;
@@ -38,7 +39,7 @@ public class SpleefPowerUp implements Listener {
         .add(new PowerUp("&a&lSpeed I", Material.WOOL, Color.WHITE, (player, power) -> {
             Optional.ofNullable(timedPowers.get(player.getName())).ifPresent(BukkitTask::cancel);
             int ticks = MathUtil.ticks(5);
-            player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, ticks, 1), true);
+            player.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SPEED, ticks, 1), true);
             player.sendMessage(Msg.locale(player, "spleef.power.given", power.getDisplay(), String.valueOf(MathUtil.sec(ticks))));
             BukkitTask end = SchedulerUtil.runAsync(() -> player.sendMessage(Msg.locale(player, "spleef.power.expire", power.getDisplay())), ticks);
             timedPowers.put(player.getName(), end);
@@ -46,14 +47,14 @@ public class SpleefPowerUp implements Listener {
         .add(new PowerUp("&a&lSpeed II", Material.GOLD_BLOCK, Color.ORANGE, (player, power) -> {
             Optional.ofNullable(timedPowers.get(player.getName())).ifPresent(BukkitTask::cancel);
             int ticks = MathUtil.ticks(10);
-            player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, ticks, 1), true);
+            player.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SPEED, ticks, 1), true);
             player.sendMessage(Msg.locale(player, "spleef.power.given", power.getDisplay(), String.valueOf(MathUtil.sec(ticks))));
             BukkitTask end = SchedulerUtil.runAsync(() -> player.sendMessage(Msg.locale(player, "spleef.power.expire", power.getDisplay())), ticks);
             timedPowers.put(player.getName(), end);
         }))
         .add(new PowerUp("&a&lTNT", Material.TNT, Color.RED, (player, power) -> {
-            player.getInventory().addItem(ItemUtil.makeItem("tnt", "{'display': {'name': '&aSpleef &6Runner'}}"));
-            player.getInventory().addItem(ItemUtil.makeItem("tnt", "{'display': {'name': '&aSpleef &6Runner'}}"));
+            player.getPlayer().getInventory().addItem(ItemUtil.makeItem("tnt", "{'display': {'name': '&aSpleef &6Runner'}}"));
+            player.getPlayer().getInventory().addItem(ItemUtil.makeItem("tnt", "{'display': {'name': '&aSpleef &6Runner'}}"));
             player.sendMessage(Msg.locale(player, "spleef.tnt.received"));
         }))
         .build();
@@ -84,7 +85,7 @@ public class SpleefPowerUp implements Listener {
         PowerUp.powerups.stream()
             .filter(power -> power.canPickUp(event.getTo()))
             .findFirst()
-            .ifPresent(power -> power.run(event.getPlayer()));
+            .ifPresent(power -> power.run(player));
 
         // Add location to positions to spawn power ups
         positions.add(from);
