@@ -109,7 +109,7 @@ public final class SidebarManager {
     public void buildSidebar(Scoreboard scoreboard, String title) {
         String hex = "sb:", nanoTime = String.valueOf(System.nanoTime());
 
-        for (String part : Splitter.fixedLength(4).split(nanoTime)) {
+        for (String part : Splitter.fixedLength(6).split(nanoTime)) {
             hex += Integer.toHexString(Integer.valueOf(part));
         }
 
