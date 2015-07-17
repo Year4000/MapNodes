@@ -5,6 +5,7 @@
 package net.year4000.mapnodes.game;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.Maps;
 import lombok.Data;
 import net.year4000.mapnodes.api.events.player.GamePlayerJoinEvent;
 import net.year4000.mapnodes.api.events.player.GamePlayerJoinSpectatorEvent;
@@ -40,6 +41,8 @@ import org.bukkit.scoreboard.Scoreboard;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 @Data
 public final class NodePlayer implements GamePlayer, Comparable {
     // internals
@@ -52,6 +55,7 @@ public final class NodePlayer implements GamePlayer, Comparable {
     private NodeClass classKit;
     private List<BukkitTask> playerTasks = new ArrayList<>();
     private boolean immortal;
+    private Map<Class, Object> playerData = Maps.newConcurrentMap();
     // scoreboard
     private Scoreboard scoreboard;
     // player flags (set by methods bellow)
@@ -70,6 +74,32 @@ public final class NodePlayer implements GamePlayer, Comparable {
         this.cache = AccountCache.getAccount(this);
         scoreboard = game.getScoreboardFactory().createScoreboard(this);
         player.setScoreboard(scoreboard);
+    }
+
+    /** Add an object to player data */
+    @Override
+    public void addPlayerData(Class clazz, Object object) {
+        checkNotNull(clazz);
+        checkNotNull(object);
+
+        playerData.put(clazz, object);
+    }
+
+    /** Add an object to player data */
+    @SuppressWarnings("unchecked")
+    @Override
+    public <T> T getPlayerData(Class clazz) {
+        checkNotNull(clazz);
+
+        return (T) playerData.get(clazz);
+    }
+
+    /** Add an object to player data */
+    @Override
+    public void removePlayerData(Class clazz) {
+        checkNotNull(clazz);
+
+        playerData.remove(clazz);
     }
 
     /** Get the locale of the player */

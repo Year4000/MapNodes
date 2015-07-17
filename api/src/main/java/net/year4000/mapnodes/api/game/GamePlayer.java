@@ -41,4 +41,13 @@ public interface GamePlayer {
     Locale getLocale();
 
     String getRawLocale();
+
+    /** Add an object to player data */
+    void addPlayerData(Class clazz, Object object);
+
+    /** Add an object to player data */
+    <T> T getPlayerData(Class clazz);
+
+    /** Add an object to player data */
+    void removePlayerData(Class clazz);
 }
