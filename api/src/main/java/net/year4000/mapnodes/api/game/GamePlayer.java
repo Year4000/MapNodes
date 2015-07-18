@@ -50,4 +50,7 @@ public interface GamePlayer {
 
     /** Add an object to player data */
     void removePlayerData(Class clazz);
+
+    /** Add one to token and experience multiplier */
+    int addMultiplierModifier();
 }

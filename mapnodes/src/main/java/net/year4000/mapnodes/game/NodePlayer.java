@@ -102,6 +102,12 @@ public final class NodePlayer implements GamePlayer, Comparable {
         playerData.remove(clazz);
     }
 
+    /** Add one to token and experience multiplier */
+    @Override
+    public int addMultiplierModifier() {
+        return getCreditsMultiplier().incrementAndGet();
+    }
+
     /** Get the locale of the player */
     public Locale getLocale() {
         return new Locale(getRawLocale());
