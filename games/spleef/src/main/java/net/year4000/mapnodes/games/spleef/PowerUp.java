@@ -6,6 +6,7 @@ package net.year4000.mapnodes.games.spleef;
 
 import com.google.common.collect.Lists;
 import lombok.Getter;
+import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.game.GamePlayer;
 import net.year4000.mapnodes.utils.Common;
@@ -107,6 +108,9 @@ public class PowerUp {
     /** Run the action tided to power up instance */
     public void run(GamePlayer player) {
         checkState(copy, "not a copy");
+        player.sendMessage(MessageUtil.replaceColors("&b+10 &6tokens"));
+        MapNodesPlugin.getInst().getApi().addTokens(player, 10);
+        player.addMultiplierModifier();
         action.accept(player, this);
         stand.remove();
         powerups.remove(this);
