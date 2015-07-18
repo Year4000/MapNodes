@@ -100,6 +100,11 @@ public class SpleefRunner extends Elimination {
     }
 
     @EventHandler
+    public void onInteract(EntityInteractEvent event) {
+        event.setCancelled(true);
+    }
+
+    @EventHandler
     public void onDrop(PlayerDropItemEvent event) {
         event.setCancelled(true);
     }
