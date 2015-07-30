@@ -56,7 +56,7 @@ public final class Msg {
 
     /** Load a message for the player's locale */
     public static String locale(GamePlayer player, String key, String... values) {
-        return locale(codes.getUnchecked(player.getPlayer()), key, values);
+        return locale(player.getRawLocale(), key, values);
     }
 
     /** Load a message for the sender's locale */
@@ -75,12 +75,7 @@ public final class Msg {
     }
 
     /** Does the string match the locale or locale key */
-    public static boolean matches(Player player, String compare, String key) {
-        return matches(codes.getUnchecked(player), compare, key);
-    }
-
-    /** Does the string match the locale or locale key */
     public static boolean matches(GamePlayer player, String compare, String key) {
-        return matches(codes.getUnchecked(player.getPlayer()), compare, key);
+        return matches(player.getRawLocale(), compare, key);
     }
 }
