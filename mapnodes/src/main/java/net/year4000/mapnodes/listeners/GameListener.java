@@ -10,6 +10,7 @@ import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.events.game.GameClockEvent;
 import net.year4000.mapnodes.api.events.game.GameWinEvent;
+import net.year4000.mapnodes.api.events.player.GamePlayerDeathEvent;
 import net.year4000.mapnodes.api.events.player.GamePlayerWinEvent;
 import net.year4000.mapnodes.api.events.team.GameTeamWinEvent;
 import net.year4000.mapnodes.api.game.GamePlayer;
@@ -31,7 +32,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.*;
 
@@ -66,6 +69,28 @@ public final class GameListener implements Listener {
         }
         else {
             event.setRespawnLocation(((NodeTeam) player.getTeam()).getSpawns().getSafeRandomSpawn());
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    /** Do not allow team mates to deal damage */
+    public void onPlayerVsPlayer(EntityDamageByEntityEvent event) {
+        if (!(event.getEntity() instanceof Player)) return;
+        if (!(event.getDamager() instanceof Player)) return;
+
+        Player killer = (Player) event.getDamager();
+        Player player = (Player) event.getEntity();
+
+        // Check if your death was null
+        if (player.getLastDamageCause() == null) return;
+
+        GamePlayer gamePlayer = MapNodes.getCurrentGame().getPlayer(player);
+        GamePlayer gameKiller = MapNodes.getCurrentGame().getPlayer(killer);
+
+        if (!gamePlayer.getTeam().isAllowFriendlyFire()) {
+            if (gameKiller.getTeam().getName().equals(gamePlayer.getTeam().getName())) {
+                event.setCancelled(true);
+            }
         }
     }
 
