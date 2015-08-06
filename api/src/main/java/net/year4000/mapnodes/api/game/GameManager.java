@@ -8,6 +8,7 @@ import net.year4000.mapnodes.api.game.modes.GameMode;
 import net.year4000.mapnodes.api.game.scoreboard.GameSidebarGoal;
 import net.year4000.mapnodes.api.utils.Operations;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.util.List;
 import java.util.Locale;
@@ -107,4 +108,7 @@ public interface GameManager {
     public void stop();
 
     public void setStopTime(long stopTime);
+
+    /** Add a task to be canceled when game ends */
+    void addTask(BukkitTask task);
 }

@@ -5,6 +5,7 @@
 package net.year4000.mapnodes.game;
 
 import com.google.common.base.Joiner;
+import com.google.common.collect.Lists;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.annotations.Since;
 import lombok.AccessLevel;
@@ -136,6 +137,7 @@ public final class NodeGame implements GameManager, Validator {
     private transient BukkitTask gameClock;
     private transient StartGame startClock;
     private transient BukkitTask stopClock;
+    private transient List<BukkitTask> tasks = Lists.newCopyOnWriteArrayList();
     private transient Map<Locale, Inventory> teamChooser = new HashMap<>();
     private transient Map<Locale, Inventory> classKitChooser = new HashMap<>();
     private transient ScoreboardFactory scoreboardFactory;
@@ -222,6 +224,11 @@ public final class NodeGame implements GameManager, Validator {
         checkArgument(stage == NodeStage.LOADING, Msg.util("load.only.loading"));
 
         regions.putIfAbsent(id, (NodeRegion) region);
+    }
+
+    /** Add a task to be canceled when game ends */
+    public void addTask(BukkitTask task) {
+        tasks.add(checkNotNull(task, "task"));
     }
 
     /** Add start control operation */
@@ -616,6 +623,7 @@ public final class NodeGame implements GameManager, Validator {
 
         // Unregister game mode listeners
         gameModes.forEach(NodeModeFactory.get()::unregisterListeners);
+        tasks.forEach(BukkitTask::cancel);
 
         // Run after the world has been registered
         Callback<BukkitTask> callback = (d, e) -> {

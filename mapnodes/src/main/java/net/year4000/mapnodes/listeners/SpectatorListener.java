@@ -68,7 +68,6 @@ public class SpectatorListener implements Listener {
         stopEvent(event, event.getPlayer());
     }
 
-
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
     public void onEntityTarget(EntityTargetLivingEntityEvent event) {
         if (!(event.getTarget() instanceof Player)) return;
