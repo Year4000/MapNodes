@@ -70,21 +70,23 @@ public class Skywars extends Elimination {
         Player player = event.getPlayer();
         boolean rightAir = event.getAction() == Action.RIGHT_CLICK_AIR;
         boolean rightBlock = event.getAction() == Action.RIGHT_CLICK_BLOCK;
+        boolean material = event.getMaterial() == Material.TNT;
 
-        if (rightAir || rightBlock) {
-            if (event.getMaterial() == Material.TNT) {
-                Location location = player.getEyeLocation();
-                Entity tnt = MapNodes.getCurrentWorld().spawnEntity(location, EntityType.PRIMED_TNT);
-                new Tracker(MapNodes.getCurrentWorld(), tnt.getEntityId(), Effect.PARTICLE_SMOKE, 0);
-                tnt.setVelocity(location.getDirection().normalize().multiply(1.75));
-                ItemStack tntStack = player.getItemInHand();
-                if (tntStack.getAmount() > 1) {
-                    tntStack.setAmount(tntStack.getAmount() - 1);
-                }
-                else {
-                    player.setItemInHand(ItemUtil.makeItem("air"));
-                }
+        if (rightAir && material) {
+            Location location = player.getEyeLocation();
+            Entity tnt = MapNodes.getCurrentWorld().spawnEntity(location, EntityType.PRIMED_TNT);
+            new Tracker(MapNodes.getCurrentWorld(), tnt.getEntityId(), Effect.PARTICLE_SMOKE, 0);
+            tnt.setVelocity(location.getDirection().normalize().multiply(1.75));
+            ItemStack tntStack = player.getItemInHand();
+            if (tntStack.getAmount() > 1) {
+                tntStack.setAmount(tntStack.getAmount() - 1);
             }
+            else {
+                player.setItemInHand(ItemUtil.makeItem("air"));
+            }
+        }
+        else if (rightBlock && material) {
+            event.setCancelled(true);
         }
     }
 
