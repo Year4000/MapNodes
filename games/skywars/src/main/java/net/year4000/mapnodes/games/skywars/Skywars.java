@@ -73,11 +73,12 @@ public class Skywars extends Elimination {
         boolean material = event.getMaterial() == Material.TNT;
 
         if (rightAir && material) {
-            Location location = player.getEyeLocation();
+            Location location = player.getEyeLocation().clone().subtract(0, 0.25, 0);
             Entity tnt = MapNodes.getCurrentWorld().spawnEntity(location, EntityType.PRIMED_TNT);
             new Tracker(MapNodes.getCurrentWorld(), tnt.getEntityId(), Effect.PARTICLE_SMOKE, 0);
             tnt.setVelocity(location.getDirection().normalize().multiply(1.75));
             ItemStack tntStack = player.getItemInHand();
+
             if (tntStack.getAmount() > 1) {
                 tntStack.setAmount(tntStack.getAmount() - 1);
             }
