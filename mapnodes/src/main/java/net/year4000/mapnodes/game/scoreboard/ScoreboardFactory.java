@@ -262,7 +262,6 @@ public class ScoreboardFactory {
         // Show Current Game Mode
         String gameMode = game.getGameModes().iterator().next().getClass().getAnnotation(GameModeInfo.class).name();
         side.addLine(Msg.locale(nodePlayer, "game.name") + " &e" + gameMode);
-        side.addBlank();
 
         // Team Selection
         String name;
@@ -280,7 +279,6 @@ public class ScoreboardFactory {
 
         // When the map has classes
         if (game.getClasses().size() > 0) {
-            side.addBlank();
             String kit;
             if (nodePlayer.hasClassKit()) {
                 kit = "&a" + nodePlayer.getClassKit().getName();
@@ -292,7 +290,6 @@ public class ScoreboardFactory {
             side.addLine(Msg.locale(nodePlayer, "class.name") + " " + kit);
         }
 
-        side.addBlank();
         side.addLine(Msg.locale(nodePlayer, "team.players"));
         game.getTeams().values().stream()
             .sorted((left, right) -> (left instanceof Spectator) ? -1 : 1)
