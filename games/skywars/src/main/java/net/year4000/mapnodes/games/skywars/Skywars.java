@@ -4,20 +4,18 @@
 
 package net.year4000.mapnodes.games.skywars;
 
+import com.google.common.collect.Lists;
 import net.year4000.mapnodes.api.MapNodes;
-import net.year4000.mapnodes.api.events.game.GameClockEvent;
 import net.year4000.mapnodes.api.events.game.GameLoadEvent;
-import net.year4000.mapnodes.api.events.game.GameStartEvent;
-import net.year4000.mapnodes.api.events.game.GameStopEvent;
-import net.year4000.mapnodes.api.game.GamePlayer;
+import net.year4000.mapnodes.api.events.player.GamePlayerStartEvent;
 import net.year4000.mapnodes.api.game.modes.GameModeInfo;
 import net.year4000.mapnodes.game.NodeClass;
 import net.year4000.mapnodes.game.NodeGame;
+import net.year4000.mapnodes.game.NodeKit;
 import net.year4000.mapnodes.games.elimination.Elimination;
 import net.year4000.mapnodes.utils.SchedulerUtil;
 import net.year4000.utilities.bukkit.ItemUtil;
 import net.year4000.utilities.bukkit.MessageUtil;
-import net.year4000.utilities.scheduler.SchedulerManager;
 import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -34,6 +32,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @GameModeInfo(
@@ -57,6 +56,19 @@ public class Skywars extends Elimination {
     }
 
     // todo After x time go to sudden death and start blowing up islands
+
+    @EventHandler
+    public void onStart(GamePlayerStartEvent event) {
+        List<ItemStack> items = Lists.newArrayList(
+            new ItemStack(Material.WOOD_SWORD),
+            new ItemStack(Material.WOOD_AXE),
+            new ItemStack(Material.WOOD_PICKAXE),
+            new ItemStack(Material.WOOD_SPADE)
+        );
+        NodeKit basic = new NodeKit();
+        basic.getItems().addAll(items);
+        basic.addKit(event.getPlayer());
+    }
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onFire(BlockSpreadEvent event) {
