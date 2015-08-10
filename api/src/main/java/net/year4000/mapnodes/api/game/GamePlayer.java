@@ -11,7 +11,7 @@ import org.bukkit.scheduler.BukkitTask;
 import java.util.List;
 import java.util.Locale;
 
-public interface GamePlayer {
+public interface GamePlayer extends Comparable {
     public Player getPlayer();
 
     public GameTeam getTeam();

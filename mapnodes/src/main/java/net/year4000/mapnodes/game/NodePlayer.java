@@ -226,7 +226,20 @@ public final class NodePlayer implements GamePlayer, Comparable {
         // start menu
         playerTasks.add(SchedulerUtil.runSync(() -> {
             if (join.isMenu() && player.getOpenInventory().getType() == InventoryType.CRAFTING) {
-                game.openTeamChooserMenu(this);
+                if (game.getStage().isPreGame()) {
+                    try {
+                        String random = Msg.locale(this, "team.menu.join.random");
+                        GameTeam team = game.checkAndGetTeam(this, random);
+                        joinTeam(team);
+                    }
+                    catch (IllegalArgumentException e) {
+                        // Can not auto join team give menu
+                        game.openTeamChooserMenu(this);
+                    }
+                }
+                else {
+                    game.openTeamChooserMenu(this);
+                }
             }
 
             if (!game.getStage().isEndGame()) {

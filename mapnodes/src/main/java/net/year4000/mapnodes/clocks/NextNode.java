@@ -4,10 +4,12 @@
 
 package net.year4000.mapnodes.clocks;
 
+import com.google.common.collect.Queues;
 import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.NodeFactory;
 import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.game.GameMap;
+import net.year4000.mapnodes.api.game.GamePlayer;
 import net.year4000.mapnodes.game.Node;
 import net.year4000.mapnodes.messages.Message;
 import net.year4000.mapnodes.messages.Msg;
@@ -21,8 +23,7 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
 import java.util.Arrays;
-import java.util.Deque;
-import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.Queue;
 import java.util.concurrent.TimeUnit;
 
 import static net.year4000.mapnodes.utils.MathUtil.percent;
@@ -83,7 +84,7 @@ public class NextNode extends Clocker {
 
         MapNodesPlugin.log(Msg.locale(Message.DEFAULT_LOCALE, "clocks.next.last", map.getName()));
 
-        Deque<Player> move = new ConcurrentLinkedDeque<>();
+        Queue<GamePlayer> move = Queues.newPriorityQueue();
 
         MapNodes.getCurrentGame().getPlayers().forEach(player -> {
             FunEffectsUtil.playSound(player.getPlayer(), Sound.NOTE_BASS);
@@ -91,13 +92,13 @@ public class NextNode extends Clocker {
             PacketHacks.setTitle(player.getPlayer(), "&a" + map.getName(), Msg.locale(player, "map.created") + map.author(player.getRawLocale()));
 
             BossBar.removeBar(player.getPlayer());
-            move.add(player.getPlayer());
+            move.add(player);
         });
 
         Node next = NodeFactory.get().loadNextQueued();
 
         while (move.peek() != null) {
-            next.getGame().join(move.poll());
+            next.getGame().join(move.poll().getPlayer());
         }
         running = false;
     }
