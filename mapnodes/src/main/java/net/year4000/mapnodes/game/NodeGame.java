@@ -582,6 +582,8 @@ public final class NodeGame implements GameManager, Validator {
 
         gameClock = SchedulerUtil.repeatAsync(() -> new GameClockEvent(this).call(), 20L);
         startTime = Common.cleanTimeMillis();
+
+        start.runPostEvents();
     }
 
     /** Stop the game and cycle to the next with default time */
@@ -715,6 +717,7 @@ public final class NodeGame implements GameManager, Validator {
             }
 
             callback.callback(clocker);
+            stop.runPostEvents();
         });
     }
 

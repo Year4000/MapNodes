@@ -186,6 +186,8 @@ public final class NodePlayer implements GamePlayer, Comparable {
         player.getPlayer().setDisplayName(getPlayerColor() + ChatColor.WHITE.toString());
         updateHiddenSpectator();
         updateInventories();
+
+        start.runPostEvents();
     }
 
     public void join() {
@@ -246,6 +248,8 @@ public final class NodePlayer implements GamePlayer, Comparable {
                 game.getScoreboardFactory().setPersonalSidebar(this);
             }
         }, 55L));
+
+        playerTasks.add(SchedulerUtil.runSync(join::runPostEvents, 60L));
     }
 
     public void leave() {
@@ -306,6 +310,7 @@ public final class NodePlayer implements GamePlayer, Comparable {
             // Spectator Settings
             player.spigot().setCollidesWithEntities(false);
             updateHiddenSpectator();
+            joinSpectator.runPostEvents();
         }
         // join new team
         else {
@@ -338,6 +343,8 @@ public final class NodePlayer implements GamePlayer, Comparable {
             if (joinTeam.isJoining()) {
                 pendingTeam.start(this);
             }
+
+            joinTeam.runPostEvents();
         }
 
         // Update player's inventory
