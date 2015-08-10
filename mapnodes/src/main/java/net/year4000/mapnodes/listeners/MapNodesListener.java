@@ -134,23 +134,25 @@ public final class MapNodesListener implements Listener {
         if (!game.getStage().isPreGame()) return;
 
         // Add one as this happens before they fully enter the team
-        int size = (int) game.getEntering().count() + 1;
-        boolean biggerThanLast = lastSize.get() < size;
-        lastSize.set(size);
+        event.addPostEvent(() -> {
+            int size = (int) game.getEntering().count() + 1;
+            boolean biggerThanLast = lastSize.get() < size;
+            lastSize.set(size);
 
-        if (game.shouldStart()) {
-            if (game.getStage().isStarting()) {
-                if (game.getStartClock().getClock().getIndex() > MathUtil.ticks(20) && biggerThanLast) {
-                    game.getStartClock().reduceTime(10); // 10 secs
+            if (game.shouldStart()) {
+                if (game.getStage().isStarting()) {
+                    if (game.getStartClock().getClock().getIndex() > MathUtil.ticks(20) && biggerThanLast) {
+                        game.getStartClock().reduceTime(10); // 10 secs
 
-                    // Announcer to players that time was reduce
-                    game.getEntering().forEach(p -> p.sendMessage(Msg.locale(p, "clocks.start.reduce", event.getPlayer().getPlayer().getName())));
+                        // Announcer to players that time was reduce
+                        game.getEntering().forEach(p -> p.sendMessage(Msg.locale(p, "clocks.start.reduce", event.getPlayer().getPlayer().getName())));
+                    }
+                }
+                else if (game.getStage().isWaiting()) {
+                    new StartGame(game.getBaseStartTime()).run();
                 }
             }
-            else if (game.getStage().isWaiting()) {
-                new StartGame(game.getBaseStartTime()).run();
-            }
-        }
+        });
     }
 
     /** Reset last size for next game */
