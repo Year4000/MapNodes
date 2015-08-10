@@ -11,6 +11,7 @@ import net.year4000.mapnodes.api.game.regions.PointVector;
 import net.year4000.mapnodes.api.game.regions.Region;
 import net.year4000.mapnodes.api.game.regions.RegionType;
 import net.year4000.mapnodes.api.game.regions.RegionTypes;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -21,7 +22,7 @@ import java.util.List;
 @NoArgsConstructor
 @RegionType(RegionTypes.VOID)
 public class Void implements Region {
-    private static int WORLD_HEIGHT = 256;
+    private static int WORLD_HEIGHT = Bukkit.getWorlds().get(0).getMaxHeight();
 
     @Override
     public List<Location> getLocations(World world) {
