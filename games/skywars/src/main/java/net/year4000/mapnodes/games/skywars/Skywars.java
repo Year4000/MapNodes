@@ -27,6 +27,7 @@ import org.bukkit.event.block.BlockBurnEvent;
 import org.bukkit.event.block.BlockSpreadEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
@@ -57,12 +58,18 @@ public class Skywars extends Elimination {
     @EventHandler
     public void onStart(GamePlayerStartEvent event) {
         ItemStack[] items = new ItemStack[]{
-            new ItemStack(Material.WOOD_SWORD),
             new ItemStack(Material.WOOD_AXE),
             new ItemStack(Material.WOOD_PICKAXE),
             new ItemStack(Material.WOOD_SPADE)
         };
-        event.addPostEvent(() -> event.getPlayer().getPlayer().getInventory().addItem(items));
+
+        event.addPostEvent(() -> {
+            SchedulerUtil.runSync(() -> {
+                Player player = event.getPlayer().getPlayer();
+                player.getInventory().addItem(items);
+                player.updateInventory();
+            }, 10L);
+        });
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
