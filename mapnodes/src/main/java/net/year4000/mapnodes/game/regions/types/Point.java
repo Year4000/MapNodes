@@ -71,14 +71,14 @@ public class Point implements Region, Validator, PointVector {
 
     @Override
     public boolean inRegion(PointVector region) {
-        return region.getX().equals(x < 0 ? x - 1 : x) && region.getY().equals(y) && region.getZ().equals(z < 0 ? z - 1 : z);
+        return region.getX().equals(x) && region.getY().equals(y) && region.getZ().equals(z);
     }
 
     public Location create(World world) {
         if (yaw == null || pitch == null) {
-            return new Location(world, x < 0 ? x - 1 : x, y, z < 0 ? z - 1 : z);
+            return new Location(world, x , y, z);
         }
 
-        return new Location(world, x < 0 ? x - 1 : x, y, z < 0 ? z - 1 : z, yaw, pitch);
+        return new Location(world, x, y, z, yaw, pitch);
     }
 }
