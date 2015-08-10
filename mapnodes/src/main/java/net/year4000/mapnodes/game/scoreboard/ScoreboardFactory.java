@@ -258,6 +258,7 @@ public class ScoreboardFactory {
         }
 
         SidebarManager side = new SidebarManager();
+        side.addBlank();
 
         // Show Current Game Mode
         String gameMode = game.getGameModes().iterator().next().getClass().getAnnotation(GameModeInfo.class).name();
@@ -290,6 +291,7 @@ public class ScoreboardFactory {
             side.addLine(Msg.locale(nodePlayer, "class.name") + " " + kit);
         }
 
+        side.addBlank();
         side.addLine(Msg.locale(nodePlayer, "team.players"));
         game.getTeams().values().stream()
             .sorted((left, right) -> (left instanceof Spectator) ? -1 : 1)
