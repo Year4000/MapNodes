@@ -5,6 +5,7 @@
 package net.year4000.mapnodes.game;
 
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Lists;
 import com.google.gson.annotations.Since;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -25,15 +26,13 @@ import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitTask;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Getter
@@ -184,7 +183,27 @@ public class NodeKit implements GameKit {
         reset(player);
 
         player.getPlayerTasks().add(SchedulerUtil.runSync(() -> {
-            rawPlayer.getInventory().setContents(this.items.toArray(new ItemStack[this.items.size()]));
+            // Translate Lore, Display if contains a key
+            List<ItemStack> inventoryContent = Lists.newArrayList(this.items);
+            inventoryContent.forEach(itemStack -> {
+                ItemMeta meta = itemStack.getItemMeta();
+
+                if (meta != null) {
+                    // Replace locales in displayname
+                    if (meta.hasDisplayName()) {
+                        meta.setDisplayName(Msg.locale(player, meta.getDisplayName()));
+                    }
+
+                    // Replace locales in lore
+                    if (meta.hasLore()) {
+                        List<String> localeLore = Lists.newArrayList();
+                        meta.getLore().forEach(lore -> localeLore.add(Msg.locale(player, lore)));
+                    }
+
+                    itemStack.setItemMeta(meta);
+                }
+            });
+            rawPlayer.getInventory().setContents(inventoryContent.toArray(new ItemStack[inventoryContent.size()]));
 
             // Color the armor
             List<ItemStack> items = new ArrayList<>();
@@ -232,11 +251,29 @@ public class NodeKit implements GameKit {
             Inventory inv = player.getPlayer().getInventory();
             // Apply the items to the player if it has a slot set that slot if not just add it
             items.getRawItems().forEach(slotItem -> {
+                ItemStack item = slotItem.create();
+                ItemMeta meta = item.getItemMeta();
+
+                if (meta != null) {
+                    // Replace locales in displayname
+                    if (meta.hasDisplayName()) {
+                        meta.setDisplayName(Msg.locale(player, meta.getDisplayName()));
+                    }
+
+                    // Replace locales in lore
+                    if (meta.hasLore()) {
+                        List<String> localeLore = Lists.newArrayList();
+                        meta.getLore().forEach(lore -> localeLore.add(Msg.locale(player, lore)));
+                    }
+
+                    item.setItemMeta(meta);
+                }
+
                 if (slotItem.getSlot() == -1) {
-                    inv.addItem(slotItem.create());
+                    inv.addItem(item);
                 }
                 else {
-                    inv.setItem(slotItem.getSlot(), slotItem.create());
+                    inv.setItem(slotItem.getSlot(), item);
                 }
             });
 
