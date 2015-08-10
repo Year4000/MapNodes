@@ -4,14 +4,12 @@
 
 package net.year4000.mapnodes.games.skywars;
 
-import com.google.common.collect.Lists;
 import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.events.game.GameLoadEvent;
 import net.year4000.mapnodes.api.events.player.GamePlayerStartEvent;
 import net.year4000.mapnodes.api.game.modes.GameModeInfo;
 import net.year4000.mapnodes.game.NodeClass;
 import net.year4000.mapnodes.game.NodeGame;
-import net.year4000.mapnodes.game.NodeKit;
 import net.year4000.mapnodes.games.elimination.Elimination;
 import net.year4000.mapnodes.utils.SchedulerUtil;
 import net.year4000.utilities.bukkit.ItemUtil;
@@ -32,7 +30,6 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @GameModeInfo(
@@ -59,15 +56,13 @@ public class Skywars extends Elimination {
 
     @EventHandler
     public void onStart(GamePlayerStartEvent event) {
-        List<ItemStack> items = Lists.newArrayList(
+        ItemStack[] items = new ItemStack[]{
             new ItemStack(Material.WOOD_SWORD),
             new ItemStack(Material.WOOD_AXE),
             new ItemStack(Material.WOOD_PICKAXE),
             new ItemStack(Material.WOOD_SPADE)
-        );
-        NodeKit basic = new NodeKit();
-        basic.getItems().addAll(items);
-        basic.addKit(event.getPlayer());
+        };
+        event.addPostEvent(() -> event.getPlayer().getPlayer().getInventory().addItem(items));
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
