@@ -580,7 +580,7 @@ public final class NodeGame implements GameManager, Validator {
             .filter(player -> !(((NodePlayer) player).getPendingTeam()).getQueue().contains(player))
             .forEach(player -> ((NodePlayer) player).start());
 
-        gameClock = SchedulerUtil.repeatAsync(() -> new GameClockEvent(this).call(), 20L);
+        gameClock = SchedulerUtil.repeatSync(() -> new GameClockEvent(this).call(), 20L);
         startTime = Common.cleanTimeMillis();
 
         start.runPostEvents();
