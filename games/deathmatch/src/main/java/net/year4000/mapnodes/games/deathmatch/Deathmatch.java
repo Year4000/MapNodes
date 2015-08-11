@@ -88,13 +88,15 @@ public class Deathmatch extends GameModeTemplate implements GameMode {
             });
 
             if (currentTime < 0L) {
-                GameTeamWinEvent win = new GameTeamWinEvent(game, winner);
+                SchedulerUtil.runSync(() -> {
+                    GameTeamWinEvent win = new GameTeamWinEvent(game, winner);
 
-                if (win.getWinner() == null) {
-                    win.setWinnerText(Joiner.on("&7, ").join(game.getPlayingTeams().map(GameTeam::getDisplayName).collect(Collectors.toList())));
-                }
+                    if (win.getWinner() == null) {
+                        win.setWinnerText(Joiner.on("&7, ").join(game.getPlayingTeams().map(GameTeam::getDisplayName).collect(Collectors.toList())));
+                    }
 
-                win.call();
+                    win.call();
+                });
             }
         }
     }
