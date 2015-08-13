@@ -21,6 +21,11 @@ public class CoreMapObject {
     private ByteObject icon;
     private ByteObject world;
 
+    /** Get the cache id */
+    public String getCacheId() {
+        return object.getURLName() + "-" + object.getVersion().replaceAll("\\.", "-");
+    }
+
     @Value
     public static class ByteObject {
         private int size;

@@ -72,7 +72,7 @@ public class Node {
         try {
             worldName = String.format(TEMPLATE, id, worldFolder.getObject().getURLName());
             worldUrl = new URL(worldFolder.getWorld().getUrl() + "?key=" + Settings.get().getKey());
-            worldCache = new File(new File(WORLD_CONTAINER, worldName), "world.zip");
+            worldCache = new File(new File(WORLD_CONTAINER, "cache"), worldFolder.getCacheId() + ".zip");
             worldFile = new ZipFile(worldCache);
             worldSize = worldFolder.getWorld().getSize();
         }
@@ -220,7 +220,9 @@ public class Node {
         }
 
         try {
-            FileUtils.copyURLToFile(worldUrl, worldCache);
+            if (!worldCache.exists()) {
+                FileUtils.copyURLToFile(worldUrl, worldCache);
+            }
 
             worldFile.extractAll(location.getPath());
             MapNodesPlugin.debug(Msg.util("debug.world.unzip", worldName));
