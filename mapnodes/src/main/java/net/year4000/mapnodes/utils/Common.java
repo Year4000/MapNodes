@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class Common {
@@ -313,5 +314,15 @@ public final class Common {
     public static String formatPath(String path) {
         if (path.length() < 6) return path;
         return path.substring(0, path.length() - 6).replaceAll("/", ".");
+    }
+
+    /** Sleep the current thread */
+    public static void sleep(long amount, TimeUnit unit) {
+        try {
+            unit.sleep(amount);
+        }
+        catch (InterruptedException e) {
+            e.printStackTrace(System.err);
+        }
     }
 }

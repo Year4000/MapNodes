@@ -22,10 +22,7 @@ import net.year4000.mapnodes.game.system.SpectatorKit;
 import net.year4000.mapnodes.game.system.SpectatorTeam;
 import net.year4000.mapnodes.map.CoreMapObject;
 import net.year4000.mapnodes.messages.Msg;
-import net.year4000.mapnodes.utils.GsonUtil;
-import net.year4000.mapnodes.utils.MathUtil;
-import net.year4000.mapnodes.utils.NullGenerator;
-import net.year4000.mapnodes.utils.SchedulerUtil;
+import net.year4000.mapnodes.utils.*;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.*;
 import org.bukkit.block.Block;
@@ -41,6 +38,7 @@ import java.lang.reflect.Type;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -130,7 +128,20 @@ public class Node {
         try {
             if (getWorld() == null) {
                 unZip();
-                createWorld();
+
+                if (Bukkit.isPrimaryThread()) {
+                    createWorld();
+                }
+                else {
+                    SchedulerUtil.runSync(this::createWorld);
+                }
+            }
+            else {
+                throw new WorldLoadException(Msg.util("error.world.loaded"));
+            }
+
+            while (getWorld() == null) {
+                Common.sleep(250, TimeUnit.MILLISECONDS);
             }
 
             game = GsonUtil.createGson(getWorld()).fromJson(mapJson, NodeGame.class);
@@ -233,11 +244,7 @@ public class Node {
     }
 
     /** Create the world for the world. */
-    public void createWorld() throws WorldLoadException {
-        if (world != null) {
-            throw new WorldLoadException(Msg.util("error.world.loaded"));
-        }
-
+    public void createWorld() {
         GameConfig config = game.getConfig();
 
         // Create the world

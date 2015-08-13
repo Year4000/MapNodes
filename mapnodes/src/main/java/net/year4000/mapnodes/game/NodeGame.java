@@ -702,7 +702,7 @@ public final class NodeGame implements GameManager, Validator {
         }.run();
 
         // Register map in its own async thread
-        SchedulerUtil.runSync(() -> {
+        SchedulerUtil.runAsync(() -> {
             // Only register next map if it exists
             if (NodeFactory.get().isQueuedGames()) {
                 NodeFactory.get().peekNextQueued().register();
