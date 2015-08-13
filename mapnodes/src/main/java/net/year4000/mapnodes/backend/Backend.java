@@ -17,6 +17,7 @@ import net.year4000.utilities.URLBuilder;
 import net.year4000.utilities.sdk.API;
 import net.year4000.utilities.sdk.HttpFetcher;
 import net.year4000.utilities.sdk.routes.accounts.AccountRoute;
+import org.bukkit.Bukkit;
 
 import java.lang.reflect.Type;
 import java.util.*;
@@ -26,6 +27,14 @@ public class Backend extends API {
 
     public Backend() {
         super(Settings.get().getKey());
+
+        // Enforce valid UUIDs
+        boolean bungeecord = Bukkit.spigot().getConfig().getBoolean("settings.bungeecord", false);
+
+        if (!Bukkit.getOnlineMode() && !bungeecord) {
+            Bukkit.spigot().getConfig().set("settings.bungeecord", true);
+            throw new RuntimeException(Msg.util("server.offline"));
+        }
     }
 
     /** Add tokens to the specific account */
