@@ -21,6 +21,8 @@ import net.year4000.mapnodes.game.NodePlayer;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.Common;
 import net.year4000.mapnodes.utils.SchedulerUtil;
+import net.year4000.servermenu.ServerMenu;
+import net.year4000.servermenu.gui.AbstractGUI;
 import net.year4000.utilities.bukkit.MessageUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -197,6 +199,24 @@ public class Elimination extends GameModeTemplate implements GameMode {
                 }
                 player.sendMessage("&7&m******************************************");
                 player.sendMessage("");
+
+                /** Try to load the game menu */
+                player.getPlayerTasks().add(SchedulerUtil.runSync(() -> {
+                    try {
+                        String title = this.getClass().getAnnotation(GameModeInfo.class).name().toLowerCase();
+                        Optional<AbstractGUI> menu = ServerMenu.inst.getMenus().stream()
+                            .filter(gui -> gui.getInventory(player.getLocale()).getTitle().toLowerCase().contains(title))
+                            .findFirst();
+
+                        menu.ifPresent(gameMenu -> gameMenu.openInventory(player.getPlayer()));
+                    }
+                    catch (NoClassDefFoundError e) {
+                        MapNodesPlugin.log(Msg.util("mapnodes.servermenu.error"));
+                    }
+                    catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }, 40L));
             }
         }
 
