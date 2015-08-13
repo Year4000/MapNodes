@@ -162,7 +162,7 @@ public class MapNodesPlugin extends BukkitPlugin implements Plugin {
         // Only run ServerMenu when their are spectators
         SchedulerUtil.runAsync(() -> {
             try {
-                ServerMenu.inst.getProcessing().setWait(() -> getCurrentGame().getSpectating().count() == 0);
+                ServerMenu.inst.getProcessing().setWait(() -> getCurrentGame().getSpectating().count() == 0 && getCurrentGame().getEntering().count() == 0);
             }
             catch (NoClassDefFoundError e) {
                 log(Msg.util("mapnodes.servermenu.error"));
