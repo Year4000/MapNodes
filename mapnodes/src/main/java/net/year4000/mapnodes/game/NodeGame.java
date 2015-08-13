@@ -684,6 +684,7 @@ public final class NodeGame implements GameManager, Validator {
                     .map(Player::getScoreboard)
                     .map(obj -> obj.getObjective(DisplaySlot.SIDEBAR))
                     .filter(obj -> obj != null)
+                    .filter(Objective::isModifiable)
                     .forEach(obj -> obj.setDisplayName(Common.truncate(MessageUtil.replaceColors("    &b" + parts + "    "), 32)));
             }
 
@@ -694,6 +695,7 @@ public final class NodeGame implements GameManager, Validator {
                     .map(Player::getScoreboard)
                     .map(obj -> obj.getObjective(DisplaySlot.SIDEBAR))
                     .filter(obj -> obj != null)
+                    .filter(Objective::isModifiable)
                     .forEach(obj -> obj.setDisplayName(Common.truncate(MessageUtil.replaceColors("    &f" + title + "    "), 32)));
 
                 lastTime = 1;
