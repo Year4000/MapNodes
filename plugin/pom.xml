@@ -28,6 +28,7 @@
                         <configuration>
                             <artifactSet>
                                 <includes>
+                                    <include>com.googlecode.concurrentlinkedhashmap:concurrentlinkedhashmap-lru</include>
                                     <include>com.sk89q:command-framework-bukkit</include>
                                     <include>net.year4000:*</include>
                                     <include>net.year4000.mapnodes.games:*</include>

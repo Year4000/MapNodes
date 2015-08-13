@@ -29,7 +29,7 @@ public class NodeFactory {
     private int gameID = 0;
 
     private NodeFactory() {
-        MapFactory.getMaps(Settings.get().getLoadMaps()).parallelStream().forEach(world -> {
+        MapFactory.getMaps(Settings.get().getLoadMaps()).forEach(world -> {
             if (!world.isDisabled()) {
                 try {
                     addMap(world);

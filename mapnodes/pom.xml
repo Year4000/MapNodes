@@ -71,6 +71,14 @@
             <scope>compile</scope>
         </dependency>
 
+        <!-- ConcurrentLinkedHashMap  -->
+        <dependency>
+            <groupId>com.googlecode.concurrentlinkedhashmap</groupId>
+            <artifactId>concurrentlinkedhashmap-lru</artifactId>
+            <version>1.4.2</version>
+            <scope>compile</scope>
+        </dependency>
+
         <!-- Use this while Utilities is switching to Intake -->
         <dependency>
             <groupId>com.sk89q</groupId>

@@ -5,13 +5,13 @@
 package net.year4000.mapnodes.map;
 
 import com.google.common.collect.Iterables;
+import com.googlecode.concurrentlinkedhashmap.ConcurrentLinkedHashMap;
 import lombok.Getter;
 import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.Settings;
 
 import javax.annotation.Nullable;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -21,7 +21,9 @@ public class MapFactory {
 
     /** Find and load all maps */
     public MapFactory() {
-        folders = new ConcurrentHashMap<>();
+        folders = new ConcurrentLinkedHashMap.Builder<String, MapObject>()
+            .maximumWeightedCapacity(Settings.get().getLoadMaps())
+            .build();
 
         MapNodesPlugin.getInst().getApi().getMaps().forEach(path -> {
             String id = path.getName().toLowerCase().replace(" ", "-");
