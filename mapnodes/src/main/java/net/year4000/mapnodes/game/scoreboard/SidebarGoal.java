@@ -32,25 +32,41 @@ public class SidebarGoal implements GameSidebarGoal {
 
     @Override
     public void setType(GoalType type) {
-        this.type = type;
+        setSilentlyType(type);
         game.getScoreboardFactory().setAllGameSidebar();
     }
 
     @Override
     public void setDisplay(String display) {
-        this.display = display;
+        setSilentlyDisplay(display);
         game.getScoreboardFactory().setAllGameSidebar();
     }
 
     @Override
     public void setScore(Integer score) {
-        this.score = score;
+        setSilentlyScore(score);
         game.getScoreboardFactory().setAllGameSidebar();
     }
 
     @Override
     public void setOwner(String owner) {
-        this.owner = owner;
+        setSilentlyOwner(owner);
         game.getScoreboardFactory().setAllGameSidebar();
+    }
+
+    public void setSilentlyType(GoalType type) {
+        this.type = type;
+    }
+
+    public void setSilentlyDisplay(String display) {
+        this.display = display;
+    }
+
+    public void setSilentlyScore(Integer score) {
+        this.score = score;
+    }
+
+    public void setSilentlyOwner(String owner) {
+        this.owner = owner;
     }
 }

@@ -240,30 +240,50 @@ public final class NodeGame implements GameManager, Validator {
 
     /** Add a dynamic goal to the scoreboard */
     public GameSidebarGoal addDynamicGoal(String id, String display, int score) {
-        GameSidebarGoal goal = sidebarGoals.put(id, new SidebarGoal(this, GameSidebarGoal.GoalType.DYNAMIC, display, score, ""));
+        GameSidebarGoal goal = addSilentlyDynamicGoal(id, display, score);
         scoreboardFactory.setAllGameSidebar();
         return goal;
     }
 
     /** Add a dynamic goal to the scoreboard */
     public GameSidebarGoal addDynamicGoal(String id, String owner, String display, int score) {
-        GameSidebarGoal goal = sidebarGoals.put(id, new SidebarGoal(this, SidebarGoal.GoalType.DYNAMIC, display, score, owner));
+        GameSidebarGoal goal = addSilentlyDynamicGoal(id, owner, display, score);
         scoreboardFactory.setAllGameSidebar();
         return goal;
     }
 
     /** Add a static foal to the scoreboard */
     public GameSidebarGoal addStaticGoal(String id, String display) {
-        GameSidebarGoal goal = sidebarGoals.put(id, new SidebarGoal(this, SidebarGoal.GoalType.STATIC, display, null, ""));
+        GameSidebarGoal goal = addSilentlyStaticGoal(id, display);
         scoreboardFactory.setAllGameSidebar();
         return goal;
     }
 
     /** Add a static foal to the scoreboard */
     public GameSidebarGoal addStaticGoal(String id, String owner, String display) {
-        GameSidebarGoal goal = sidebarGoals.put(id, new SidebarGoal(this, SidebarGoal.GoalType.STATIC, display, null, owner));
+        GameSidebarGoal goal = addSilentlyStaticGoal(id, owner, display);
         scoreboardFactory.setAllGameSidebar();
         return goal;
+    }
+
+    /** Add a dynamic goal to the scoreboard */
+    public GameSidebarGoal addSilentlyDynamicGoal(String id, String display, int score) {
+        return sidebarGoals.put(id, new SidebarGoal(this, GameSidebarGoal.GoalType.DYNAMIC, display, score, ""));
+    }
+
+    /** Add a dynamic goal to the scoreboard */
+    public GameSidebarGoal addSilentlyDynamicGoal(String id, String owner, String display, int score) {
+        return sidebarGoals.put(id, new SidebarGoal(this, SidebarGoal.GoalType.DYNAMIC, display, score, owner));
+    }
+
+    /** Add a static foal to the scoreboard */
+    public GameSidebarGoal addSilentlyStaticGoal(String id, String display) {
+        return sidebarGoals.put(id, new SidebarGoal(this, SidebarGoal.GoalType.STATIC, display, null, ""));
+    }
+
+    /** Add a static foal to the scoreboard */
+    public GameSidebarGoal addSilentlyStaticGoal(String id, String owner, String display) {
+        return sidebarGoals.put(id, new SidebarGoal(this, SidebarGoal.GoalType.STATIC, display, null, owner));
     }
 
     // END Sidebar Things //
