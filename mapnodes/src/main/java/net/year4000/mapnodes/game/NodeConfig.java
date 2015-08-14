@@ -58,6 +58,11 @@ public final class NodeConfig implements GameConfig, Validator {
     @SerializedName("resource_pack")
     private URL resourcePack = null;
 
+    /** Should chests be cleared on map load. */
+    @Since(2.0)
+    @SerializedName("clear_chests")
+    private boolean clearChests = true;
+
     /** The area for the spawn. */
     @Since(2.0)
     private LocationList<Location> spawn = new LocationList<>();

@@ -35,6 +35,8 @@ public interface GameConfig {
     /** Get the URL to the resource pack */
     public URL getResourcePack();
 
+    /** Should chests be cleared on map load */
+    boolean isClearChests();
 
     /** The spawn locations when players enter the world */
     public List<Location> getSpawn();

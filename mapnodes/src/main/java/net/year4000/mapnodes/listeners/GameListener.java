@@ -9,14 +9,13 @@ import lombok.EqualsAndHashCode;
 import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.events.game.GameClockEvent;
+import net.year4000.mapnodes.api.events.game.GameLoadEvent;
 import net.year4000.mapnodes.api.events.game.GameWinEvent;
-import net.year4000.mapnodes.api.events.player.GamePlayerDeathEvent;
 import net.year4000.mapnodes.api.events.player.GamePlayerWinEvent;
 import net.year4000.mapnodes.api.events.team.GameTeamWinEvent;
 import net.year4000.mapnodes.api.game.GamePlayer;
 import net.year4000.mapnodes.api.game.GameTeam;
 import net.year4000.mapnodes.api.utils.Spectator;
-import net.year4000.mapnodes.game.NodeGame;
 import net.year4000.mapnodes.game.NodeKit;
 import net.year4000.mapnodes.game.NodePlayer;
 import net.year4000.mapnodes.game.NodeTeam;
@@ -26,7 +25,12 @@ import net.year4000.mapnodes.utils.typewrappers.LocationList;
 import net.year4000.utilities.ChatColor;
 import net.year4000.utilities.bukkit.FunEffectsUtil;
 import net.year4000.utilities.bukkit.MessageUtil;
+import org.bukkit.Chunk;
 import org.bukkit.Sound;
+import org.bukkit.World;
+import org.bukkit.block.Block;
+import org.bukkit.block.Chest;
+import org.bukkit.block.DoubleChest;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -34,9 +38,12 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.*;
+import org.bukkit.event.world.ChunkLoadEvent;
+import org.bukkit.event.world.WorldLoadEvent;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -220,6 +227,55 @@ public final class GameListener implements Listener {
             if (y >= height) {
                 event.getPlayer().sendMessage(Msg.NOTICE + Msg.locale(event.getPlayer(), "region.deny.height", String.valueOf(y)));
                 event.setCancelled(true);
+            }
+        }
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void onChest(WorldLoadEvent event) {
+        if (!MapNodes.getCurrentGame().getConfig().isClearChests()) return;
+
+        for (Chunk chunk : event.getWorld().getLoadedChunks()) {
+            clearChests(chunk);
+        }
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void onChest(ChunkLoadEvent event) {
+        if (!MapNodes.getCurrentGame().getConfig().isClearChests()) return;
+
+        clearChests(event.getChunk());
+    }
+
+    /** Will clear all the chests in the chunk */
+    private void clearChests(Chunk chunk) {
+        World world = chunk.getWorld();
+        int bx = chunk.getX() << 4;
+        int bz = chunk.getZ() << 4;
+
+        for (int xx = bx; xx < bx + 16; xx++) {
+            for (int zz = bz; zz < bz + 16; zz++) {
+                int y = world.getHighestBlockYAt(xx, zz) + 1;
+
+                for (int yy = 0; yy < y; yy++) {
+                    Block block = world.getBlockAt(xx, yy, zz);
+                    final Inventory chest;
+
+                    if (block.getState() instanceof Chest) {
+                        chest = ((Chest) block.getState()).getInventory();
+                    }
+                    else if (block.getState() instanceof DoubleChest) {
+                        chest = ((DoubleChest) block.getState()).getInventory();
+                    }
+                    else {
+                        chest = null;
+                    }
+
+                    if (chest != null) {
+                        System.out.println(block);
+                        chest.setContents(new ItemStack[]{});
+                    }
+                }
             }
         }
     }
