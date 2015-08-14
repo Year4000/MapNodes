@@ -22,7 +22,7 @@ public class MapFactory {
     /** Find and load all maps */
     public MapFactory() {
         folders = new ConcurrentLinkedHashMap.Builder<String, MapObject>()
-            .maximumWeightedCapacity(Settings.get().getLoadMaps())
+            .maximumWeightedCapacity(Short.MAX_VALUE)
             .build();
 
         MapNodesPlugin.getInst().getApi().getMaps().forEach(path -> {
