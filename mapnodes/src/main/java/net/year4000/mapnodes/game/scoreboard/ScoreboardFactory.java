@@ -34,6 +34,8 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 @AllArgsConstructor
 public class ScoreboardFactory {
     private static final ScoreboardManager manager = Bukkit.getScoreboardManager();
@@ -339,8 +341,16 @@ public class ScoreboardFactory {
             }
         });
 
+        setCustomSidebar(nodePlayer, side);
+    }
+
+    /** Set a custom sidebar for the player */
+    public void setCustomSidebar(NodePlayer nodePlayer, SidebarManager sidebarManager) {
+        checkNotNull(nodePlayer);
+        checkNotNull(sidebarManager);
+
         // 22 is 32 - 10 the number comes from the padding of the map name
         String shortMapName = Common.shortMessage(22, nodePlayer.getGame().getMap().getName());
-        side.buildSidebar(nodePlayer.getScoreboard(), "    &b" + shortMapName + "    ");
+        sidebarManager.buildSidebar(nodePlayer.getScoreboard(), "    &b" + shortMapName + "    ");
     }
 }
