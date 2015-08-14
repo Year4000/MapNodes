@@ -22,6 +22,7 @@
         <module>spleef</module>
         <module>elimination</module>
         <module>arrowtag</module>
+        <module>builders</module>
     </modules>
 
     <build>
