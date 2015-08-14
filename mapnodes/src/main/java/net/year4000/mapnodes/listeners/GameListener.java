@@ -31,6 +31,7 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.block.DoubleChest;
+import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -82,11 +83,22 @@ public final class GameListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     /** Do not allow team mates to deal damage */
     public void onPlayerVsPlayer(EntityDamageByEntityEvent event) {
-        if (!(event.getEntity() instanceof Player)) return;
+        if (!(event.getEntity() instanceof Player || event.getEntity() instanceof Arrow)) return;
         if (!(event.getDamager() instanceof Player)) return;
 
         Player killer = (Player) event.getDamager();
-        Player player = (Player) event.getEntity();
+        Player player;
+
+        if (event.getEntity() instanceof Arrow) {
+            Arrow arrow = (Arrow) event.getEntity();
+
+            if (!(arrow.getShooter() instanceof Player)) return;
+
+            player = (Player) arrow.getShooter();
+        }
+        else {
+            player = (Player) event.getEntity();
+        }
 
         // Check if your death was null
         if (player.getLastDamageCause() == null) return;
