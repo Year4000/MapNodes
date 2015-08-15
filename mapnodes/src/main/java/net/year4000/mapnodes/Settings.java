@@ -47,13 +47,23 @@ public class Settings {
             try {
                 URLBuilder url = URLBuilder.builder(API.BASE_URL).addPath("configs").addPath("mapnodes");
                 inst = HttpFetcher.get(url.build(), Settings.class);
+                overrideSettings(inst);
             }
             catch (Exception e) {
                 MapNodesPlugin.log(e, false);
                 inst = new Settings();
+                overrideSettings(inst);
             }
         }
 
         return inst;
+    }
+
+    /** JVM properties to override settings */
+    private static void overrideSettings(Settings settings) {
+        String loadMaps = "mapnodes.load_maps";
+        if ((loadMaps = System.getProperty(loadMaps)) != null) {
+            settings.loadMaps = Integer.valueOf(loadMaps);
+        }
     }
 }
