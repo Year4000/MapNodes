@@ -273,18 +273,17 @@ public final class GameListener implements Listener {
                     Block block = world.getBlockAt(xx, yy, zz);
                     final Inventory chest;
 
-                    if (block.getState() instanceof Chest) {
-                        chest = ((Chest) block.getState()).getInventory();
-                    }
-                    else if (block.getState() instanceof DoubleChest) {
+                    if (block.getState() instanceof DoubleChest) {
                         chest = ((DoubleChest) block.getState()).getInventory();
+                    }
+                    else if (block.getState() instanceof Chest) {
+                        chest = ((Chest) block.getState()).getInventory();
                     }
                     else {
                         chest = null;
                     }
 
                     if (chest != null) {
-                        System.out.println(block);
                         chest.setContents(new ItemStack[]{});
                     }
                 }
