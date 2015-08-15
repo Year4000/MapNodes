@@ -7,6 +7,7 @@ import net.year4000.mapnodes.api.exceptions.InvalidJsonException;
 import net.year4000.mapnodes.api.game.modes.GameModeConfig;
 import net.year4000.mapnodes.api.game.modes.GameModeConfigName;
 import org.bukkit.util.BlockVector;
+import org.bukkit.util.Vector;
 
 import java.util.List;
 
@@ -97,6 +98,45 @@ public class BuildersConfig implements GameModeConfig {
             int offsetZ = xz[1] > getMin().getBlockZ() ? 1 : -1;
 
             return new BlockVector(xz[0] + offsetX, HEIGHT, xz[1] + offsetZ);
+        }
+
+        /** Is the specific vector inside region */
+        public boolean isInPlot(Vector vector) {
+            return isInPlot(vector, 0, HEIGHT);
+        }
+
+        /** Is the specific vector inside region */
+        public boolean isInPlot(Vector vector, int minY, int maxY) {
+            Vector min = getMin().setY(minY);
+            Vector max = getOuterMax().setY(maxY);
+
+            return isInPlot(min, max, vector);
+        }
+
+        /** Is the specific vector inside region */
+        public boolean isInInnerPlot(Vector vector) {
+            return isInInnerPlot(vector, 0, HEIGHT);
+        }
+
+        /** Is the specific vector inside region */
+        public boolean isInInnerPlot(Vector vector, int minY, int maxY) {
+            Vector min = getInnerMin().setY(minY);
+            Vector max = getInnerMax().setY(maxY);
+
+            return isInPlot(min, max, vector);
+        }
+
+        /** Is the specific vector inside region */
+        public boolean isInPlot(Vector min, Vector max, Vector vector) {
+            int minX = min.getBlockX() > max.getBlockX() ? max.getBlockX() : min.getBlockX();
+            int minZ = min.getBlockZ() > max.getBlockZ() ? max.getBlockZ() : min.getBlockZ();
+            int maxX = min.getBlockX() < max.getBlockX() ? max.getBlockX() : min.getBlockX();
+            int maxZ = min.getBlockZ() < max.getBlockZ() ? max.getBlockZ() : min.getBlockZ();
+
+            Vector trueMin = new Vector(minX, min.getY(), minZ);
+            Vector trueMax = new Vector(maxX, max.getY(), maxZ);
+
+            return vector.isInAABB(trueMin, trueMax);
         }
     }
 }

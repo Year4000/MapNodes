@@ -4,10 +4,10 @@ import com.comphenix.packetwrapper.WrapperPlayServerWorldBorder;
 import com.comphenix.protocol.wrappers.EnumWrappers;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.game.GamePlayer;
-import net.year4000.mapnodes.utils.Common;
 import net.year4000.utilities.bukkit.LocationUtil;
 import org.bukkit.*;
 import org.bukkit.block.Biome;
@@ -27,6 +27,9 @@ public class PlayerPlot {
     private final BuildersConfig.Plot plot;
     @Getter
     private final int y;
+    @Setter
+    @Getter
+    private boolean forfeited = false;
 
     // Plot effects
     private Material floor = Material.GRASS;
@@ -77,12 +80,10 @@ public class PlayerPlot {
     /** Teleport the player to this plot */
     public Location teleportPlotLocation() {
         World world = MapNodes.getCurrentWorld();
+        Vector midpoint = plot.getInnerMin().midpoint(plot.getInnerMax());
 
-        int offsetX = Math.abs(plot.getMax().getBlockX() - plot.getMin().getBlockX());
-        int offsetZ = Math.abs(plot.getMax().getBlockZ() - plot.getMin().getBlockZ());
-
-        int x = plot.getMin().getBlockX() + Common.rand.nextInt(offsetX);
-        int z = plot.getMin().getBlockZ() + Common.rand.nextInt(offsetZ);
+        int x = midpoint.getBlockX();
+        int z = midpoint.getBlockZ();
         int y = world.getHighestBlockYAt(x, z) + 10;
 
         return LocationUtil.center(new Location(world, x, y, z));

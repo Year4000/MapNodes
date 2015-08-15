@@ -6,6 +6,7 @@ import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.events.game.GameLoadEvent;
 import net.year4000.mapnodes.api.events.game.GameStartEvent;
 import net.year4000.mapnodes.api.events.player.GamePlayerJoinEvent;
+import net.year4000.mapnodes.api.events.player.GamePlayerJoinSpectatorEvent;
 import net.year4000.mapnodes.api.events.player.GamePlayerJoinTeamEvent;
 import net.year4000.mapnodes.api.events.player.GamePlayerStartEvent;
 import net.year4000.mapnodes.api.game.GamePlayer;
@@ -128,6 +129,16 @@ public class Builders extends GameModeTemplate implements GameMode {
 
     /** Disable menu when game started */
     @EventHandler
+    public void onSpectatorJoin(GamePlayerJoinSpectatorEvent event) {
+        if (MapNodes.getCurrentGame().getStage().isPlaying()) {
+            if (plots.containsKey(event.getPlayer())) {
+                plots.get(event.getPlayer()).setForfeited(true);
+            }
+        }
+    }
+
+    /** Disable menu when game started */
+    @EventHandler
     public void onPlayerJoin(GamePlayerJoinEvent event) {
         if (MapNodes.getCurrentGame().getStage().isPlaying()) {
             event.setMenu(false);
@@ -166,6 +177,7 @@ public class Builders extends GameModeTemplate implements GameMode {
     }
 
     // Plots
+
     @EventHandler(ignoreCancelled = true)
     public void onPlayerBuild(BlockPlaceEvent event) {
         if (!MapNodes.getCurrentGame().getStage().isPlaying()) return;
@@ -175,11 +187,9 @@ public class Builders extends GameModeTemplate implements GameMode {
         if (!gamePlayer.isPlaying()) return;
 
         PlayerPlot plot = gamePlayer.getPlayerData(PlayerPlot.class);
-        Vector vector = event.getBlockPlaced().getLocation().toVector();
-        Vector floor = plot.getPlot().getInnerMin();
-        floor.setY(plot.getY());
+        Vector vector = event.getBlock().getLocation().toVector();
 
-        if (!vector.isInAABB(floor, plot.getPlot().getInnerMax())) {
+        if (!plot.getPlot().isInInnerPlot(vector, plot.getY(), plot.getPlot().getMax().getBlockY())) {
             gamePlayer.sendMessage(Msg.NOTICE + Msg.locale(gamePlayer, "region.build.region"));
             event.setCancelled(true);
         }
@@ -195,10 +205,8 @@ public class Builders extends GameModeTemplate implements GameMode {
 
         PlayerPlot plot = gamePlayer.getPlayerData(PlayerPlot.class);
         Vector vector = event.getBlock().getLocation().toVector();
-        Vector floor = plot.getPlot().getInnerMin();
-        floor.setY(plot.getY());
 
-        if (!vector.isInAABB(floor, plot.getPlot().getInnerMax())) {
+        if (!plot.getPlot().isInInnerPlot(vector, plot.getY(), plot.getPlot().getMax().getBlockY())) {
             gamePlayer.sendMessage(Msg.NOTICE + Msg.locale(gamePlayer, "region.destroy.region"));
             event.setCancelled(true);
         }
@@ -217,10 +225,8 @@ public class Builders extends GameModeTemplate implements GameMode {
 
         PlayerPlot plot = gamePlayer.getPlayerData(PlayerPlot.class);
         Vector vector = event.getTo().toVector();
-        Vector limit = plot.getPlot().getOuterMax();
-        limit.setY(plot.getY() + config.getHeight());
 
-        if (!vector.isInAABB(plot.getPlot().getMin(), limit)) {
+        if (!plot.getPlot().isInPlot(vector, plot.getY(), plot.getY() + config.getHeight())) {
             gamePlayer.sendMessage(Msg.NOTICE + Msg.locale(gamePlayer, "region.exit.room"));
 
             event.setTo(plot.teleportToPlot(gamePlayer));
