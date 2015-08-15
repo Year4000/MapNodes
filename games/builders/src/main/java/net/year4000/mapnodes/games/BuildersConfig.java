@@ -6,9 +6,11 @@ import lombok.ToString;
 import net.year4000.mapnodes.api.exceptions.InvalidJsonException;
 import net.year4000.mapnodes.api.game.modes.GameModeConfig;
 import net.year4000.mapnodes.api.game.modes.GameModeConfigName;
+import org.bukkit.block.Block;
 import org.bukkit.util.BlockVector;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkArgument;
