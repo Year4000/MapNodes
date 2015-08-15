@@ -3,8 +3,11 @@ package net.year4000.mapnodes.games;
 import com.comphenix.packetwrapper.WrapperPlayServerWorldBorder;
 import com.comphenix.protocol.wrappers.EnumWrappers;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.ToString;
 import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.game.GamePlayer;
+import net.year4000.mapnodes.utils.Common;
 import net.year4000.utilities.bukkit.LocationUtil;
 import org.bukkit.*;
 import org.bukkit.block.Biome;
@@ -17,9 +20,12 @@ import java.util.function.Consumer;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+@ToString
 public class PlayerPlot {
     private final GamePlayer player;
+    @Getter
     private final BuildersConfig.Plot plot;
+    @Getter
     private final int y;
 
     // Plot effects
@@ -61,6 +67,8 @@ public class PlayerPlot {
     public Location teleportToPlot(GamePlayer player) {
         Location location = teleportPlotLocation();
         addPlotEffects(player);
+        player.getPlayer().setAllowFlight(true);
+        player.getPlayer().setFlying(true);
         player.getPlayer().teleport(location);
 
         return location;
@@ -70,8 +78,11 @@ public class PlayerPlot {
     public Location teleportPlotLocation() {
         World world = MapNodes.getCurrentWorld();
 
-        int x = plot.getMin().getBlockX(); // todo random the cords
-        int z = plot.getMin().getBlockZ(); // todo random the cords
+        int offsetX = Math.abs(plot.getMax().getBlockX() - plot.getMin().getBlockX());
+        int offsetZ = Math.abs(plot.getMax().getBlockZ() - plot.getMin().getBlockZ());
+
+        int x = plot.getMin().getBlockX() + Common.rand.nextInt(offsetX);
+        int z = plot.getMin().getBlockZ() + Common.rand.nextInt(offsetZ);
         int y = world.getHighestBlockYAt(x, z) + 10;
 
         return LocationUtil.center(new Location(world, x, y, z));
