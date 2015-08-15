@@ -19,6 +19,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 @Getter
 @GameModeConfigName("builders")
 public class BuildersConfig implements GameModeConfig {
+    private static final int HEIGHT = 256;
     private int height = Byte.MAX_VALUE;
     private List<Plot> plots = Lists.newArrayList();
 
@@ -55,9 +56,49 @@ public class BuildersConfig implements GameModeConfig {
 
         /** Grab the BlockVector of max plot */
         public BlockVector getMax() {
+            int[] xz = transcribe(max);
+
+            return new BlockVector(xz[0], HEIGHT, xz[1]);
+        }
+
+        /** Grab the BlockVector of min plot */
+        public BlockVector getInnerMin() {
             int[] xz = transcribe(min);
 
-            return new BlockVector(xz[0], 256, xz[1]);
+            int offsetX = xz[0] < getMax().getBlockX() ? 1 : -1;
+            int offsetZ = xz[1] < getMax().getBlockZ() ? 1 : -1;
+
+            return new BlockVector(xz[0] + offsetX, 0, xz[1] + offsetZ);
+        }
+
+        /** Grab the BlockVector of max plot */
+        public BlockVector getInnerMax() {
+            int[] xz = transcribe(max);
+
+            int offsetX = xz[0] < getMin().getBlockX() ? 1 : -1;
+            int offsetZ = xz[1] < getMin().getBlockZ() ? 1 : -1;
+
+            return new BlockVector(xz[0] + offsetX, HEIGHT, xz[1] + offsetZ);
+        }
+
+        /** Grab the BlockVector of min plot */
+        public BlockVector getOuterMin() {
+            int[] xz = transcribe(min);
+
+            int offsetX = xz[0] > getMax().getBlockX() ? 1 : -1;
+            int offsetZ = xz[1] > getMax().getBlockZ() ? 1 : -1;
+
+            return new BlockVector(xz[0] + offsetX, 0, xz[1] + offsetZ);
+        }
+
+        /** Grab the BlockVector of max plot */
+        public BlockVector getOuterMax() {
+            int[] xz = transcribe(max);
+
+            int offsetX = xz[0] > getMin().getBlockX() ? 1 : -1;
+            int offsetZ = xz[1] > getMin().getBlockZ() ? 1 : -1;
+
+            return new BlockVector(xz[0] + offsetX, HEIGHT, xz[1] + offsetZ);
         }
     }
 }
