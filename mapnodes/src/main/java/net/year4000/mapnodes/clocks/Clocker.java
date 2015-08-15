@@ -9,6 +9,8 @@ import net.year4000.mapnodes.utils.MathUtil;
 import net.year4000.mapnodes.utils.SchedulerUtil;
 import org.bukkit.scheduler.BukkitTask;
 
+import java.util.concurrent.TimeUnit;
+
 /** Clocker to allow easy code for clocks */
 public abstract class Clocker {
     private int offset;
@@ -20,6 +22,16 @@ public abstract class Clocker {
     /** Run a clock for x amount of time */
     public Clocker(int time) {
         this(time, 0);
+    }
+
+    /** Run a clock for x amount of time */
+    public Clocker(long time, TimeUnit unit) {
+        this(MathUtil.ticks((int) unit.toSeconds(time)), 0);
+    }
+
+    /** Run a clock for x amount of time after x amount of time */
+    public Clocker(int time, TimeUnit timeUnit, int offset, TimeUnit offsetUnit) {
+        this(MathUtil.ticks((int) timeUnit.toSeconds(time)), MathUtil.ticks((int) offsetUnit.toSeconds(offset)));
     }
 
     /** Run a clock for x amount of time after x amount of time */
