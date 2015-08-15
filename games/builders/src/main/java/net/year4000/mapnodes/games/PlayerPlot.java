@@ -1,11 +1,8 @@
 package net.year4000.mapnodes.games;
 
 import com.comphenix.packetwrapper.WrapperPlayServerWorldBorder;
-import com.comphenix.protocol.PacketType;
-import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.wrappers.EnumWrappers;
 import lombok.AllArgsConstructor;
-import net.minecraft.server.v1_8_R3.PacketPlayOutWorldBorder;
 import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.game.GamePlayer;
 import net.year4000.utilities.bukkit.LocationUtil;
@@ -13,7 +10,6 @@ import org.bukkit.*;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
-import org.bukkit.util.BlockVector;
 import org.bukkit.util.Vector;
 
 import java.lang.reflect.InvocationTargetException;
@@ -51,7 +47,7 @@ public class PlayerPlot {
         // Get the floor's base level
         int x = plot.getMin().getBlockX();
         int z = plot.getMin().getBlockZ();
-        y = MapNodes.getCurrentWorld().getHighestBlockYAt(x, z);
+        y = MapNodes.getCurrentWorld().getHighestBlockYAt(x, z) - 1;
 
         player.addPlayerData(PlayerPlot.class, this);
     }
@@ -123,8 +119,8 @@ public class PlayerPlot {
 
     /** Process data for each block in the plot */
     public void processPlot(Consumer<Block> block) {
-        for (int x = plot.getMin().getBlockX(); x < plot.getMax().getBlockX(); x++) {
-            for (int z = plot.getMin().getBlockZ(); z < plot.getMax().getBlockZ(); z++) {
+        for (int x = plot.getInnerMin().getBlockX(); x < plot.getInnerMax().getBlockX(); x++) {
+            for (int z = plot.getInnerMin().getBlockZ(); z < plot.getInnerMax().getBlockZ(); z++) {
                 Block pos = MapNodes.getCurrentWorld().getBlockAt(x, y, z);
                 block.accept(pos);
             }

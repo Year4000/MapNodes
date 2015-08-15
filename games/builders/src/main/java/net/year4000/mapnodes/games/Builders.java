@@ -98,7 +98,6 @@ public class Builders extends GameModeTemplate implements GameMode {
         PlayerPlot plot = new PlayerPlot(gamePlayer, avaiablePlots.next());
         plots.put(gamePlayer, plot);
         event.setSpawn(plot.teleportPlotLocation());
-        plot.setBorder();
         String theme = getTheme(gamePlayer);
 
         // Set the sidebar after the player has fully joined
