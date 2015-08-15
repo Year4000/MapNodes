@@ -4,6 +4,8 @@
 
 package net.year4000.mapnodes;
 
+import com.comphenix.protocol.ProtocolLibrary;
+import com.comphenix.protocol.ProtocolManager;
 import com.sk89q.bukkit.util.BukkitCommandsManager;
 import com.sk89q.bukkit.util.CommandsManagerRegistration;
 import com.sk89q.minecraft.util.commands.*;
@@ -65,6 +67,7 @@ public class MapNodesPlugin extends BukkitPlugin implements Plugin {
     private MessagingChannel connector;
     private Network network;
     private Backend api;
+    private ProtocolManager protocolManager;
 
     @Override
     public void onLoad() {
@@ -72,6 +75,7 @@ public class MapNodesPlugin extends BukkitPlugin implements Plugin {
         log = new LogUtil(getLogger());
         usercache = new UserCache();
         api = new Backend();
+        protocolManager = ProtocolLibrary.getProtocolManager();
         MapNodes.init(inst);
         //ProtocolInjector.inject();
 

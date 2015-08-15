@@ -4,6 +4,7 @@
 
 package net.year4000.mapnodes.api;
 
+import com.comphenix.protocol.ProtocolManager;
 import net.year4000.mapnodes.api.game.GameManager;
 import net.year4000.utilities.LogUtil;
 import org.bukkit.World;
@@ -30,5 +31,10 @@ public final class MapNodes {
     /** Get the log util to log things */
     public static LogUtil getLogUtil() {
         return inst.getLogUtil();
+    }
+
+    /** Grab the protocol manager for MapNodes */
+    public static ProtocolManager getProtocolManager() {
+        return inst.getProtocolManager();
     }
 }
