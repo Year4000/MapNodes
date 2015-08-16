@@ -229,7 +229,13 @@ public class Builders extends GameModeTemplate implements GameMode {
         if (!plot.getPlot().isInPlot(vector, plot.getY(), plot.getY() + config.getHeight())) {
             gamePlayer.sendMessage(Msg.NOTICE + Msg.locale(gamePlayer, "region.exit.room"));
 
-            event.setTo(plot.teleportToPlot(gamePlayer));
+            // Try to use from, if fails send to plot
+            if (plot.getPlot().isInPlot(event.getFrom().toVector())) {
+                event.setTo(event.getFrom().clone());
+            }
+            else {
+                event.setTo(plot.teleportPlotLocation());
+            }
         }
     }
 }
