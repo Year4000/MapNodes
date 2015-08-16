@@ -9,7 +9,6 @@ import lombok.EqualsAndHashCode;
 import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.events.game.GameClockEvent;
-import net.year4000.mapnodes.api.events.game.GameLoadEvent;
 import net.year4000.mapnodes.api.events.game.GameWinEvent;
 import net.year4000.mapnodes.api.events.player.GamePlayerWinEvent;
 import net.year4000.mapnodes.api.events.team.GameTeamWinEvent;
@@ -26,11 +25,10 @@ import net.year4000.utilities.ChatColor;
 import net.year4000.utilities.bukkit.FunEffectsUtil;
 import net.year4000.utilities.bukkit.MessageUtil;
 import org.bukkit.Chunk;
+import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.block.Block;
-import org.bukkit.block.Chest;
-import org.bukkit.block.DoubleChest;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -43,7 +41,6 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.event.world.WorldLoadEvent;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
@@ -272,17 +269,20 @@ public final class GameListener implements Listener {
 
                 for (int yy = 0; yy < y; yy++) {
                     Block block = world.getBlockAt(xx, yy, zz);
-                    final Inventory chest;
 
-                    if (block.getState() instanceof InventoryHolder) {
-                        chest = ((InventoryHolder) block.getState()).getInventory();
+                    if (block.getType() == Material.CHEST) {
+                        ((InventoryHolder) block.getState()).getInventory().setContents(new ItemStack[0]);
+                        byte type = block.getData();
+                        block.setType(Material.AIR);
+                        block.setType(Material.CHEST);
+                        block.setData(type);
                     }
-                    else {
-                        chest = null;
-                    }
-
-                    if (chest != null) {
-                        chest.setContents(new ItemStack[]{});
+                    else if (block.getType() == Material.TRAPPED_CHEST) {
+                        ((InventoryHolder) block.getState()).getInventory().setContents(new ItemStack[0]);
+                        byte type = block.getData();
+                        block.setType(Material.AIR);
+                        block.setType(Material.TRAPPED_CHEST);
+                        block.setData(type);
                     }
                 }
             }
