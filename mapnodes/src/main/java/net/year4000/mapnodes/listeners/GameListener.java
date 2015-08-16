@@ -81,21 +81,21 @@ public final class GameListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     /** Do not allow team mates to deal damage */
     public void onPlayerVsPlayer(EntityDamageByEntityEvent event) {
-        if (!(event.getEntity() instanceof Player || event.getEntity() instanceof Arrow)) return;
-        if (!(event.getDamager() instanceof Player)) return;
+        if (!(event.getEntity() instanceof Player)) return;
+        if (!(event.getDamager() instanceof Player || event.getDamager() instanceof Arrow)) return;
 
-        Player killer = (Player) event.getDamager();
-        Player player;
+        Player player = (Player) event.getEntity();
+        Player killer;
 
-        if (event.getEntity() instanceof Arrow) {
+        if (event.getDamager() instanceof Arrow) {
             Arrow arrow = (Arrow) event.getEntity();
 
             if (!(arrow.getShooter() instanceof Player)) return;
 
-            player = (Player) arrow.getShooter();
+            killer = (Player) arrow.getShooter();
         }
         else {
-            player = (Player) event.getEntity();
+            killer = (Player) event.getDamager();
         }
 
         // Check if your death was null
