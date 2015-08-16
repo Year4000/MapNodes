@@ -44,6 +44,7 @@ import org.bukkit.event.player.*;
 import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.event.world.WorldLoadEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
@@ -273,11 +274,8 @@ public final class GameListener implements Listener {
                     Block block = world.getBlockAt(xx, yy, zz);
                     final Inventory chest;
 
-                    if (block.getState() instanceof DoubleChest) {
-                        chest = ((DoubleChest) block.getState()).getInventory();
-                    }
-                    else if (block.getState() instanceof Chest) {
-                        chest = ((Chest) block.getState()).getInventory();
+                    if (block.getState() instanceof InventoryHolder) {
+                        chest = ((InventoryHolder) block.getState()).getInventory();
                     }
                     else {
                         chest = null;
