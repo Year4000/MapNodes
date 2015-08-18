@@ -51,7 +51,7 @@ public class Builders extends GameModeTemplate implements GameMode {
     private BuildersConfig config;
     private BuilderStage stage = BuilderStage.PRE_GAME;
     private Map<GamePlayer, PlayerPlot> plots = Maps.newHashMap();
-    private Iterator<BuildersConfig.Plot> avaiablePlots;
+    private Iterator<BuildersConfig.Plot> availablePlots;
     private BukkitTask gameClock;
 
     /** The Current theme of the game */
@@ -69,7 +69,7 @@ public class Builders extends GameModeTemplate implements GameMode {
     @EventHandler
     public void onGameLoad(GameLoadEvent event) {
         config = this.<BuildersConfig>getConfig();
-        avaiablePlots = config.getPlots().iterator();
+        availablePlots = config.getPlots().iterator();
 
         // Load the theme for this game
         themes = Themes.get();
@@ -147,10 +147,10 @@ public class Builders extends GameModeTemplate implements GameMode {
 
     @EventHandler
     public void onPlayerStart(GamePlayerStartEvent event) {
-        checkState(avaiablePlots.hasNext(), "error.game.builders.not_enuf_plots");
+        checkState(availablePlots.hasNext(), "error.game.builders.not_enuf_plots");
 
         GamePlayer gamePlayer = event.getPlayer();
-        PlayerPlot plot = new PlayerPlot(gamePlayer, avaiablePlots.next());
+        PlayerPlot plot = new PlayerPlot(gamePlayer, availablePlots.next());
         plots.put(gamePlayer, plot);
         event.setImmortal(false);
         event.setSpawn(plot.teleportPlotLocation());
