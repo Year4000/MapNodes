@@ -53,6 +53,8 @@ public class Builders extends GameModeTemplate implements GameMode {
     private Map<GamePlayer, PlayerPlot> plots = Maps.newHashMap();
     private Iterator<BuildersConfig.Plot> availablePlots;
     private BukkitTask gameClock;
+    private Iterator<PlayerPlot> voting;
+    private PlayerPlot currentVoting;
 
     /** The Current theme of the game */
     private Themes themes;
@@ -64,6 +66,53 @@ public class Builders extends GameModeTemplate implements GameMode {
         checkState(themes != null && theme != null, Msg.util("error.game.builders.theme_not_loaded"));
 
         return themes.translateTheme(theme, player.getLocale());
+    }
+
+    public void processVoting() {
+        stage = BuilderStage.VOTING;
+
+        // Set up iterator
+        if (voting == null) {
+            voting = plots.values()
+                .stream()
+                .filter(plot -> !plot.isForfeited())
+                .iterator();
+        }
+
+        if (!voting.hasNext()) {
+            // todo find the winners
+            MapNodes.getCurrentGame().stop();
+            return;
+        }
+
+        PlayerPlot plot = currentVoting = voting.next();
+
+        MapNodes.getCurrentGame().getPlayers().forEach(gamePlayer -> {
+            plot.teleportToPlot(gamePlayer);
+            plot.addPlotEffects(gamePlayer);
+        });
+
+        // Set the
+        gameClock = new Clocker(10, TimeUnit.SECONDS) {
+            @Override
+            public void runTock(int position) {
+                int currentTime = MathUtil.sec(position);
+                String color = Common.chatColorNumber(position, getTime());
+                String clock = color + (new TimeUtil(currentTime, TimeUnit.SECONDS)).prettyOutput("&7:" + color);
+
+                MapNodes.getCurrentGame().getPlaying().forEach(gamePlayer -> {
+                    Player player = gamePlayer.getPlayer();
+                    String message = Msg.locale(gamePlayer, "builders.voting", clock);
+                    PacketHacks.sendActionBarMessage(player, MessageUtil.replaceColors(message));
+                });
+            }
+
+            @Override
+            public void runLast(int position) {
+                processVoting();
+            }
+        }.run();
+        MapNodes.getCurrentGame().addTask(gameClock);
     }
 
     @EventHandler
@@ -99,9 +148,7 @@ public class Builders extends GameModeTemplate implements GameMode {
 
             @Override
             public void runLast(int position) {
-                stage = BuilderStage.VOTING;
-                // todo trigger voting
-                MapNodes.getCurrentGame().stop();
+                processVoting();
             }
         }.run();
         event.getGame().addTask(gameClock);
