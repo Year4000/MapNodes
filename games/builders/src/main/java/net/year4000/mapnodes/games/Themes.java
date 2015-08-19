@@ -1,14 +1,13 @@
 package net.year4000.mapnodes.games;
 
-import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.utilities.configs.Config;
 import net.year4000.utilities.configs.ConfigURL;
+import net.year4000.utilities.configs.JsonConfig;
 
 import java.util.Collections;
 import java.util.List;
@@ -20,7 +19,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @ToString
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @ConfigURL(value = "https://api.year4000.net/configs/builders", config = Themes.class)
-public class Themes extends Config<Themes> {
+public class Themes extends JsonConfig {
     private static final Locale DEFAULT_KEY = Locale.US;
 
     /** The themes that are for this game mode */
@@ -28,8 +27,7 @@ public class Themes extends Config<Themes> {
 
     /** Get the instance of this theme */
     public static Themes get() {
-        Themes themes = new Themes();
-        return themes.getInstance(themes);
+        return JsonConfig.getInstance(new Themes());
     }
 
     /** Get a random theme */

@@ -2,6 +2,7 @@ package net.year4000.mapnodes.games;
 
 import com.comphenix.packetwrapper.WrapperPlayServerWorldBorder;
 import com.comphenix.protocol.wrappers.EnumWrappers;
+import com.google.common.collect.Maps;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,12 +17,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Map;
 import java.util.function.Consumer;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
 @ToString
-public class PlayerPlot {
+public class PlayerPlot implements Comparable<PlayerPlot> {
     private final GamePlayer player;
     @Getter
     private final BuildersConfig.Plot plot;
@@ -30,6 +32,8 @@ public class PlayerPlot {
     @Setter
     @Getter
     private boolean forfeited = false;
+    @Getter
+    private Map<GamePlayer, VoteType> votes = Maps.newHashMap();
 
     // Plot effects
     private Material floor = Material.GRASS;
@@ -152,5 +156,21 @@ public class PlayerPlot {
             MapNodes.getProtocolManager().sendServerPacket(player.getPlayer(), border.getHandle());
         }
         catch (InvocationTargetException error) {}
+    }
+
+    /** Get the owner of the plot */
+    public String getOwner() {
+        return player.getPlayerColor();
+    }
+
+    /** Calculate the score of this plot */
+    public int calculateScore() {
+        return forfeited ? -1 : votes.values().stream().mapToInt(VoteType::getScore).sum();
+    }
+
+    @Override
+    public int compareTo(PlayerPlot playerPlot) {
+        checkNotNull(playerPlot, "playerPlot");
+        return calculateScore() < playerPlot.calculateScore() ? 1 : -1;
     }
 }

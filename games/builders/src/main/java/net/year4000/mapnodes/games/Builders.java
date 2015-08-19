@@ -29,13 +29,16 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
 
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -81,6 +84,18 @@ public class Builders extends GameModeTemplate implements GameMode {
 
         if (!voting.hasNext()) {
             // todo find the winners
+            MapNodes.getCurrentGame().getPlayers().forEach(player -> {
+                Iterator<PlayerPlot> voting = plots.values()
+                    .stream()
+                    .filter(plot -> !plot.isForfeited())
+                    .sorted()
+                    .iterator();
+
+                while (voting.hasNext()) {
+                    PlayerPlot plot = voting.next();
+                    player.sendMessage(plot.getOwner() + "&7: &e" + plot.calculateScore());
+                }
+            });
             MapNodes.getCurrentGame().stop();
             return;
         }
@@ -88,8 +103,27 @@ public class Builders extends GameModeTemplate implements GameMode {
         PlayerPlot plot = currentVoting = voting.next();
 
         MapNodes.getCurrentGame().getPlayers().forEach(gamePlayer -> {
+            VoteType.setInventory(gamePlayer);
             plot.teleportToPlot(gamePlayer);
             plot.addPlotEffects(gamePlayer);
+
+            SidebarManager sidebar = new SidebarManager();
+            sidebar.addBlank();
+            sidebar.addLine(Msg.locale(gamePlayer, "builders.theme", getTheme(gamePlayer)));
+            sidebar.addBlank();
+            sidebar.addLine(Msg.locale(gamePlayer, "builders.owner", gamePlayer.getPlayerColor()));
+            sidebar.addBlank();
+            if (plot.getOwner().equals(gamePlayer.getPlayerColor())) {
+                sidebar.addLine(Msg.locale(gamePlayer, "builders.vote", VoteType.INVALID.voteName(gamePlayer)));
+            }
+            else {
+                sidebar.addLine(Msg.locale(gamePlayer, "builders.vote", VoteType.NO_VOTE.voteName(gamePlayer)));
+            }
+            sidebar.addBlank();
+            sidebar.addLine(" &bwww&3.&byear4000&3.&bnet ");
+
+            ((NodeGame) MapNodes.getCurrentGame()).getScoreboardFactory().setCustomSidebar((NodePlayer) gamePlayer, sidebar);
+
         });
 
         // Set the
@@ -132,7 +166,7 @@ public class Builders extends GameModeTemplate implements GameMode {
     public void onGameStart(GameStartEvent event) {
         stage = BuilderStage.BUILDING;
 
-        gameClock = new Clocker(5, TimeUnit.MINUTES) {
+        gameClock = new Clocker(1, TimeUnit.MINUTES) {
             @Override
             public void runTock(int position) {
                 int currentTime = MathUtil.sec(position);
@@ -283,6 +317,49 @@ public class Builders extends GameModeTemplate implements GameMode {
             else {
                 event.setTo(plot.teleportPlotLocation());
             }
+        }
+    }
+
+    // Voting
+
+    @EventHandler
+    public void onVoting(PlayerInteractEvent event) {
+        if (stage != BuilderStage.VOTING || currentVoting == null) return;
+
+        GamePlayer gamePlayer = MapNodes.getCurrentGame().getPlayer(event.getPlayer());
+
+        if (!gamePlayer.isPlaying()) return;
+
+        Optional<ItemStack> holding = Optional.ofNullable(event.getItem());
+
+        if (holding.isPresent() && !currentVoting.getOwner().equals(gamePlayer.getPlayerColor())) {
+            ItemStack item = holding.get();
+
+            try {
+                VoteType voteType = VoteType.getVoteType(item, gamePlayer);
+                voteType.playSound(gamePlayer);
+                currentVoting.getVotes().put(gamePlayer, voteType);
+                gamePlayer.sendMessage(Msg.locale(gamePlayer, "builders.vote.selected"));
+
+                SidebarManager sidebar = new SidebarManager();
+                sidebar.addBlank();
+                sidebar.addLine(Msg.locale(gamePlayer, "builders.theme", getTheme(gamePlayer)));
+                sidebar.addBlank();
+                sidebar.addLine(Msg.locale(gamePlayer, "builders.owner", gamePlayer.getPlayerColor()));
+                sidebar.addBlank();
+                sidebar.addLine(Msg.locale(gamePlayer, "builders.vote", voteType.voteName(gamePlayer)));
+                sidebar.addBlank();
+                sidebar.addLine(" &bwww&3.&byear4000&3.&bnet ");
+
+                ((NodeGame) MapNodes.getCurrentGame()).getScoreboardFactory().setCustomSidebar((NodePlayer) gamePlayer, sidebar);
+            }
+            catch (IllegalArgumentException | NullPointerException error) {
+                // Invalid
+            }
+        }
+        else {
+            gamePlayer.sendMessage(Msg.locale(gamePlayer, "builders.vote.owner"));
+            VoteType.INVALID.playSound(gamePlayer);
         }
     }
 }
