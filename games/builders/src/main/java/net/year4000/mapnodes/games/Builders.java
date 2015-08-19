@@ -2,6 +2,7 @@ package net.year4000.mapnodes.games;
 
 import com.google.common.collect.Maps;
 import net.year4000.mapnodes.GameModeTemplate;
+import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.events.game.GameLoadEvent;
 import net.year4000.mapnodes.api.events.game.GameStartEvent;
@@ -127,7 +128,7 @@ public class Builders extends GameModeTemplate implements GameMode {
         });
 
         // Set the
-        gameClock = new Clocker(10, TimeUnit.SECONDS) {
+        gameClock = new Clocker(MapNodesPlugin.getInst().isDebug() ? 30 : 15, TimeUnit.SECONDS) {
             @Override
             public void runTock(int position) {
                 int currentTime = MathUtil.sec(position);
@@ -166,7 +167,7 @@ public class Builders extends GameModeTemplate implements GameMode {
     public void onGameStart(GameStartEvent event) {
         stage = BuilderStage.BUILDING;
 
-        gameClock = new Clocker(1, TimeUnit.MINUTES) {
+        gameClock = new Clocker(MapNodesPlugin.getInst().isDebug() ? 1 : 5, TimeUnit.MINUTES) {
             @Override
             public void runTock(int position) {
                 int currentTime = MathUtil.sec(position);
