@@ -1,15 +1,13 @@
 package net.year4000.mapnodes.games;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.year4000.mapnodes.GameModeTemplate;
 import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.events.game.GameLoadEvent;
 import net.year4000.mapnodes.api.events.game.GameStartEvent;
-import net.year4000.mapnodes.api.events.player.GamePlayerJoinEvent;
-import net.year4000.mapnodes.api.events.player.GamePlayerJoinSpectatorEvent;
-import net.year4000.mapnodes.api.events.player.GamePlayerJoinTeamEvent;
-import net.year4000.mapnodes.api.events.player.GamePlayerStartEvent;
+import net.year4000.mapnodes.api.events.player.*;
 import net.year4000.mapnodes.api.game.GamePlayer;
 import net.year4000.mapnodes.api.game.GameTeam;
 import net.year4000.mapnodes.api.game.modes.GameMode;
@@ -26,6 +24,13 @@ import net.year4000.mapnodes.utils.PacketHacks;
 import net.year4000.mapnodes.utils.SchedulerUtil;
 import net.year4000.utilities.MessageUtil;
 import net.year4000.utilities.TimeUtil;
+import net.year4000.utilities.bukkit.BukkitUtil;
+import net.year4000.utilities.bukkit.LocationUtil;
+import org.bukkit.Color;
+import org.bukkit.FireworkEffect;
+import org.bukkit.Location;
+import org.bukkit.entity.Firework;
+import org.bukkit.entity.Horse;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -33,13 +38,11 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
 
-import java.util.Iterator;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -83,21 +86,63 @@ public class Builders extends GameModeTemplate implements GameMode {
                 .iterator();
         }
 
+        // No more plots end game
         if (!voting.hasNext()) {
-            // todo find the winners
-            MapNodes.getCurrentGame().getPlayers().forEach(player -> {
-                Iterator<PlayerPlot> voting = plots.values()
-                    .stream()
-                    .filter(plot -> !plot.isForfeited())
-                    .sorted()
-                    .iterator();
+            List<PlayerPlot> voting = plots.values()
+                .stream()
+                .filter(plot -> !plot.isForfeited())
+                .sorted()
+                .collect(Collectors.toList());
 
-                while (voting.hasNext()) {
-                    PlayerPlot plot = voting.next();
-                    player.sendMessage(plot.getOwner() + "&7: &e" + plot.calculateScore());
-                }
+            PlayerPlot winningPlot = voting.get(0);
+            SidebarManager sidebar = new SidebarManager();
+
+            for (PlayerPlot plot : voting) {
+                sidebar.addLine(plot.getOwner(), plot.calculateScore());
+            }
+
+            // Set sidebar
+            MapNodes.getCurrentGame().getPlayers().forEach(player -> {
+                winningPlot.teleportToPlot(player);
+                winningPlot.fireworks();
+                ((NodeGame) MapNodes.getCurrentGame()).getScoreboardFactory().setCustomSidebar((NodePlayer) player, sidebar);
+
+                // Launch firework at player position
+                Location location = player.getPlayer().getLocation().clone().add(Common.randomOffset());
+                Firework firework = MapNodes.getCurrentWorld().spawn(location, Firework.class);
+                FireworkEffect effect = FireworkEffect.builder()
+                    .withColor((Color) BukkitUtil.COLOR_MAP.keySet().toArray()[new Random().nextInt(BukkitUtil.COLOR_MAP.keySet().size())])
+                    .withColor((Color) BukkitUtil.COLOR_MAP.keySet().toArray()[new Random().nextInt(BukkitUtil.COLOR_MAP.keySet().size())])
+                    .withColor((Color) BukkitUtil.COLOR_MAP.keySet().toArray()[new Random().nextInt(BukkitUtil.COLOR_MAP.keySet().size())])
+                    .withColor((Color) BukkitUtil.COLOR_MAP.keySet().toArray()[new Random().nextInt(BukkitUtil.COLOR_MAP.keySet().size())])
+                    .withFade((Color) BukkitUtil.COLOR_MAP.keySet().toArray()[new Random().nextInt(BukkitUtil.COLOR_MAP.keySet().size())])
+                    .withFade((Color) BukkitUtil.COLOR_MAP.keySet().toArray()[new Random().nextInt(BukkitUtil.COLOR_MAP.keySet().size())])
+                    .withFade((Color) BukkitUtil.COLOR_MAP.keySet().toArray()[new Random().nextInt(BukkitUtil.COLOR_MAP.keySet().size())])
+                    .withFade((Color) BukkitUtil.COLOR_MAP.keySet().toArray()[new Random().nextInt(BukkitUtil.COLOR_MAP.keySet().size())])
+                    .with(FireworkEffect.Type.BURST)
+                    .build();
+                FireworkMeta meta = firework.getFireworkMeta();
+                meta.clearEffects();
+                meta.addEffect(effect);
+                meta.setPower(0);
+                firework.setFireworkMeta(meta);
             });
-            MapNodes.getCurrentGame().stop();
+
+            // After 5 secs
+            MapNodes.getCurrentGame().addTask(SchedulerUtil.runSync(() -> {
+                GamePlayerWinEvent win = new GamePlayerWinEvent(MapNodes.getCurrentGame(), winningPlot.getPlayer());
+                List<String> top = Lists.newArrayList();
+
+                for (int i = 0; i < 3; i++) {
+                    if (i < voting.size()) {
+                        PlayerPlot plot = voting.get(i);
+                        top.add(plot.getOwner() + "&7: " + Common.colorCapacity(plot.calculateScore(), winningPlot.calculateScore()));
+                    }
+                }
+
+                win.setMessage(top);
+                win.call();
+            }, 5 * 20L));
             return;
         }
 
@@ -106,25 +151,8 @@ public class Builders extends GameModeTemplate implements GameMode {
         MapNodes.getCurrentGame().getPlayers().forEach(gamePlayer -> {
             VoteType.setInventory(gamePlayer);
             plot.teleportToPlot(gamePlayer);
-            plot.addPlotEffects(gamePlayer);
-
-            SidebarManager sidebar = new SidebarManager();
-            sidebar.addBlank();
-            sidebar.addLine(Msg.locale(gamePlayer, "builders.theme", getTheme(gamePlayer)));
-            sidebar.addBlank();
-            sidebar.addLine(Msg.locale(gamePlayer, "builders.owner", gamePlayer.getPlayerColor()));
-            sidebar.addBlank();
-            if (plot.getOwner().equals(gamePlayer.getPlayerColor())) {
-                sidebar.addLine(Msg.locale(gamePlayer, "builders.vote", VoteType.INVALID.voteName(gamePlayer)));
-            }
-            else {
-                sidebar.addLine(Msg.locale(gamePlayer, "builders.vote", VoteType.NO_VOTE.voteName(gamePlayer)));
-            }
-            sidebar.addBlank();
-            sidebar.addLine(" &bwww&3.&byear4000&3.&bnet ");
-
-            ((NodeGame) MapNodes.getCurrentGame()).getScoreboardFactory().setCustomSidebar((NodePlayer) gamePlayer, sidebar);
-
+            VoteType voteType = plot.getOwner().equals(gamePlayer.getPlayerColor()) ? VoteType.INVALID : VoteType.NO_VOTE;
+            setVoteSidebar(gamePlayer, plot.getPlayer(), voteType);
         });
 
         // Set the
@@ -264,6 +292,11 @@ public class Builders extends GameModeTemplate implements GameMode {
     public void onPlayerBuild(BlockPlaceEvent event) {
         if (!MapNodes.getCurrentGame().getStage().isPlaying()) return;
 
+        if (stage == BuilderStage.VOTING) {
+            event.setCancelled(true);
+            return;
+        }
+
         GamePlayer gamePlayer = MapNodes.getCurrentGame().getPlayer(event.getPlayer());
 
         if (!gamePlayer.isPlaying()) return;
@@ -280,6 +313,11 @@ public class Builders extends GameModeTemplate implements GameMode {
     @EventHandler(ignoreCancelled = true)
     public void onPlayerBuild(BlockBreakEvent event) {
         if (!MapNodes.getCurrentGame().getStage().isPlaying()) return;
+
+        if (stage == BuilderStage.VOTING) {
+            event.setCancelled(true);
+            return;
+        }
 
         GamePlayer gamePlayer = MapNodes.getCurrentGame().getPlayer(event.getPlayer());
 
@@ -302,11 +340,18 @@ public class Builders extends GameModeTemplate implements GameMode {
         if (event.getFrom().toVector().toBlockVector().equals(event.getTo().toVector().toBlockVector())) return;
 
         GamePlayer gamePlayer = MapNodes.getCurrentGame().getPlayer(event.getPlayer());
+        Vector vector = event.getTo().toVector();
+        PlayerPlot plot;
 
         if (!gamePlayer.isPlaying()) return;
 
-        PlayerPlot plot = gamePlayer.getPlayerData(PlayerPlot.class);
-        Vector vector = event.getTo().toVector();
+        // When voting say in voters plot
+        if (stage == BuilderStage.VOTING) {
+            plot = currentVoting.getPlayer().getPlayerData(PlayerPlot.class);
+        }
+        else {
+            plot = gamePlayer.getPlayerData(PlayerPlot.class);
+        }
 
         if (!plot.getPlot().isInPlot(vector, plot.getY(), plot.getY() + config.getHeight())) {
             gamePlayer.sendMessage(Msg.NOTICE + Msg.locale(gamePlayer, "region.exit.room"));
@@ -341,18 +386,7 @@ public class Builders extends GameModeTemplate implements GameMode {
                 voteType.playSound(gamePlayer);
                 currentVoting.getVotes().put(gamePlayer, voteType);
                 gamePlayer.sendMessage(Msg.locale(gamePlayer, "builders.vote.selected"));
-
-                SidebarManager sidebar = new SidebarManager();
-                sidebar.addBlank();
-                sidebar.addLine(Msg.locale(gamePlayer, "builders.theme", getTheme(gamePlayer)));
-                sidebar.addBlank();
-                sidebar.addLine(Msg.locale(gamePlayer, "builders.owner", gamePlayer.getPlayerColor()));
-                sidebar.addBlank();
-                sidebar.addLine(Msg.locale(gamePlayer, "builders.vote", voteType.voteName(gamePlayer)));
-                sidebar.addBlank();
-                sidebar.addLine(" &bwww&3.&byear4000&3.&bnet ");
-
-                ((NodeGame) MapNodes.getCurrentGame()).getScoreboardFactory().setCustomSidebar((NodePlayer) gamePlayer, sidebar);
+                setVoteSidebar(gamePlayer, currentVoting.getPlayer(), voteType);
             }
             catch (IllegalArgumentException | NullPointerException error) {
                 // Invalid
@@ -362,5 +396,20 @@ public class Builders extends GameModeTemplate implements GameMode {
             gamePlayer.sendMessage(Msg.locale(gamePlayer, "builders.vote.owner"));
             VoteType.INVALID.playSound(gamePlayer);
         }
+    }
+
+    /** Set the sidebar for vote */
+    private void setVoteSidebar(GamePlayer gamePlayer, GamePlayer plotOwner, VoteType voteType) {
+        SidebarManager sidebar = new SidebarManager();
+        sidebar.addBlank();
+        sidebar.addLine(Msg.locale(gamePlayer, "builders.theme", getTheme(gamePlayer)));
+        sidebar.addBlank();
+        sidebar.addLine(Msg.locale(gamePlayer, "builders.owner", plotOwner.getPlayerColor()));
+        sidebar.addBlank();
+        sidebar.addLine(Msg.locale(gamePlayer, "builders.vote", voteType.voteName(gamePlayer)));
+        sidebar.addBlank();
+        sidebar.addLine(" &bwww&3.&byear4000&3.&bnet ");
+
+        ((NodeGame) MapNodes.getCurrentGame()).getScoreboardFactory().setCustomSidebar((NodePlayer) gamePlayer, sidebar);
     }
 }

@@ -18,12 +18,14 @@ import org.bukkit.util.Vector;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
+import java.util.Random;
 import java.util.function.Consumer;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
 @ToString
 public class PlayerPlot implements Comparable<PlayerPlot> {
+    @Getter
     private final GamePlayer player;
     @Getter
     private final BuildersConfig.Plot plot;
@@ -85,10 +87,12 @@ public class PlayerPlot implements Comparable<PlayerPlot> {
     public Location teleportPlotLocation() {
         World world = MapNodes.getCurrentWorld();
         Vector midpoint = plot.getInnerMin().midpoint(plot.getInnerMax());
+        double distance = Math.sqrt(midpoint.clone().setY(0).distance(plot.getMax().clone().setY(0)));
+        double delta = new Random().nextInt(360) * Math.PI / 180;
 
-        int x = midpoint.getBlockX();
-        int z = midpoint.getBlockZ();
-        int y = world.getHighestBlockYAt(x, z) + 10;
+        double x = midpoint.getX() + distance * Math.cos(delta);
+        double z = midpoint.getZ() + distance * Math.sin(delta);
+        int y = world.getHighestBlockYAt((int) x, (int) z) + 10;
 
         return LocationUtil.center(new Location(world, x, y, z));
     }
@@ -143,19 +147,8 @@ public class PlayerPlot implements Comparable<PlayerPlot> {
         }
     }
 
-    public void setBorder() {
-        try {
-            Vector center = plot.getMax().midpoint(plot.getMin());
-            WrapperPlayServerWorldBorder border = new WrapperPlayServerWorldBorder();
-            border.setCenterX(center.getBlockX());
-            border.setCenterZ(center.getBlockZ());
-            border.setWarningDistance(0);
-            border.setRadius(center.distance(plot.getMax()));
-            border.setAction(EnumWrappers.WorldBorderAction.INITIALIZE);
+    public void fireworks() {
 
-            MapNodes.getProtocolManager().sendServerPacket(player.getPlayer(), border.getHandle());
-        }
-        catch (InvocationTargetException error) {}
     }
 
     /** Get the owner of the plot */
