@@ -30,6 +30,8 @@ import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Arrow;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -263,6 +265,7 @@ public final class GameListener implements Listener {
         int bx = chunk.getX() << 4;
         int bz = chunk.getZ() << 4;
 
+        // Do what it stakes to clear chests
         for (int xx = bx; xx < bx + 16; xx++) {
             for (int zz = bz; zz < bz + 16; zz++) {
                 int y = world.getHighestBlockYAt(xx, zz) + 1;
@@ -288,6 +291,12 @@ public final class GameListener implements Listener {
                     }
                 }
             }
+        }
+
+        // Remove item stacks that may been from chest
+        for (Entity item : chunk.getEntities()) {
+            if (item.getType() != EntityType.DROPPED_ITEM) continue;
+            item.remove();
         }
     }
 
