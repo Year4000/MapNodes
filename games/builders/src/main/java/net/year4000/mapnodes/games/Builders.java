@@ -25,16 +25,19 @@ import net.year4000.mapnodes.utils.SchedulerUtil;
 import net.year4000.utilities.MessageUtil;
 import net.year4000.utilities.TimeUtil;
 import net.year4000.utilities.bukkit.BukkitUtil;
-import net.year4000.utilities.bukkit.LocationUtil;
+import net.year4000.utilities.bukkit.FunEffectsUtil;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
+import org.bukkit.Sound;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Firework;
-import org.bukkit.entity.Horse;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
@@ -159,6 +162,8 @@ public class Builders extends GameModeTemplate implements GameMode {
         gameClock = new Clocker(MapNodesPlugin.getInst().isDebug() ? 30 : 15, TimeUnit.SECONDS) {
             @Override
             public void runTock(int position) {
+                if (position % 20 != 0) return;
+
                 int currentTime = MathUtil.sec(position);
                 String color = Common.chatColorNumber(position, getTime());
                 String clock = color + (new TimeUtil(currentTime, TimeUnit.SECONDS)).prettyOutput("&7:" + color);
@@ -167,6 +172,12 @@ public class Builders extends GameModeTemplate implements GameMode {
                     Player player = gamePlayer.getPlayer();
                     String message = Msg.locale(gamePlayer, "builders.voting", clock);
                     PacketHacks.sendActionBarMessage(player, MessageUtil.replaceColors(message));
+
+                    // Display on title at specific integers
+                    if (currentTime <= 5) {
+                        PacketHacks.setTitle(player, clock, "", 5, 20, 0);
+                        FunEffectsUtil.playSound(player, Sound.CHICKEN_EGG_POP);
+                    }
                 });
             }
 
@@ -195,9 +206,12 @@ public class Builders extends GameModeTemplate implements GameMode {
     public void onGameStart(GameStartEvent event) {
         stage = BuilderStage.BUILDING;
 
-        gameClock = new Clocker(MapNodesPlugin.getInst().isDebug() ? 1 : 5, TimeUnit.MINUTES) {
+        // 2:30 dev = 150 | 5:30 production = 330
+        gameClock = new Clocker(MapNodesPlugin.getInst().isDebug() ? 150 : 330, TimeUnit.SECONDS) {
             @Override
             public void runTock(int position) {
+                if (position % 20 != 0) return;
+
                 int currentTime = MathUtil.sec(position);
                 String color = Common.chatColorNumber(position, getTime());
                 String clock = color + (new TimeUtil(currentTime, TimeUnit.SECONDS)).prettyOutput("&7:" + color);
@@ -206,6 +220,12 @@ public class Builders extends GameModeTemplate implements GameMode {
                     Player player = gamePlayer.getPlayer();
                     String message = Msg.locale(gamePlayer, "builders.time", clock);
                     PacketHacks.sendActionBarMessage(player, MessageUtil.replaceColors(message));
+
+                    // Display on title at specific integers
+                    if (currentTime % 60 >= 58 || currentTime % 60 == 0 || currentTime <= 10) {
+                        PacketHacks.setTitle(player, clock, "", 0, 20, 5);
+                        FunEffectsUtil.playSound(player, Sound.CHICKEN_EGG_POP);
+                    }
                 });
             }
 
