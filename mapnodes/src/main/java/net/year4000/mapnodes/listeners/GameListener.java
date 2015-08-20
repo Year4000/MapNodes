@@ -273,6 +273,7 @@ public final class GameListener implements Listener {
                     if (block.getType() == Material.CHEST) {
                         ((InventoryHolder) block.getState()).getInventory().setContents(new ItemStack[0]);
                         byte type = block.getData();
+                        block.getDrops().clear();
                         block.setType(Material.AIR);
                         block.setType(Material.CHEST);
                         block.setData(type);
@@ -280,6 +281,7 @@ public final class GameListener implements Listener {
                     else if (block.getType() == Material.TRAPPED_CHEST) {
                         ((InventoryHolder) block.getState()).getInventory().setContents(new ItemStack[0]);
                         byte type = block.getData();
+                        block.getDrops().clear();
                         block.setType(Material.AIR);
                         block.setType(Material.TRAPPED_CHEST);
                         block.setData(type);
