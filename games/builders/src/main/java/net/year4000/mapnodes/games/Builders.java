@@ -78,6 +78,7 @@ public class Builders extends GameModeTemplate implements GameMode {
         return themes.translateTheme(theme, player.getLocale());
     }
 
+    /** Process the plots */
     public void processVoting() {
         stage = BuilderStage.VOTING;
 
@@ -315,7 +316,6 @@ public class Builders extends GameModeTemplate implements GameMode {
             SidebarManager sidebar = new SidebarManager();
             sidebar.addBlank();
             sidebar.addLine(Msg.locale(gamePlayer, "builders.theme", theme));
-            sidebar.addBlank();
             sidebar.addLine(Msg.locale(gamePlayer, "builders.owner", gamePlayer.getPlayerColor()));
             sidebar.addBlank();
             sidebar.addLine(" &bwww&3.&byear4000&3.&bnet ");
@@ -401,6 +401,13 @@ public class Builders extends GameModeTemplate implements GameMode {
             else {
                 event.setTo(plot.teleportPlotLocation());
             }
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onInteract(PlayerInteractEvent event) {
+        if (stage == BuilderStage.VOTING) {
+            event.setCancelled(true);
         }
     }
 
