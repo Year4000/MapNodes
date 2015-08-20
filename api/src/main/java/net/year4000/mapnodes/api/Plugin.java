@@ -7,6 +7,7 @@ package net.year4000.mapnodes.api;
 import com.comphenix.protocol.ProtocolManager;
 import net.year4000.mapnodes.api.game.GameManager;
 import net.year4000.utilities.LogUtil;
+import net.year4000.utilities.bukkit.gui.GUIManager;
 import org.bukkit.World;
 
 public interface Plugin {
@@ -21,4 +22,7 @@ public interface Plugin {
 
     /** Grab the protocol manager for MapNodes */
     ProtocolManager getProtocolManager();
+
+    /** Get the GUI Manager for MapNodes */
+    GUIManager getGui();
 }

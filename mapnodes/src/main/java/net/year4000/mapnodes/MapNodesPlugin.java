@@ -42,6 +42,7 @@ import net.year4000.utilities.LogUtil;
 import net.year4000.utilities.bukkit.BukkitPlugin;
 import net.year4000.utilities.bukkit.MessageUtil;
 import net.year4000.utilities.bukkit.MessagingChannel;
+import net.year4000.utilities.bukkit.gui.GUIManager;
 import net.year4000.utilities.bukkit.locale.MessageLocale;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -68,6 +69,7 @@ public class MapNodesPlugin extends BukkitPlugin implements Plugin {
     private Network network;
     private Backend api;
     private ProtocolManager protocolManager;
+    private GUIManager gui = new GUIManager();
 
     @Override
     public void onLoad() {
@@ -192,6 +194,7 @@ public class MapNodesPlugin extends BukkitPlugin implements Plugin {
         }
 
         // Tasks that can be ran with out plugin loaded
+        gui.unregisterMenus();
         Bukkit.getScheduler().cancelTasks(this);
         Bukkit.shutdown();
     }

@@ -7,6 +7,7 @@ package net.year4000.mapnodes.api;
 import com.comphenix.protocol.ProtocolManager;
 import net.year4000.mapnodes.api.game.GameManager;
 import net.year4000.utilities.LogUtil;
+import net.year4000.utilities.bukkit.gui.GUIManager;
 import org.bukkit.World;
 
 public final class MapNodes {
@@ -36,5 +37,10 @@ public final class MapNodes {
     /** Grab the protocol manager for MapNodes */
     public static ProtocolManager getProtocolManager() {
         return inst.getProtocolManager();
+    }
+
+    /** Get the GUI Manager for MapNodes */
+    public static GUIManager getGui() {
+        return inst.getGui();
     }
 }
