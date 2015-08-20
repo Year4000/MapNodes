@@ -91,61 +91,7 @@ public class Builders extends GameModeTemplate implements GameMode {
 
         // No more plots end game
         if (!voting.hasNext()) {
-            List<PlayerPlot> voting = plots.values()
-                .stream()
-                .filter(plot -> !plot.isForfeited())
-                .sorted()
-                .collect(Collectors.toList());
-
-            PlayerPlot winningPlot = voting.get(0);
-            SidebarManager sidebar = new SidebarManager();
-
-            for (PlayerPlot plot : voting) {
-                sidebar.addLine(plot.getOwner(), plot.calculateScore());
-            }
-
-            // Set sidebar
-            MapNodes.getCurrentGame().getPlayers().forEach(player -> {
-                winningPlot.teleportToPlot(player);
-                winningPlot.fireworks();
-                ((NodeGame) MapNodes.getCurrentGame()).getScoreboardFactory().setCustomSidebar((NodePlayer) player, sidebar);
-
-                // Launch firework at player position
-                Location location = player.getPlayer().getLocation().clone().add(Common.randomOffset());
-                Firework firework = MapNodes.getCurrentWorld().spawn(location, Firework.class);
-                FireworkEffect effect = FireworkEffect.builder()
-                    .withColor((Color) BukkitUtil.COLOR_MAP.keySet().toArray()[new Random().nextInt(BukkitUtil.COLOR_MAP.keySet().size())])
-                    .withColor((Color) BukkitUtil.COLOR_MAP.keySet().toArray()[new Random().nextInt(BukkitUtil.COLOR_MAP.keySet().size())])
-                    .withColor((Color) BukkitUtil.COLOR_MAP.keySet().toArray()[new Random().nextInt(BukkitUtil.COLOR_MAP.keySet().size())])
-                    .withColor((Color) BukkitUtil.COLOR_MAP.keySet().toArray()[new Random().nextInt(BukkitUtil.COLOR_MAP.keySet().size())])
-                    .withFade((Color) BukkitUtil.COLOR_MAP.keySet().toArray()[new Random().nextInt(BukkitUtil.COLOR_MAP.keySet().size())])
-                    .withFade((Color) BukkitUtil.COLOR_MAP.keySet().toArray()[new Random().nextInt(BukkitUtil.COLOR_MAP.keySet().size())])
-                    .withFade((Color) BukkitUtil.COLOR_MAP.keySet().toArray()[new Random().nextInt(BukkitUtil.COLOR_MAP.keySet().size())])
-                    .withFade((Color) BukkitUtil.COLOR_MAP.keySet().toArray()[new Random().nextInt(BukkitUtil.COLOR_MAP.keySet().size())])
-                    .with(FireworkEffect.Type.BURST)
-                    .build();
-                FireworkMeta meta = firework.getFireworkMeta();
-                meta.clearEffects();
-                meta.addEffect(effect);
-                meta.setPower(0);
-                firework.setFireworkMeta(meta);
-            });
-
-            // After 5 secs
-            MapNodes.getCurrentGame().addTask(SchedulerUtil.runSync(() -> {
-                GamePlayerWinEvent win = new GamePlayerWinEvent(MapNodes.getCurrentGame(), winningPlot.getPlayer());
-                List<String> top = Lists.newArrayList();
-
-                for (int i = 0; i < 3; i++) {
-                    if (i < voting.size()) {
-                        PlayerPlot plot = voting.get(i);
-                        top.add(plot.getOwner() + "&7: " + Common.colorCapacity(plot.calculateScore(), winningPlot.calculateScore()));
-                    }
-                }
-
-                win.setMessage(top);
-                win.call();
-            }, 5 * 20L));
+            endGame();
             return;
         }
 
@@ -187,6 +133,78 @@ public class Builders extends GameModeTemplate implements GameMode {
             }
         }.run();
         MapNodes.getCurrentGame().addTask(gameClock);
+    }
+
+    /** Calculate the winner and show scores */
+    public void endGame() {
+        List<PlayerPlot> voting = plots.values()
+            .stream()
+            .filter(plot -> !plot.isForfeited())
+            .sorted()
+            .collect(Collectors.toList());
+
+        PlayerPlot winningPlot = voting.get(0);
+        SidebarManager sidebar = new SidebarManager();
+
+        for (PlayerPlot plot : voting) {
+            sidebar.addLine(plot.getOwner(), plot.calculateScore());
+        }
+
+        // Set sidebar
+        MapNodes.getCurrentGame().getPlayers().forEach(player -> {
+            winningPlot.teleportToPlot(player);
+            winningPlot.fireworks();
+            ((NodeGame) MapNodes.getCurrentGame()).getScoreboardFactory().setCustomSidebar((NodePlayer) player, sidebar);
+
+            // Launch firework at player position
+            Location location = player.getPlayer().getLocation().clone().add(Common.randomOffset());
+            Firework firework = MapNodes.getCurrentWorld().spawn(location, Firework.class);
+            FireworkEffect effect = FireworkEffect.builder()
+                .withColor((Color) BukkitUtil.COLOR_MAP.keySet().toArray()[new Random().nextInt(BukkitUtil.COLOR_MAP.keySet().size())])
+                .withColor((Color) BukkitUtil.COLOR_MAP.keySet().toArray()[new Random().nextInt(BukkitUtil.COLOR_MAP.keySet().size())])
+                .withColor((Color) BukkitUtil.COLOR_MAP.keySet().toArray()[new Random().nextInt(BukkitUtil.COLOR_MAP.keySet().size())])
+                .withColor((Color) BukkitUtil.COLOR_MAP.keySet().toArray()[new Random().nextInt(BukkitUtil.COLOR_MAP.keySet().size())])
+                .withFade((Color) BukkitUtil.COLOR_MAP.keySet().toArray()[new Random().nextInt(BukkitUtil.COLOR_MAP.keySet().size())])
+                .withFade((Color) BukkitUtil.COLOR_MAP.keySet().toArray()[new Random().nextInt(BukkitUtil.COLOR_MAP.keySet().size())])
+                .withFade((Color) BukkitUtil.COLOR_MAP.keySet().toArray()[new Random().nextInt(BukkitUtil.COLOR_MAP.keySet().size())])
+                .withFade((Color) BukkitUtil.COLOR_MAP.keySet().toArray()[new Random().nextInt(BukkitUtil.COLOR_MAP.keySet().size())])
+                .with(FireworkEffect.Type.BURST)
+                .build();
+            FireworkMeta meta = firework.getFireworkMeta();
+            meta.clearEffects();
+            meta.addEffect(effect);
+            meta.setPower(0);
+            firework.setFireworkMeta(meta);
+        });
+
+        // After 5 secs
+        MapNodes.getCurrentGame().addTask(SchedulerUtil.runSync(() -> {
+            GamePlayerWinEvent win = new GamePlayerWinEvent(MapNodes.getCurrentGame(), winningPlot.getPlayer());
+            List<String> top = Lists.newArrayList();
+
+            for (int i = 0; i < 3; i++) {
+                if (i < voting.size()) {
+                    PlayerPlot plot = voting.get(i);
+                    top.add(plot.getOwner() + "&7: " + plot.calculateScore());
+                }
+            }
+
+            win.setMessage(top);
+            win.call();
+        }, 5 * 20L));
+    }
+
+    /** Set the sidebar for vote */
+    private void setVoteSidebar(GamePlayer gamePlayer, GamePlayer plotOwner, VoteType voteType) {
+        SidebarManager sidebar = new SidebarManager();
+        sidebar.addBlank();
+        sidebar.addLine(Msg.locale(gamePlayer, "builders.theme", getTheme(gamePlayer)));
+        sidebar.addLine(Msg.locale(gamePlayer, "builders.owner", plotOwner.getPlayerColor()));
+        sidebar.addLine(Msg.locale(gamePlayer, "builders.vote", voteType.voteName(gamePlayer)));
+        sidebar.addBlank();
+        sidebar.addLine(" &bwww&3.&byear4000&3.&bnet ");
+
+        ((NodeGame) MapNodes.getCurrentGame()).getScoreboardFactory().setCustomSidebar((NodePlayer) gamePlayer, sidebar);
     }
 
     @EventHandler
@@ -412,24 +430,18 @@ public class Builders extends GameModeTemplate implements GameMode {
                 // Invalid
             }
         }
-        else {
+        else if (holding.isPresent()) {
             gamePlayer.sendMessage(Msg.locale(gamePlayer, "builders.vote.owner"));
             VoteType.INVALID.playSound(gamePlayer);
         }
     }
 
-    /** Set the sidebar for vote */
-    private void setVoteSidebar(GamePlayer gamePlayer, GamePlayer plotOwner, VoteType voteType) {
-        SidebarManager sidebar = new SidebarManager();
-        sidebar.addBlank();
-        sidebar.addLine(Msg.locale(gamePlayer, "builders.theme", getTheme(gamePlayer)));
-        sidebar.addBlank();
-        sidebar.addLine(Msg.locale(gamePlayer, "builders.owner", plotOwner.getPlayerColor()));
-        sidebar.addBlank();
-        sidebar.addLine(Msg.locale(gamePlayer, "builders.vote", voteType.voteName(gamePlayer)));
-        sidebar.addBlank();
-        sidebar.addLine(" &bwww&3.&byear4000&3.&bnet ");
+    // Misc Plot Events
 
-        ((NodeGame) MapNodes.getCurrentGame()).getScoreboardFactory().setCustomSidebar((NodePlayer) gamePlayer, sidebar);
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onDrop(EntitySpawnEvent event) {
+        if (event.getEntityType() == EntityType.ARMOR_STAND) {
+            event.setCancelled(false);
+        }
     }
 }
