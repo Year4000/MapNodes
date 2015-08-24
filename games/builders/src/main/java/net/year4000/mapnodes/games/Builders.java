@@ -142,6 +142,8 @@ public class Builders extends GameModeTemplate implements GameMode {
 
     /** Calculate the winner and show scores */
     public void endGame() {
+        stage = BuilderStage.RESULTS;
+
         List<PlayerPlot> voting = plots.values()
             .stream()
             .filter(plot -> !plot.isForfeited())
