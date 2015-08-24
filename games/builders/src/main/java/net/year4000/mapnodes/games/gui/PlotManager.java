@@ -1,3 +1,7 @@
+/*
+ * Copyright 2015 Year4000. All Rights Reserved.
+ */
+
 package net.year4000.mapnodes.games.gui;
 
 import net.year4000.mapnodes.api.MapNodes;
@@ -17,7 +21,6 @@ public class PlotManager extends AbstractGUI {
     public Locale getLocale(Player player) {
         return MapNodes.getCurrentGame().getPlayer(player).getLocale();
     }
-
 
     @Override
     public IconView[][] generate(Locale locale) {
