@@ -4,13 +4,17 @@
 
 package net.year4000.mapnodes.game.regions.events;
 
+import com.google.common.collect.Maps;
 import com.google.gson.annotations.SerializedName;
+import net.year4000.mapnodes.api.MapNodes;
+import net.year4000.mapnodes.api.game.GamePlayer;
 import net.year4000.mapnodes.api.game.regions.EventType;
 import net.year4000.mapnodes.api.game.regions.RegionListener;
 import net.year4000.mapnodes.api.game.regions.EventTypes;
 import net.year4000.mapnodes.game.regions.RegionEvent;
 import net.year4000.mapnodes.game.regions.types.Point;
 import net.year4000.mapnodes.utils.*;
+import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -21,6 +25,7 @@ import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.util.Vector;
 
@@ -30,7 +35,7 @@ import java.util.concurrent.TimeUnit;
 @EventType(EventTypes.TNT)
 public class TNT extends RegionEvent implements RegionListener {
     private static final Random rand = new Random();
-    private static Collection<? extends Entity> tracker = new ArrayList<>();
+    private static Map<UUID, Vector> tracker = Maps.newHashMap();
 
     /** Tnt will be active when placed */
     private boolean instant = false;
@@ -122,6 +127,7 @@ public class TNT extends RegionEvent implements RegionListener {
                     block.setType(Material.AIR);
                     flying.setDropItem(false);
                     flying.setVelocity(velocity);
+                    tracker.put(flying.getUniqueId(), event.getLocation().toVector());
                 }
             });
 
@@ -130,6 +136,18 @@ public class TNT extends RegionEvent implements RegionListener {
         }
 
         runGlobalEventTasks(event.getLocation());
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onBlockLand(EntityChangeBlockEvent event) {
+        if (event.getEntity() instanceof org.bukkit.entity.FallingBlock && throwBlocks) {
+            Vector vector = event.getBlock().getLocation().toVector();
+            boolean tooClose = vector.distance(tracker.getOrDefault(event.getEntity().getUniqueId(), vector)) < 2;
+
+            if (event.getBlock().getType() == Material.AIR && tooClose) {
+                SchedulerUtil.runSync(() -> event.getBlock().setType(Material.AIR));
+            }
+        }
     }
 
     /** Explode the Primed TNT later */

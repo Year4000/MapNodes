@@ -9,6 +9,7 @@ import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.events.game.GameLoadEvent;
@@ -21,32 +22,36 @@ import net.year4000.mapnodes.api.game.GameRegion;
 import net.year4000.mapnodes.api.game.GameTeam;
 import net.year4000.mapnodes.api.game.modes.GameMode;
 import net.year4000.mapnodes.api.game.modes.GameModeInfo;
+import net.year4000.mapnodes.backend.MapNodesBadgeManager;
 import net.year4000.mapnodes.game.NodePlayer;
 import net.year4000.mapnodes.game.regions.types.Global;
 import net.year4000.mapnodes.game.regions.types.Point;
 import net.year4000.mapnodes.GameModeTemplate;
+import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.NMSHacks;
+import net.year4000.mapnodes.utils.PacketHacks;
 import net.year4000.mapnodes.utils.SchedulerUtil;
+import net.year4000.utilities.TimeUtil;
+import net.year4000.utilities.bukkit.ItemUtil;
 import net.year4000.utilities.bukkit.MessageUtil;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.TNTPrimed;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockDispenseEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.ExplosionPrimeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @GameModeInfo(
@@ -63,6 +68,7 @@ public class TntWars extends GameModeTemplate implements GameMode {
     private Map<Integer, Vector> locations = new HashMap<>();
     private List<Integer> fromDispenser = new ArrayList<>();
     private List<Vector> fromDispensers = Lists.newArrayList();
+    private Map<UUID, Long> launchTimes = Maps.newHashMap();
 
     // Safe TNT //
 
@@ -107,6 +113,46 @@ public class TntWars extends GameModeTemplate implements GameMode {
     @EventHandler
     public void onPlayerStart(GamePlayerStartEvent event) {
         event.setImmortal(false);
+    }
+
+    @EventHandler
+    public void onTNTLaunch(PlayerInteractEvent event) {
+        Player player = event.getPlayer();
+        NodePlayer nodePlayer = (NodePlayer) MapNodes.getCurrentGame().getPlayer(player);
+        long currentTime = System.currentTimeMillis(), playerTime;
+        boolean rightAir = event.getAction() == Action.RIGHT_CLICK_AIR;
+        boolean rightBlock = event.getAction() == Action.RIGHT_CLICK_BLOCK;
+        boolean material = event.getMaterial() == Material.TNT;
+
+        if (rightAir && material && !rightBlock) {
+            if ((playerTime = launchTimes.getOrDefault(player.getUniqueId(), currentTime)) > currentTime) {
+                String time = "&a" + new TimeUtil(playerTime - currentTime + 1000, TimeUnit.MILLISECONDS).prettyOutput("&7:&a");
+                PacketHacks.setTitle(player, "", Msg.locale(player, "tnt_wars.throw.tnt", time), 5, 10, 5);
+                return;
+            }
+            else if (nodePlayer.getCache().getBadge().getRank() == 1) {
+                // Let the player know VIP has less wait time
+                player.sendMessage(Msg.locale(player, "tnt_wars.throw.vip"));
+            }
+
+            Location location = player.getEyeLocation().clone().subtract(0, 0.25, 0);
+            Entity tnt = MapNodes.getCurrentWorld().spawnEntity(location, EntityType.PRIMED_TNT);
+            double pitch = player.getLocation().getPitch() > 0 ? 90 - player.getLocation().getPitch() : player.getLocation().getPitch() + 270;
+            tnt.setVelocity(location.getDirection().normalize().multiply(Math.log(pitch) - 0.25));
+            ItemStack tntStack = player.getItemInHand();
+
+            if (tntStack.getAmount() > 1) {
+                tntStack.setAmount(tntStack.getAmount() - 1);
+            }
+            else {
+                player.setItemInHand(ItemUtil.makeItem("air"));
+            }
+
+            locations.putIfAbsent(tnt.getEntityId(), location.toVector());
+            // VIP perk higher you are less time to wait
+            int waitTime = 1 + MapNodesBadgeManager.MAX_RANK  - nodePlayer.getCache().getBadge().getRank();
+            launchTimes.put(player.getUniqueId(), currentTime + TimeUnit.SECONDS.toMillis(waitTime));
+        }
     }
 
     @EventHandler
