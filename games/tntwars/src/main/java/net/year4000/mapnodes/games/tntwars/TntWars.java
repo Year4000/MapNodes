@@ -4,6 +4,11 @@
 
 package net.year4000.mapnodes.games.tntwars;
 
+import com.comphenix.packetwrapper.WrapperPlayServerSpawnEntity;
+import com.comphenix.protocol.PacketType;
+import com.comphenix.protocol.events.PacketAdapter;
+import com.comphenix.protocol.events.PacketEvent;
+import com.google.common.collect.Lists;
 import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.events.game.GameLoadEvent;
@@ -32,6 +37,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.block.BlockDispenseEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.ExplosionPrimeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
@@ -56,6 +62,7 @@ public class TntWars extends GameModeTemplate implements GameMode {
     private int winnerScore;
     private Map<Integer, Vector> locations = new HashMap<>();
     private List<Integer> fromDispenser = new ArrayList<>();
+    private List<Vector> fromDispensers = Lists.newArrayList();
 
     // Safe TNT //
 
@@ -81,6 +88,20 @@ public class TntWars extends GameModeTemplate implements GameMode {
             island.initIsland(game);
             game.addStaticGoal(island.getId(), island.getDisplay());
         });
+
+        // Register the packet to grab the tnt dispensed from the dispenser
+        MapNodes.getProtocolManager().addPacketListener(new PacketAdapter(MapNodesPlugin.getInst(), PacketType.Play.Server.SPAWN_ENTITY) {
+            @Override
+            public void onPacketSending(PacketEvent event) {
+                WrapperPlayServerSpawnEntity entity = new WrapperPlayServerSpawnEntity(event.getPacket());
+                Vector vector = new Vector(entity.getX(), entity.getY(), entity.getZ());
+
+                if (fromDispensers.remove(vector)) {
+                    locations.putIfAbsent(entity.getEntityID(), vector);
+                    fromDispenser.add(entity.getEntityID());
+                }
+            }
+        });
     }
 
     @EventHandler
@@ -90,26 +111,23 @@ public class TntWars extends GameModeTemplate implements GameMode {
 
     @EventHandler
     public void onPrimed(ExplosionPrimeEvent event) {
-        locations.put(event.getEntity().getEntityId(), event.getEntity().getLocation().toVector());
+        locations.putIfAbsent(event.getEntity().getEntityId(), event.getEntity().getLocation().toVector().clone());
     }
 
-    /*@EventHandler
-    public void onPrimed(BlockDispenseEntityEvent event) {
-        if (!(event.getEntity() instanceof TNTPrimed)) return;
-
-        locations.put(event.getEntity().getEntityId(), event.getEntity().getLocation().toVector());
-        fromDispenser.add(event.getEntity().getEntityId());
-    }*/
+    @EventHandler
+    public void onPrimed(BlockDispenseEvent event) {
+        if (event.getItem().getType() != Material.TNT) return;
+        fromDispensers.add(event.getVelocity().clone());
+    }
 
     @EventHandler(priority = EventPriority.LOW)
     public void onPrimed(EntityExplodeEvent event) {
         try {
             if (locations.containsKey(event.getEntity().getEntityId())) {
-                Vector current = event.getLocation().toVector();
+                Vector current = event.getLocation().clone().toVector();
                 Vector old = locations.remove(event.getEntity().getEntityId());
 
-                if (Math.abs(current.getBlockZ() - old.getBlockZ()) < 5 && Math.abs(current.getBlockX() - old.getBlockX()) < 5) {
-
+                if (current.clone().setY(old.getY()).distance(old) < 5) {
                     if (fromDispenser.remove((Integer) event.getEntity().getEntityId())) {
                         Block baseBlock = old.toLocation(MapNodes.getCurrentWorld()).getBlock();
 
