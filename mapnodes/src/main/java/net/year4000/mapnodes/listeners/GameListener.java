@@ -90,7 +90,7 @@ public final class GameListener implements Listener {
         Player killer;
 
         if (event.getDamager() instanceof Arrow) {
-            Arrow arrow = (Arrow) event.getEntity();
+            Arrow arrow = (Arrow) event.getDamager();
 
             if (!(arrow.getShooter() instanceof Player)) return;
 
