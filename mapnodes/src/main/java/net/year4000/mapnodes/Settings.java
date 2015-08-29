@@ -34,6 +34,10 @@ public class Settings {
     private Integer loadMaps = 0;
 
     @NonNull
+    @SerializedName("world_cache")
+    private String worldCache = "/tmp/MapNodes";
+
+    @NonNull
     private JsonObject kits = new JsonObject();
 
     // todo remove this, was added for backwards compatibly
@@ -64,6 +68,11 @@ public class Settings {
         String loadMaps = "mapnodes.load_maps";
         if ((loadMaps = System.getProperty(loadMaps)) != null) {
             settings.loadMaps = Integer.valueOf(loadMaps);
+        }
+
+        String worldCache = "mapnodes.world_cache";
+        if ((worldCache = System.getProperty(worldCache)) != null) {
+            settings.worldCache = worldCache;
         }
     }
 }

@@ -70,7 +70,7 @@ public class Node {
         try {
             worldName = String.format(TEMPLATE, id, worldFolder.getObject().getURLName());
             worldUrl = new URL(worldFolder.getWorld().getUrl() + "?key=" + Settings.get().getKey());
-            worldCache = new File(new File(WORLD_CONTAINER, "cache"), worldFolder.getCacheId() + ".zip");
+            worldCache = new File(new File(Settings.get().getWorldCache()), worldFolder.getCacheId() + ".zip");
             worldFile = new ZipFile(worldCache);
             worldSize = worldFolder.getWorld().getSize();
         }
