@@ -41,6 +41,7 @@ import org.bukkit.scoreboard.Scoreboard;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static net.year4000.utilities.locale.AbstractLocaleManager.toLanguage;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 @Data
@@ -110,12 +111,12 @@ public final class NodePlayer implements GamePlayer, Comparable {
 
     /** Get the locale of the player */
     public Locale getLocale() {
-        return new Locale(getRawLocale());
+        return toLanguage(new Locale(player.spigot().getLocale()));
     }
 
     /** Get the locale of the player */
     public String getRawLocale() {
-        return player.spigot().getLocale();
+        return getLocale().toString();
     }
 
     /** Does this player have a class kit */
