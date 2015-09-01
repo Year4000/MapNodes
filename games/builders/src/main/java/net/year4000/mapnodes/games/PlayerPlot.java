@@ -143,8 +143,8 @@ public class PlayerPlot implements Comparable<PlayerPlot> {
 
     /** Process data for each block in the plot */
     public void processPlot(Consumer<Block> block) {
-        for (int x = plot.getInnerMin().getBlockX(); x < plot.getInnerMax().getBlockX(); x++) {
-            for (int z = plot.getInnerMin().getBlockZ(); z < plot.getInnerMax().getBlockZ(); z++) {
+        for (int x = plot.getInnerMin().getBlockX(); x <= plot.getInnerMax().getBlockX(); x++) {
+            for (int z = plot.getInnerMin().getBlockZ(); z <= plot.getInnerMax().getBlockZ(); z++) {
                 Block pos = MapNodes.getCurrentWorld().getBlockAt(x, y, z);
                 block.accept(pos);
             }
