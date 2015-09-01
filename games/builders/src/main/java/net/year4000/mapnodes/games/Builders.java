@@ -11,6 +11,7 @@ import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.events.game.GameLoadEvent;
 import net.year4000.mapnodes.api.events.game.GameStartEvent;
+import net.year4000.mapnodes.api.events.game.GameStopEvent;
 import net.year4000.mapnodes.api.events.player.*;
 import net.year4000.mapnodes.api.game.GamePlayer;
 import net.year4000.mapnodes.api.game.GameTeam;
@@ -21,6 +22,7 @@ import net.year4000.mapnodes.clocks.Clocker;
 import net.year4000.mapnodes.game.NodeGame;
 import net.year4000.mapnodes.game.NodePlayer;
 import net.year4000.mapnodes.game.scoreboard.SidebarManager;
+import net.year4000.mapnodes.games.gui.PlotManager;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.Common;
 import net.year4000.mapnodes.utils.MathUtil;
@@ -30,22 +32,23 @@ import net.year4000.utilities.MessageUtil;
 import net.year4000.utilities.TimeUtil;
 import net.year4000.utilities.bukkit.BukkitUtil;
 import net.year4000.utilities.bukkit.FunEffectsUtil;
-import org.bukkit.Color;
-import org.bukkit.FireworkEffect;
-import org.bukkit.Location;
-import org.bukkit.Sound;
+import org.bukkit.*;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntitySpawnEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkMeta;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
 
@@ -69,6 +72,14 @@ public class Builders extends GameModeTemplate implements GameMode {
     private BukkitTask gameClock;
     private Iterator<PlayerPlot> voting;
     private PlayerPlot currentVoting;
+    List<PlotManager> guis = Lists.newArrayList();
+    private static final ItemStack itemBase;
+    static {
+        itemBase = new ItemStack(Material.BLAZE_ROD);
+        ItemMeta meta = itemBase.getItemMeta();
+        meta.spigot().setUnbreakable(true);
+        itemBase.setItemMeta(meta);
+    }
 
     /** The Current theme of the game */
     private Themes themes;
@@ -217,6 +228,12 @@ public class Builders extends GameModeTemplate implements GameMode {
     }
 
     @EventHandler
+    public void onGameGameStop(GameStopEvent event) {
+        // Unregister menus
+        guis.forEach(MapNodes.getGui()::unregisterMenu);
+    }
+
+    @EventHandler
     public void onGameLoad(GameLoadEvent event) {
         config = this.<BuildersConfig>getConfig();
         availablePlots = config.getPlots().iterator();
@@ -253,6 +270,13 @@ public class Builders extends GameModeTemplate implements GameMode {
                         PacketHacks.setTitle(player, clock, "", 0, 20, 5);
                         FunEffectsUtil.playSound(player, Sound.CHICKEN_EGG_POP);
                     }
+
+                    // Make sure the player has the plot stick
+                    ItemStack item = itemBase.clone();
+                    ItemMeta meta = item.getItemMeta();
+                    meta.setDisplayName(Msg.locale(gamePlayer, "builders.plot.stick"));
+                    item.setItemMeta(meta);
+                    gamePlayer.getPlayer().getInventory().setItem(8, item);
                 });
             }
 
@@ -307,7 +331,7 @@ public class Builders extends GameModeTemplate implements GameMode {
         checkState(availablePlots.hasNext(), "error.game.builders.not_enuf_plots");
 
         GamePlayer gamePlayer = event.getPlayer();
-        PlayerPlot plot = new PlayerPlot(gamePlayer, availablePlots.next());
+        PlayerPlot plot = new PlayerPlot(this, gamePlayer, availablePlots.next());
         plots.put(gamePlayer, plot);
         event.setImmortal(false);
         event.setSpawn(plot.teleportPlotLocation());
@@ -473,6 +497,22 @@ public class Builders extends GameModeTemplate implements GameMode {
             /** Can not change armor */
             if (gamePlayer.isPlaying() && event.getSlotType() == InventoryType.SlotType.ARMOR) {
                 event.setCancelled(true);
+            }
+        }
+    }
+
+    @EventHandler
+    public void onPlotStick(PlayerInteractEvent event) {
+        boolean rightBlock = event.getAction() == Action.RIGHT_CLICK_BLOCK;
+        boolean rightAir = event.getAction() == Action.RIGHT_CLICK_AIR;
+
+        if (rightBlock || rightAir) {
+            ItemStack plotStick = event.getPlayer().getItemInHand();
+
+            if (plotStick.getType() == itemBase.getType() && plotStick.getItemMeta().spigot().isUnbreakable()) {
+                GamePlayer gamePlayer = MapNodes.getCurrentGame().getPlayer(event.getPlayer());
+                PlayerPlot plot = gamePlayer.getPlayerData(PlayerPlot.class);
+                plot.getPlotManager().openInventory(event.getPlayer());
             }
         }
     }

@@ -4,8 +4,6 @@
 
 package net.year4000.mapnodes.games;
 
-import com.comphenix.packetwrapper.WrapperPlayServerWorldBorder;
-import com.comphenix.protocol.wrappers.EnumWrappers;
 import com.google.common.collect.Maps;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,6 +11,8 @@ import lombok.Setter;
 import lombok.ToString;
 import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.game.GamePlayer;
+import net.year4000.mapnodes.games.gui.PlotManager;
+import net.year4000.mapnodes.utils.SchedulerUtil;
 import net.year4000.utilities.bukkit.LocationUtil;
 import org.bukkit.*;
 import org.bukkit.block.Biome;
@@ -20,7 +20,6 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 import java.util.Random;
 import java.util.function.Consumer;
@@ -28,20 +27,18 @@ import java.util.function.Consumer;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 @ToString
+@Getter
 public class PlayerPlot implements Comparable<PlayerPlot> {
-    @Getter
     private final GamePlayer player;
-    @Getter
     private final BuildersConfig.Plot plot;
-    @Getter
     private final int y;
     @Setter
-    @Getter
     private boolean forfeited = false;
-    @Getter
     private Map<GamePlayer, VoteType> votes = Maps.newHashMap();
+    private final PlotManager plotManager;
 
     // Plot effects
+    private byte floorData = 0;
     private Material floor = Material.GRASS;
     private Biome biome = Biome.PLAINS;
     // Player effects
@@ -59,9 +56,13 @@ public class PlayerPlot implements Comparable<PlayerPlot> {
         public int time;
     }
 
-    public PlayerPlot(GamePlayer player, BuildersConfig.Plot plot) {
+    public PlayerPlot(Builders builder, GamePlayer player, BuildersConfig.Plot plot) {
         this.player = checkNotNull(player, "player");
         this.plot = checkNotNull(plot, "plot");
+        plotManager = new PlotManager(player, this);
+        checkNotNull(builder).guis.add(plotManager);
+        MapNodes.getGui().registerMenu(plotManager);
+        MapNodes.getCurrentGame().addTask(SchedulerUtil.repeatSync(plotManager, 5L));
 
         // Get the floor's base level
         int x = plot.getMin().getBlockX();
@@ -110,11 +111,15 @@ public class PlayerPlot implements Comparable<PlayerPlot> {
     }
 
     /** Set the floor of the plot to the specific block type */
-    public void setFloor(Material floor) {
-        if (this.floor == floor) return;
+    public void setFloor(Material floor, short floorData) {
+        if (this.floor == floor && this.floorData == floorData) return;
 
         this.floor = checkNotNull(floor);
-        processPlot(block -> block.setType(floor));
+        this.floorData = (byte) floorData;
+        processPlot(block -> {
+            block.setType(floor);
+            block.setData((byte) floorData);
+        });
     }
 
     /** Set the biome of the plot to the specific biome */

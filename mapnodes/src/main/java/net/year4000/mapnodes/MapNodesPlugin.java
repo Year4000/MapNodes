@@ -144,6 +144,9 @@ public class MapNodesPlugin extends BukkitPlugin implements Plugin {
             .add(SpectatorListener.class)
             .register();
 
+        // Load the listener for the gui
+        Bukkit.getPluginManager().registerEvents(gui, this);
+
         // Register built in commands
         new CommandBuilder()
             .add(MapNodesBase.class)
