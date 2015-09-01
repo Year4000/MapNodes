@@ -44,6 +44,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
@@ -482,6 +483,16 @@ public class Builders extends GameModeTemplate implements GameMode {
         if (event.getEntityType() == EntityType.ARMOR_STAND) {
             event.setCancelled(false);
         }
+
+        // Disable items on floor
+        if (event.getEntityType() == EntityType.DROPPED_ITEM) {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onDrop(PlayerDropItemEvent event) {
+        event.setCancelled(true);
     }
 
     @EventHandler(ignoreCancelled = true)
