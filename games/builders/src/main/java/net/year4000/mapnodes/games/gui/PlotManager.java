@@ -8,6 +8,7 @@ import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.game.GamePlayer;
 import net.year4000.mapnodes.games.PlayerPlot;
 import net.year4000.mapnodes.messages.MessageManager;
+import net.year4000.mapnodes.messages.Msg;
 import net.year4000.utilities.bukkit.gui.AbstractGUI;
 import net.year4000.utilities.bukkit.gui.IconView;
 import net.year4000.utilities.bukkit.gui.InventoryGUI;
@@ -28,7 +29,7 @@ public class PlotManager extends AbstractGUI {
         this.plot = checkNotNull(plot);
         populateMenu(locale -> {
             generate(locale);
-            return gamePlayer.getPlayer().getName();
+            return Msg.locale(gamePlayer, "builders.plot.stick") + " - " + gamePlayer.getPlayer().getName();
         }, size);
     }
 
