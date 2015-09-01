@@ -103,6 +103,8 @@ public class Builders extends GameModeTemplate implements GameMode {
         PlayerPlot plot = currentVoting = voting.next();
 
         MapNodes.getCurrentGame().getPlayers().forEach(gamePlayer -> {
+            gamePlayer.getPlayer().setGameMode(org.bukkit.GameMode.ADVENTURE);
+            gamePlayer.getPlayer().closeInventory();
             VoteType.setInventory(gamePlayer);
             plot.teleportToPlot(gamePlayer);
             VoteType voteType = plot.getOwner().equals(gamePlayer.getPlayerColor()) ? VoteType.INVALID : VoteType.NO_VOTE;
@@ -455,6 +457,23 @@ public class Builders extends GameModeTemplate implements GameMode {
     public void onDrop(EntitySpawnEvent event) {
         if (event.getEntityType() == EntityType.ARMOR_STAND) {
             event.setCancelled(false);
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onClick(InventoryClickEvent event) {
+        if (event.getWhoClicked() instanceof Player) {
+            GamePlayer gamePlayer = MapNodes.getCurrentGame().getPlayer((Player) event.getWhoClicked());
+
+            /** Disable inventory during voting */
+            if (gamePlayer.isPlaying() && stage == BuilderStage.VOTING) {
+                event.setCancelled(true);
+            }
+
+            /** Can not change armor */
+            if (gamePlayer.isPlaying() && event.getSlotType() == InventoryType.SlotType.ARMOR) {
+                event.setCancelled(true);
+            }
         }
     }
 }
