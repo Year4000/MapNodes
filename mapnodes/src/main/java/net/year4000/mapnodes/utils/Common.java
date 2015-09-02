@@ -325,4 +325,9 @@ public final class Common {
             e.printStackTrace(System.err);
         }
     }
+
+    /** Make a pretty String from enum */
+    public static String prettyEnum(Enum value) {
+        return value.name().toLowerCase().replaceAll("_", " ");
+    }
 }

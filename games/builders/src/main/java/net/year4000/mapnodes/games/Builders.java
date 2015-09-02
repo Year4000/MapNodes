@@ -32,6 +32,7 @@ import net.year4000.utilities.MessageUtil;
 import net.year4000.utilities.TimeUtil;
 import net.year4000.utilities.bukkit.BukkitUtil;
 import net.year4000.utilities.bukkit.FunEffectsUtil;
+import net.year4000.utilities.bukkit.gui.AbstractGUI;
 import org.bukkit.*;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Firework;

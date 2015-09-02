@@ -30,9 +30,9 @@ public class PlotFloorView implements IconView {
     private PlotManager manager;
     private PlayerPlot plot;
 
-    public PlotFloorView(PlotManager manager, PlayerPlot plot) {
+    public PlotFloorView(PlotManager manager) {
         this.manager = checkNotNull(manager);
-        this.plot = checkNotNull(plot);
+        this.plot = manager.getPlot();
     }
 
     @Override
@@ -40,7 +40,7 @@ public class PlotFloorView implements IconView {
         Material iconMaterial = MAPPER.inverse().getOrDefault(plot.getFloor(), plot.getFloor());
         ItemStack icon = new ItemStack(iconMaterial, 1, plot.getFloorData());
         ItemMeta meta = icon.getItemMeta();
-        meta.setDisplayName(Msg.locale(manager.gamePlayer, "builder.plot.floor"));
+        meta.setDisplayName(Msg.locale(manager.getGamePlayer(), "builder.plot.floor.icon"));
         icon.setItemMeta(meta);
         return icon;
     }

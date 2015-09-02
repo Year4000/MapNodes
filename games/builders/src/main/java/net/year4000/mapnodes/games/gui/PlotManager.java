@@ -4,25 +4,26 @@
 
 package net.year4000.mapnodes.games.gui;
 
+import lombok.Getter;
 import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.game.GamePlayer;
 import net.year4000.mapnodes.games.PlayerPlot;
-import net.year4000.mapnodes.messages.MessageManager;
+import net.year4000.mapnodes.games.gui.biome.BiomeManager;
 import net.year4000.mapnodes.messages.Msg;
-import net.year4000.utilities.bukkit.gui.AbstractGUI;
 import net.year4000.utilities.bukkit.gui.IconView;
 import net.year4000.utilities.bukkit.gui.InventoryGUI;
-import org.bukkit.entity.Player;
 
 import java.util.Locale;
-import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-public class PlotManager extends AbstractGUI {
-    GamePlayer gamePlayer;
-    PlayerPlot plot;
-    private final int size = 5;
+public class PlotManager extends MapNodesLocaleGUI {
+    @Getter
+    private GamePlayer gamePlayer;
+    @Getter
+    private PlayerPlot plot;
+    private final int size = 3;
+    private BiomeManager biomeManager = new BiomeManager(this);
 
     public PlotManager(GamePlayer gamePlayer, PlayerPlot plot) {
         this.gamePlayer = checkNotNull(gamePlayer);
@@ -31,24 +32,15 @@ public class PlotManager extends AbstractGUI {
             generate(locale);
             return Msg.locale(gamePlayer, "builders.plot.stick") + " - " + gamePlayer.getPlayer().getName();
         }, size);
-    }
-
-    @Override
-    public Locale[] getLocales() {
-        Set<Locale> locales = MessageManager.get().getLocales().keySet();
-        return locales.toArray(new Locale[locales.size()]);
-    }
-
-    @Override
-    public Locale getLocale(Player player) {
-        return MapNodes.getCurrentGame().getPlayer(player).getLocale();
+        registerSubGUI(MapNodes.getGui(), biomeManager);
     }
 
     @Override
     public IconView[][] generate(Locale locale) {
         IconView[][] view = new IconView[size][InventoryGUI.COLS];
 
-        view[0][0] = new PlotFloorView(this, plot);
+        view[1][5] = new PlotFloorView(this);
+        view[1][6] = biomeManager;
 
         return view;
     }
