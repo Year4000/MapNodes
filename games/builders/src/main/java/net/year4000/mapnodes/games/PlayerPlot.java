@@ -4,6 +4,9 @@
 
 package net.year4000.mapnodes.games;
 
+import com.comphenix.packetwrapper.WrapperPlayServerBlockChange;
+import com.comphenix.packetwrapper.WrapperPlayServerMapChunk;
+import com.comphenix.protocol.wrappers.BlockPosition;
 import com.google.common.collect.Maps;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,14 +17,17 @@ import net.year4000.mapnodes.api.game.GamePlayer;
 import net.year4000.mapnodes.games.gui.PlotManager;
 import net.year4000.mapnodes.utils.SchedulerUtil;
 import net.year4000.utilities.bukkit.LocationUtil;
+import net.year4000.utilities.returns.DoubleReturn;
 import org.bukkit.*;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 import java.util.function.Consumer;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -127,7 +133,7 @@ public class PlayerPlot implements Comparable<PlayerPlot> {
         if (this.biome == biome) return;
 
         this.biome = checkNotNull(biome);
-        processPlot(block -> block.setBiome(biome));
+        processFullPlot(block -> block.setBiome(biome));
     }
 
     /** Set the weather for the plot owner */
@@ -152,6 +158,18 @@ public class PlayerPlot implements Comparable<PlayerPlot> {
             for (int z = plot.getInnerMin().getBlockZ(); z <= plot.getInnerMax().getBlockZ(); z++) {
                 Block pos = MapNodes.getCurrentWorld().getBlockAt(x, y, z);
                 block.accept(pos);
+            }
+        }
+    }
+
+    /** Process data for each block in the plot */
+    public void processFullPlot(Consumer<Block> block) {
+        for (int x = plot.getInnerMin().getBlockX(); x <= plot.getInnerMax().getBlockX(); x++) {
+            for (int z = plot.getInnerMin().getBlockZ(); z <= plot.getInnerMax().getBlockZ(); z++) {
+                for (int y = this.y ; y < MapNodes.getCurrentWorld().getHighestBlockYAt(x, z); y++) {
+                    Block pos = MapNodes.getCurrentWorld().getBlockAt(x, y, z);
+                    block.accept(pos);
+                }
             }
         }
     }

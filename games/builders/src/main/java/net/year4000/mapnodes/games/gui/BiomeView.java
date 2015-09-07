@@ -2,13 +2,12 @@
  * Copyright 2015 Year4000. All Rights Reserved.
  */
 
-package net.year4000.mapnodes.games.gui.biome;
+package net.year4000.mapnodes.games.gui;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.ImmutableBiMap;
 import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.game.GamePlayer;
-import net.year4000.mapnodes.games.gui.PlotManager;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.Common;
 import net.year4000.utilities.bukkit.gui.ActionMeta;
@@ -27,6 +26,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 public class BiomeView implements IconView {
     static final BiMap<Biome, Material> MAPPER = ImmutableBiMap.<Biome, Material>builder()
+        .put(Biome.PLAINS, Material.GRASS)
         .put(Biome.BEACH, Material.SAND)
         .put(Biome.HELL, Material.NETHERRACK)
         .put(Biome.SKY, Material.ENDER_STONE)

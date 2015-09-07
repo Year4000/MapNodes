@@ -2,14 +2,13 @@
  * Copyright 2015 Year4000. All Rights Reserved.
  */
 
-package net.year4000.mapnodes.games.gui.biome;
+package net.year4000.mapnodes.games.gui;
 
 import com.google.common.collect.Iterators;
 import net.year4000.mapnodes.api.MapNodes;
-import net.year4000.mapnodes.games.gui.MapNodesLocaleGUI;
-import net.year4000.mapnodes.games.gui.PlotManager;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.SchedulerUtil;
+import net.year4000.utilities.bukkit.BukkitUtil;
 import net.year4000.utilities.bukkit.ItemUtil;
 import net.year4000.utilities.bukkit.gui.ActionMeta;
 import net.year4000.utilities.bukkit.gui.IconView;
@@ -26,7 +25,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 public class BiomeManager extends MapNodesLocaleGUI implements IconView {
     private static final Iterator<Material> BIOMES = Iterators.cycle(BiomeView.MAPPER.values());
-    private final int size = (int) Math.ceil(BiomeView.MAPPER.size() / InventoryGUI.COLS);
+    private final int size = BukkitUtil.invBase(BiomeView.MAPPER.size());
     private PlotManager manager;
 
     public BiomeManager(PlotManager manager) {
@@ -40,12 +39,12 @@ public class BiomeManager extends MapNodesLocaleGUI implements IconView {
 
     @Override
     public IconView[][] generate(Locale locale) {
-        IconView[][] view = new IconView[size][];
+        IconView[][] view = new IconView[size][InventoryGUI.COLS];
         Iterator<BiomeView> views = BiomeView.biomeFactory(manager).iterator();
         boolean broken = false;
 
-        for (int i = 0; i < view.length; i++) {
-            for (int j = 0; j < view[i].length; j++) {
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < InventoryGUI.COLS; j++) {
                 if (views.hasNext()) {
                     view[i][j] = views.next();
                 }
