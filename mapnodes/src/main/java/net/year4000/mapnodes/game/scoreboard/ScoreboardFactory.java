@@ -174,9 +174,9 @@ public class ScoreboardFactory {
         }
 
         stringBuilder
-            .append(Common.chars(player.getTeam().getId()))
-            .append(BadgeManager.MAX_RANK - player.getBadgeRank())
-            .append(Common.chars(player.getPlayer().getName()));
+            .append(Integer.toHexString(Common.chars(player.getTeam().getId())))
+            .append(Integer.toHexString(BadgeManager.MAX_RANK - player.getBadgeRank()))
+            .append(Integer.toHexString(Common.chars(player.getPlayer().getName())));
 
         String hash = stringBuilder.toString();
 
