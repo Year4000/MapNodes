@@ -61,7 +61,7 @@ public class BiomeView implements IconView {
         String out = Common.prettyEnum(MAPPER.get(biome));
         player.sendMessage(Msg.locale(gamePlayer, "builder.plot.biome.set", out));
         manager.getPlot().setBiome(biome);
-        manager.getPlot().addPlotEffects(gamePlayer);
+        // todo send client updated chunks
         return true;
     }
 }
