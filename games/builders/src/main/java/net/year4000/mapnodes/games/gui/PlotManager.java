@@ -23,6 +23,7 @@ public class PlotManager extends MapNodesLocaleGUI {
     private PlayerPlot plot;
     private final int size = 3;
     private BiomeManager biomeManager;
+    private TimeManager timeManager;
 
     public PlotManager(GamePlayer gamePlayer, PlayerPlot plot) {
         this.gamePlayer = checkNotNull(gamePlayer);
@@ -32,6 +33,7 @@ public class PlotManager extends MapNodesLocaleGUI {
             return Msg.locale(gamePlayer, "builders.plot.stick") + " - " + gamePlayer.getPlayer().getName();
         }, size);
         registerSubGUI(MapNodes.getGui(), biomeManager = new BiomeManager(this));
+        registerSubGUI(MapNodes.getGui(), timeManager = new TimeManager(this));
     }
 
     @Override
@@ -40,6 +42,7 @@ public class PlotManager extends MapNodesLocaleGUI {
 
         view[1][5] = new PlotFloorView(this);
         view[1][6] = biomeManager;
+        view[1][7] = timeManager;
 
         return view;
     }
