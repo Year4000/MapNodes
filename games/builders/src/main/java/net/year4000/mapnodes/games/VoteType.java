@@ -16,11 +16,11 @@ import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 
 public enum VoteType {
-    ONE(Material.STAINED_GLASS, (short) 0, 1, Note.Tone.A),
+    ONE(Material.STAINED_GLASS, (short) 14, 1, Note.Tone.A),
     TWO(Material.STAINED_GLASS, (short) 1, 2, Note.Tone.B),
-    THREE(Material.STAINED_GLASS, (short) 2, 3, Note.Tone.C),
-    FOUR(Material.STAINED_GLASS, (short) 3, 4, Note.Tone.D),
-    FIVE(Material.STAINED_GLASS, (short) 4, 5, Note.Tone.E),
+    THREE(Material.STAINED_GLASS, (short) 4, 3, Note.Tone.C),
+    FOUR(Material.STAINED_GLASS, (short) 5, 4, Note.Tone.D),
+    FIVE(Material.STAINED_GLASS, (short) 13, 5, Note.Tone.E),
     INVALID(Material.BEDROCK, (short) 0, 0, Note.Tone.G),
     NO_VOTE(Material.BEDROCK, (short) 0, 0, Note.Tone.G),
     ;
