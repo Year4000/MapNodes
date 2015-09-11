@@ -39,25 +39,7 @@ public class BiomeManager extends MapNodesLocaleGUI implements IconView {
 
     @Override
     public IconView[][] generate(Locale locale) {
-        IconView[][] view = new IconView[size][InventoryGUI.COLS];
-        Iterator<BiomeView> views = BiomeView.biomeFactory(manager).iterator();
-        boolean broken = false;
-
-        for (int i = 0; i < size; i++) {
-            for (int j = 0; j < InventoryGUI.COLS; j++) {
-                if (views.hasNext()) {
-                    view[i][j] = views.next();
-                }
-                else {
-                    broken = true;
-                    break;
-                }
-            }
-
-            if (broken) break;
-        }
-
-        return view;
+        return populate(size, BiomeView.biomeFactory(manager).iterator());
     }
 
     @Override
