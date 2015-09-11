@@ -8,7 +8,6 @@ import com.google.common.collect.Iterators;
 import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.SchedulerUtil;
-import net.year4000.utilities.bukkit.BukkitUtil;
 import net.year4000.utilities.bukkit.ItemUtil;
 import net.year4000.utilities.bukkit.gui.ActionMeta;
 import net.year4000.utilities.bukkit.gui.IconView;
@@ -25,7 +24,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 public class BiomeManager extends MapNodesLocaleGUI implements IconView {
     private static final Iterator<Material> BIOMES = Iterators.cycle(BiomeView.MAPPER.values());
-    private final int size = BukkitUtil.invBase(BiomeView.MAPPER.size());
+    private final int size = (int) Math.ceil(BiomeView.MAPPER.size() / 9) + 1;
     private PlotManager manager;
 
     public BiomeManager(PlotManager manager) {

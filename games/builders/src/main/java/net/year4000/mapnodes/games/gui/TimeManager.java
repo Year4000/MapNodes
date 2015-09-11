@@ -3,7 +3,6 @@ package net.year4000.mapnodes.games.gui;
 import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.SchedulerUtil;
-import net.year4000.utilities.bukkit.BukkitUtil;
 import net.year4000.utilities.bukkit.gui.ActionMeta;
 import net.year4000.utilities.bukkit.gui.IconView;
 import net.year4000.utilities.bukkit.gui.InventoryGUI;
@@ -16,7 +15,7 @@ import java.util.Locale;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public class TimeManager extends MapNodesLocaleGUI implements IconView {
-    private final int size = BukkitUtil.invBase(BiomeView.MAPPER.size());
+    private final int size = (int) Math.ceil(TimeView.MAPPER.size() / 9) + 1;
     private PlotManager manager;
 
     public TimeManager(PlotManager manager) {
