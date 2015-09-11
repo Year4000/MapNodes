@@ -21,7 +21,7 @@ public class PlotManager extends MapNodesLocaleGUI {
     private GamePlayer gamePlayer;
     @Getter
     private PlayerPlot plot;
-    private final int size = 3;
+    private final int size = 1;
     private BiomeManager biomeManager;
     private TimeManager timeManager;
     //private WeatherManager weatherManager;
@@ -42,10 +42,10 @@ public class PlotManager extends MapNodesLocaleGUI {
     public IconView[][] generate(Locale locale) {
         IconView[][] view = new IconView[size][InventoryGUI.COLS];
 
-        view[1][5] = new PlotFloorView(this);
-        view[1][6] = biomeManager;
-        view[1][7] = timeManager;
-        //view[1][7] = weatherManager;
+        view[0][3] = new PlotFloorView(this);
+        view[0][4] = biomeManager;
+        view[0][5] = timeManager;
+        //view[0][8] = weatherManager;
 
         return view;
     }
