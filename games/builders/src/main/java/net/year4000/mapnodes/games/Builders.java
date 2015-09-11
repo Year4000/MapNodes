@@ -43,6 +43,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntitySpawnEvent;
+import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerDropItemEvent;
@@ -493,6 +494,11 @@ public class Builders extends GameModeTemplate implements GameMode {
 
     @EventHandler
     public void onDrop(PlayerDropItemEvent event) {
+        event.setCancelled(true);
+    }
+
+    @EventHandler
+    public void onFood(FoodLevelChangeEvent event) {
         event.setCancelled(true);
     }
 
