@@ -24,6 +24,7 @@ public class PlotManager extends MapNodesLocaleGUI {
     private final int size = 3;
     private BiomeManager biomeManager;
     private TimeManager timeManager;
+    //private WeatherManager weatherManager;
 
     public PlotManager(GamePlayer gamePlayer, PlayerPlot plot) {
         this.gamePlayer = checkNotNull(gamePlayer);
@@ -34,6 +35,7 @@ public class PlotManager extends MapNodesLocaleGUI {
         }, size);
         registerSubGUI(MapNodes.getGui(), biomeManager = new BiomeManager(this));
         registerSubGUI(MapNodes.getGui(), timeManager = new TimeManager(this));
+        //registerSubGUI(MapNodes.getGui(), weatherManager = new WeatherManager(this));
     }
 
     @Override
@@ -43,6 +45,7 @@ public class PlotManager extends MapNodesLocaleGUI {
         view[1][5] = new PlotFloorView(this);
         view[1][6] = biomeManager;
         view[1][7] = timeManager;
+        //view[1][7] = weatherManager;
 
         return view;
     }
