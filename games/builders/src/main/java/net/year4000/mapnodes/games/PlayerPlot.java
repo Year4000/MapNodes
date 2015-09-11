@@ -45,7 +45,7 @@ public class PlayerPlot implements Comparable<PlayerPlot> {
 
     // Plot effects
     private byte floorData = 0;
-    private Material floor = Material.GRASS;
+    private Material floor = Material.CLAY;
     private Biome biome = Biome.PLAINS;
     // Player effects
     private WeatherType weather = WeatherType.CLEAR;
@@ -76,6 +76,8 @@ public class PlayerPlot implements Comparable<PlayerPlot> {
         y = MapNodes.getCurrentWorld().getHighestBlockYAt(x, z) - 1;
 
         player.addPlayerData(PlayerPlot.class, this);
+
+        setFloor(floor, floorData);
     }
 
     /** Teleport the owner to this plot */
