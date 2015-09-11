@@ -414,7 +414,8 @@ public class Builders extends GameModeTemplate implements GameMode {
         if (event.getFrom().toVector().toBlockVector().equals(event.getTo().toVector().toBlockVector())) return;
 
         GamePlayer gamePlayer = MapNodes.getCurrentGame().getPlayer(event.getPlayer());
-        Vector vector = event.getTo().toVector();
+        Vector vectorTo = fromPlayerVectorToBlockVector(event.getTo().toVector());
+        Vector vectorFrom = fromPlayerVectorToBlockVector(event.getFrom().toVector());
         PlayerPlot plot;
 
         if (!gamePlayer.isPlaying()) return;
@@ -427,17 +428,22 @@ public class Builders extends GameModeTemplate implements GameMode {
             plot = gamePlayer.getPlayerData(PlayerPlot.class);
         }
 
-        if (!plot.getPlot().isInPlot(vector, plot.getY(), plot.getY() + config.getHeight())) {
+        if (!plot.getPlot().isInPlot(vectorTo, plot.getY(), plot.getY() + config.getHeight())) {
             gamePlayer.sendMessage(Msg.NOTICE + Msg.locale(gamePlayer, "region.exit.room"));
 
             // Try to use from, if fails send to plot
-            if (plot.getPlot().isInPlot(event.getFrom().toVector(), plot.getY(), plot.getY() + config.getHeight())) {
+            if (plot.getPlot().isInPlot(vectorFrom, plot.getY(), plot.getY() + config.getHeight())) {
                 event.setTo(event.getFrom().clone());
             }
             else {
                 event.setTo(plot.teleportPlotLocation());
             }
         }
+    }
+
+    /** Convert player vector's plane to the block vector plane */
+    private Vector fromPlayerVectorToBlockVector(Vector vector) {
+        return new Vector(vector.getBlockX(), vector.getY(), vector.getBlockZ());
     }
 
     @EventHandler(ignoreCancelled = true)
