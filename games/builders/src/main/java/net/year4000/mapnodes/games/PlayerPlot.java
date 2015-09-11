@@ -77,7 +77,11 @@ public class PlayerPlot implements Comparable<PlayerPlot> {
 
         player.addPlayerData(PlayerPlot.class, this);
 
-        setFloor(floor, floorData);
+        // Force set the floor type
+        processPlot(block -> {
+            block.setType(floor);
+            block.setData(floorData);
+        });
     }
 
     /** Teleport the owner to this plot */
