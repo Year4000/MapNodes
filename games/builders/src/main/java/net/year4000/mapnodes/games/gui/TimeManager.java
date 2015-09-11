@@ -41,7 +41,7 @@ public class TimeManager extends MapNodesLocaleGUI implements IconView {
 
     @Override
     public boolean action(Player player, ActionMeta meta, InventoryGUI gui) {
-        openInventory(player);
+        SchedulerUtil.runSync(() -> openInventory(player));
         return true;
     }
 }
