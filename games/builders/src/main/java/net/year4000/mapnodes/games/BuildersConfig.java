@@ -118,11 +118,6 @@ public class BuildersConfig implements GameModeConfig {
         }
 
         /** Is the specific vector inside region */
-        public boolean isInInnerPlot(Vector vector) {
-            return isInInnerPlot(vector, 0, HEIGHT);
-        }
-
-        /** Is the specific vector inside region */
         public boolean isInInnerPlot(Vector vector, int minY, int maxY) {
             Vector min = getInnerMin().setY(minY);
             Vector max = getInnerMax().setY(maxY);

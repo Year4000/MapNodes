@@ -431,7 +431,7 @@ public class Builders extends GameModeTemplate implements GameMode {
             gamePlayer.sendMessage(Msg.NOTICE + Msg.locale(gamePlayer, "region.exit.room"));
 
             // Try to use from, if fails send to plot
-            if (plot.getPlot().isInPlot(event.getFrom().toVector())) {
+            if (plot.getPlot().isInPlot(event.getFrom().toVector(), plot.getY(), plot.getY() + config.getHeight())) {
                 event.setTo(event.getFrom().clone());
             }
             else {
