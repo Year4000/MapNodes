@@ -52,66 +52,51 @@ public class BuildersConfig implements GameModeConfig {
 
         /** Grab the BlockVector of min plot */
         public BlockVector getMin() {
-            int[] xz = transcribe(min);
+            int[] xzMin = transcribe(min);
+            int[] xzMax = transcribe(max);
 
-            return new BlockVector(xz[0], 0, xz[1]);
+            return new BlockVector(Math.min(xzMin[0], xzMax[0]), 0, Math.min(xzMin[1], xzMax[1]));
         }
 
         /** Grab the BlockVector of max plot */
         public BlockVector getMax() {
-            int[] xz = transcribe(max);
+            int[] xzMin = transcribe(min);
+            int[] xzMax = transcribe(max);
 
-            return new BlockVector(xz[0], HEIGHT, xz[1]);
+            return new BlockVector(Math.max(xzMin[0], xzMax[0]), HEIGHT, Math.max(xzMin[1], xzMax[1]));
         }
 
         /** Grab the BlockVector of min plot */
         public BlockVector getInnerMin() {
-            int[] xz = transcribe(min);
+            BlockVector xz = getMin();
 
-            int offsetX = xz[0] < getMax().getBlockX() ? 1 : -1;
-            int offsetZ = xz[1] < getMax().getBlockZ() ? 1 : -1;
-
-            return new BlockVector(xz[0] + offsetX, 0, xz[1] + offsetZ);
+            return new BlockVector(xz.getX() + 1, 0, xz.getZ() + 1);
         }
 
         /** Grab the BlockVector of max plot */
         public BlockVector getInnerMax() {
-            int[] xz = transcribe(max);
+            BlockVector xz = getMax();
 
-            int offsetX = xz[0] < getMin().getBlockX() ? 1 : -1;
-            int offsetZ = xz[1] < getMin().getBlockZ() ? 1 : -1;
-
-            return new BlockVector(xz[0] + offsetX, HEIGHT, xz[1] + offsetZ);
+            return new BlockVector(xz.getX() - 1, HEIGHT, xz.getZ() - 1);
         }
 
         /** Grab the BlockVector of min plot */
         public BlockVector getOuterMin() {
-            int[] xz = transcribe(min);
+            BlockVector xz = getMin();
 
-            int offsetX = xz[0] > getMax().getBlockX() ? 1 : -1;
-            int offsetZ = xz[1] > getMax().getBlockZ() ? 1 : -1;
-
-            return new BlockVector(xz[0] + offsetX, 0, xz[1] + offsetZ);
+            return new BlockVector(xz.getX() - 1, 0, xz.getZ() - 1);
         }
 
         /** Grab the BlockVector of max plot */
         public BlockVector getOuterMax() {
-            int[] xz = transcribe(max);
+            BlockVector xz = getMax();
 
-            int offsetX = xz[0] > getMin().getBlockX() ? 1 : -1;
-            int offsetZ = xz[1] > getMin().getBlockZ() ? 1 : -1;
-
-            return new BlockVector(xz[0] + offsetX, HEIGHT, xz[1] + offsetZ);
-        }
-
-        /** Is the specific vector inside region */
-        public boolean isInPlot(Vector vector) {
-            return isInPlot(vector, 0, HEIGHT);
+            return new BlockVector(xz.getX() + 1, HEIGHT, xz.getZ() + 1);
         }
 
         /** Is the specific vector inside region */
         public boolean isInPlot(Vector vector, int minY, int maxY) {
-            Vector min = getMin().setY(minY);
+            Vector min = getOuterMin().setY(minY);
             Vector max = getOuterMax().setY(maxY);
 
             return isInPlot(min, max, vector);
@@ -126,16 +111,8 @@ public class BuildersConfig implements GameModeConfig {
         }
 
         /** Is the specific vector inside region */
-        public boolean isInPlot(Vector min, Vector max, Vector vector) {
-            int minX = min.getBlockX() > max.getBlockX() ? max.getBlockX() : min.getBlockX();
-            int minZ = min.getBlockZ() > max.getBlockZ() ? max.getBlockZ() : min.getBlockZ();
-            int maxX = min.getBlockX() < max.getBlockX() ? max.getBlockX() : min.getBlockX();
-            int maxZ = min.getBlockZ() < max.getBlockZ() ? max.getBlockZ() : min.getBlockZ();
-
-            Vector trueMin = new Vector(minX, min.getY(), minZ);
-            Vector trueMax = new Vector(maxX, max.getY(), maxZ);
-
-            return vector.isInAABB(trueMin, trueMax);
+        private boolean isInPlot(Vector min, Vector max, Vector vector) {
+            return vector.isInAABB(min, max);
         }
     }
 }
