@@ -322,7 +322,7 @@ public class Builders extends GameModeTemplate implements GameMode {
         }
 
         // Not enuf players to play with
-        if (MapNodes.getCurrentGame().getPlayers().count() < 3) {
+        if (!MapNodes.getCurrentGame().getStage().isPreGame() && MapNodes.getCurrentGame().getPlayers().count() < 3) {
             MapNodes.getCurrentGame().stop();
         }
     }
