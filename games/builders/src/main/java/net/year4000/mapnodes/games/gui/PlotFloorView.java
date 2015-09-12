@@ -40,7 +40,7 @@ public class PlotFloorView implements IconView {
         Material iconMaterial = MAPPER.inverse().getOrDefault(plot.getFloor(), plot.getFloor());
         ItemStack icon = new ItemStack(iconMaterial, 1, plot.getFloorData());
         ItemMeta meta = icon.getItemMeta();
-        meta.setDisplayName(Msg.locale(manager.getGamePlayer(), "builder.plot.floor.icon"));
+        meta.setDisplayName(Msg.locale(manager.getGamePlayer(), "builders.plot.floor.icon"));
         icon.setItemMeta(meta);
         return icon;
     }
@@ -57,11 +57,11 @@ public class PlotFloorView implements IconView {
         else if ((material.isBlock() || MAPPER.containsKey(material))) {
             material = MAPPER.getOrDefault(material, material);
             String block = material.name().toLowerCase().replace("_", " ");
-            gamePlayer.sendMessage(Msg.locale(gamePlayer, "builder.plot.floor.set", block));
+            gamePlayer.sendMessage(Msg.locale(gamePlayer, "builders.plot.floor.set", block));
             plot.setFloor(material, current.getDurability());
         }
         else {
-            gamePlayer.sendMessage(Msg.locale(gamePlayer, "builder.plot.floor.block"));
+            gamePlayer.sendMessage(Msg.locale(gamePlayer, "builders.plot.floor.block"));
         }
 
         //meta.setCursor(null);

@@ -45,7 +45,7 @@ public class TimeView implements IconView {
     public ItemStack make() {
         ItemStack icon = MAPPER.get(timeState);
         ItemMeta meta = icon.getItemMeta();
-        meta.setDisplayName(Msg.locale(manager.getGamePlayer(), "builder.plot.time.icon", Common.prettyEnum(timeState)));
+        meta.setDisplayName(Msg.locale(manager.getGamePlayer(), "builders.plot.time.icon", Common.prettyEnum(timeState)));
         icon.setItemMeta(meta);
         return icon;
     }
@@ -54,7 +54,7 @@ public class TimeView implements IconView {
     public boolean action(Player player, ActionMeta meta, InventoryGUI gui) {
         GamePlayer gamePlayer = MapNodes.getCurrentGame().getPlayer(player);
         String out = Common.prettyEnum(timeState);
-        player.sendMessage(Msg.locale(gamePlayer, "builder.plot.time.set", out));
+        player.sendMessage(Msg.locale(gamePlayer, "builders.plot.time.set", out));
         manager.getPlot().setTime(timeState);
         manager.getPlot().addPlotEffects(gamePlayer);
         return true;

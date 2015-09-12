@@ -50,7 +50,7 @@ public class BiomeView implements IconView {
         Material iconMaterial = MAPPER.get(biome);
         ItemStack icon = new ItemStack(iconMaterial, 1);
         ItemMeta meta = icon.getItemMeta();
-        meta.setDisplayName(Msg.locale(manager.getGamePlayer(), "builder.plot.biome.icon", Common.prettyEnum(iconMaterial)));
+        meta.setDisplayName(Msg.locale(manager.getGamePlayer(), "builders.plot.biome.icon", Common.prettyEnum(iconMaterial)));
         icon.setItemMeta(meta);
         return icon;
     }
@@ -59,7 +59,7 @@ public class BiomeView implements IconView {
     public boolean action(Player player, ActionMeta meta, InventoryGUI gui) {
         GamePlayer gamePlayer = MapNodes.getCurrentGame().getPlayer(player);
         String out = Common.prettyEnum(MAPPER.get(biome));
-        player.sendMessage(Msg.locale(gamePlayer, "builder.plot.biome.set", out));
+        player.sendMessage(Msg.locale(gamePlayer, "builders.plot.biome.set", out));
         manager.getPlot().setBiome(biome);
         // todo send client updated chunks
         return true;
