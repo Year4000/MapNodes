@@ -312,13 +312,18 @@ public class Builders extends GameModeTemplate implements GameMode {
         }
     }
 
-    /** Disable menu when game started */
+    /** Make plot forfeited when they leave the game */
     @EventHandler
     public void onSpectatorJoin(GamePlayerJoinSpectatorEvent event) {
-        if (MapNodes.getCurrentGame().getStage().isPlaying()) {
-            if (plots.containsKey(event.getPlayer())) {
-                plots.get(event.getPlayer()).setForfeited(true);
-            }
+        PlayerPlot plot = event.getPlayer().getPlayerData(PlayerPlot.class);
+
+        if (plot != null) {
+            plot.setForfeited(true);
+        }
+
+        // Not enuf players to play with
+        if (MapNodes.getCurrentGame().getPlayers().count() < 3) {
+            MapNodes.getCurrentGame().stop();
         }
     }
 
