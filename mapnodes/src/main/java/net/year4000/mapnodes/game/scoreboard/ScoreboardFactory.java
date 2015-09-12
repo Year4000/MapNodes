@@ -7,6 +7,7 @@ package net.year4000.mapnodes.game.scoreboard;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import lombok.AllArgsConstructor;
+import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.game.GameManager;
 import net.year4000.mapnodes.api.game.GamePlayer;
@@ -225,7 +226,12 @@ public class ScoreboardFactory {
                 .filter(team -> team.getName().equals(nodeTeam.getName()))
                 .forEach(team -> team.addPlayer(nodePlayer.getPlayer()));
 
-            nodePlayer.getScoreboard().getTeam(player.getTeam().getName()).addPlayer(player.getPlayer());
+            try {
+                nodePlayer.getScoreboard().getTeam(player.getTeam().getName()).addPlayer(player.getPlayer());
+            }
+            catch (Exception error) {
+                MapNodesPlugin.debug(error, false);
+            }
 
             setOrUpdateListName(player, nodePlayer);
             setOrUpdateListName(nodePlayer, player);
