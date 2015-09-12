@@ -116,7 +116,7 @@ public class Builders extends GameModeTemplate implements GameMode {
 
         PlayerPlot plot = currentVoting = voting.next();
 
-        MapNodes.getCurrentGame().getPlayers().forEach(gamePlayer -> {
+        MapNodes.getCurrentGame().getPlaying().forEach(gamePlayer -> {
             gamePlayer.getPlayer().setGameMode(org.bukkit.GameMode.ADVENTURE);
             gamePlayer.getPlayer().closeInventory();
             VoteType.setInventory(gamePlayer);
@@ -174,7 +174,7 @@ public class Builders extends GameModeTemplate implements GameMode {
         }
 
         // Set sidebar
-        MapNodes.getCurrentGame().getPlayers().forEach(player -> {
+        MapNodes.getCurrentGame().getPlaying().forEach(player -> {
             winningPlot.teleportToPlot(player);
             winningPlot.fireworks();
             ((NodeGame) MapNodes.getCurrentGame()).getScoreboardFactory().setCustomSidebar((NodePlayer) player, sidebar);
