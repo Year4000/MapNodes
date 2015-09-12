@@ -376,6 +376,7 @@ public class Builders extends GameModeTemplate implements GameMode {
         if (!gamePlayer.isPlaying()) return;
 
         PlayerPlot plot = gamePlayer.getPlayerData(PlayerPlot.class);
+        plot.setForfeited(false);
         Vector vector = event.getBlock().getLocation().toVector();
 
         if (!plot.getPlot().isInInnerPlot(vector, plot.getY(), plot.getPlot().getMax().getBlockY())) {

@@ -33,7 +33,7 @@ public class PlayerPlot implements Comparable<PlayerPlot> {
     private final BuildersConfig.Plot plot;
     private final int y;
     @Setter
-    private boolean forfeited = false;
+    private boolean forfeited = true;
     private Map<GamePlayer, VoteType> votes = Maps.newHashMap();
     private final PlotManager plotManager;
 
