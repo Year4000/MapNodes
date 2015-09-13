@@ -64,7 +64,7 @@ public final class MapNodesListener implements Listener {
 
         // Update server name
         if (MapNodesPlugin.getInst().getNetwork().getName().equals(Network.UNKNOWN)) {
-            SchedulerUtil.runSync(() -> MapNodesPlugin.getInst().getNetwork().updateName(), 40L);
+            SchedulerUtil.runAsync(() -> MapNodesPlugin.getInst().getNetwork().updateName(), 40L);
         }
     }
 
@@ -138,14 +138,13 @@ public final class MapNodesListener implements Listener {
         if (!game.getStage().isPreGame()) return;
 
         // Add one as this happens before they fully enter the team
-        startLock.lock();
         event.addPostEvent(() -> {
-            try {
-                int size = (int) game.getEntering().count() + 1;
-                boolean biggerThanLast = lastSize.get() < size;
-                lastSize.set(size);
+            int size = (int) game.getEntering().count() + 1;
+            boolean biggerThanLast = lastSize.get() < size;
+            lastSize.set(size);
 
-                if (game.shouldStart()) {
+            if (game.shouldStart() && startLock.tryLock()) {
+                try {
                     if (game.getStage().isStarting()) {
                         if (game.getStartClock().getClock().getIndex() > MathUtil.ticks(20) && biggerThanLast) {
                             game.getStartClock().reduceTime(10); // 10 secs
@@ -158,9 +157,9 @@ public final class MapNodesListener implements Listener {
                         new StartGame(game.getBaseStartTime()).run();
                     }
                 }
-            }
-            finally {
-                startLock.unlock();
+                finally {
+                    startLock.unlock();
+                }
             }
         });
     }

@@ -5,6 +5,7 @@
 package net.year4000.mapnodes.game;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import lombok.Data;
 import net.year4000.mapnodes.api.events.player.GamePlayerJoinEvent;
@@ -17,6 +18,7 @@ import net.year4000.mapnodes.api.game.GameTeam;
 import net.year4000.mapnodes.api.utils.Spectator;
 import net.year4000.mapnodes.backend.AccountCache;
 import net.year4000.mapnodes.backend.MapNodesBadgeManager;
+import net.year4000.mapnodes.game.scoreboard.ScoreboardFactory;
 import net.year4000.mapnodes.messages.MessageManager;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.Common;
@@ -35,7 +37,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitTask;
-import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Scoreboard;
 
 import java.util.*;
@@ -54,7 +55,7 @@ public final class NodePlayer implements GamePlayer, Comparable {
     private NodeTeam team;
     private NodeTeam pendingTeam;
     private NodeClass classKit;
-    private List<BukkitTask> playerTasks = new ArrayList<>();
+    private List<BukkitTask> playerTasks = Lists.newCopyOnWriteArrayList();
     private boolean immortal;
     private Map<Class, Object> playerData = Maps.newConcurrentMap();
     // scoreboard
@@ -63,7 +64,7 @@ public final class NodePlayer implements GamePlayer, Comparable {
     private boolean spectator;
     private boolean playing;
     private boolean entering;
-    private Map<Locale, Inventory> inventory = new HashMap<>();
+    private Map<Locale, Inventory> inventory = Maps.newConcurrentMap();
     // backend database
     private AccountCache cache;
     private AtomicInteger creditsMultiplier = new AtomicInteger(1);
@@ -196,19 +197,6 @@ public final class NodePlayer implements GamePlayer, Comparable {
 
         joinTeam(null);
 
-        updateInventories();
-
-        PacketHacks.setTitle(
-            player.getPlayer(),
-            "&a" + game.getMap().getName(),
-            Msg.locale(player, "map.created") + game.getMap().author(getRawLocale()),
-            0,
-            55,
-            0
-        );
-
-        PacketHacks.setTabListHeadFoot(player, game.getTabHeader(), game.getTabFooter());
-
         GamePlayerJoinEvent join = new GamePlayerJoinEvent(this) {{
             this.setSpawn(game.getConfig().getSafeRandomSpawn());
             this.setMenu(!game.getStage().isEndGame());
@@ -218,39 +206,48 @@ public final class NodePlayer implements GamePlayer, Comparable {
         // run a tick later to allow player to login
         player.teleport(join.getSpawn());
 
-        // Update player's info
-        playerTasks.add(SchedulerUtil.runSync(() -> {
-            game.getPlayers().map(player -> (NodePlayer) player).forEach(player -> {
-                game.getScoreboardFactory().setOrUpdateListName(player, this);
-                game.getScoreboardFactory().setOrUpdateListName(this, player);
-            });
-        }, 25L));
+        // Run player events later
+        join.addPostEvent(() -> {
+            updateInventories();
+            game.getScoreboardFactory().setTeam(this, team);
+
+            PacketHacks.setTitle(
+                player.getPlayer(),
+                "&a" + game.getMap().getName(),
+                Msg.locale(player, "map.created") + game.getMap().author(getRawLocale()),
+                20,
+                60,
+                20
+            );
+
+            PacketHacks.setTabListHeadFoot(player, game.getTabHeader(), game.getTabFooter());
+        });
 
         // start menu
-        playerTasks.add(SchedulerUtil.runSync(() -> {
-            if (join.isMenu() && player.getOpenInventory().getType() == InventoryType.CRAFTING) {
-                if (game.getStage().isPreGame()) {
-                    try {
-                        String random = Msg.locale(this, "team.menu.join.random");
-                        GameTeam team = game.checkAndGetTeam(this, random);
-                        joinTeam(team);
+        join.addPostEvent(() -> {
+            synchronized (game) {
+                if (join.isMenu() && player.getOpenInventory().getType() == InventoryType.CRAFTING) {
+                    if (game.getStage().isPreGame()) {
+                        try {
+                            String random = Msg.locale(this, "team.menu.join.random");
+                            GameTeam team = game.checkAndGetTeam(this, random);
+                            joinTeam(team);
+                        }
+                        catch (IllegalArgumentException e) {
+                            // Can not auto join team give menu
+                            game.openTeamChooserMenu(this);
+                        }
                     }
-                    catch (IllegalArgumentException e) {
-                        // Can not auto join team give menu
+                    else {
                         game.openTeamChooserMenu(this);
                     }
                 }
-                else {
-                    game.openTeamChooserMenu(this);
-                }
-            }
 
-            if (!game.getStage().isEndGame()) {
                 game.getScoreboardFactory().setPersonalSidebar(this);
             }
-        }, 55L));
+        });
 
-        playerTasks.add(SchedulerUtil.runSync(join::runPostEvents, 60L));
+        playerTasks.add(SchedulerUtil.runAsync(join::runPostEvents, 60L));
     }
 
     public void leave() {
@@ -265,10 +262,7 @@ public final class NodePlayer implements GamePlayer, Comparable {
             pendingTeam = null;
         }
 
-        // Update sidebar when there is a sidebar to update
-        if (scoreboard.getObjective(DisplaySlot.SIDEBAR) != null) {
-            game.getScoreboardFactory().setAllPersonalSidebar();
-        }
+        game.getScoreboardFactory().setAllPersonalSidebar();
 
         // Cancel tasks
         playerTasks.stream().forEach(BukkitTask::cancel);
@@ -299,11 +293,7 @@ public final class NodePlayer implements GamePlayer, Comparable {
 
             // Auto join spectator team
             game.getScoreboardFactory().setTeam(this, team);
-
-            // Update sidebar when there is a sidebar to update
-            if (scoreboard.getObjective(DisplaySlot.SIDEBAR) != null) {
-                game.getScoreboardFactory().setAllPersonalSidebar();
-            }
+            game.getScoreboardFactory().setAllPersonalSidebar();
 
             // Kit
             joinSpectator.getKit().giveKit(this);
@@ -367,16 +357,18 @@ public final class NodePlayer implements GamePlayer, Comparable {
 
     /** Manage how the players see each other. */
     public void updateHiddenSpectator() {
-        game.getPlayers().forEach(gPlayer -> {
-            game.getPlayers().forEach(player -> {
-                if ((player.isSpectator() || player.isEntering()) && gPlayer.isPlaying()) {
-                    gPlayer.getPlayer().hidePlayer(player.getPlayer());
-                }
-                else {
-                    gPlayer.getPlayer().showPlayer(player.getPlayer());
-                }
+        synchronized (game.getPlayers()) {
+            game.getPlayers().forEach(gPlayer -> {
+                game.getPlayers().forEach(player -> {
+                    if ((player.isSpectator() || player.isEntering()) && gPlayer.isPlaying()) {
+                        gPlayer.getPlayer().hidePlayer(player.getPlayer());
+                    }
+                    else {
+                        gPlayer.getPlayer().showPlayer(player.getPlayer());
+                    }
+                });
             });
-        });
+        }
     }
 
     /** Get the inventory for the player by locale */
@@ -399,7 +391,7 @@ public final class NodePlayer implements GamePlayer, Comparable {
 
     /** Create an inventory of the player stats. */
     public void updateInventory(Locale locale) {
-        playerTasks.add(SchedulerUtil.runSync(() -> {
+        playerTasks.add(SchedulerUtil.runAsync(() -> {
             ItemStack[] items = new ItemStack[INV_SIZE];
             Player player = getPlayer();
             PlayerInventory pinv = player.getInventory();

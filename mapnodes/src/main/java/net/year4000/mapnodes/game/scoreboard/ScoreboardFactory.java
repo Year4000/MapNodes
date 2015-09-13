@@ -11,11 +11,13 @@ import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.game.GameManager;
 import net.year4000.mapnodes.api.game.GamePlayer;
+import net.year4000.mapnodes.api.game.GameStage;
 import net.year4000.mapnodes.api.game.modes.GameModeInfo;
 import net.year4000.mapnodes.api.utils.Spectator;
 import net.year4000.mapnodes.clocks.Clocker;
 import net.year4000.mapnodes.game.NodeGame;
 import net.year4000.mapnodes.game.NodePlayer;
+import net.year4000.mapnodes.game.NodeStage;
 import net.year4000.mapnodes.game.NodeTeam;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.*;
@@ -250,8 +252,11 @@ public class ScoreboardFactory {
 
     public void setPersonalSidebar(NodePlayer nodePlayer, String header) {
         // When game has ended only show game sidebar
-        if (game.getStage().isEndGame()) {
+        if (game.getStage() == NodeStage.ENDING) {
             setGameSidebar(nodePlayer);
+            return;
+        }
+        else if (game.getStage() == NodeStage.ENDED) {
             return;
         }
 
