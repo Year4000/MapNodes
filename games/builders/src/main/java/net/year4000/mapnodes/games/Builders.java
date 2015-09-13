@@ -123,6 +123,7 @@ public class Builders extends GameModeTemplate implements GameMode {
             plot.teleportToPlot(gamePlayer);
             VoteType voteType = plot.getOwner().equals(gamePlayer.getPlayerColor()) ? VoteType.INVALID : VoteType.NO_VOTE;
             setVoteSidebar(gamePlayer, plot.getPlayer(), voteType);
+            PacketHacks.setTitle(gamePlayer.getPlayer(), "", Msg.locale(gamePlayer, "builders.owner", plot.getOwner()), 10, 40, 10);
         });
 
         // Set the
