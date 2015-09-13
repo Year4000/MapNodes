@@ -241,6 +241,7 @@ public class Builders extends GameModeTemplate implements GameMode {
         config = this.<BuildersConfig>getConfig();
         availablePlots = config.getPlots().iterator();
         MapNodes.getCurrentGame().addStartTime(30); // 30 Sec delay
+        MapNodes.getCurrentGame().getStartControls().add(() -> MapNodes.getCurrentGame().getEntering().count() >= 2);
 
         // Load the theme for this game
         themes = Themes.get();
