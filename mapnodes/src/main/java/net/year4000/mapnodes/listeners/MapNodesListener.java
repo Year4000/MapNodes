@@ -138,7 +138,7 @@ public final class MapNodesListener implements Listener {
         if (!game.getStage().isPreGame()) return;
 
         // Add one as this happens before they fully enter the team
-        event.addPostEvent(() -> {
+        event.addPostEvent(() -> SchedulerUtil.runAsync( () -> {
             int size = (int) game.getEntering().count() + 1;
             boolean biggerThanLast = lastSize.get() < size;
             lastSize.set(size);
@@ -161,7 +161,7 @@ public final class MapNodesListener implements Listener {
                     startLock.unlock();
                 }
             }
-        });
+        }));
     }
 
     /** Reset last size for next game */
