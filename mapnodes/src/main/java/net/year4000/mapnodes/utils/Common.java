@@ -6,6 +6,7 @@ package net.year4000.mapnodes.utils;
 
 import com.google.common.base.Ascii;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Maps;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.Synchronized;
@@ -20,7 +21,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
@@ -31,7 +31,7 @@ public final class Common {
     public static final Random rand = new Random();
     /** Color numbers based on its percent */
     private static int toggle = 0;
-    private static Map<NodePlayer, BukkitTask> actionBarAnimations = new HashMap<>();
+    private static final Map<NodePlayer, BukkitTask> actionBarAnimations = Maps.newHashMap();
     private static Set<String> VIPS = ImmutableSet.of("theta", "mu", "pi", "sigma", "phi", "delta", "omega");
 
     public static String colorNumber(int current, int total) {
@@ -272,7 +272,6 @@ public final class Common {
     }
 
     /** Send a cool animated action bar message */
-    @Synchronized("actionBarAnimations")
     public static void sendAnimatedActionBar(GamePlayer player, String message) {
         final NodePlayer nodePlayer = (NodePlayer) player;
 
@@ -288,15 +287,19 @@ public final class Common {
 
             @Override
             public void runLast(int position) {
-                actionBarAnimations.remove(nodePlayer);
+                synchronized (actionBarAnimations) {
+                    actionBarAnimations.remove(nodePlayer);
+                }
             }
         };
 
-        if (actionBarAnimations.containsKey(nodePlayer)) {
-            actionBarAnimations.remove(nodePlayer).cancel();
-        }
+        synchronized (actionBarAnimations) {
+            if (actionBarAnimations.containsKey(nodePlayer)) {
+                actionBarAnimations.remove(nodePlayer).cancel();
+            }
 
-        actionBarAnimations.put(nodePlayer, animation.run());
+            actionBarAnimations.put(nodePlayer, animation.run());
+        }
     }
 
     /** Is the selected player a VIP */
