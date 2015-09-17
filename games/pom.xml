@@ -23,6 +23,7 @@
         <module>elimination</module>
         <module>arrowtag</module>
         <module>builders</module>
+        <module>agar</module>
     </modules>
 
     <build>

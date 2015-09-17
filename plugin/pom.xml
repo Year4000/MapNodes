@@ -69,6 +69,13 @@
         <!-- MapNodes Games -->
         <dependency>
             <groupId>net.year4000.mapnodes.games</groupId>
+            <artifactId>agar</artifactId>
+            <version>${project.version}</version>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>net.year4000.mapnodes.games</groupId>
             <artifactId>builders</artifactId>
             <version>${project.version}</version>
             <optional>true</optional>
