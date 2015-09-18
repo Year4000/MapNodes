@@ -2,7 +2,7 @@
  * Copyright 2015 Year4000. All Rights Reserved.
  */
 
-package net.year4000.mapnodes.games;
+package net.year4000.mapnodes.games.builders;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -22,7 +22,7 @@ import net.year4000.mapnodes.clocks.Clocker;
 import net.year4000.mapnodes.game.NodeGame;
 import net.year4000.mapnodes.game.NodePlayer;
 import net.year4000.mapnodes.game.scoreboard.SidebarManager;
-import net.year4000.mapnodes.games.gui.PlotManager;
+import net.year4000.mapnodes.games.builders.gui.PlotManager;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.Common;
 import net.year4000.mapnodes.utils.MathUtil;

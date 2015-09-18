@@ -2,7 +2,7 @@
  * Copyright 2015 Year4000. All Rights Reserved.
  */
 
-package net.year4000.mapnodes.games;
+package net.year4000.mapnodes.games.builders;
 
 import lombok.Getter;
 import net.year4000.mapnodes.api.game.GamePlayer;

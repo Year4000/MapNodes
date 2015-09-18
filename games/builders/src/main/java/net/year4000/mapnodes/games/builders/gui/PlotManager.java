@@ -2,12 +2,12 @@
  * Copyright 2015 Year4000. All Rights Reserved.
  */
 
-package net.year4000.mapnodes.games.gui;
+package net.year4000.mapnodes.games.builders.gui;
 
 import lombok.Getter;
 import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.game.GamePlayer;
-import net.year4000.mapnodes.games.PlayerPlot;
+import net.year4000.mapnodes.games.builders.PlayerPlot;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.utilities.bukkit.gui.IconView;
 import net.year4000.utilities.bukkit.gui.InventoryGUI;

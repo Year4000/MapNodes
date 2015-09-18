@@ -2,14 +2,13 @@
  * Copyright 2015 Year4000. All Rights Reserved.
  */
 
-package net.year4000.mapnodes.games;
+package net.year4000.mapnodes.games.builders;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import net.year4000.utilities.configs.Config;
 import net.year4000.utilities.configs.ConfigURL;
 import net.year4000.utilities.configs.JsonConfig;
 

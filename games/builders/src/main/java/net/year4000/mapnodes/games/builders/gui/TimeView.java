@@ -1,9 +1,9 @@
-package net.year4000.mapnodes.games.gui;
+package net.year4000.mapnodes.games.builders.gui;
 
 import com.google.common.collect.ImmutableMap;
 import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.game.GamePlayer;
-import net.year4000.mapnodes.games.PlayerPlot;
+import net.year4000.mapnodes.games.builders.PlayerPlot;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.Common;
 import net.year4000.utilities.bukkit.ItemUtil;

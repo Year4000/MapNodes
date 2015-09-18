@@ -2,7 +2,7 @@
  * Copyright 2015 Year4000. All Rights Reserved.
  */
 
-package net.year4000.mapnodes.games;
+package net.year4000.mapnodes.games.builders;
 
 import com.google.common.collect.Maps;
 import lombok.AllArgsConstructor;
@@ -11,7 +11,7 @@ import lombok.Setter;
 import lombok.ToString;
 import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.game.GamePlayer;
-import net.year4000.mapnodes.games.gui.PlotManager;
+import net.year4000.mapnodes.games.builders.gui.PlotManager;
 import net.year4000.mapnodes.utils.SchedulerUtil;
 import net.year4000.utilities.bukkit.LocationUtil;
 import org.bukkit.*;

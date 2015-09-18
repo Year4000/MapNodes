@@ -2,7 +2,7 @@
  * Copyright 2015 Year4000. All Rights Reserved.
  */
 
-package net.year4000.mapnodes.games.gui;
+package net.year4000.mapnodes.games.builders.gui;
 
 import com.google.common.collect.Iterators;
 import net.year4000.mapnodes.api.MapNodes;

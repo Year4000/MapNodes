@@ -1,4 +1,4 @@
-package net.year4000.mapnodes.games.gui;
+package net.year4000.mapnodes.games.builders.gui;
 
 import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.messages.Msg;
