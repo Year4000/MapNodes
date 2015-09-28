@@ -18,12 +18,11 @@ import net.year4000.mapnodes.clocks.StartGame;
 import net.year4000.mapnodes.game.Node;
 import net.year4000.mapnodes.game.NodeGame;
 import net.year4000.mapnodes.messages.Msg;
-import net.year4000.mapnodes.utils.Common;
-import net.year4000.mapnodes.utils.MathUtil;
-import net.year4000.mapnodes.utils.PacketHacks;
-import net.year4000.mapnodes.utils.SchedulerUtil;
+import net.year4000.mapnodes.utils.*;
+import net.year4000.utilities.JsonBuilder;
 import net.year4000.utilities.bukkit.FunEffectsUtil;
 import net.year4000.utilities.bukkit.MessageUtil;
+import net.year4000.utilities.bukkit.protocol.ServerInfoPing;
 import net.year4000.utilities.sdk.routes.accounts.AccountRoute;
 import org.bukkit.Effect;
 import org.bukkit.Sound;
@@ -42,6 +41,26 @@ import java.util.concurrent.locks.ReentrantLock;
 @EqualsAndHashCode
 public final class MapNodesListener implements Listener {
     private AtomicInteger lastSize = new AtomicInteger(0);
+
+    // When the listener is register register the packet listener
+    static {
+        // Add MapNodes data to the json string
+        ServerInfoPing.inject(MapNodes.getProtocolManager(), new ServerInfoPing()).put("mapnodes", () -> {
+            NodeGame game = (NodeGame) MapNodes.getCurrentGame();
+            return JsonBuilder.newObject()
+                .addProperty("id", NodeFactory.get().getCurrentGame().getId())
+                .addJsonObject("map")
+                .addProperty("name", game.getMap().getName())
+                .addProperty("version", game.getMap().getVersion())
+                .parent()
+                .addJsonObject("game")
+                .addProperty("stage", game.getStage().name())
+                .addProperty("start_time", game.getStartTime())
+                .addProperty("stop_time", game.getStopTime())
+                .parent()
+                .toJsonObject();
+        });
+    }
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onJoin(AsyncPlayerPreLoginEvent event) {
