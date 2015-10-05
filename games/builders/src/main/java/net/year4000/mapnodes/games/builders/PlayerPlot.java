@@ -194,7 +194,9 @@ public class PlayerPlot implements Comparable<PlayerPlot> {
 
     /** Calculate the score of this plot */
     public int calculateScore() {
-        return forfeited ? -1 : votes.values().stream().mapToInt(VoteType::getScore).sum();
+        int baseScore = votes.values().stream().mapToInt(VoteType::getScore).sum();
+        // Basic average calculation f(x) = (x + 1) * 2 / SIZE
+        return forfeited ? -1 : (baseScore + 1) * 2 / builders.plots.size();
     }
 
     @Override

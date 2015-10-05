@@ -77,7 +77,7 @@ import static com.google.common.base.Preconditions.checkState;
 public class Builders extends GameModeTemplate implements GameMode {
     BuildersConfig config;
     private BuilderStage stage = BuilderStage.PRE_GAME;
-    private Map<GamePlayer, PlayerPlot> plots = Maps.newHashMap();
+    Map<GamePlayer, PlayerPlot> plots = Maps.newHashMap();
     private Iterator<BuildersConfig.Plot> availablePlots;
     private BukkitTask gameClock;
     private Iterator<PlayerPlot> voting;
