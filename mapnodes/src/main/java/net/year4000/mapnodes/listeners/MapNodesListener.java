@@ -72,7 +72,7 @@ public final class MapNodesListener implements Listener {
         UUID uuid = event.getUniqueId();
         try {
             AccountCache account = AccountCache.getAccount(uuid);
-            if (System.currentTimeMillis() + account.getUpdated() > TimeUnit.DAYS.toMillis(5)) {
+            if (System.currentTimeMillis() - account.getUpdated() > TimeUnit.DAYS.toMillis(5)) {
                 throw new RuntimeException("Refresh Account");
             }
             rank = account.getRank().toLowerCase();
