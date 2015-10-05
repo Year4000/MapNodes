@@ -101,18 +101,12 @@ public class PlayerPlot implements Comparable<PlayerPlot> {
     public Location teleportPlotLocation() {
         World world = MapNodes.getCurrentWorld();
         Vector midpoint = plot.getInnerMin().midpoint(plot.getInnerMax());
-        double x, z;
-        int y;
+        double distance = Math.sqrt(midpoint.clone().setY(0).distance(plot.getMax().clone().setY(0)));
+        double delta = Common.rand.nextInt(360) * Math.PI / 180;
 
-        do {
-            double distance = Math.sqrt(midpoint.clone().setY(0).distance(plot.getMax().clone().setY(0)));
-            double delta = Common.rand.nextInt(360) * Math.PI / 180;
-
-            x = midpoint.getX() + distance * Math.cos(delta);
-            z = midpoint.getZ() + distance * Math.sin(delta);
-            y = world.getHighestBlockYAt((int) x, (int) z) + 10;
-        }
-        while (y >= builders.config.getHeight());
+        double x = midpoint.getX() + distance * Math.cos(delta);
+        double z = midpoint.getZ() + distance * Math.sin(delta);
+        int y = this.y + 10;
 
         return LocationUtil.center(new Location(world, x, y, z));
     }
