@@ -13,6 +13,7 @@ import lombok.ToString;
 import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.game.GamePlayer;
 import net.year4000.mapnodes.games.builders.gui.PlotManager;
+import net.year4000.mapnodes.utils.Common;
 import net.year4000.mapnodes.utils.SchedulerUtil;
 import net.year4000.utilities.bukkit.LocationUtil;
 import org.bukkit.*;
@@ -22,7 +23,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
 import java.util.Map;
-import java.util.Random;
 import java.util.function.Consumer;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -30,6 +30,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @ToString
 @Getter
 public class PlayerPlot implements Comparable<PlayerPlot> {
+    private final Builders builders;
     private final GamePlayer player;
     private final BuildersConfig.Plot plot;
     private final int y;
@@ -61,7 +62,8 @@ public class PlayerPlot implements Comparable<PlayerPlot> {
         this.player = checkNotNull(player, "player");
         this.plot = checkNotNull(plot, "plot");
         plotManager = new PlotManager(player, this);
-        checkNotNull(builder).guis.add(plotManager);
+        this.builders = checkNotNull(builder);
+        builders.guis.add(plotManager);
         MapNodes.getGui().registerMenu(plotManager);
         MapNodes.getCurrentGame().addTask(SchedulerUtil.repeatSync(plotManager, 5L));
 
@@ -99,12 +101,18 @@ public class PlayerPlot implements Comparable<PlayerPlot> {
     public Location teleportPlotLocation() {
         World world = MapNodes.getCurrentWorld();
         Vector midpoint = plot.getInnerMin().midpoint(plot.getInnerMax());
-        double distance = Math.sqrt(midpoint.clone().setY(0).distance(plot.getMax().clone().setY(0)));
-        double delta = new Random().nextInt(360) * Math.PI / 180;
+        double x, z;
+        int y;
 
-        double x = midpoint.getX() + distance * Math.cos(delta);
-        double z = midpoint.getZ() + distance * Math.sin(delta);
-        int y = world.getHighestBlockYAt((int) x, (int) z) + 10;
+        do {
+            double distance = Math.sqrt(midpoint.clone().setY(0).distance(plot.getMax().clone().setY(0)));
+            double delta = Common.rand.nextInt(360) * Math.PI / 180;
+
+            x = midpoint.getX() + distance * Math.cos(delta);
+            z = midpoint.getZ() + distance * Math.sin(delta);
+            y = world.getHighestBlockYAt((int) x, (int) z) + 10;
+        }
+        while (y >= builders.config.getHeight());
 
         return LocationUtil.center(new Location(world, x, y, z));
     }

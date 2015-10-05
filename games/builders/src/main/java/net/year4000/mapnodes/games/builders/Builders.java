@@ -68,7 +68,7 @@ import static com.google.common.base.Preconditions.checkState;
     config = BuildersConfig.class
 )
 public class Builders extends GameModeTemplate implements GameMode {
-    private BuildersConfig config;
+    BuildersConfig config;
     private BuilderStage stage = BuilderStage.PRE_GAME;
     private Map<GamePlayer, PlayerPlot> plots = Maps.newHashMap();
     private Iterator<BuildersConfig.Plot> availablePlots;
