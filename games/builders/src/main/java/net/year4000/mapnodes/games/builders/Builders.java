@@ -33,6 +33,7 @@ import net.year4000.utilities.TimeUtil;
 import net.year4000.utilities.bukkit.BukkitUtil;
 import net.year4000.utilities.bukkit.FunEffectsUtil;
 import org.bukkit.*;
+import org.bukkit.block.Block;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
@@ -42,10 +43,12 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
@@ -53,10 +56,13 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitTask;
+import org.bukkit.util.BlockVector;
 import org.bukkit.util.Vector;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -393,6 +399,29 @@ public class Builders extends GameModeTemplate implements GameMode {
     }
 
     @EventHandler(ignoreCancelled = true)
+    public void onPlayerBuild(PlayerBucketEmptyEvent event) {
+        if (!MapNodes.getCurrentGame().getStage().isPlaying()) return;
+
+        if (stage == BuilderStage.VOTING) {
+            event.setCancelled(true);
+            return;
+        }
+
+        GamePlayer gamePlayer = MapNodes.getCurrentGame().getPlayer(event.getPlayer());
+
+        if (!gamePlayer.isPlaying()) return;
+
+        PlayerPlot plot = gamePlayer.getPlayerData(PlayerPlot.class);
+        plot.setForfeited(false);
+        Vector vector = event.getBlockClicked().getLocation().toVector();
+
+        if (!plot.getPlot().isInInnerPlot(vector, plot.getY(), plot.getPlot().getMax().getBlockY())) {
+            gamePlayer.sendMessage(Msg.NOTICE + Msg.locale(gamePlayer, "region.build.region"));
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true)
     public void onPlayerBuild(BlockBreakEvent event) {
         if (!MapNodes.getCurrentGame().getStage().isPlaying()) return;
 
@@ -522,6 +551,26 @@ public class Builders extends GameModeTemplate implements GameMode {
     @EventHandler
     public void onFood(FoodLevelChangeEvent event) {
         event.setCancelled(true);
+    }
+
+    @EventHandler
+    public void onExplosion(final EntityExplodeEvent event) {
+        // Clone list
+        final List<Block> damaged = Lists.newArrayList(event.blockList());
+        // Create function to check if block exists in plot
+        Function<BlockVector, Boolean> isInPlots = vector -> {
+            for (PlayerPlot plot : plots.values()) {
+                int maxY = plot.getPlot().getMax().getBlockY();
+                if (plot.getPlot().isInInnerPlot(vector, plot.getY(), maxY)) {
+                    return true;
+                }
+            }
+            return false;
+        };
+        // Check values parallel
+        damaged.parallelStream()
+            .filter(block -> !isInPlots.apply(block.getLocation().toVector().toBlockVector()))
+            .forEach(block -> event.blockList().remove(block));
     }
 
     @EventHandler(ignoreCancelled = true)
