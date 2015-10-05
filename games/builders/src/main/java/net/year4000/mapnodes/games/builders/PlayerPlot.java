@@ -5,6 +5,7 @@
 package net.year4000.mapnodes.games.builders;
 
 import com.google.common.collect.Maps;
+import com.google.common.primitives.Ints;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -191,6 +192,6 @@ public class PlayerPlot implements Comparable<PlayerPlot> {
     @Override
     public int compareTo(PlayerPlot playerPlot) {
         checkNotNull(playerPlot, "playerPlot");
-        return calculateScore() < playerPlot.calculateScore() ? 1 : -1;
+        return Ints.compare(calculateScore(), playerPlot.calculateScore());
     }
 }
