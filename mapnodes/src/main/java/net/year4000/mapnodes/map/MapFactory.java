@@ -20,7 +20,7 @@ public class MapFactory {
     private static Map<String, MapObject> folders;
 
     /** Find and load all maps */
-    public MapFactory() {
+    static {
         folders = new ConcurrentLinkedHashMap.Builder<String, MapObject>()
             .maximumWeightedCapacity(Short.MAX_VALUE)
             .build();
