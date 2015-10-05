@@ -14,6 +14,7 @@ import net.lingala.zip4j.exception.ZipException;
 import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.NodeFactory;
 import net.year4000.mapnodes.Settings;
+import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.exceptions.InvalidJsonException;
 import net.year4000.mapnodes.api.exceptions.WorldLoadException;
 import net.year4000.mapnodes.api.game.GameConfig;
@@ -203,9 +204,15 @@ public class Node {
                 boolean online = false;
 
                 for (Player player : getWorld().getPlayers()) {
-                    //PacketHacks.respawnPlayer(player);
-                    //player.teleport(MapNodes.getCurrentWorld().getSpawnLocation());
-                    player.kickPlayer(Msg.locale(player, "error.cmd.error"));
+                    if (count < 10) {
+                        PacketHacks.respawnPlayer(player);
+                    }
+                    else if (count < 20) {
+                        player.teleport(MapNodes.getCurrentWorld().getSpawnLocation());
+                    }
+                    else {
+                        SchedulerUtil.runSync(() -> player.kickPlayer(Msg.locale(player, "error.cmd.error")));
+                    }
 
                     if (player.isOnline()) {
                         online = true;

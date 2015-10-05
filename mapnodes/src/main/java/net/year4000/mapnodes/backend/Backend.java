@@ -6,7 +6,6 @@ package net.year4000.mapnodes.backend;
 
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
-import lombok.Getter;
 import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.Settings;
 import net.year4000.mapnodes.api.game.GamePlayer;
