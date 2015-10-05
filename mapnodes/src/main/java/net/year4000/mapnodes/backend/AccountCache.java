@@ -19,7 +19,7 @@ import java.util.UUID;
 @Data
 public class AccountCache {
     private static final String FILE_NAME = "/tmp/MapNodes/accounts.json";
-    private static final Map<UUID, AccountCache> cache = new FileMap<>(FILE_NAME);
+    private static final Map<String, AccountCache> cache = new FileMap<>(FILE_NAME);
 
     private long updated = System.currentTimeMillis();
     private UUID uuid;
@@ -38,15 +38,15 @@ public class AccountCache {
         this.level = object.get("level").getAsInt();
         this.experience = object.get("experience").getAsInt();
         this.nextExperienceLevel = object.get("experience_level").getAsFloat();
-        cache.put(uuid, this);
+        cache.put(uuid.toString(), this);
     }
 
     public static AccountCache getAccount(NodePlayer player) {
-        return Preconditions.checkNotNull(cache.get(player.getPlayer().getUniqueId()));
+        return Preconditions.checkNotNull(cache.get(player.getPlayer().getUniqueId().toString()));
     }
 
     public static AccountCache getAccount(UUID uuid) {
-        return Preconditions.checkNotNull(cache.get(uuid));
+        return Preconditions.checkNotNull(cache.get(uuid.toString()));
     }
 
     public static AccountCache createAccount(UUID uuid, JsonObject object) {

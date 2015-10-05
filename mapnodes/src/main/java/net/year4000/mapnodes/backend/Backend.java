@@ -26,7 +26,7 @@ import java.util.*;
 
 public class Backend extends API {
     private static final String FILE_NAME = "/tmp/MapNodes/account_ids.json";
-    public static Map<UUID, String> accounts = new FileMap<>(FILE_NAME);
+    public static Map<String, String> accounts = new FileMap<>(FILE_NAME);
 
     public Backend() {
         super(Settings.get().getKey());
@@ -40,8 +40,8 @@ public class Backend extends API {
 
     /** Add tokens to the specific account */
     public void addTokens(GamePlayer player, int amount) {
-        UUID accountUuid = player.getPlayer().getUniqueId();
-        String accountId = accounts.getOrDefault(accountUuid, accountUuid.toString());
+        String accountUuid = player.getPlayer().getUniqueId().toString();
+        String accountId = accounts.getOrDefault(accountUuid, accountUuid);
         URLBuilder url = api().addPath(ACCOUNTS_PATH).addPath(accountId).addPath("tokens");
         JsonObject data = new JsonObject();
         data.addProperty("amount", amount);
@@ -57,8 +57,8 @@ public class Backend extends API {
 
     /** Add tokens to the specific account */
     public void addExperience(GamePlayer player, int amount) {
-        UUID accountUuid = player.getPlayer().getUniqueId();
-        String accountId = accounts.getOrDefault(accountUuid, accountUuid.toString());
+        String accountUuid = player.getPlayer().getUniqueId().toString();
+        String accountId = accounts.getOrDefault(accountUuid, accountUuid);
         URLBuilder url = api().addPath(ACCOUNTS_PATH).addPath(accountId).addPath("experience");
         JsonObject data = new JsonObject();
         data.addProperty("amount", amount);
@@ -71,7 +71,7 @@ public class Backend extends API {
 
                 // If spectator update exp
                 if (nodePlayer.isSpectator()) {
-                    AccountRoute route = getAccount(accountUuid.toString());
+                    AccountRoute route = getAccount(accountUuid);
                     int level = route.getRawResponse().get("level").getAsInt();
                     int experience = route.getRawResponse().get("experience").getAsInt();
                     float experienceLevel = route.getRawResponse().get("experience_level").getAsFloat();
