@@ -204,7 +204,9 @@ public final class NodePlayer implements GamePlayer, Comparable {
         join.call();
 
         // run a tick later to allow player to login
-        player.teleport(join.getSpawn());
+        if (!join.getSpawn().equals(player.getPlayer().getLocation())) {
+            player.teleport(join.getSpawn());
+        }
 
         // Run player events later
         join.addPostEvent(() -> {

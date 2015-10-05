@@ -33,6 +33,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.event.server.ServerListPingEvent;
+import org.spigotmc.event.player.PlayerSpawnLocationEvent;
 
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -89,15 +90,19 @@ public final class MapNodesListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
-    public void onJoin(PlayerJoinEvent event) {
-        event.setJoinMessage(null);
-        MapNodes.getCurrentGame().join(event.getPlayer());
-
+    @EventHandler
+    public void onFirstLogon(PlayerSpawnLocationEvent event) {
+        event.setSpawnLocation(MapNodes.getCurrentWorld().getSpawnLocation());
         // Update server name
         if (MapNodesPlugin.getInst().getNetwork().getName().equals(Network.UNKNOWN)) {
             SchedulerUtil.runAsync(() -> MapNodesPlugin.getInst().getNetwork().updateName(), 40L);
         }
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void onJoin(PlayerJoinEvent event) {
+        event.setJoinMessage(null);
+        MapNodes.getCurrentGame().join(event.getPlayer());
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
