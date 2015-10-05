@@ -1,10 +1,7 @@
 package net.year4000.mapnodes.utils;
 
 import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.File;
@@ -13,17 +10,18 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.Collection;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public class FileMap<K, V> implements Map<K, V> {
-    private final Type MAP_TYPE = new TypeToken<Map<K, V>>(){}.getType();
+    private final Type MAP_TYPE = new TypeToken<LinkedHashMap<K, V>>(){}.getType();
     private static final Gson GSON = new Gson();
     private final File file;
     private long lastModified;
-    private Map<K, V> elements = Maps.newLinkedHashMap();
+    private LinkedHashMap<K, V> elements = Maps.newLinkedHashMap();
 
     public FileMap(File file) {
         this.file = checkNotNull(file, "There must be a file");
