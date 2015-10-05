@@ -14,6 +14,7 @@ import net.year4000.mapnodes.api.events.player.GamePlayerJoinSpectatorEvent;
 import net.year4000.mapnodes.api.events.player.GamePlayerJoinTeamEvent;
 import net.year4000.mapnodes.api.utils.Spectator;
 import net.year4000.mapnodes.backend.AccountCache;
+import net.year4000.mapnodes.backend.Backend;
 import net.year4000.mapnodes.clocks.StartGame;
 import net.year4000.mapnodes.game.Node;
 import net.year4000.mapnodes.game.NodeGame;
@@ -34,6 +35,7 @@ import org.bukkit.event.player.*;
 import org.bukkit.event.server.ServerListPingEvent;
 
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -64,13 +66,24 @@ public final class MapNodesListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onJoin(AsyncPlayerPreLoginEvent event) {
+        String rank, locale;
         NodeGame game = (NodeGame) MapNodes.getCurrentGame();
         UUID uuid = event.getUniqueId();
-        AccountRoute account = MapNodesPlugin.getInst().getApi().getAccount(uuid.toString());
-        String rank = account.getRank().toLowerCase();
-        String locale = account.getRawResponse().get("locale").toString();
-        AccountCache.createAccount(uuid, account.getRawResponse());
-
+        try {
+            AccountCache account = AccountCache.getAccount(uuid);
+            if (System.currentTimeMillis() + account.getUpdated() > TimeUnit.DAYS.toMillis(5)) {
+                throw new RuntimeException("Refresh Account");
+            }
+            rank = account.getRank().toLowerCase();
+            locale = account.getLocale();
+        }
+        catch (Exception error) {
+            String accountId = Backend.accounts.getOrDefault(uuid, uuid.toString());
+            AccountRoute account = MapNodesPlugin.getInst().getApi().getAccount(accountId);
+            rank = account.getRank().toLowerCase();
+            locale = account.getRawResponse().get("locale").toString();
+            AccountCache.createAccount(uuid, account.getRawResponse());
+        }
         if (game.getPlayers().count() >= game.getRealMaxCount() && rank.equals("alpha")) {
             event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_FULL, Msg.locale(locale, "server.full") + ' ' + Msg.locale(locale, "team.select.non_vip_url"));
         }

@@ -8,18 +8,22 @@ import com.google.common.base.Preconditions;
 import com.google.gson.JsonObject;
 import lombok.Data;
 import net.year4000.mapnodes.game.NodePlayer;
+import net.year4000.mapnodes.utils.FileMap;
 import net.year4000.utilities.AbstractBadgeManager;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
 @Data
 public class AccountCache {
-    private static final Map<UUID, AccountCache> cache = new HashMap<>();
-    public static final Double TWO_THIRDS = .650000001;
+    private static final String FILE_NAME = "/tmp/MapNodes/accounts.json";
+    private static final Map<UUID, AccountCache> cache = new FileMap<>(FILE_NAME);
 
+    private long updated = System.currentTimeMillis();
     private UUID uuid;
+    private String locale;
     private String rank;
     private AbstractBadgeManager.Badges badge;
     private int level;
@@ -29,6 +33,7 @@ public class AccountCache {
     private AccountCache(UUID uuid, JsonObject object) {
         this.uuid = uuid;
         this.rank = object.get("rank").getAsString();
+        this.locale = object.get("locale").getAsString();
         this.badge = AbstractBadgeManager.Badges.valueOf(rank.toUpperCase());
         this.level = object.get("level").getAsInt();
         this.experience = object.get("experience").getAsInt();
@@ -38,6 +43,10 @@ public class AccountCache {
 
     public static AccountCache getAccount(NodePlayer player) {
         return Preconditions.checkNotNull(cache.get(player.getPlayer().getUniqueId()));
+    }
+
+    public static AccountCache getAccount(UUID uuid) {
+        return Preconditions.checkNotNull(cache.get(uuid));
     }
 
     public static AccountCache createAccount(UUID uuid, JsonObject object) {
