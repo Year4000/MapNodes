@@ -41,6 +41,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
@@ -571,6 +572,25 @@ public class Builders extends GameModeTemplate implements GameMode {
         damaged.parallelStream()
             .filter(block -> !isInPlots.apply(block.getLocation().toVector().toBlockVector()))
             .forEach(block -> event.blockList().remove(block));
+    }
+
+    @EventHandler
+    public void onFromTo(BlockFromToEvent event) {
+        // Create function to check if block exists in plot
+        Function<BlockVector, Boolean> isInPlots = vector -> {
+            for (PlayerPlot plot : plots.values()) {
+                int maxY = plot.getPlot().getMax().getBlockY();
+                if (plot.getPlot().isInInnerPlot(vector, plot.getY(), maxY)) {
+                    return true;
+                }
+            }
+            return false;
+        };
+        // Make sure to is inside a plot
+        BlockVector to = event.getBlock().getLocation().toVector().toBlockVector();
+        if (!isInPlots.apply(to)) {
+            event.setCancelled(true);
+        }
     }
 
     @EventHandler(ignoreCancelled = true)
