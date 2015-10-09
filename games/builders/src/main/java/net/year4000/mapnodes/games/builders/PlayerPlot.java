@@ -196,6 +196,6 @@ public class PlayerPlot implements Comparable<PlayerPlot> {
     @Override
     public int compareTo(PlayerPlot playerPlot) {
         checkNotNull(playerPlot, "playerPlot");
-        return Ints.compare(calculateScore(), playerPlot.calculateScore());
+        return Ints.compare(playerPlot.calculateScore(), calculateScore());
     }
 }
