@@ -15,14 +15,18 @@ import net.year4000.mapnodes.api.game.GamePlayer;
 import net.year4000.mapnodes.games.builders.gui.PlotManager;
 import net.year4000.mapnodes.utils.Common;
 import net.year4000.mapnodes.utils.SchedulerUtil;
+import net.year4000.utilities.bukkit.BukkitUtil;
 import net.year4000.utilities.bukkit.LocationUtil;
 import org.bukkit.*;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.util.Vector;
 
 import java.util.Map;
+import java.util.Random;
 import java.util.function.Consumer;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -177,8 +181,29 @@ public class PlayerPlot implements Comparable<PlayerPlot> {
         }
     }
 
+    /** Launch fireworks for this plot */
     public void fireworks() {
-
+        MapNodes.getCurrentGame().getPlaying().forEach(player -> {
+            // Launch firework at player position
+            Location location = player.getPlayer().getLocation().clone().add(Common.randomOffset());
+            Firework firework = MapNodes.getCurrentWorld().spawn(location, Firework.class);
+            FireworkEffect effect = FireworkEffect.builder()
+                .withColor((Color) BukkitUtil.COLOR_MAP.keySet().toArray()[new Random().nextInt(BukkitUtil.COLOR_MAP.keySet().size())])
+                .withColor((Color) BukkitUtil.COLOR_MAP.keySet().toArray()[new Random().nextInt(BukkitUtil.COLOR_MAP.keySet().size())])
+                .withColor((Color) BukkitUtil.COLOR_MAP.keySet().toArray()[new Random().nextInt(BukkitUtil.COLOR_MAP.keySet().size())])
+                .withColor((Color) BukkitUtil.COLOR_MAP.keySet().toArray()[new Random().nextInt(BukkitUtil.COLOR_MAP.keySet().size())])
+                .withFade((Color) BukkitUtil.COLOR_MAP.keySet().toArray()[new Random().nextInt(BukkitUtil.COLOR_MAP.keySet().size())])
+                .withFade((Color) BukkitUtil.COLOR_MAP.keySet().toArray()[new Random().nextInt(BukkitUtil.COLOR_MAP.keySet().size())])
+                .withFade((Color) BukkitUtil.COLOR_MAP.keySet().toArray()[new Random().nextInt(BukkitUtil.COLOR_MAP.keySet().size())])
+                .withFade((Color) BukkitUtil.COLOR_MAP.keySet().toArray()[new Random().nextInt(BukkitUtil.COLOR_MAP.keySet().size())])
+                .with(FireworkEffect.Type.BURST)
+                .build();
+            FireworkMeta meta = firework.getFireworkMeta();
+            meta.clearEffects();
+            meta.addEffect(effect);
+            meta.setPower(0);
+            firework.setFireworkMeta(meta);
+        });
     }
 
     /** Get the owner of the plot */
