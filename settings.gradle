@@ -1,0 +1,13 @@
+/*
+ * Copyright 2016 Year4000. All Rights Reserved.
+ */
+rootProject.name = 'MapNodes'
+
+// MapNodes
+include 'core'
+include 'sponge'
+
+// Utilities
+include 'utilities:core'
+
+

@@ -1,0 +1,21 @@
+/*
+ * Copyright 2016 Year4000. All Rights Reserved.
+ */
+
+plugins {
+    id 'java'
+    id 'idea'
+    id 'org.spongepowered.plugin' version '0.5.1'
+}
+
+apply from: project('utilities').file('gradle/utils.gradle')
+
+defaultTasks 'assemble'
+
+sourceCompatibility = 1.8
+
+def rawVersion = '3.0.0'
+def gitVersion = rawVersion + '-' + git()
+
+group 'net.year4000.mapnodes'
+version = gitVersion
