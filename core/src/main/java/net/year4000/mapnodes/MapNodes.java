@@ -3,9 +3,17 @@
  */
 package net.year4000.mapnodes;
 
+import com.google.common.collect.ImmutableSet;
 import net.year4000.mapnodes.nodes.Node;
 import net.year4000.mapnodes.nodes.NodeFactory;
 import net.year4000.mapnodes.nodes.NodeManager;
+import net.year4000.utilities.ErrorReporter;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.stream.Collectors;
 
 /** The system to handle the Maps and load their games */
 public interface MapNodes {
@@ -25,7 +33,16 @@ public interface MapNodes {
 
   /** Load the MapNodes system */
   default void load() {
-
+    // Inject the javascript files into v8
+    ImmutableSet.of("bindings.js", "game.js", "player.js", "team.js", "utils.js").forEach(file -> {
+      InputStream stream = MapNodes.class.getResourceAsStream("/js/" + file);
+      try (BufferedReader buffer = new BufferedReader(new InputStreamReader(stream))) {
+        String script = buffer.lines().collect(Collectors.joining("\n"));
+        bindings().v8().executeVoidScript(script);
+      } catch (IOException error) {
+        ErrorReporter.builder(error).add("file", file).buildAndReport(System.err);
+      }
+    });
   }
 
   /** Enable the MapNodes system */
@@ -35,6 +52,6 @@ public interface MapNodes {
 
   /** Unload the MapNodes system */
   default void unload() {
-
+    bindings().release();
   }
 }
