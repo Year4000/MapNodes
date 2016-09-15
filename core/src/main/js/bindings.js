@@ -13,8 +13,8 @@ var PLATFORM = _PLATFORM;
 
 /** The constants that are known when the JS runtime is created */
 var PLATFORMS = {
-  "PC": "java",
-  "PE": "php"
+  "PC": "java", // Sponge
+  "PE": "java" // Nukkit
 };
 
 /** Used to interact the Javascript with MapNodes base game */
@@ -22,7 +22,7 @@ class $ {
   /** Map a specific object to this bindings var */
   static get bindings() {
     if (PLATFORM == PLATFORMS.PE) {
-      return PHP || {};
+      return JAVA || {};
     } else if (PLATFORM == PLATFORMS.PC) {
       return JAVA || {};
     } else {
@@ -30,8 +30,23 @@ class $ {
     }
   }
 
-  /** Update the player to the team */
+  /** Send a message to the player */
   static send_message(player, message) {
       $.bindings.send_message(player.uuid, message);
   }
+}
+
+/** Print the message to the console */
+function print(message) {
+  $.bindings.print(message);
+}
+
+/** Print a line to the console */
+function println(message) {
+  print(message + "\n")
+}
+
+/** Dump the var to the screen */
+function var_dump(variable) {
+  println(JSON.stringify(variable));
 }

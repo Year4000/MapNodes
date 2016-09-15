@@ -12,12 +12,13 @@ import java.util.stream.Collectors;
 public class Testing {
   private static final Bindings BINDINGS = new TestBindings();
 
-
   public static void main(String[] args) throws Exception {
     try {
       String bindings = read(Testing.class.getResourceAsStream("/js/bindings.js"));
       BINDINGS.v8().executeVoidScript(bindings);
-
+      BINDINGS.v8().executeScript("print('Hello');");
+      BINDINGS.v8().executeScript("println(' World!');");
+      BINDINGS.v8().executeScript("var_dump(PLATFORMS);");
     } finally {
       BINDINGS.release();
     }

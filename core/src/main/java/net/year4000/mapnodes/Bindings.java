@@ -7,6 +7,7 @@ import com.eclipsesource.v8.Releasable;
 import com.eclipsesource.v8.V8;
 import com.eclipsesource.v8.V8Object;
 import com.google.common.base.CaseFormat;
+import net.year4000.utilities.Utils;
 
 import java.lang.reflect.Method;
 
@@ -41,7 +42,10 @@ public abstract class Bindings implements Releasable {
     engine.release();
   }
 
-
+  /** Print the message */
+  public void print(String message) {
+    System.out.print(message);
+  }
 
   /** Send a message to a player */
   public abstract void sendMessage(String player, String message);

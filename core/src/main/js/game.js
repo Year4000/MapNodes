@@ -1,9 +1,14 @@
 /*
  * Copyright 2016 Year4000. All Rights Reserved.
  */
+
+/**
+ The class that is the game
+ */
 class Game {
-  constructor(id) {
+  constructor(id, map) {
     this._id = id;
+    this._map = map;
   }
 
   get id() {

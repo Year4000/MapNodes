@@ -15,12 +15,8 @@ class Player {
     return this._meta.username;
   }
 
-  set team(team) {
-    $.update_team(this, team);
-  }
-
   /** Send a message to this player */
   send_message(message) {
-    $.send_message(this.uuid, message);
+    $.send_message(this, message);
   }
 }
