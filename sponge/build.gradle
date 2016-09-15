@@ -25,5 +25,5 @@ dependencies {
 
 task docs(type: Javadoc) {
     source = sourceSets.main.allJava
-    destinationDir = mapnodes.file("docs/")
+    destinationDir = mapnodes.file("docs/sponge/")
 }
