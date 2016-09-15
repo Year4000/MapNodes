@@ -11,9 +11,7 @@
     <version>2.0.0-SNAPSHOT</version>
 
     <modules>
-        <module>api</module>
         <module>mapnodes</module>
-        <module>games</module>
         <module>plugin</module>
     </modules>
 
@@ -79,14 +77,6 @@
                     <artifactId>bukkit</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>
-
-        <!-- Getter and Setters -->
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>1.14.8</version>
-            <scope>provided</scope>
         </dependency>
 
         <!-- @Nullable ect -->

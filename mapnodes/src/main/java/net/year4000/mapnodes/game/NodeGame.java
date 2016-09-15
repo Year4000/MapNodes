@@ -8,10 +8,6 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.annotations.Since;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.NodeFactory;
 import net.year4000.mapnodes.api.events.game.*;
@@ -64,9 +60,6 @@ import java.util.stream.Stream;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
-@Getter
-@Setter
-@NoArgsConstructor
 public final class NodeGame implements GameManager, Validator {
     /** Details about the current map. */
     @Since(1.0)
@@ -93,6 +86,9 @@ public final class NodeGame implements GameManager, Validator {
     /** Classes to pick from on top of your team. */
     @Since(1.0)
     private Map<String, NodeClass> classes = new ConcurrentHashMap<>();
+
+    public NodeGame() {
+    }
 
     @Override
     public void validate() throws InvalidJsonException {
@@ -144,7 +140,6 @@ public final class NodeGame implements GameManager, Validator {
     private transient Map<String, GameSidebarGoal> sidebarGoals = new LinkedHashMap<>();
     private transient List<Operations> startControls = new CopyOnWriteArrayList<>();
     private transient long startTime = 0, stopTime;
-    @Setter(AccessLevel.NONE)
     private transient int baseStartTime = 10;
 
     /** The start time for the game */
@@ -753,5 +748,157 @@ public final class NodeGame implements GameManager, Validator {
         pages.add(pageJoiner.join(NodeTeam.getBookPage(player)));
 
         return pages;
+    }
+
+    public NodeMap getMap() {
+        return this.map;
+    }
+
+    public NodeConfig getConfig() {
+        return this.config;
+    }
+
+    public Map<String, Map<String, String>> getLocales() {
+        return this.locales;
+    }
+
+    public GameSet<GameMode> getGameModes() {
+        return this.gameModes;
+    }
+
+    public NodeStage getStage() {
+        return this.stage;
+    }
+
+    public BukkitTask getGameClock() {
+        return this.gameClock;
+    }
+
+    public StartGame getStartClock() {
+        return this.startClock;
+    }
+
+    public BukkitTask getStopClock() {
+        return this.stopClock;
+    }
+
+    public List<BukkitTask> getTasks() {
+        return this.tasks;
+    }
+
+    public Map<Locale, Inventory> getTeamChooser() {
+        return this.teamChooser;
+    }
+
+    public Map<Locale, Inventory> getClassKitChooser() {
+        return this.classKitChooser;
+    }
+
+    public ScoreboardFactory getScoreboardFactory() {
+        return this.scoreboardFactory;
+    }
+
+    public Map<String, GameSidebarGoal> getSidebarGoals() {
+        return this.sidebarGoals;
+    }
+
+    public List<Operations> getStartControls() {
+        return this.startControls;
+    }
+
+    public long getStartTime() {
+        return this.startTime;
+    }
+
+    public long getStopTime() {
+        return this.stopTime;
+    }
+
+    public int getBaseStartTime() {
+        return this.baseStartTime;
+    }
+
+    public void setMap(NodeMap map) {
+        this.map = map;
+    }
+
+    public void setConfig(NodeConfig config) {
+        this.config = config;
+    }
+
+    public void setLocales(Map<String, Map<String, String>> locales) {
+        this.locales = locales;
+    }
+
+    public void setGameModes(GameSet<GameMode> gameModes) {
+        this.gameModes = gameModes;
+    }
+
+    public void setKits(Map<String, NodeKit> kits) {
+        this.kits = kits;
+    }
+
+    public void setRegions(Map<String, NodeRegion> regions) {
+        this.regions = regions;
+    }
+
+    public void setTeams(Map<String, NodeTeam> teams) {
+        this.teams = teams;
+    }
+
+    public void setClasses(Map<String, NodeClass> classes) {
+        this.classes = classes;
+    }
+
+    public void setPlayers(Map<Player, GamePlayer> players) {
+        this.players = players;
+    }
+
+    public void setStage(NodeStage stage) {
+        this.stage = stage;
+    }
+
+    public void setGameClock(BukkitTask gameClock) {
+        this.gameClock = gameClock;
+    }
+
+    public void setStartClock(StartGame startClock) {
+        this.startClock = startClock;
+    }
+
+    public void setStopClock(BukkitTask stopClock) {
+        this.stopClock = stopClock;
+    }
+
+    public void setTasks(List<BukkitTask> tasks) {
+        this.tasks = tasks;
+    }
+
+    public void setTeamChooser(Map<Locale, Inventory> teamChooser) {
+        this.teamChooser = teamChooser;
+    }
+
+    public void setClassKitChooser(Map<Locale, Inventory> classKitChooser) {
+        this.classKitChooser = classKitChooser;
+    }
+
+    public void setScoreboardFactory(ScoreboardFactory scoreboardFactory) {
+        this.scoreboardFactory = scoreboardFactory;
+    }
+
+    public void setSidebarGoals(Map<String, GameSidebarGoal> sidebarGoals) {
+        this.sidebarGoals = sidebarGoals;
+    }
+
+    public void setStartControls(List<Operations> startControls) {
+        this.startControls = startControls;
+    }
+
+    public void setStartTime(long startTime) {
+        this.startTime = startTime;
+    }
+
+    public void setStopTime(long stopTime) {
+        this.stopTime = stopTime;
     }
 }

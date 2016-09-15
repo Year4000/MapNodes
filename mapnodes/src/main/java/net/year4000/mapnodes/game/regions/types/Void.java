@@ -4,8 +4,6 @@
 
 package net.year4000.mapnodes.game.regions.types;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.game.regions.PointVector;
 import net.year4000.mapnodes.api.game.regions.Region;
@@ -18,11 +16,12 @@ import org.bukkit.World;
 
 import java.util.List;
 
-@Data
-@NoArgsConstructor
 @RegionType(RegionTypes.VOID)
 public class Void implements Region {
     private static int WORLD_HEIGHT = Bukkit.getWorlds().get(0).getMaxHeight();
+
+    public Void() {
+    }
 
     @Override
     public List<Location> getLocations(World world) {
@@ -43,5 +42,26 @@ public class Void implements Region {
         }
 
         return true;
+    }
+
+    public boolean equals(Object o) {
+        if (o == this) return true;
+        if (!(o instanceof Void)) return false;
+        final Void other = (Void) o;
+        if (!other.canEqual((Object) this)) return false;
+        return true;
+    }
+
+    public int hashCode() {
+        int result = 1;
+        return result;
+    }
+
+    protected boolean canEqual(Object other) {
+        return other instanceof Void;
+    }
+
+    public String toString() {
+        return "net.year4000.mapnodes.game.regions.types.Void()";
     }
 }

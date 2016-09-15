@@ -7,9 +7,6 @@ package net.year4000.mapnodes.utils;
 import com.google.common.base.Ascii;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
-import lombok.Synchronized;
 import net.year4000.mapnodes.api.game.GamePlayer;
 import net.year4000.mapnodes.api.game.regions.PointVector;
 import net.year4000.mapnodes.clocks.Clocker;
@@ -26,13 +23,15 @@ import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class Common {
     public static final Random rand = new Random();
     /** Color numbers based on its percent */
     private static int toggle = 0;
     private static final Map<NodePlayer, BukkitTask> actionBarAnimations = Maps.newHashMap();
     private static Set<String> VIPS = ImmutableSet.of("theta", "mu", "pi", "sigma", "phi", "delta", "omega");
+
+    private Common() {
+    }
 
     public static String colorNumber(int current, int total) {
         return MessageUtil.replaceColors(chatColorNumber(current, total) + current);

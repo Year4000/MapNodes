@@ -6,12 +6,11 @@ package net.year4000.mapnodes.game.regions.events;
 
 import com.google.common.collect.Iterables;
 import com.google.gson.annotations.SerializedName;
-import lombok.Data;
 import net.year4000.mapnodes.api.events.game.GameStopEvent;
 import net.year4000.mapnodes.api.game.GameKit;
 import net.year4000.mapnodes.api.game.regions.EventType;
-import net.year4000.mapnodes.api.game.regions.RegionListener;
 import net.year4000.mapnodes.api.game.regions.EventTypes;
+import net.year4000.mapnodes.api.game.regions.RegionListener;
 import net.year4000.mapnodes.game.regions.RegionEvent;
 import net.year4000.mapnodes.game.regions.types.Point;
 import net.year4000.mapnodes.utils.ChestUtil;
@@ -188,10 +187,67 @@ public class Chest extends RegionEvent implements RegionListener {
         placedChests.clear();
     }
 
-    @Data
     public static class ChestKit {
         private String name;
         private int amount;
         private boolean repeat = false;
+
+        public ChestKit() {
+        }
+
+        public String getName() {
+            return this.name;
+        }
+
+        public int getAmount() {
+            return this.amount;
+        }
+
+        public boolean isRepeat() {
+            return this.repeat;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public void setAmount(int amount) {
+            this.amount = amount;
+        }
+
+        public void setRepeat(boolean repeat) {
+            this.repeat = repeat;
+        }
+
+        public boolean equals(Object o) {
+            if (o == this) return true;
+            if (!(o instanceof ChestKit)) return false;
+            final ChestKit other = (ChestKit) o;
+            if (!other.canEqual((Object) this)) return false;
+            final Object this$name = this.getName();
+            final Object other$name = other.getName();
+            if (this$name == null ? other$name != null : !this$name.equals(other$name)) return false;
+            if (this.getAmount() != other.getAmount()) return false;
+            if (this.isRepeat() != other.isRepeat()) return false;
+            return true;
+        }
+
+        public int hashCode() {
+            final int PRIME = 59;
+            int result = 1;
+            final Object $name = this.getName();
+            result = result * PRIME + ($name == null ? 43 : $name.hashCode());
+            result = result * PRIME + this.getAmount();
+            result = result * PRIME + (this.isRepeat() ? 79 : 97);
+            return result;
+        }
+
+        protected boolean canEqual(Object other) {
+            return other instanceof ChestKit;
+        }
+
+        public String toString() {
+            return "net.year4000.mapnodes.game.regions.events.Chest.ChestKit(name=" + this.getName() + ", amount=" + this.getAmount() + ", repeat=" + this.isRepeat() + ")";
+        }
     }
 }

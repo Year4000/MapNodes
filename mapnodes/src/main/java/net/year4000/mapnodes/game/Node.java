@@ -8,7 +8,6 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
-import lombok.Getter;
 import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
 import net.year4000.mapnodes.MapNodesPlugin;
@@ -44,7 +43,6 @@ import java.util.concurrent.TimeUnit;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
-@Getter
 public class Node {
     private static final File WORLD_CONTAINER = new File(Bukkit.getWorldContainer(), MapNodesPlugin.getInst().getName());
     private static final String TEMPLATE = "%d-%s";
@@ -76,7 +74,7 @@ public class Node {
             worldSize = worldFolder.getWorld().getSize();
         }
         catch (MalformedURLException | ZipException e) {
-            // Can not happen unless api is broke
+            // Can not happen unless net.year4000.mapnodes.api is broke
         }
 
         // Load icon if one
@@ -315,5 +313,49 @@ public class Node {
         catch (IOException e) {
             MapNodesPlugin.debug(e.getMessage());
         }
+    }
+
+    public JsonObject getMapJson() {
+        return this.mapJson;
+    }
+
+    public int getId() {
+        return this.id;
+    }
+
+    public CachedServerIcon getIcon() {
+        return this.icon;
+    }
+
+    public Image getIconImage() {
+        return this.iconImage;
+    }
+
+    public NodeGame getGame() {
+        return this.game;
+    }
+
+    public String getWorldName() {
+        return this.worldName;
+    }
+
+    public ZipFile getWorldFile() {
+        return this.worldFile;
+    }
+
+    public World getWorld() {
+        return this.world;
+    }
+
+    public URL getWorldUrl() {
+        return this.worldUrl;
+    }
+
+    public File getWorldCache() {
+        return this.worldCache;
+    }
+
+    public int getWorldSize() {
+        return this.worldSize;
     }
 }

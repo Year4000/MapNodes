@@ -4,14 +4,12 @@
 
 package net.year4000.mapnodes.game.regions.types;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import net.year4000.mapnodes.api.exceptions.InvalidJsonException;
 import net.year4000.mapnodes.api.game.regions.PointVector;
 import net.year4000.mapnodes.api.game.regions.Region;
 import net.year4000.mapnodes.api.game.regions.RegionType;
-import net.year4000.mapnodes.api.utils.Validator;
 import net.year4000.mapnodes.api.game.regions.RegionTypes;
+import net.year4000.mapnodes.api.utils.Validator;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.util.Vector;
@@ -24,8 +22,6 @@ import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
-@Data
-@NoArgsConstructor
 @RegionType(RegionTypes.SPHERE)
 public class Sphere implements Region, Validator {
     private Point center = null;
@@ -36,6 +32,9 @@ public class Sphere implements Region, Validator {
     // Cached vars
     private transient List<PointVector> cachedPoints = null;
     private transient List<Location> cachedLocations = null;
+
+    public Sphere() {
+    }
 
     @Override
     public void validate() throws InvalidJsonException {
@@ -110,5 +109,85 @@ public class Sphere implements Region, Validator {
     public boolean inRegion(PointVector region) {
         Vector point = new Vector(region.getX(), region.getY(), region.getZ());
         return point.isInSphere(new Vector(center.getX(), center.getY(), center.getZ()), radius);
+    }
+
+    public Point getCenter() {
+        return this.center;
+    }
+
+    public Integer getRadius() {
+        return this.radius;
+    }
+
+    public Integer getYaw() {
+        return this.yaw;
+    }
+
+    public Integer getPitch() {
+        return this.pitch;
+    }
+
+    public List<PointVector> getCachedPoints() {
+        return this.cachedPoints;
+    }
+
+    public List<Location> getCachedLocations() {
+        return this.cachedLocations;
+    }
+
+    public void setCenter(Point center) {
+        this.center = center;
+    }
+
+    public void setRadius(Integer radius) {
+        this.radius = radius;
+    }
+
+    public void setYaw(Integer yaw) {
+        this.yaw = yaw;
+    }
+
+    public void setPitch(Integer pitch) {
+        this.pitch = pitch;
+    }
+
+    public void setCachedPoints(List<PointVector> cachedPoints) {
+        this.cachedPoints = cachedPoints;
+    }
+
+    public void setCachedLocations(List<Location> cachedLocations) {
+        this.cachedLocations = cachedLocations;
+    }
+
+    public boolean equals(Object o) {
+        if (o == this) return true;
+        if (!(o instanceof Sphere)) return false;
+        final Sphere other = (Sphere) o;
+        if (!other.canEqual((Object) this)) return false;
+        final Object this$center = this.getCenter();
+        final Object other$center = other.getCenter();
+        if (this$center == null ? other$center != null : !this$center.equals(other$center)) return false;
+        final Object this$radius = this.getRadius();
+        final Object other$radius = other.getRadius();
+        if (this$radius == null ? other$radius != null : !this$radius.equals(other$radius)) return false;
+        return true;
+    }
+
+    public int hashCode() {
+        final int PRIME = 59;
+        int result = 1;
+        final Object $center = this.getCenter();
+        result = result * PRIME + ($center == null ? 43 : $center.hashCode());
+        final Object $radius = this.getRadius();
+        result = result * PRIME + ($radius == null ? 43 : $radius.hashCode());
+        return result;
+    }
+
+    protected boolean canEqual(Object other) {
+        return other instanceof Sphere;
+    }
+
+    public String toString() {
+        return "net.year4000.mapnodes.game.regions.types.Sphere(center=" + this.getCenter() + ", radius=" + this.getRadius() + ", yaw=" + this.getYaw() + ", pitch=" + this.getPitch() + ", cachedPoints=" + this.getCachedPoints() + ", cachedLocations=" + this.getCachedLocations() + ")";
     }
 }

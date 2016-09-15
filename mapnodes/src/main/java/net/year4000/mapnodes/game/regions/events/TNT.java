@@ -6,15 +6,12 @@ package net.year4000.mapnodes.game.regions.events;
 
 import com.google.common.collect.Maps;
 import com.google.gson.annotations.SerializedName;
-import net.year4000.mapnodes.api.MapNodes;
-import net.year4000.mapnodes.api.game.GamePlayer;
 import net.year4000.mapnodes.api.game.regions.EventType;
-import net.year4000.mapnodes.api.game.regions.RegionListener;
 import net.year4000.mapnodes.api.game.regions.EventTypes;
+import net.year4000.mapnodes.api.game.regions.RegionListener;
 import net.year4000.mapnodes.game.regions.RegionEvent;
 import net.year4000.mapnodes.game.regions.types.Point;
 import net.year4000.mapnodes.utils.*;
-import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -27,7 +24,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
-import org.bukkit.util.Vector;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;

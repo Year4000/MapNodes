@@ -6,9 +6,6 @@ package net.year4000.mapnodes.game;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.gson.annotations.Since;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 import net.year4000.mapnodes.api.exceptions.InvalidJsonException;
 import net.year4000.mapnodes.api.game.GameKit;
 import net.year4000.mapnodes.api.game.GameManager;
@@ -36,9 +33,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@Getter
-@EqualsAndHashCode
-@NoArgsConstructor
 /** Manage the items and effects that are given to the player. */
 public class NodeKit implements GameKit {
     /** The parents the kit will inherit */
@@ -66,6 +60,9 @@ public class NodeKit implements GameKit {
     @Since(2.0)
     protected List<String> permissions = new ArrayList<>();
 
+    public NodeKit() {
+    }
+
     @Override
     public void validate() throws InvalidJsonException {
         if (health < 1) {
@@ -82,7 +79,6 @@ public class NodeKit implements GameKit {
     *///--------------------------------------------//
 
     public transient static final String DEFAULT_LEATHER = "A06540";
-    @Getter(lazy = true)
     private final transient String id = id();
     /** Can this kit fly */
     @Since(1.0)
@@ -249,5 +245,104 @@ public class NodeKit implements GameKit {
         rawPlayer.setGameMode(gamemode);
         rawPlayer.setAllowFlight(fly);
         rawPlayer.setFlying(fly);
+    }
+
+    public List<String> getParents() {
+        return this.parents;
+    }
+
+    public PlayerInventoryList<ItemStack> getItems() {
+        return this.items;
+    }
+
+    public PotionEffectList<PotionEffect> getEffects() {
+        return this.effects;
+    }
+
+    public PlayerArmorList<ItemStack> getArmor() {
+        return this.armor;
+    }
+
+    public GameMode getGamemode() {
+        return this.gamemode;
+    }
+
+    public int getHealth() {
+        return this.health;
+    }
+
+    public int getFood() {
+        return this.food;
+    }
+
+    public List<String> getPermissions() {
+        return this.permissions;
+    }
+
+    public boolean isFly() {
+        return this.fly;
+    }
+
+    public GameManager getGame() {
+        return this.game;
+    }
+
+    public boolean equals(Object o) {
+        if (o == this) return true;
+        if (!(o instanceof NodeKit)) return false;
+        final NodeKit other = (NodeKit) o;
+        if (!other.canEqual((Object) this)) return false;
+        final Object this$parents = this.getParents();
+        final Object other$parents = other.getParents();
+        if (this$parents == null ? other$parents != null : !this$parents.equals(other$parents)) return false;
+        final Object this$items = this.getItems();
+        final Object other$items = other.getItems();
+        if (this$items == null ? other$items != null : !this$items.equals(other$items)) return false;
+        final Object this$effects = this.getEffects();
+        final Object other$effects = other.getEffects();
+        if (this$effects == null ? other$effects != null : !this$effects.equals(other$effects)) return false;
+        final Object this$armor = this.getArmor();
+        final Object other$armor = other.getArmor();
+        if (this$armor == null ? other$armor != null : !this$armor.equals(other$armor)) return false;
+        final Object this$gamemode = this.getGamemode();
+        final Object other$gamemode = other.getGamemode();
+        if (this$gamemode == null ? other$gamemode != null : !this$gamemode.equals(other$gamemode)) return false;
+        if (this.getHealth() != other.getHealth()) return false;
+        if (this.getFood() != other.getFood()) return false;
+        final Object this$permissions = this.getPermissions();
+        final Object other$permissions = other.getPermissions();
+        if (this$permissions == null ? other$permissions != null : !this$permissions.equals(other$permissions))
+            return false;
+        if (this.isFly() != other.isFly()) return false;
+        return true;
+    }
+
+    public int hashCode() {
+        final int PRIME = 59;
+        int result = 1;
+        final Object $parents = this.getParents();
+        result = result * PRIME + ($parents == null ? 43 : $parents.hashCode());
+        final Object $items = this.getItems();
+        result = result * PRIME + ($items == null ? 43 : $items.hashCode());
+        final Object $effects = this.getEffects();
+        result = result * PRIME + ($effects == null ? 43 : $effects.hashCode());
+        final Object $armor = this.getArmor();
+        result = result * PRIME + ($armor == null ? 43 : $armor.hashCode());
+        final Object $gamemode = this.getGamemode();
+        result = result * PRIME + ($gamemode == null ? 43 : $gamemode.hashCode());
+        result = result * PRIME + this.getHealth();
+        result = result * PRIME + this.getFood();
+        final Object $permissions = this.getPermissions();
+        result = result * PRIME + ($permissions == null ? 43 : $permissions.hashCode());
+        result = result * PRIME + (this.isFly() ? 79 : 97);
+        return result;
+    }
+
+    protected boolean canEqual(Object other) {
+        return other instanceof NodeKit;
+    }
+
+    public String getId() {
+        return this.id;
     }
 }

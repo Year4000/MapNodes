@@ -6,12 +6,10 @@ package net.year4000.mapnodes.game.scoreboard;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
-import lombok.AllArgsConstructor;
 import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.game.GameManager;
 import net.year4000.mapnodes.api.game.GamePlayer;
-import net.year4000.mapnodes.api.game.GameStage;
 import net.year4000.mapnodes.api.game.modes.GameModeInfo;
 import net.year4000.mapnodes.api.utils.Spectator;
 import net.year4000.mapnodes.clocks.Clocker;
@@ -39,7 +37,6 @@ import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-@AllArgsConstructor
 public class ScoreboardFactory {
     private static final ScoreboardManager manager = Bukkit.getScoreboardManager();
     // Fancy Title
@@ -140,6 +137,11 @@ public class ScoreboardFactory {
 
     private transient final ConcurrentMap<Scoreboard, List<Team>> tabListTeamNames = new ConcurrentHashMap<>();
     private final NodeGame game;
+
+    @java.beans.ConstructorProperties({"game"})
+    public ScoreboardFactory(NodeGame game) {
+        this.game = game;
+    }
 
     /** Create a scoreboard for the player */
     public Scoreboard createScoreboard(NodePlayer player) {

@@ -6,13 +6,10 @@ package net.year4000.mapnodes.game.regions;
 
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.annotations.Since;
-import lombok.Getter;
-import lombok.Setter;
 import net.year4000.mapnodes.api.game.GamePlayer;
 import net.year4000.mapnodes.api.game.GameRegion;
 import net.year4000.mapnodes.api.utils.Spectator;
 import net.year4000.mapnodes.game.NodePlayer;
-import net.year4000.mapnodes.game.NodeRegion;
 import net.year4000.mapnodes.game.NodeTeam;
 import net.year4000.mapnodes.game.regions.types.Point;
 import net.year4000.mapnodes.messages.Msg;
@@ -27,12 +24,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Getter
-@Setter
 public abstract class RegionEvent {
     /** The region the event is assigned to */
-    @Getter
-    @Setter
     protected transient GameRegion region;
 
     @Since(1.0)
@@ -127,5 +120,85 @@ public abstract class RegionEvent {
         // Translate by MapNodes
         translatedMessage = Msg.locale(player, translatedMessage);
         player.sendMessage(Msg.NOTICE + translatedMessage);
+    }
+
+    public Boolean getAllow() {
+        return this.allow;
+    }
+
+    public ItemStackList<ItemStack> getDropItems() {
+        return this.dropItems;
+    }
+
+    public Sound getPlaySound() {
+        return this.playSound;
+    }
+
+    public Point getVelocity() {
+        return this.velocity;
+    }
+
+    public String getMessage() {
+        return this.message;
+    }
+
+    public LocationList<Location> getTeleport() {
+        return this.teleport;
+    }
+
+    public String getGiveKit() {
+        return this.giveKit;
+    }
+
+    public String getAddKit() {
+        return this.addKit;
+    }
+
+    public List<String> getApply() {
+        return this.apply;
+    }
+
+    public void setAllow(Boolean allow) {
+        this.allow = allow;
+    }
+
+    public void setDropItems(ItemStackList<ItemStack> dropItems) {
+        this.dropItems = dropItems;
+    }
+
+    public void setPlaySound(Sound playSound) {
+        this.playSound = playSound;
+    }
+
+    public void setVelocity(Point velocity) {
+        this.velocity = velocity;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public void setTeleport(LocationList<Location> teleport) {
+        this.teleport = teleport;
+    }
+
+    public void setGiveKit(String giveKit) {
+        this.giveKit = giveKit;
+    }
+
+    public void setAddKit(String addKit) {
+        this.addKit = addKit;
+    }
+
+    public void setApply(List<String> apply) {
+        this.apply = apply;
+    }
+
+    public GameRegion getRegion() {
+        return this.region;
+    }
+
+    public void setRegion(GameRegion region) {
+        this.region = region;
     }
 }

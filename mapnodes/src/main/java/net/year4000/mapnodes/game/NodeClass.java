@@ -5,9 +5,6 @@
 package net.year4000.mapnodes.game;
 
 import com.google.gson.annotations.Since;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 import net.year4000.mapnodes.api.exceptions.InvalidJsonException;
 import net.year4000.mapnodes.api.game.GameClass;
 import net.year4000.mapnodes.api.game.GameComponent;
@@ -25,9 +22,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-@Getter
-@EqualsAndHashCode
-@NoArgsConstructor
 /** Classes to pick from on top of your team. */
 public class NodeClass implements GameClass, GameComponent {
     /** The name of the class. */
@@ -45,6 +39,9 @@ public class NodeClass implements GameClass, GameComponent {
     /** The kit name to use with this class. */
     @Since(1.0)
     protected String permission = null;
+
+    public NodeClass() {
+    }
 
     @Override
     public void validate() throws InvalidJsonException {
@@ -69,7 +66,6 @@ public class NodeClass implements GameClass, GameComponent {
          Upper Json Settings / Bellow Instance Code
     *///--------------------------------------------//
 
-    @Getter(lazy = true)
     private final transient String id = id();
     private transient GameManager game;
 
@@ -148,5 +144,74 @@ public class NodeClass implements GameClass, GameComponent {
         NMSHacks.setNBTTag(kitIcon, "MapNodes_Class", getId());
 
         return kitIcon;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public Material getIcon() {
+        return this.icon;
+    }
+
+    public String getDescription() {
+        return this.description;
+    }
+
+    public String getPermission() {
+        return this.permission;
+    }
+
+    public GameManager getGame() {
+        return this.game;
+    }
+
+    public boolean equals(Object o) {
+        if (o == this) return true;
+        if (!(o instanceof NodeClass)) return false;
+        final NodeClass other = (NodeClass) o;
+        if (!other.canEqual((Object) this)) return false;
+        final Object this$name = this.getName();
+        final Object other$name = other.getName();
+        if (this$name == null ? other$name != null : !this$name.equals(other$name)) return false;
+        final Object this$icon = this.getIcon();
+        final Object other$icon = other.getIcon();
+        if (this$icon == null ? other$icon != null : !this$icon.equals(other$icon)) return false;
+        final Object this$description = this.getDescription();
+        final Object other$description = other.getDescription();
+        if (this$description == null ? other$description != null : !this$description.equals(other$description))
+            return false;
+        final Object this$kit = this.getKit();
+        final Object other$kit = other.getKit();
+        if (this$kit == null ? other$kit != null : !this$kit.equals(other$kit)) return false;
+        final Object this$permission = this.getPermission();
+        final Object other$permission = other.getPermission();
+        if (this$permission == null ? other$permission != null : !this$permission.equals(other$permission))
+            return false;
+        return true;
+    }
+
+    public int hashCode() {
+        final int PRIME = 59;
+        int result = 1;
+        final Object $name = this.getName();
+        result = result * PRIME + ($name == null ? 43 : $name.hashCode());
+        final Object $icon = this.getIcon();
+        result = result * PRIME + ($icon == null ? 43 : $icon.hashCode());
+        final Object $description = this.getDescription();
+        result = result * PRIME + ($description == null ? 43 : $description.hashCode());
+        final Object $kit = this.getKit();
+        result = result * PRIME + ($kit == null ? 43 : $kit.hashCode());
+        final Object $permission = this.getPermission();
+        result = result * PRIME + ($permission == null ? 43 : $permission.hashCode());
+        return result;
+    }
+
+    protected boolean canEqual(Object other) {
+        return other instanceof NodeClass;
+    }
+
+    public String getId() {
+        return this.id;
     }
 }

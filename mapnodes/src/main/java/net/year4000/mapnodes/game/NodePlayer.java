@@ -7,7 +7,6 @@ package net.year4000.mapnodes.game;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import lombok.Data;
 import net.year4000.mapnodes.api.events.player.GamePlayerJoinEvent;
 import net.year4000.mapnodes.api.events.player.GamePlayerJoinSpectatorEvent;
 import net.year4000.mapnodes.api.events.player.GamePlayerJoinTeamEvent;
@@ -18,7 +17,6 @@ import net.year4000.mapnodes.api.game.GameTeam;
 import net.year4000.mapnodes.api.utils.Spectator;
 import net.year4000.mapnodes.backend.AccountCache;
 import net.year4000.mapnodes.backend.MapNodesBadgeManager;
-import net.year4000.mapnodes.game.scoreboard.ScoreboardFactory;
 import net.year4000.mapnodes.messages.MessageManager;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.Common;
@@ -39,13 +37,15 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.scoreboard.Scoreboard;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static net.year4000.utilities.locale.AbstractLocaleManager.toLanguage;
 import static com.google.common.base.Preconditions.checkNotNull;
+import static net.year4000.utilities.locale.AbstractLocaleManager.toLanguage;
 
-@Data
 public final class NodePlayer implements GamePlayer, Comparable {
     // internals
     public static final MapNodesBadgeManager badges = new MapNodesBadgeManager();
@@ -509,5 +509,198 @@ public final class NodePlayer implements GamePlayer, Comparable {
         }
 
         return Common.isVIP(player) ? 1 : -1;
+    }
+
+    public NodeGame getGame() {
+        return this.game;
+    }
+
+    public Player getPlayer() {
+        return this.player;
+    }
+
+    public NodeTeam getTeam() {
+        return this.team;
+    }
+
+    public NodeTeam getPendingTeam() {
+        return this.pendingTeam;
+    }
+
+    public NodeClass getClassKit() {
+        return this.classKit;
+    }
+
+    public List<BukkitTask> getPlayerTasks() {
+        return this.playerTasks;
+    }
+
+    public boolean isImmortal() {
+        return this.immortal;
+    }
+
+    public Map<Class, Object> getPlayerData() {
+        return this.playerData;
+    }
+
+    public Scoreboard getScoreboard() {
+        return this.scoreboard;
+    }
+
+    public boolean isSpectator() {
+        return this.spectator;
+    }
+
+    public boolean isPlaying() {
+        return this.playing;
+    }
+
+    public boolean isEntering() {
+        return this.entering;
+    }
+
+    public Map<Locale, Inventory> getInventory() {
+        return this.inventory;
+    }
+
+    public AccountCache getCache() {
+        return this.cache;
+    }
+
+    public AtomicInteger getCreditsMultiplier() {
+        return this.creditsMultiplier;
+    }
+
+    public void setTeam(NodeTeam team) {
+        this.team = team;
+    }
+
+    public void setPendingTeam(NodeTeam pendingTeam) {
+        this.pendingTeam = pendingTeam;
+    }
+
+    public void setPlayerTasks(List<BukkitTask> playerTasks) {
+        this.playerTasks = playerTasks;
+    }
+
+    public void setImmortal(boolean immortal) {
+        this.immortal = immortal;
+    }
+
+    public void setPlayerData(Map<Class, Object> playerData) {
+        this.playerData = playerData;
+    }
+
+    public void setScoreboard(Scoreboard scoreboard) {
+        this.scoreboard = scoreboard;
+    }
+
+    public void setSpectator(boolean spectator) {
+        this.spectator = spectator;
+    }
+
+    public void setPlaying(boolean playing) {
+        this.playing = playing;
+    }
+
+    public void setEntering(boolean entering) {
+        this.entering = entering;
+    }
+
+    public void setInventory(Map<Locale, Inventory> inventory) {
+        this.inventory = inventory;
+    }
+
+    public void setCache(AccountCache cache) {
+        this.cache = cache;
+    }
+
+    public void setCreditsMultiplier(AtomicInteger creditsMultiplier) {
+        this.creditsMultiplier = creditsMultiplier;
+    }
+
+    public boolean equals(Object o) {
+        if (o == this) return true;
+        if (!(o instanceof NodePlayer)) return false;
+        final NodePlayer other = (NodePlayer) o;
+        final Object this$game = this.getGame();
+        final Object other$game = other.getGame();
+        if (this$game == null ? other$game != null : !this$game.equals(other$game)) return false;
+        final Object this$player = this.getPlayer();
+        final Object other$player = other.getPlayer();
+        if (this$player == null ? other$player != null : !this$player.equals(other$player)) return false;
+        final Object this$team = this.getTeam();
+        final Object other$team = other.getTeam();
+        if (this$team == null ? other$team != null : !this$team.equals(other$team)) return false;
+        final Object this$pendingTeam = this.getPendingTeam();
+        final Object other$pendingTeam = other.getPendingTeam();
+        if (this$pendingTeam == null ? other$pendingTeam != null : !this$pendingTeam.equals(other$pendingTeam))
+            return false;
+        final Object this$classKit = this.getClassKit();
+        final Object other$classKit = other.getClassKit();
+        if (this$classKit == null ? other$classKit != null : !this$classKit.equals(other$classKit)) return false;
+        final Object this$playerTasks = this.getPlayerTasks();
+        final Object other$playerTasks = other.getPlayerTasks();
+        if (this$playerTasks == null ? other$playerTasks != null : !this$playerTasks.equals(other$playerTasks))
+            return false;
+        if (this.isImmortal() != other.isImmortal()) return false;
+        final Object this$playerData = this.getPlayerData();
+        final Object other$playerData = other.getPlayerData();
+        if (this$playerData == null ? other$playerData != null : !this$playerData.equals(other$playerData))
+            return false;
+        final Object this$scoreboard = this.getScoreboard();
+        final Object other$scoreboard = other.getScoreboard();
+        if (this$scoreboard == null ? other$scoreboard != null : !this$scoreboard.equals(other$scoreboard))
+            return false;
+        if (this.isSpectator() != other.isSpectator()) return false;
+        if (this.isPlaying() != other.isPlaying()) return false;
+        if (this.isEntering() != other.isEntering()) return false;
+        final Object this$inventory = this.getInventory();
+        final Object other$inventory = other.getInventory();
+        if (this$inventory == null ? other$inventory != null : !this$inventory.equals(other$inventory)) return false;
+        final Object this$cache = this.getCache();
+        final Object other$cache = other.getCache();
+        if (this$cache == null ? other$cache != null : !this$cache.equals(other$cache)) return false;
+        final Object this$creditsMultiplier = this.getCreditsMultiplier();
+        final Object other$creditsMultiplier = other.getCreditsMultiplier();
+        if (this$creditsMultiplier == null ? other$creditsMultiplier != null : !this$creditsMultiplier.equals(other$creditsMultiplier))
+            return false;
+        return true;
+    }
+
+    public int hashCode() {
+        final int PRIME = 59;
+        int result = 1;
+        final Object $game = this.getGame();
+        result = result * PRIME + ($game == null ? 43 : $game.hashCode());
+        final Object $player = this.getPlayer();
+        result = result * PRIME + ($player == null ? 43 : $player.hashCode());
+        final Object $team = this.getTeam();
+        result = result * PRIME + ($team == null ? 43 : $team.hashCode());
+        final Object $pendingTeam = this.getPendingTeam();
+        result = result * PRIME + ($pendingTeam == null ? 43 : $pendingTeam.hashCode());
+        final Object $classKit = this.getClassKit();
+        result = result * PRIME + ($classKit == null ? 43 : $classKit.hashCode());
+        final Object $playerTasks = this.getPlayerTasks();
+        result = result * PRIME + ($playerTasks == null ? 43 : $playerTasks.hashCode());
+        result = result * PRIME + (this.isImmortal() ? 79 : 97);
+        final Object $playerData = this.getPlayerData();
+        result = result * PRIME + ($playerData == null ? 43 : $playerData.hashCode());
+        final Object $scoreboard = this.getScoreboard();
+        result = result * PRIME + ($scoreboard == null ? 43 : $scoreboard.hashCode());
+        result = result * PRIME + (this.isSpectator() ? 79 : 97);
+        result = result * PRIME + (this.isPlaying() ? 79 : 97);
+        result = result * PRIME + (this.isEntering() ? 79 : 97);
+        final Object $inventory = this.getInventory();
+        result = result * PRIME + ($inventory == null ? 43 : $inventory.hashCode());
+        final Object $cache = this.getCache();
+        result = result * PRIME + ($cache == null ? 43 : $cache.hashCode());
+        final Object $creditsMultiplier = this.getCreditsMultiplier();
+        result = result * PRIME + ($creditsMultiplier == null ? 43 : $creditsMultiplier.hashCode());
+        return result;
+    }
+
+    public String toString() {
+        return "net.year4000.mapnodes.game.NodePlayer(game=" + this.getGame() + ", player=" + this.getPlayer() + ", team=" + this.getTeam() + ", pendingTeam=" + this.getPendingTeam() + ", classKit=" + this.getClassKit() + ", playerTasks=" + this.getPlayerTasks() + ", immortal=" + this.isImmortal() + ", playerData=" + this.getPlayerData() + ", scoreboard=" + this.getScoreboard() + ", spectator=" + this.isSpectator() + ", playing=" + this.isPlaying() + ", entering=" + this.isEntering() + ", inventory=" + this.getInventory() + ", cache=" + this.getCache() + ", creditsMultiplier=" + this.getCreditsMultiplier() + ")";
     }
 }

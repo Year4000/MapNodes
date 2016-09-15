@@ -7,9 +7,6 @@ package net.year4000.mapnodes.game;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.annotations.Since;
 import com.google.gson.annotations.Until;
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.exceptions.InvalidJsonException;
@@ -38,8 +35,6 @@ import java.util.stream.Collectors;
 import static net.year4000.mapnodes.utils.MathUtil.percent;
 import static net.year4000.mapnodes.utils.MathUtil.ticks;
 
-@Data
-@NoArgsConstructor
 public class NodeTeam implements GameTeam {
     /** The name of the team. */
     @Since(1.0)
@@ -62,6 +57,9 @@ public class NodeTeam implements GameTeam {
     @Since(1.0)
     protected String kit = "default"; // todo make a list to allow for multiple kits
 
+    public NodeTeam() {
+    }
+
     @Override
     public void validate() throws InvalidJsonException {
         if (name == null || name.equals("")) {
@@ -79,7 +77,6 @@ public class NodeTeam implements GameTeam {
 
     public static final transient String SPECTATOR = "spectator";
     private transient static final String TEAM_FORMAT = "%s%s &7(%s&8/&6%d&7)";
-    @Getter(lazy = true)
     private final transient String id = id();
     /** Points to where the player can spawn. */
     @Since(1.0)
@@ -271,5 +268,143 @@ public class NodeTeam implements GameTeam {
         }
 
         return i;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public ChatColor getColor() {
+        return this.color;
+    }
+
+    public int getSize() {
+        return this.size;
+    }
+
+    public boolean isAllowFriendlyFire() {
+        return this.allowFriendlyFire;
+    }
+
+    public boolean isCanSeeFriendlyInvisibles() {
+        return this.canSeeFriendlyInvisibles;
+    }
+
+    public LocationList<Location> getSpawns() {
+        return this.spawns;
+    }
+
+    public boolean isUseScoreboard() {
+        return this.useScoreboard;
+    }
+
+    public GameManager getGame() {
+        return this.game;
+    }
+
+    public List<GamePlayer> getPlayers() {
+        return this.players;
+    }
+
+    public Queue<GamePlayer> getQueue() {
+        return this.queue;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setColor(ChatColor color) {
+        this.color = color;
+    }
+
+    public void setSize(int size) {
+        this.size = size;
+    }
+
+    public void setAllowFriendlyFire(boolean allowFriendlyFire) {
+        this.allowFriendlyFire = allowFriendlyFire;
+    }
+
+    public void setCanSeeFriendlyInvisibles(boolean canSeeFriendlyInvisibles) {
+        this.canSeeFriendlyInvisibles = canSeeFriendlyInvisibles;
+    }
+
+    public void setKit(String kit) {
+        this.kit = kit;
+    }
+
+    public void setSpawns(LocationList<Location> spawns) {
+        this.spawns = spawns;
+    }
+
+    public void setUseScoreboard(boolean useScoreboard) {
+        this.useScoreboard = useScoreboard;
+    }
+
+    public void setGame(GameManager game) {
+        this.game = game;
+    }
+
+    public void setPlayers(List<GamePlayer> players) {
+        this.players = players;
+    }
+
+    public void setQueue(Queue<GamePlayer> queue) {
+        this.queue = queue;
+    }
+
+    public boolean equals(Object o) {
+        if (o == this) return true;
+        if (!(o instanceof NodeTeam)) return false;
+        final NodeTeam other = (NodeTeam) o;
+        if (!other.canEqual((Object) this)) return false;
+        final Object this$name = this.getName();
+        final Object other$name = other.getName();
+        if (this$name == null ? other$name != null : !this$name.equals(other$name)) return false;
+        final Object this$color = this.getColor();
+        final Object other$color = other.getColor();
+        if (this$color == null ? other$color != null : !this$color.equals(other$color)) return false;
+        if (this.getSize() != other.getSize()) return false;
+        if (this.isAllowFriendlyFire() != other.isAllowFriendlyFire()) return false;
+        if (this.isCanSeeFriendlyInvisibles() != other.isCanSeeFriendlyInvisibles()) return false;
+        final Object this$kit = this.getKit();
+        final Object other$kit = other.getKit();
+        if (this$kit == null ? other$kit != null : !this$kit.equals(other$kit)) return false;
+        final Object this$spawns = this.getSpawns();
+        final Object other$spawns = other.getSpawns();
+        if (this$spawns == null ? other$spawns != null : !this$spawns.equals(other$spawns)) return false;
+        if (this.isUseScoreboard() != other.isUseScoreboard()) return false;
+        return true;
+    }
+
+    public int hashCode() {
+        final int PRIME = 59;
+        int result = 1;
+        final Object $name = this.getName();
+        result = result * PRIME + ($name == null ? 43 : $name.hashCode());
+        final Object $color = this.getColor();
+        result = result * PRIME + ($color == null ? 43 : $color.hashCode());
+        result = result * PRIME + this.getSize();
+        result = result * PRIME + (this.isAllowFriendlyFire() ? 79 : 97);
+        result = result * PRIME + (this.isCanSeeFriendlyInvisibles() ? 79 : 97);
+        final Object $kit = this.getKit();
+        result = result * PRIME + ($kit == null ? 43 : $kit.hashCode());
+        final Object $spawns = this.getSpawns();
+        result = result * PRIME + ($spawns == null ? 43 : $spawns.hashCode());
+        result = result * PRIME + (this.isUseScoreboard() ? 79 : 97);
+        return result;
+    }
+
+    protected boolean canEqual(Object other) {
+        return other instanceof NodeTeam;
+    }
+
+    public String toString() {
+        return "net.year4000.mapnodes.game.NodeTeam(name=" + this.getName() + ", color=" + this.getColor() + ", size=" + this.getSize() + ", allowFriendlyFire=" + this.isAllowFriendlyFire() + ", canSeeFriendlyInvisibles=" + this.isCanSeeFriendlyInvisibles() + ", kit=" + this.getKit() + ", id=" + this.getId() + ", spawns=" + this.getSpawns() + ", useScoreboard=" + this.isUseScoreboard() + ", game=" + this.getGame() + ", players=" + this.getPlayers() + ", queue=" + this.getQueue() + ")";
+    }
+
+    public String getId() {
+        return this.id;
     }
 }

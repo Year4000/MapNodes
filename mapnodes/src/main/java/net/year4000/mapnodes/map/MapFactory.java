@@ -6,7 +6,6 @@ package net.year4000.mapnodes.map;
 
 import com.google.common.collect.Iterables;
 import com.googlecode.concurrentlinkedhashmap.ConcurrentLinkedHashMap;
-import lombok.Getter;
 import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.Settings;
 
@@ -16,7 +15,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class MapFactory {
-    @Getter
     private static Map<String, MapObject> folders;
 
     /** Find and load all maps */
@@ -86,5 +84,9 @@ public class MapFactory {
         }
 
         return loadedMaps;
+    }
+
+    public static Map<String, MapObject> getFolders() {
+        return MapFactory.folders;
     }
 }

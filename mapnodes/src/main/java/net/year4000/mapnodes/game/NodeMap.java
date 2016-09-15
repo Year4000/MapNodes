@@ -9,8 +9,6 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.Since;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.UserCache;
 import net.year4000.mapnodes.api.exceptions.InvalidJsonException;
@@ -31,8 +29,6 @@ import java.util.UUID;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
-@Data
-@NoArgsConstructor
 /** Details about the current map. */
 public final class NodeMap implements GameMap {
     private static final String BACKUP_BASE = "https://sessionserver.mojang.com/session/minecraft/profile/";
@@ -83,6 +79,9 @@ public final class NodeMap implements GameMap {
     @Since(1.0)
     private List<String> authors = new ArrayList<>();
     private transient GameManager game;
+
+    public NodeMap() {
+    }
 
     @Override
     public void validate() throws InvalidJsonException {
@@ -219,5 +218,83 @@ public final class NodeMap implements GameMap {
             return author(Message.DEFAULT_LOCALE);
         }*/
         return author(Message.DEFAULT_LOCALE);
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public String getVersion() {
+        return this.version;
+    }
+
+    public String getDescription() {
+        return this.description;
+    }
+
+    public List<String> getAuthors() {
+        return this.authors;
+    }
+
+    public GameManager getGame() {
+        return this.game;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setAuthors(List<String> authors) {
+        this.authors = authors;
+    }
+
+    public void setGame(GameManager game) {
+        this.game = game;
+    }
+
+    public boolean equals(Object o) {
+        if (o == this) return true;
+        if (!(o instanceof NodeMap)) return false;
+        final NodeMap other = (NodeMap) o;
+        final Object this$name = this.getName();
+        final Object other$name = other.getName();
+        if (this$name == null ? other$name != null : !this$name.equals(other$name)) return false;
+        final Object this$version = this.getVersion();
+        final Object other$version = other.getVersion();
+        if (this$version == null ? other$version != null : !this$version.equals(other$version)) return false;
+        final Object this$description = this.getDescription();
+        final Object other$description = other.getDescription();
+        if (this$description == null ? other$description != null : !this$description.equals(other$description))
+            return false;
+        final Object this$authors = this.getAuthors();
+        final Object other$authors = other.getAuthors();
+        if (this$authors == null ? other$authors != null : !this$authors.equals(other$authors)) return false;
+        return true;
+    }
+
+    public int hashCode() {
+        final int PRIME = 59;
+        int result = 1;
+        final Object $name = this.getName();
+        result = result * PRIME + ($name == null ? 43 : $name.hashCode());
+        final Object $version = this.getVersion();
+        result = result * PRIME + ($version == null ? 43 : $version.hashCode());
+        final Object $description = this.getDescription();
+        result = result * PRIME + ($description == null ? 43 : $description.hashCode());
+        final Object $authors = this.getAuthors();
+        result = result * PRIME + ($authors == null ? 43 : $authors.hashCode());
+        return result;
+    }
+
+    public String toString() {
+        return "net.year4000.mapnodes.game.NodeMap(name=" + this.getName() + ", version=" + this.getVersion() + ", description=" + this.getDescription() + ", authors=" + this.getAuthors() + ", game=" + this.getGame() + ")";
     }
 }

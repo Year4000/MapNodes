@@ -6,8 +6,8 @@ package net.year4000.mapnodes.game.regions.events;
 
 import net.year4000.mapnodes.api.game.GamePlayer;
 import net.year4000.mapnodes.api.game.regions.EventType;
-import net.year4000.mapnodes.api.game.regions.RegionListener;
 import net.year4000.mapnodes.api.game.regions.EventTypes;
+import net.year4000.mapnodes.api.game.regions.RegionListener;
 import net.year4000.mapnodes.game.regions.RegionEvent;
 import net.year4000.mapnodes.game.regions.types.Point;
 import net.year4000.mapnodes.utils.typewrappers.MaterialList;

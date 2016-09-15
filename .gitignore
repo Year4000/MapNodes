@@ -1,9 +1,19 @@
-# Maven
-target/
-*git.properties
-*dependency-reduced-pom.xml
+# MapNodes
+run/
 
-# IDE's
+# Gradle
+.gradle/
+*build/
+
+# IDES
+*~
+*.swp
+*.swap
+*.tmp
 .idea/
 *.iml
-*~
+*.gitignore
+
+# Mac
+._*
+.DS_Store

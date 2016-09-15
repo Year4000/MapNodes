@@ -5,10 +5,6 @@
 package net.year4000.mapnodes.game;
 
 import com.google.gson.annotations.Since;
-import lombok.AccessLevel;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
 import net.year4000.mapnodes.api.exceptions.InvalidJsonException;
 import net.year4000.mapnodes.api.game.GameComponent;
 import net.year4000.mapnodes.api.game.GameManager;
@@ -24,16 +20,12 @@ import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
-@Getter
-@EqualsAndHashCode
 public class NodeRegion implements GameRegion, GameComponent {
     /** The flags for this region optional if just used for zones */
     @Since(2.0)
     protected RegionEvents events = null;
     /** The zones that this region contains */
     @Since(2.0)
-    @Getter(AccessLevel.NONE)
-    @Setter(AccessLevel.NONE)
     protected RegionList<Region> zones = new RegionList<>();
 
     @Override
@@ -47,7 +39,6 @@ public class NodeRegion implements GameRegion, GameComponent {
     *///--------------------------------------------//
 
     private static transient int totalWeight = 0;
-    @Getter(lazy = true)
     private final transient String id = id();
     private transient int weight = 0;
     private transient GameManager game;
@@ -94,5 +85,53 @@ public class NodeRegion implements GameRegion, GameComponent {
     /** Is the point in the region */
     public boolean inZone(PointVector point) {
         return getZones().stream().filter(z -> z.inRegion(point)).count() > 0;
+    }
+
+    public RegionEvents getEvents() {
+        return this.events;
+    }
+
+    public int getWeight() {
+        return this.weight;
+    }
+
+    public GameManager getGame() {
+        return this.game;
+    }
+
+    public Set<Region> getZoneSet() {
+        return this.zoneSet;
+    }
+
+    public boolean equals(Object o) {
+        if (o == this) return true;
+        if (!(o instanceof NodeRegion)) return false;
+        final NodeRegion other = (NodeRegion) o;
+        if (!other.canEqual((Object) this)) return false;
+        final Object this$events = this.getEvents();
+        final Object other$events = other.getEvents();
+        if (this$events == null ? other$events != null : !this$events.equals(other$events)) return false;
+        final Object this$zones = this.getZones();
+        final Object other$zones = other.getZones();
+        if (this$zones == null ? other$zones != null : !this$zones.equals(other$zones)) return false;
+        return true;
+    }
+
+    public int hashCode() {
+        final int PRIME = 59;
+        int result = 1;
+        final Object $events = this.getEvents();
+        result = result * PRIME + ($events == null ? 43 : $events.hashCode());
+        final Object $zones = this.getZones();
+        result = result * PRIME + ($zones == null ? 43 : $zones.hashCode());
+        return result;
+    }
+
+    protected boolean canEqual(Object other) {
+        return other instanceof NodeRegion;
+    }
+
+    public String getId() {
+        return this.id;
     }
 }
