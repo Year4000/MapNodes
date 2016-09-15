@@ -43,15 +43,29 @@ public interface MapNodes {
         ErrorReporter.builder(error).add("file", file).buildAndReport(System.err);
       }
     });
+    // Generate the maps
+    nodeFactory().generatePackages();
   }
 
   /** Enable the MapNodes system */
   default void enable() {
-
+    nodeFactory().packages().forEach(map -> {
+      // todo exception handling
+      Node node = nodeFactory().create(map);
+      NODE_MANAGER.addToQueue(node);
+    });
+    // Set up the first node if we can
+    if (nodeFactory().packages().size() > 0) {
+      NODE_MANAGER.loadNextNode();
+    }
   }
 
   /** Unload the MapNodes system */
   default void unload() {
+    // Unload the last map in the system
+    if (nodeFactory().packages().size() > 0) {
+      currentNode().unload();
+    }
     bindings().release();
   }
 }

@@ -9,6 +9,9 @@ public interface NodeFactory {
   /** Create a node from the MapPackage */
   Node create(MapPackage map);
 
-  /** Generate the known map packages */
+  /** Get the known map packages */
   Collection<MapPackage> packages();
+
+  /** Generate the list of MapPackages */
+  void generatePackages();
 }
