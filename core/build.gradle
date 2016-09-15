@@ -11,5 +11,18 @@ repositories {
 }
 
 dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.11'
+    testCompile 'junit:junit:4.12'
+    compile utilities.project('core')
+    compile 'com.eclipsesource.j2v8:j2v8_linux_x86_64:4.5.0'
+}
+
+idea {
+    module {
+        sourceDirs += file("${projectDir}/src/main/js/")
+    }
+}
+
+task docs(type: Javadoc) {
+    source = sourceSets.main.allJava
+    destinationDir = mapnodes.file("docs/")
 }

@@ -5,10 +5,12 @@
 plugins {
     id 'java'
     id 'idea'
-    id 'org.spongepowered.plugin' version '0.5.1'
 }
 
-apply from: project('utilities').file('gradle/utils.gradle')
+ext.mapnodes = project
+ext.utilities = project('utilities')
+
+apply from: utilities.file('gradle/utils.gradle')
 
 defaultTasks 'assemble'
 
@@ -19,3 +21,6 @@ def gitVersion = rawVersion + '-' + git()
 
 group 'net.year4000.mapnodes'
 version = gitVersion
+
+
+
