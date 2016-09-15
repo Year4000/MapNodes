@@ -5,7 +5,6 @@
 package net.year4000.mapnodes.listeners;
 
 import com.google.common.base.Joiner;
-import lombok.EqualsAndHashCode;
 import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.events.game.GameClockEvent;
@@ -50,7 +49,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-@EqualsAndHashCode
 public final class GameListener implements Listener {
     @EventHandler
     public void respawn(PlayerRespawnEvent event) {
@@ -340,5 +338,17 @@ public final class GameListener implements Listener {
     public void updateInventory(PlayerItemBreakEvent event) {
         GamePlayer player = MapNodes.getCurrentGame().getPlayer(event.getPlayer());
         ((NodePlayer) player).updateInventories();
+    }
+
+    public boolean equals(Object o) {
+        if (o == this) return true;
+        if (!(o instanceof GameListener)) return false;
+        final GameListener other = (GameListener) o;
+        return true;
+    }
+
+    public int hashCode() {
+        int result = 1;
+        return result;
     }
 }

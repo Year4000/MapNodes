@@ -4,17 +4,19 @@
 
 package net.year4000.mapnodes.utils;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-
 import java.util.concurrent.TimeUnit;
 
-@AllArgsConstructor
 public class TimeDuration {
     private final TimeUnit unit;
     private final long time;
-    @Getter
     private final boolean infinite;
+
+    @java.beans.ConstructorProperties({"unit", "time", "infinite"})
+    public TimeDuration(TimeUnit unit, long time, boolean infinite) {
+        this.unit = unit;
+        this.time = time;
+        this.infinite = infinite;
+    }
 
     /** Return the time duration to ticks */
     public int toTicks() {
@@ -24,5 +26,9 @@ public class TimeDuration {
     /** Return the time duration in secs */
     public int toSecs() {
         return MathUtil.sec(toTicks());
+    }
+
+    public boolean isInfinite() {
+        return this.infinite;
     }
 }

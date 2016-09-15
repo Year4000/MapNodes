@@ -4,11 +4,9 @@
 
 package net.year4000.mapnodes;
 
-import lombok.Setter;
 import net.year4000.mapnodes.api.game.modes.GameModeConfig;
 
 public abstract class GameModeTemplate {
-    @Setter
     private transient GameModeConfig config;
 
     public GameModeConfig getRawConfig() {
@@ -17,5 +15,9 @@ public abstract class GameModeTemplate {
 
     public <T extends GameModeConfig> T getConfig() {
         return (T) config;
+    }
+
+    public void setConfig(GameModeConfig config) {
+        this.config = config;
     }
 }

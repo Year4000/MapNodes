@@ -5,8 +5,6 @@
 package net.year4000.mapnodes.utils;
 
 import com.google.common.base.Preconditions;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
 import net.minecraft.server.v1_8_R3.*;
 import net.year4000.mapnodes.messages.Msg;
 import net.year4000.utilities.MessageUtil;
@@ -22,10 +20,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class PacketHacks {
     private static final AtomicInteger CRACK_COUNTER = new AtomicInteger(0);
     private static final Map<BlockVector, Integer> CRACK_IDS = new HashMap<>();
+
+    public PacketHacks() {
+    }
 
     /** Re-spawn a dead player */
     public static void respawnPlayer(Player player) {

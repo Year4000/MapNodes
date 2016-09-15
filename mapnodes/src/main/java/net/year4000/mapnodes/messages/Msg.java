@@ -7,7 +7,6 @@ package net.year4000.mapnodes.messages;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
-import lombok.Getter;
 import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.game.GamePlayer;
 import net.year4000.utilities.bukkit.BukkitLocale;
@@ -20,7 +19,6 @@ import java.util.concurrent.TimeUnit;
 public final class Msg {
     public static String NOTICE = MessageUtil.message(" &7[&e!&7] &e");
     private static System util = new System();
-    @Getter
     private static LoadingCache<Player, String> codes = CacheBuilder.newBuilder()
         .expireAfterAccess(5, TimeUnit.MINUTES)
         .build(new CacheLoader<Player, String>() {
@@ -77,5 +75,9 @@ public final class Msg {
     /** Does the string match the locale or locale key */
     public static boolean matches(GamePlayer player, String compare, String key) {
         return matches(player.getRawLocale(), compare, key);
+    }
+
+    public static LoadingCache<Player, String> getCodes() {
+        return Msg.codes;
     }
 }

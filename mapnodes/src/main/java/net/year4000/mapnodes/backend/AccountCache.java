@@ -11,8 +11,6 @@ import net.year4000.mapnodes.game.NodePlayer;
 import net.year4000.mapnodes.utils.FileMap;
 import net.year4000.utilities.AbstractBadgeManager;
 
-import java.io.File;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 

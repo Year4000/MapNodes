@@ -9,7 +9,6 @@ import com.comphenix.protocol.ProtocolManager;
 import com.sk89q.bukkit.util.BukkitCommandsManager;
 import com.sk89q.bukkit.util.CommandsManagerRegistration;
 import com.sk89q.minecraft.util.commands.*;
-import lombok.Getter;
 import net.year4000.mapnodes.addons.Addons;
 import net.year4000.mapnodes.addons.modules.misc.DeathMessages;
 import net.year4000.mapnodes.addons.modules.misc.GameMech;
@@ -37,7 +36,6 @@ import net.year4000.mapnodes.messages.Msg;
 import net.year4000.mapnodes.utils.Common;
 import net.year4000.mapnodes.utils.SchedulerUtil;
 import net.year4000.servermenu.ServerMenu;
-import net.year4000.utilities.ChatColor;
 import net.year4000.utilities.LogUtil;
 import net.year4000.utilities.bukkit.BukkitPlugin;
 import net.year4000.utilities.bukkit.MessageUtil;
@@ -46,7 +44,6 @@ import net.year4000.utilities.bukkit.gui.GUIManager;
 import net.year4000.utilities.bukkit.locale.MessageLocale;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
 import java.io.File;
@@ -58,9 +55,7 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.stream.Collectors;
 
-@Getter
 public class MapNodesPlugin extends BukkitPlugin implements Plugin {
-    @Getter
     private static MapNodesPlugin inst = null;
     private Addons addons = Addons.get();
     private UserCache usercache;
@@ -70,6 +65,10 @@ public class MapNodesPlugin extends BukkitPlugin implements Plugin {
     private Backend api;
     private ProtocolManager protocolManager;
     private GUIManager gui = new GUIManager();
+
+    public static MapNodesPlugin getInst() {
+        return MapNodesPlugin.inst;
+    }
 
     @Override
     public void onLoad() {
@@ -313,5 +312,41 @@ public class MapNodesPlugin extends BukkitPlugin implements Plugin {
     @Override
     public LogUtil getLogUtil() {
         return log;
+    }
+
+    public Addons getAddons() {
+        return this.addons;
+    }
+
+    public UserCache getUsercache() {
+        return this.usercache;
+    }
+
+    public boolean isEnable() {
+        return this.enable;
+    }
+
+    public MessagingChannel getConnector() {
+        return this.connector;
+    }
+
+    public Network getNetwork() {
+        return this.network;
+    }
+
+    public Backend getApi() {
+        return this.api;
+    }
+
+    public ProtocolManager getProtocolManager() {
+        return this.protocolManager;
+    }
+
+    public GUIManager getGui() {
+        return this.gui;
+    }
+
+    public BukkitCommandsManager get_commands() {
+        return this._commands;
     }
 }

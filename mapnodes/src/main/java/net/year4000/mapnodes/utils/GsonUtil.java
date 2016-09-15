@@ -6,8 +6,6 @@ package net.year4000.mapnodes.utils;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
 import net.year4000.mapnodes.api.utils.WorldTime;
 import net.year4000.mapnodes.game.regions.RegionEvents;
 import net.year4000.mapnodes.game.regions.types.Point;
@@ -17,9 +15,11 @@ import org.bukkit.*;
 import org.bukkit.entity.EntityType;
 import org.bukkit.potion.PotionEffectType;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class GsonUtil {
     public static final Gson GSON = new Gson();
+
+    public GsonUtil() {
+    }
 
     /** Normal gson object for standard things */
     public static Gson createGson(World world) {

@@ -4,7 +4,6 @@
 
 package net.year4000.mapnodes.listeners;
 
-import lombok.EqualsAndHashCode;
 import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.Network;
 import net.year4000.mapnodes.NodeFactory;
@@ -19,7 +18,10 @@ import net.year4000.mapnodes.clocks.StartGame;
 import net.year4000.mapnodes.game.Node;
 import net.year4000.mapnodes.game.NodeGame;
 import net.year4000.mapnodes.messages.Msg;
-import net.year4000.mapnodes.utils.*;
+import net.year4000.mapnodes.utils.Common;
+import net.year4000.mapnodes.utils.MathUtil;
+import net.year4000.mapnodes.utils.PacketHacks;
+import net.year4000.mapnodes.utils.SchedulerUtil;
 import net.year4000.utilities.JsonBuilder;
 import net.year4000.utilities.bukkit.FunEffectsUtil;
 import net.year4000.utilities.bukkit.MessageUtil;
@@ -41,7 +43,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-@EqualsAndHashCode
 public final class MapNodesListener implements Listener {
     private AtomicInteger lastSize = new AtomicInteger(0);
 
@@ -218,6 +219,29 @@ public final class MapNodesListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onCreatureSpawn(CreatureSpawnEvent event) {
         event.setCancelled(true);
+    }
+
+    public boolean equals(Object o) {
+        if (o == this) return true;
+        if (!(o instanceof MapNodesListener)) return false;
+        final MapNodesListener other = (MapNodesListener) o;
+        final Object this$lastSize = this.lastSize;
+        final Object other$lastSize = other.lastSize;
+        if (this$lastSize == null ? other$lastSize != null : !this$lastSize.equals(other$lastSize)) return false;
+        final Object this$startLock = this.startLock;
+        final Object other$startLock = other.startLock;
+        if (this$startLock == null ? other$startLock != null : !this$startLock.equals(other$startLock)) return false;
+        return true;
+    }
+
+    public int hashCode() {
+        final int PRIME = 59;
+        int result = 1;
+        final Object $lastSize = this.lastSize;
+        result = result * PRIME + ($lastSize == null ? 43 : $lastSize.hashCode());
+        final Object $startLock = this.startLock;
+        result = result * PRIME + ($startLock == null ? 43 : $startLock.hashCode());
+        return result;
     }
 
 /*    @EventHandler

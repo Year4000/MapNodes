@@ -4,7 +4,6 @@
 
 package net.year4000.mapnodes.listeners;
 
-import lombok.EqualsAndHashCode;
 import net.year4000.mapnodes.api.MapNodes;
 import org.bukkit.World;
 import org.bukkit.event.EventHandler;
@@ -14,7 +13,6 @@ import org.bukkit.event.block.*;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 
-@EqualsAndHashCode
 public final class WorldListener implements Listener {
     /** Return true | false if the map is running. */
     private boolean isMapPlaying(World world) {
@@ -104,5 +102,17 @@ public final class WorldListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onMapPlaying(CreatureSpawnEvent event) {
         event.setCancelled(isMapPlaying(event.getEntity().getWorld()));
+    }
+
+    public boolean equals(Object o) {
+        if (o == this) return true;
+        if (!(o instanceof WorldListener)) return false;
+        final WorldListener other = (WorldListener) o;
+        return true;
+    }
+
+    public int hashCode() {
+        int result = 1;
+        return result;
     }
 }

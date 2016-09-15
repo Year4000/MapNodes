@@ -4,7 +4,6 @@
 
 package net.year4000.mapnodes;
 
-import lombok.Getter;
 import net.year4000.mapnodes.api.exceptions.InvalidJsonException;
 import net.year4000.mapnodes.api.exceptions.WorldLoadException;
 import net.year4000.mapnodes.game.Node;
@@ -21,7 +20,6 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class NodeFactory {
     private static NodeFactory inst;
     /** The games loaded into the queue, thread safe */
-    @Getter
     private final Queue<Node> queueNodes = new LinkedBlockingQueue<>();
     /** The current playing game */
     private Node currentNode;
@@ -141,4 +139,7 @@ public class NodeFactory {
         return queueNodes.size() > 0;
     }
 
+    public Queue<Node> getQueueNodes() {
+        return this.queueNodes;
+    }
 }

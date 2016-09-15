@@ -4,7 +4,6 @@
 
 package net.year4000.mapnodes.listeners;
 
-import lombok.EqualsAndHashCode;
 import net.year4000.mapnodes.api.MapNodes;
 import net.year4000.mapnodes.api.events.player.GamePlayerJoinSpectatorEvent;
 import net.year4000.mapnodes.api.events.player.GamePlayerJoinTeamEvent;
@@ -49,7 +48,6 @@ import org.bukkit.util.BlockIterator;
 import java.util.Iterator;
 import java.util.Locale;
 
-@EqualsAndHashCode
 public class SpectatorListener implements Listener {
     /** Stop the event if the player is not playing the game */
     private void stopEvent(Cancellable event, Player player) {
@@ -426,5 +424,22 @@ public class SpectatorListener implements Listener {
                 player.sendMessage(Msg.NOTICE + Msg.locale(player, "items.teleport_hand"));
             }
         }
+    }
+
+    public boolean equals(Object o) {
+        if (o == this) return true;
+        if (!(o instanceof SpectatorListener)) return false;
+        final SpectatorListener other = (SpectatorListener) o;
+        if (!other.canEqual((Object) this)) return false;
+        return true;
+    }
+
+    public int hashCode() {
+        int result = 1;
+        return result;
+    }
+
+    protected boolean canEqual(Object other) {
+        return other instanceof SpectatorListener;
     }
 }

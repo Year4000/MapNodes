@@ -20,7 +20,6 @@ import net.year4000.mapnodes.utils.TimeUtil;
 import net.year4000.utilities.bukkit.FunEffectsUtil;
 import net.year4000.utilities.bukkit.bossbar.BossBar;
 import org.bukkit.Sound;
-import org.bukkit.entity.Player;
 
 import java.util.Arrays;
 import java.util.Queue;

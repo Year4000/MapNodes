@@ -4,17 +4,17 @@
 
 package net.year4000.mapnodes.utils;
 
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
 import net.year4000.mapnodes.MapNodesPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scheduler.BukkitTask;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class SchedulerUtil {
     private static MapNodesPlugin plugin = MapNodesPlugin.getInst();
     private static BukkitScheduler scheduler = Bukkit.getScheduler();
+
+    public SchedulerUtil() {
+    }
 
     /** Run a task in sync with a delay */
     public static BukkitTask runSync(Runnable task, long delay) {

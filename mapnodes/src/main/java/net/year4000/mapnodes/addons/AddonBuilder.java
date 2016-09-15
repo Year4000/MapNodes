@@ -4,7 +4,6 @@
 
 package net.year4000.mapnodes.addons;
 
-import lombok.Getter;
 import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.listeners.ListenerBuilder;
 import net.year4000.mapnodes.messages.Msg;
@@ -13,9 +12,7 @@ import java.util.*;
 
 public class AddonBuilder {
     private final List<Class<? extends Addon>> addons = new ArrayList<>();
-    @Getter
     private final List<AddonInfo> infos = new ArrayList<>();
-    @Getter
     private final Map<Addon, ListenerBuilder> listeners = new HashMap<>();
 
     public AddonBuilder add(Class<? extends Addon> commandClass) {
@@ -66,5 +63,13 @@ public class AddonBuilder {
             AddonInfo current = info.next();
             MapNodesPlugin.debug(Msg.util("addon.stop", current.name(), current.version()));
         });
+    }
+
+    public List<AddonInfo> getInfos() {
+        return this.infos;
+    }
+
+    public Map<Addon, ListenerBuilder> getListeners() {
+        return this.listeners;
     }
 }

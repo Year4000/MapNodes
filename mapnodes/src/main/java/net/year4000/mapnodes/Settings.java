@@ -6,9 +6,7 @@ package net.year4000.mapnodes;
 
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
-import lombok.Getter;
 import lombok.NonNull;
-import lombok.ToString;
 import net.year4000.utilities.URLBuilder;
 import net.year4000.utilities.sdk.API;
 import net.year4000.utilities.sdk.HttpFetcher;
@@ -16,8 +14,6 @@ import net.year4000.utilities.sdk.HttpFetcher;
 import java.util.Arrays;
 import java.util.List;
 
-@Getter
-@ToString
 public class Settings {
     private static transient Settings inst = null;
 
@@ -74,5 +70,42 @@ public class Settings {
         if ((worldCache = System.getProperty(worldCache)) != null) {
             settings.worldCache = worldCache;
         }
+    }
+
+    @NonNull
+    public String getClientLocales() {
+        return this.clientLocales;
+    }
+
+    @NonNull
+    public String getSystemLocales() {
+        return this.systemLocales;
+    }
+
+    @NonNull
+    public Integer getLoadMaps() {
+        return this.loadMaps;
+    }
+
+    @NonNull
+    public String getWorldCache() {
+        return this.worldCache;
+    }
+
+    @NonNull
+    public JsonObject getKits() {
+        return this.kits;
+    }
+
+    public List<String> getModes() {
+        return this.modes;
+    }
+
+    public String getKey() {
+        return this.key;
+    }
+
+    public String toString() {
+        return "net.year4000.mapnodes.Settings(clientLocales=" + this.getClientLocales() + ", systemLocales=" + this.getSystemLocales() + ", loadMaps=" + this.getLoadMaps() + ", worldCache=" + this.getWorldCache() + ", kits=" + this.getKits() + ", modes=" + this.getModes() + ", key=" + this.getKey() + ")";
     }
 }

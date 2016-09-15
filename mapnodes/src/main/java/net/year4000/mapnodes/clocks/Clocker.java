@@ -14,9 +14,7 @@ import java.util.concurrent.TimeUnit;
 /** Clocker to allow easy code for clocks */
 public abstract class Clocker {
     private int offset;
-    @Getter
     private int time;
-    @Getter
     private Clock clock;
 
     /** Run a clock for x amount of time */
@@ -67,6 +65,14 @@ public abstract class Clocker {
 
     public int increaseTime(int time) {
         return clock.index += MathUtil.ticks(time);
+    }
+
+    public int getTime() {
+        return this.time;
+    }
+
+    public Clock getClock() {
+        return this.clock;
     }
 
     public class Clock implements Runnable {
