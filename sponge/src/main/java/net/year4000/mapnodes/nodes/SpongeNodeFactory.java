@@ -15,4 +15,9 @@ public class SpongeNodeFactory implements NodeFactory {
   public Collection<MapPackage> packages() {
     return null;
   }
+
+  @Override
+  public void generatePackages() {
+
+  }
 }
