@@ -1,6 +1,7 @@
-package net.year4000.mapnodes;/*
+/*
  * Copyright 2016 Year4000. All Rights Reserved.
  */
+package net.year4000.mapnodes;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -14,7 +15,7 @@ public class Testing {
 
   public static void main(String[] args) throws Exception {
     try {
-      String bindings = read(Testing.class.getResourceAsStream("bindings.js"));
+      String bindings = read(Testing.class.getResourceAsStream("/js/bindings.js"));
       BINDINGS.v8().executeVoidScript(bindings);
 
     } finally {
