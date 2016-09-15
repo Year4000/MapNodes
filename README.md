@@ -1,5 +1,4 @@
-### MapNodes ![Build Status](https://magnum.travis-ci.com/ewized/MapNodes.svg?token=zmUpkLZqvMbrRfbszTjK&branch=master)
-
+### MapNodes ![Build Status](https://api.travis-ci.com/ewized/MapNodes.svg?token=zmUpkLZqvMbrRfbszTjK)
 This is the plugin that handles the games that `Year4000` runs.
 
 ## License
