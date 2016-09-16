@@ -1,0 +1,14 @@
+net.year4000.mapnodes
+net.year4000.mapnodes.nodes
+net.year4000.utilities
+net.year4000.utilities.cache
+net.year4000.utilities.database
+net.year4000.utilities.net
+net.year4000.utilities.net.router
+net.year4000.utilities.net.router.http
+net.year4000.utilities.net.router.pipline
+net.year4000.utilities.reflection
+net.year4000.utilities.reflection.annotations
+net.year4000.utilities.tuple
+net.year4000.utilities.utils
+net.year4000.utilities.value

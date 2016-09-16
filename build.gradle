@@ -2,10 +2,22 @@
  * Copyright 2016 Year4000. All Rights Reserved.
  */
 
+buildscript {
+    repositories {
+        jcenter()
+    }
+
+    dependencies {
+        classpath 'com.netflix.nebula:gradle-aggregate-javadocs-plugin:2.2.+'
+    }
+}
+
 plugins {
     id 'java'
     id 'idea'
 }
+
+apply plugin: 'nebula-aggregate-javadocs'
 
 ext.mapnodes = project
 ext.utilities = project('utilities')

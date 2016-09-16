@@ -33,8 +33,3 @@ dependencies {
     compile mapnodes.project('core')
     compile 'org.spongepowered:spongeapi:4.1.0-SNAPSHOT'
 }
-
-task docs(type: Javadoc) {
-    source = sourceSets.main.allJava
-    destinationDir = mapnodes.file("docs/sponge/")
-}
