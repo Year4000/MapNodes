@@ -41,8 +41,8 @@ public interface MapNodes {
       try (BufferedReader buffer = new BufferedReader(new InputStreamReader(stream))) {
         String script = buffer.lines().collect(Collectors.joining("\n"));
         bindings().v8().executeVoidScript(script);
-      } catch (IOException error) {
-        ErrorReporter.builder(error).add("file", file).buildAndReport(System.err);
+      } catch (IOException | NullPointerException error) {
+        ErrorReporter.builder(error).add("file: ", file).buildAndReport(System.err);
       }
     });
     // Generate the maps
