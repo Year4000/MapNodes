@@ -12,7 +12,7 @@ apply from: utilities.file('gradle/sponge.gradle')
 
 assemble.dependsOn shadowJar {
     baseName = mapnodes.name.toLowerCase()
-    version = mapnodes.version
+    version = mapnodes.rawVersion
 
     dependencies {
         include dependency('com.eclipsesource.j2v8:.*')

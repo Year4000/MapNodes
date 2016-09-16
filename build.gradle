@@ -16,7 +16,7 @@ defaultTasks 'assemble'
 
 sourceCompatibility = 1.8
 
-def rawVersion = '3.0.0'
+ext.rawVersion = '3.0.0'
 def gitVersion = rawVersion + '-' + git()
 
 group 'net.year4000.mapnodes'
