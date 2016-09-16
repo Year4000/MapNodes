@@ -3,18 +3,30 @@
  */
 package net.year4000.mapnodes;
 
+import com.google.inject.Inject;
 import net.year4000.mapnodes.nodes.NodeFactory;
 import net.year4000.mapnodes.nodes.SpongeNodeFactory;
+import org.slf4j.Logger;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.GameConstructionEvent;
 import org.spongepowered.api.event.game.state.GameLoadCompleteEvent;
 import org.spongepowered.api.event.game.state.GameStoppingEvent;
 import org.spongepowered.api.plugin.Plugin;
 
+/** Sponge plugin to provide support for the MapNodes system */
 @Plugin(id = "mapnodes", name = "MapNodes", version = "3.0.0-SNAPSHOT")
 public class MapNodesPlugin implements MapNodes {
   private final SpongeBindings bindings = new SpongeBindings();
   private final SpongeNodeFactory nodeFactory = new SpongeNodeFactory();
+
+  /** The logger injected from Sponge */
+  @Inject
+  private Logger logger;
+
+  @Override
+  public Logger logger() {
+    return logger;
+  }
 
   @Override
   public Bindings bindings() {

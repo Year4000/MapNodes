@@ -14,6 +14,7 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile utilities.project('core')
     compile 'com.eclipsesource.j2v8:j2v8_linux_x86_64:4.5.0'
+    compile 'org.slf4j:slf4j-api:1.7.21'
 }
 
 task docs(type: Javadoc) {
