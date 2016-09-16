@@ -5,9 +5,20 @@
 plugins {
     id 'java'
     id 'org.spongepowered.plugin' version '0.5.1'
+    id 'com.github.johnrengelman.shadow' version '1.2.3'
 }
 
 apply from: utilities.file('gradle/sponge.gradle')
+
+assemble.dependsOn shadowJar {
+    baseName = mapnodes.name.toLowerCase()
+    version = mapnodes.version
+
+    dependencies {
+        include dependency('com.eclipsesource.j2v8:.*')
+        include dependency(':core')
+    }
+}
 
 repositories {
     mavenCentral()
