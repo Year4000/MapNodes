@@ -13,10 +13,14 @@ import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.GameConstructionEvent;
 import org.spongepowered.api.event.game.state.GameLoadCompleteEvent;
 import org.spongepowered.api.event.game.state.GameStoppingEvent;
+import org.spongepowered.api.event.server.ClientPingServerEvent;
+import org.spongepowered.api.network.status.Favicon;
 import org.spongepowered.api.plugin.Plugin;
-import org.spongepowered.api.plugin.PluginContainer;
+import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.format.TextColors;
 
-import java.util.Optional;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 
 /** Sponge plugin to provide support for the MapNodes system */
 @Plugin(id = "mapnodes", name = "MapNodes", version = "3.0.0-SNAPSHOT")
@@ -77,5 +81,12 @@ public class MapNodesPlugin implements MapNodes {
   @Listener
   public void onUnload(GameStoppingEvent event) {
     unload();
+  }
+
+  @Listener
+  public void onClientPing(ClientPingServerEvent event) throws IOException {
+    Favicon favicon = game.getRegistry().loadFavicon(new ByteArrayInputStream(currentNode().map().image().array()));
+    event.getResponse().setFavicon(favicon);
+    event.getResponse().setDescription(Text.of(currentNode().name() + " version " + currentNode().version()));
   }
 }
