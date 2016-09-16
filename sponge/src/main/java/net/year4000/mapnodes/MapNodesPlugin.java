@@ -75,7 +75,7 @@ public class MapNodesPlugin implements MapNodes {
   }
 
   @Listener
-  public void onEnable(GameStoppingEvent event) {
+  public void onUnload(GameStoppingEvent event) {
     unload();
   }
 }
