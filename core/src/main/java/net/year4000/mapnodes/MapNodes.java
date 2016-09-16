@@ -44,7 +44,9 @@ public interface MapNodes {
       InputStream stream = MapNodes.class.getResourceAsStream("/js/" + file);
       try (BufferedReader buffer = new BufferedReader(new InputStreamReader(stream))) {
         String script = buffer.lines().collect(Collectors.joining("\n"));
-        bindings().v8().executeVoidScript(script);
+        try (V8ThreadLock lock = bindings().v8Thread()) {
+          lock.v8().executeVoidScript(script);
+        }
       } catch (IOException | NullPointerException error) {
         ErrorReporter.builder(error).add("file: ", file).buildAndReport(System.err);
       }

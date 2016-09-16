@@ -4,6 +4,7 @@
 package net.year4000.mapnodes.nodes;
 
 import com.eclipsesource.v8.V8Object;
+import net.year4000.mapnodes.V8ThreadLock;
 import net.year4000.utilities.ErrorReporter;
 
 import java.io.BufferedReader;
@@ -25,7 +26,9 @@ public abstract class Node {
     this.map = map;
     try (BufferedReader buffer = new BufferedReader(new InputStreamReader(map.map()))) {
       String script = buffer.lines().collect(Collectors.joining("\n"));
-      this.v8Object = factory.v8().executeObjectScript("eval(" + script + ");");
+      try (V8ThreadLock lock = factory.v8Thread()) {
+        this.v8Object = lock.v8().executeObjectScript("eval(" + script + ");");
+      }
     } catch (IOException | NullPointerException error) {
       throw ErrorReporter.builder(error).buildAndReport(System.err);
     }
@@ -33,7 +36,7 @@ public abstract class Node {
 
   /** Get the name of the map */
   public String name() {
-    try {
+    try (V8ThreadLock lock = new V8ThreadLock(v8Object.getRuntime())) {
       return v8Object.getObject("map").getString("name");
     } catch (Exception error) {
       ErrorReporter.builder(error).hideStackTrace().buildAndReport(System.err);
@@ -43,7 +46,7 @@ public abstract class Node {
 
   /** Get the version of the map */
   public String version() {
-    try {
+    try (V8ThreadLock lock = new V8ThreadLock(v8Object.getRuntime())) {
       return v8Object.getObject("map").getString("version");
     } catch (Exception error) {
       ErrorReporter.builder(error).hideStackTrace().buildAndReport(System.err);

@@ -7,7 +7,6 @@ import com.eclipsesource.v8.Releasable;
 import com.eclipsesource.v8.V8;
 import com.eclipsesource.v8.V8Object;
 import com.google.common.base.CaseFormat;
-import net.year4000.utilities.Utils;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -40,11 +39,12 @@ public abstract class Bindings implements Releasable {
     }
     engine.add("_PLATFORM", "java");
     engine.add("JAVA", object);
+    engine.getLocker().release(); // release the locker
   }
 
-  /** Get the b8 instance */
-  public V8 v8() {
-    return engine;
+  /** Get the v8 instance */
+  public V8ThreadLock v8Thread() {
+    return new V8ThreadLock(engine);
   }
 
   /** Release the bindings */
