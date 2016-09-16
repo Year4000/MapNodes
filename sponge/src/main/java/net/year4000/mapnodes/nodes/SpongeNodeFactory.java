@@ -3,17 +3,19 @@
  */
 package net.year4000.mapnodes.nodes;
 
+import com.google.common.collect.ImmutableSet;
+
 import java.util.Collection;
 
 public class SpongeNodeFactory implements NodeFactory {
   @Override
   public Node create(MapPackage map) {
-    return null;
+    return new SpongeNode();
   }
 
   @Override
   public Collection<MapPackage> packages() {
-    return null;
+    return ImmutableSet.of();
   }
 
   @Override

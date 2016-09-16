@@ -11,7 +11,7 @@ import org.spongepowered.api.event.game.state.GameLoadCompleteEvent;
 import org.spongepowered.api.event.game.state.GameStoppingEvent;
 import org.spongepowered.api.plugin.Plugin;
 
-@Plugin(id = "mapnodes", version = "3.0.0-SNAPSHOT")
+@Plugin(id = "mapnodes", name = "MapNodes", version = "3.0.0-SNAPSHOT")
 public class MapNodesPlugin implements MapNodes {
   private final SpongeBindings bindings = new SpongeBindings();
   private final SpongeNodeFactory nodeFactory = new SpongeNodeFactory();
