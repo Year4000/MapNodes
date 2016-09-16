@@ -7,6 +7,7 @@ import com.google.inject.Inject;
 import net.year4000.mapnodes.nodes.NodeFactory;
 import net.year4000.mapnodes.nodes.SpongeNodeFactory;
 import org.slf4j.Logger;
+import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.GameConstructionEvent;
@@ -23,6 +24,11 @@ public class MapNodesPlugin implements MapNodes {
   private final SpongeBindings bindings = new SpongeBindings();
   private final SpongeNodeFactory nodeFactory = new SpongeNodeFactory();
   private static MapNodesPlugin inst;
+
+  /** The game instance injected for mapnodes */
+  @Inject
+  private Game game;
+
   /** The logger injected from Sponge */
   @Inject
   private Logger logger;
@@ -61,6 +67,11 @@ public class MapNodesPlugin implements MapNodes {
   @Listener
   public void onEnable(GameLoadCompleteEvent event) {
     enable();
+    if (currentNode() == null) {
+      String message = "No maps loaded!";
+      logger().warn(message);
+      game.getServer().shutdown(Text.of(TextColors.RED, message));
+    }
   }
 
   @Listener
