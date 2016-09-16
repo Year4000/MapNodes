@@ -8,6 +8,7 @@ import net.year4000.mapnodes.V8ThreadLock;
 import net.year4000.utilities.ErrorReporter;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -24,7 +25,7 @@ public abstract class Node {
   public Node(NodeFactory factory, MapPackage map) throws Exception {
     id = idTracker.getAndIncrement();
     this.map = map;
-    try (BufferedReader buffer = new BufferedReader(new InputStreamReader(map.map()))) {
+    try (BufferedReader buffer = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(map.map().array())))) {
       String script = buffer.lines().collect(Collectors.joining("\n"));
       try (V8ThreadLock lock = factory.v8Thread()) {
         this.v8Object = lock.v8().executeObjectScript("eval(" + script + ");");
@@ -32,6 +33,11 @@ public abstract class Node {
     } catch (IOException | NullPointerException error) {
       throw ErrorReporter.builder(error).buildAndReport(System.err);
     }
+  }
+
+  /** Get the MapPackage instance */
+  public MapPackage map() {
+    return map;
   }
 
   /** Get the name of the map */

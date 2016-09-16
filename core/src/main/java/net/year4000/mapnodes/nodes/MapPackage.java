@@ -3,19 +3,25 @@
  */
 package net.year4000.mapnodes.nodes;
 
+import com.google.common.io.ByteStreams;
 import net.year4000.utilities.Utils;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
-import java.io.InputStream;
+import java.io.*;
+import java.nio.ByteBuffer;
 
 /** Represents a Map package on where to gather the needed objects */
 public class MapPackage {
   private final String location;
+  private byte[] image, map, world;
 
-  public MapPackage(String location) {
+  public MapPackage(String location) throws IOException {
     this.location = location;
     if (location.startsWith("file://")) {
       // load from tmp folder where the map is cached
+      location = location.substring(7); // cut off file://
+      image = ByteStreams.toByteArray(new FileInputStream(location + "/icon.png"));
+      map = ByteStreams.toByteArray(new FileInputStream(location + "/map.js"));
+      world = ByteStreams.toByteArray(new FileInputStream(location + "/world.zip"));
     } else if (location.startsWith("https://") || location.startsWith("http://")) {
       // load from the API server and cache the results
       // todo when fetching from API server
@@ -23,19 +29,18 @@ public class MapPackage {
   }
 
   /** Get the icon for the map */
-  public InputStream image() {
-    // todo add the ability to fetch map icon
-    return MapPackage.class.getResourceAsStream("server-icon.png");
+  public ByteBuffer image() {
+    return ByteBuffer.wrap(image);
   }
 
   /** Get the map json object */
-  public InputStream map() {
-    throw new NotImplementedException();
+  public ByteBuffer map() {
+    return ByteBuffer.wrap(map);
   }
 
   /** Get the zip of the world files */
-  public InputStream world() {
-    throw new NotImplementedException();
+  public ByteBuffer world() {
+    return ByteBuffer.wrap(world);
   }
 
   @Override
