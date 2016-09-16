@@ -71,6 +71,8 @@ public abstract class Node {
 
   /** Unloads the node */
   public void unload() {
-    v8Object.release();
+    try (V8ThreadLock<V8Object> lock = new V8ThreadLock<>(v8Object)) {
+      lock.v8().release();
+    }
   }
 }
