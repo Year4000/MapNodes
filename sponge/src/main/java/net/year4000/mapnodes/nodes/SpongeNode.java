@@ -4,6 +4,11 @@
 package net.year4000.mapnodes.nodes;
 
 public class SpongeNode extends Node {
+
+  public SpongeNode(NodeFactory factory, MapPackage map) throws Exception {
+    super(factory, map);
+  }
+
   @Override
   public void load() {
 

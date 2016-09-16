@@ -3,14 +3,16 @@
  */
 package net.year4000.mapnodes.nodes;
 
+import com.eclipsesource.v8.V8;
 import com.google.common.collect.ImmutableSet;
+import net.year4000.mapnodes.MapNodesPlugin;
 
 import java.util.Collection;
 
 public class SpongeNodeFactory implements NodeFactory {
   @Override
-  public Node create(MapPackage map) {
-    return new SpongeNode();
+  public Node create(MapPackage map) throws Exception {
+    return new SpongeNode(this, map);
   }
 
   @Override
@@ -21,5 +23,10 @@ public class SpongeNodeFactory implements NodeFactory {
   @Override
   public void generatePackages() {
 
+  }
+
+  @Override
+  public V8 v8() {
+    return MapNodesPlugin.get().bindings().v8();
   }
 }

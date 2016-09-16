@@ -56,12 +56,16 @@ public interface MapNodes {
 
   /** Enable the MapNodes system */
   default void enable() {
-    logger().info("Adding maps to queue");
+    logger().info("Adding maps to queue (max: " + SETTINGS.loadMaps + ")");
     nodeFactory().packages().forEach(map -> {
       logger().info("Adding map: " + map.toString());
-      // todo exception handling
-      Node node = nodeFactory().create(map);
-      NODE_MANAGER.addToQueue(node);
+      try {
+        Node node = nodeFactory().create(map);
+        logger().info("Map " + node.name() + " version " + node.version());
+        NODE_MANAGER.addToQueue(node);
+      } catch (Exception error) {
+        ErrorReporter.builder(error).buildAndReport(System.err);
+      }
     });
     // Set up the first node if we can
     if (nodeFactory().packages().size() > 0) {
