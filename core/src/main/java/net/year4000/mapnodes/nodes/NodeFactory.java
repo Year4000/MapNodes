@@ -3,13 +3,14 @@
  */
 package net.year4000.mapnodes.nodes;
 
+import com.eclipsesource.v8.V8;
 import net.year4000.mapnodes.V8ThreadLock;
 
 import java.util.Collection;
 
 public interface NodeFactory {
   /** Get the runtime for the v8 engine */
-  V8ThreadLock v8Thread();
+  V8ThreadLock<V8> v8Thread();
 
   /** Create a node from the MapPackage */
   Node create(MapPackage map) throws Exception;

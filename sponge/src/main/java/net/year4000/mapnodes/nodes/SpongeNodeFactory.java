@@ -3,6 +3,7 @@
  */
 package net.year4000.mapnodes.nodes;
 
+import com.eclipsesource.v8.V8;
 import com.google.common.collect.ImmutableSet;
 import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.V8ThreadLock;
@@ -26,7 +27,7 @@ public class SpongeNodeFactory implements NodeFactory {
   }
 
   @Override
-  public V8ThreadLock v8Thread() {
+  public V8ThreadLock<V8> v8Thread() {
     return MapNodesPlugin.get().bindings().v8Thread();
   }
 }

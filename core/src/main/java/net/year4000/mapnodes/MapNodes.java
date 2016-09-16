@@ -3,6 +3,7 @@
  */
 package net.year4000.mapnodes;
 
+import com.eclipsesource.v8.V8;
 import com.google.common.collect.ImmutableSet;
 import net.year4000.mapnodes.nodes.Node;
 import net.year4000.mapnodes.nodes.NodeFactory;
@@ -44,7 +45,7 @@ public interface MapNodes {
       InputStream stream = MapNodes.class.getResourceAsStream("/js/" + file);
       try (BufferedReader buffer = new BufferedReader(new InputStreamReader(stream))) {
         String script = buffer.lines().collect(Collectors.joining("\n"));
-        try (V8ThreadLock lock = bindings().v8Thread()) {
+        try (V8ThreadLock<V8> lock = bindings().v8Thread()) {
           lock.v8().executeVoidScript(script);
         }
       } catch (IOException | NullPointerException error) {

@@ -43,15 +43,17 @@ public abstract class Bindings implements Releasable {
   }
 
   /** Get the v8 instance */
-  public V8ThreadLock v8Thread() {
-    return new V8ThreadLock(engine);
+  public V8ThreadLock<V8> v8Thread() {
+    return new V8ThreadLock<>(engine);
   }
 
   /** Release the bindings */
   @Override
   public void release() {
-    object.release();
-    engine.release();
+    try (V8ThreadLock<V8> lock = v8Thread()) {
+      object.release();
+      lock.v8().release();
+    }
   }
 
   /** Print the message */

@@ -3,6 +3,7 @@
  */
 package net.year4000.mapnodes.nodes;
 
+import com.eclipsesource.v8.V8;
 import com.eclipsesource.v8.V8Object;
 import net.year4000.mapnodes.V8ThreadLock;
 import net.year4000.utilities.ErrorReporter;
@@ -27,7 +28,7 @@ public abstract class Node {
     this.map = map;
     try (BufferedReader buffer = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(map.map().array())))) {
       String script = buffer.lines().collect(Collectors.joining("\n"));
-      try (V8ThreadLock lock = factory.v8Thread()) {
+      try (V8ThreadLock<V8> lock = factory.v8Thread()) {
         this.v8Object = lock.v8().executeObjectScript("eval(" + script + ");");
       }
     } catch (IOException | NullPointerException error) {
@@ -42,8 +43,8 @@ public abstract class Node {
 
   /** Get the name of the map */
   public String name() {
-    try (V8ThreadLock lock = new V8ThreadLock(v8Object.getRuntime())) {
-      return v8Object.getObject("map").getString("name");
+    try (V8ThreadLock<V8Object> lock = new V8ThreadLock<>(v8Object)) {
+      return lock.v8().getObject("map").getString("name");
     } catch (Exception error) {
       ErrorReporter.builder(error).hideStackTrace().buildAndReport(System.err);
       return "unknown";
@@ -52,8 +53,8 @@ public abstract class Node {
 
   /** Get the version of the map */
   public String version() {
-    try (V8ThreadLock lock = new V8ThreadLock(v8Object.getRuntime())) {
-      return v8Object.getObject("map").getString("version");
+    try (V8ThreadLock<V8Object> lock = new V8ThreadLock<>(v8Object)) {
+      return lock.v8().getObject("map").getString("version");
     } catch (Exception error) {
       ErrorReporter.builder(error).hideStackTrace().buildAndReport(System.err);
       return "unknown";
