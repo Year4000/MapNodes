@@ -6,8 +6,3 @@ rootProject.name = 'MapNodes'
 // MapNodes
 include 'core'
 include 'sponge'
-
-// Utilities
-include 'utilities:core'
-
-

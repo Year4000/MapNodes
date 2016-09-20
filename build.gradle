@@ -20,19 +20,19 @@ plugins {
 apply plugin: 'nebula-aggregate-javadocs'
 
 ext.mapnodes = project
-ext.utilities = project('utilities')
-
-apply from: utilities.file('gradle/utils.gradle')
 
 defaultTasks 'assemble'
 
 sourceCompatibility = 1.8
 
 ext.rawVersion = '3.0.0'
-def gitVersion = rawVersion + '-' + git()
+def gitVersion = rawVersion + '-' //+ git()
 
 group 'net.year4000.mapnodes'
 version = gitVersion
 
-
-
+allprojects {
+    repositories {
+        maven { url "https://jitpack.io" }
+    }
+}

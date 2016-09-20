@@ -8,7 +8,7 @@ plugins {
     id 'com.github.johnrengelman.shadow' version '1.2.3'
 }
 
-apply from: utilities.file('gradle/sponge.gradle')
+//apply from: utilities.file('gradle/sponge.gradle')
 
 assemble.dependsOn shadowJar {
     baseName = mapnodes.name.toLowerCase()
@@ -16,7 +16,7 @@ assemble.dependsOn shadowJar {
 
     dependencies {
         include dependency('com.eclipsesource.j2v8:.*')
-        include dependency(':core')
+        include dependency('net.year4000.mapndes:core')
     }
 }
 
@@ -32,4 +32,5 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
     compile mapnodes.project('core')
     compile 'org.spongepowered:spongeapi:4.1.0-SNAPSHOT'
+    compile 'net.year4000.utilities:sponge:master-SNAPSHOT'
 }
