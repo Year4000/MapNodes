@@ -4,6 +4,7 @@
 package net.year4000.mapnodes.nodes;
 
 import com.google.common.collect.Queues;
+import net.year4000.utilities.ErrorReporter;
 import net.year4000.utilities.value.Value;
 
 import java.util.Queue;
@@ -14,15 +15,20 @@ public final class NodeManager {
   private Node current;
 
   /** Get the current node or throw null pointer exception */
-  public Node getNode() throws NullPointerException {
+  public Node getNode() {
     if (current == null) {
-      current = loadNextNode();
+      try {
+        current = loadNextNode();
+      } catch (Exception error) {
+        ErrorReporter.builder(error).hideStackTrace().buildAndReport(System.err);
+        return null;
+      }
     }
     return current;
   }
 
   /** Load the next node or throw null pointer exception */
-  public Node loadNextNode() throws NullPointerException {
+  public Node loadNextNode() throws Exception {
     if (isNextNode()) {
       current = nextNode().getOrThrow("No nodes available");
       current.load();
@@ -33,7 +39,11 @@ public final class NodeManager {
   /** Get the next node if there are any also clean up the last node */
   private Value<Node> nextNode() {
     if (current != null) {
-      current.unload();
+      try {
+        current.unload();
+      } catch (Exception error) {
+        ErrorReporter.builder(error).hideStackTrace().buildAndReport(System.err);
+      }
     }
     return Value.of(queue.poll());
   }

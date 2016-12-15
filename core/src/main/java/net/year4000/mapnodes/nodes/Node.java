@@ -67,10 +67,10 @@ public abstract class Node {
   }
 
   /** Loads the node */
-  public abstract void load();
+  public abstract void load() throws Exception;
 
   /** Unloads the node */
-  public void unload() {
+  public void unload() throws Exception {
     try (V8ThreadLock<V8Object> lock = new V8ThreadLock<>(v8Object)) {
       lock.v8().release();
     }

@@ -15,7 +15,7 @@ public class SpongeNode extends Node {
   }
 
   @Override
-  public void unload() {
+  public void unload() throws Exception {
     super.unload();
   }
 }

@@ -49,7 +49,7 @@ public interface MapNodes {
           lock.v8().executeVoidScript(script);
         }
       } catch (IOException | NullPointerException error) {
-        ErrorReporter.builder(error).add("file: ", file).buildAndReport(System.err);
+        logger().error(ErrorReporter.builder(error).add("file: ", file).build().toString());
       }
     });
     // Generate the maps
@@ -67,13 +67,17 @@ public interface MapNodes {
         logger().info("Map " + node.name() + " version " + node.version());
         NODE_MANAGER.addToQueue(node);
       } catch (Exception error) {
-        ErrorReporter.builder(error).buildAndReport(System.err);
+        logger().error(ErrorReporter.builder(error).build().toString());
       }
     });
     // Set up the first node if we can
     if (nodeFactory().packages().size() > 0) {
       logger().info("Creating first node");
-      NODE_MANAGER.loadNextNode();
+      try {
+        NODE_MANAGER.loadNextNode();
+      } catch (Exception error) {
+        logger().error(ErrorReporter.builder(error).add("Could not load map").build().toString());
+      }
     }
   }
 
@@ -82,7 +86,11 @@ public interface MapNodes {
     // Unload the last map in the system
     if (nodeFactory().packages().size() > 0) {
       logger().info("Unloading current node");
-      currentNode().unload();
+      try {
+        currentNode().unload();
+      } catch (Exception error) {
+        logger().error(ErrorReporter.builder(error).add("Could not unload map").build().toString());
+      }
     }
     logger().info("Releasing runtime bindings");
     bindings().release();
