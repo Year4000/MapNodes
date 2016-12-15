@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 
 /** The node that contains the map object */
 public abstract class Node {
-  private static AtomicInteger idTracker = new AtomicInteger();
+  private static AtomicInteger idTracker = new AtomicInteger(1);
   protected final V8Object v8Object;
   protected final MapPackage map;
   protected final int id;
@@ -44,7 +44,12 @@ public abstract class Node {
   /** Get the name of the map */
   public String name() {
     try (V8ThreadLock<V8Object> lock = new V8ThreadLock<>(v8Object)) {
-      return lock.v8().getObject("map").getString("name");
+      V8Object map = lock.v8().getObject("map");
+      try {
+        return map.getString("name");
+      } finally {
+        map.release();
+      }
     } catch (Exception error) {
       ErrorReporter.builder(error).hideStackTrace().buildAndReport(System.err);
       return "unknown";
@@ -54,7 +59,12 @@ public abstract class Node {
   /** Get the version of the map */
   public String version() {
     try (V8ThreadLock<V8Object> lock = new V8ThreadLock<>(v8Object)) {
-      return lock.v8().getObject("map").getString("version");
+      V8Object map = lock.v8().getObject("map");
+      try {
+        return map.getString("version");
+      } finally {
+        map.release();
+      }
     } catch (Exception error) {
       ErrorReporter.builder(error).hideStackTrace().buildAndReport(System.err);
       return "unknown";
