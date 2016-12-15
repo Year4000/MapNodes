@@ -3,6 +3,8 @@
  */
 package net.year4000.mapnodes;
 
+import com.eclipsesource.v8.V8;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,14 +15,12 @@ public class Testing {
   private static final Bindings BINDINGS = new TestBindings();
 
   public static void main(String[] args) throws Exception {
-    try {
-      String bindings = read(Testing.class.getResourceAsStream("/js/bindings.js"));
-      BINDINGS.v8().executeVoidScript(bindings);
-      BINDINGS.v8().executeScript("print('Hello');");
-      BINDINGS.v8().executeScript("println(' World!');");
-      BINDINGS.v8().executeScript("var_dump(PLATFORMS);");
-    } finally {
-      BINDINGS.release();
+    String bindings = read(Testing.class.getResourceAsStream("/js/bindings.js"));
+    try (V8ThreadLock<V8> thread = BINDINGS.v8Thread()) {
+      thread.v8().executeVoidScript(bindings);
+      thread.v8().executeScript("print('Hello');");
+      thread.v8().executeScript("println(' World!');");
+      thread.v8().executeScript("var_dump(PLATFORMS);");
     }
   }
 
