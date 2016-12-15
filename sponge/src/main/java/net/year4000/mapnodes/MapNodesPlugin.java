@@ -3,27 +3,33 @@
  */
 package net.year4000.mapnodes;
 
+import com.flowpowered.math.vector.Vector3d;
 import com.google.inject.Inject;
 import net.year4000.mapnodes.nodes.NodeFactory;
+import net.year4000.mapnodes.nodes.SpongeNode;
 import net.year4000.mapnodes.nodes.SpongeNodeFactory;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
-import org.spongepowered.api.event.game.state.GameConstructionEvent;
-import org.spongepowered.api.event.game.state.GameLoadCompleteEvent;
-import org.spongepowered.api.event.game.state.GameStoppingEvent;
+import org.spongepowered.api.event.entity.SpawnEntityEvent;
+import org.spongepowered.api.event.filter.cause.First;
+import org.spongepowered.api.event.game.state.*;
+import org.spongepowered.api.event.network.ClientConnectionEvent;
 import org.spongepowered.api.event.server.ClientPingServerEvent;
 import org.spongepowered.api.network.status.Favicon;
+import org.spongepowered.api.plugin.Dependency;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 /** Sponge plugin to provide support for the MapNodes system */
-@Plugin(id = "mapnodes", name = "MapNodes", version = "3.0.0-SNAPSHOT")
+@Plugin(id = "mapnodes", name = "MapNodes", version = "3.0.0-SNAPSHOT", dependencies = {@Dependency(id = "utilities")})
 public class MapNodesPlugin implements MapNodes {
   private final SpongeBindings bindings = new SpongeBindings();
   private final SpongeNodeFactory nodeFactory = new SpongeNodeFactory();
