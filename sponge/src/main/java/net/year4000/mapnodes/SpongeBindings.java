@@ -15,6 +15,7 @@ public final class SpongeBindings extends Bindings {
 
 
   @Override
+  @Bind
   public void sendMessage(String player, String message) {
     Consumer<Player> consumer = value -> value.sendMessage(Text.of(message));
     try {
