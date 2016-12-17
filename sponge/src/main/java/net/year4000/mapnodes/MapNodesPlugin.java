@@ -91,6 +91,7 @@ public class MapNodesPlugin implements MapNodes {
 
   @Listener
   public void onClientPing(ClientPingServerEvent event) throws IOException {
+    if (currentNode() == null) return;
     Favicon favicon = game.getRegistry().loadFavicon(new ByteArrayInputStream(currentNode().map().image().array()));
     event.getResponse().setFavicon(favicon);
     event.getResponse().setDescription(Text.of(currentNode().name() + " version " + currentNode().version()));
