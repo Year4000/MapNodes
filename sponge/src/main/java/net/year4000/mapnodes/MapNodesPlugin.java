@@ -75,7 +75,7 @@ public class MapNodesPlugin implements MapNodes {
   }
 
   @Listener
-  public void onEnable(GameLoadCompleteEvent event) {
+  public void onEnable(GameAboutToStartServerEvent event) {
     enable();
     if (currentNode() == null) {
       String message = "No maps loaded!";
