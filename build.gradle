@@ -26,7 +26,7 @@ defaultTasks 'assemble'
 sourceCompatibility = 1.8
 
 ext.rawVersion = '3.0.0'
-def gitVersion = rawVersion + '-' //+ git()
+def gitVersion = rawVersion //+ '-' //+ git()
 
 group 'net.year4000.mapnodes'
 version = gitVersion
@@ -34,5 +34,13 @@ version = gitVersion
 allprojects {
     repositories {
         maven { url "https://jitpack.io" }
+    }
+}
+
+/** Copy the plugin to the sponge server */
+task copyPlugin(dependsOn: 'sponge:assemble') {
+    copy {
+        from file("sponge/build/libs/mapnodes-$version-all.jar")
+        into file("run/sponge-server/mods/")
     }
 }
