@@ -7,6 +7,7 @@ import com.eclipsesource.v8.V8;
 import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 import net.year4000.mapnodes.*;
+import net.year4000.utilities.ErrorReporter;
 import org.slf4j.Logger;
 
 import java.io.IOException;
@@ -20,7 +21,7 @@ import java.util.stream.Collectors;
 
 /** This will generate the maps for sponge */
 public class SpongeNodeFactory implements NodeFactory {
-  private Set<String> maps = Sets.newHashSet();
+  private Set<MapPackage> mapPackages = Sets.newHashSet();
 
   @Inject private Logger logger;
   @Inject private Bindings bindings;
@@ -33,14 +34,7 @@ public class SpongeNodeFactory implements NodeFactory {
 
   @Override
   public Collection<MapPackage> packages() {
-    return maps.stream().map(path -> {
-      try {
-        return new MapPackage(path);
-      } catch (IOException error) {
-        logger.error("IO Error in path: " + path);
-        return null;
-      }
-    }).filter(element -> element != null).collect(Collectors.toSet());
+    return mapPackages.stream().collect(Collectors.toSet());
   }
 
   @Override
@@ -48,12 +42,17 @@ public class SpongeNodeFactory implements NodeFactory {
     Path path = Paths.get(settings.mapPath);
     try {
       Files.walk(path, FileVisitOption.FOLLOW_LINKS).forEach(dir -> {
-        if (Files.isDirectory(dir)) {
-          maps.add(dir.toUri().toString());
+        // Maps must have the world zip in them
+        if (Files.isDirectory(dir) && Files.isRegularFile(dir.resolve("world.zip"))) {
+          try {
+            mapPackages.add(new MapPackage(dir.toUri()));
+          } catch (IOException error) { // Could be multiple problems when map can not load
+            logger.error(ErrorReporter.builder(error).add("IO Error in path: " + dir).build().toString());
+          }
         }
       });
-    } catch (IOException error) {
-      logger.error("IO Error in path: " + settings.mapPath);
+    } catch (IOException error) { // Problem with root map path
+      logger.error(ErrorReporter.builder(error).add("IO Error in path: " + settings.mapPath).build().toString());
     }
   }
 

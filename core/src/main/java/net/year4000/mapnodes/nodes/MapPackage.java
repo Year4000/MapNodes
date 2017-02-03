@@ -7,6 +7,7 @@ import com.google.common.io.ByteStreams;
 import net.year4000.utilities.Utils;
 
 import java.io.*;
+import java.net.URI;
 import java.nio.ByteBuffer;
 
 /** Represents a Map package on where to gather the needed objects */
@@ -14,6 +15,12 @@ public class MapPackage {
   private final String location;
   private byte[] image, map, world;
 
+  /** Convert the URI into the string */
+  public MapPackage(URI location) throws IOException {
+    this(location.toString());
+  }
+
+  /** Load the package based on the url */
   public MapPackage(String location) throws IOException {
     this.location = location;
     if (location.startsWith("file://")) {

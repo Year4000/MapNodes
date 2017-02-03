@@ -74,7 +74,8 @@ public interface MapNodes {
     if (nodeFactory().packages().size() > 0) {
       logger().info("Creating first node");
       try {
-        NODE_MANAGER.loadNextNode();
+        Node node = NODE_MANAGER.loadNextNode();
+        logger().info("Map " + node.name() + " version " + node.version());
       } catch (Exception error) {
         logger().error(ErrorReporter.builder(error).add("Could not load map").build().toString());
       }
