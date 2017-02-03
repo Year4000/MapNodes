@@ -8,6 +8,7 @@ import com.google.common.collect.ImmutableSet;
 import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.V8ThreadLock;
 
+import java.io.IOException;
 import java.util.Collection;
 
 public class SpongeNodeFactory implements NodeFactory {

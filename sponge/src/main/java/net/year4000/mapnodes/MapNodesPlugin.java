@@ -6,13 +6,16 @@ package net.year4000.mapnodes;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import net.year4000.mapnodes.nodes.NodeFactory;
+import net.year4000.mapnodes.nodes.SpongeNode;
 import net.year4000.mapnodes.nodes.SpongeNodeFactory;
 import net.year4000.utilities.Conditions;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.entity.living.player.gamemode.GameModes;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.*;
+import org.spongepowered.api.event.network.ClientConnectionEvent;
 import org.spongepowered.api.event.server.ClientPingServerEvent;
 import org.spongepowered.api.network.status.Favicon;
 import org.spongepowered.api.plugin.Dependency;
@@ -95,5 +98,16 @@ public class MapNodesPlugin implements MapNodes {
     Favicon favicon = game.getRegistry().loadFavicon(new ByteArrayInputStream(currentNode().map().image().array()));
     event.getResponse().setFavicon(favicon);
     event.getResponse().setDescription(Text.of(currentNode().name() + " version " + currentNode().version()));
+  }
+
+  @Listener
+  public void join(ClientConnectionEvent.Login event) {
+    SpongeNode node = (SpongeNode) currentNode();
+    event.setToTransform(node.worldTransformer());
+  }
+
+  @Listener
+  public void join(ClientConnectionEvent.Join event) {
+    event.getTargetEntity().gameMode().set(GameModes.SPECTATOR);
   }
 }

@@ -42,7 +42,7 @@ public interface MapNodes {
     logger().info("Loading javascript files into v8 runtime");
     ImmutableSet.of("bindings.js", "game.js", "player.js", "team.js", "utils.js").forEach(file -> {
       logger().info("Loading javascript file: " + file);
-      InputStream stream = MapNodes.class.getResourceAsStream("/js/" + file);
+      InputStream stream = MapNodes.class.getResourceAsStream("/net/year4000/mapnodes/js/" + file);
       try (BufferedReader buffer = new BufferedReader(new InputStreamReader(stream))) {
         String script = buffer.lines().collect(Collectors.joining("\n"));
         try (V8ThreadLock<V8> lock = bindings().v8Thread()) {

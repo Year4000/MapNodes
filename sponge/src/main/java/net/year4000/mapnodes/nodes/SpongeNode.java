@@ -12,7 +12,7 @@ import net.year4000.mapnodes.MapNodesPlugin;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.GameState;
-import org.spongepowered.api.entity.Entity;
+import org.spongepowered.api.entity.Transform;
 import org.spongepowered.api.event.EventManager;
 import org.spongepowered.api.event.game.state.GameStartedServerEvent;
 import org.spongepowered.api.world.World;
@@ -61,5 +61,10 @@ public class SpongeNode extends Node {
   @Override
   public void unload() throws Exception {
     super.unload();
+  }
+
+  /** Create the world transformer to spawn the player into the map */
+  public Transform<World> worldTransformer() {
+    return new Transform<>(world, new Vector3d(0, 64, 0));
   }
 }

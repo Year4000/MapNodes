@@ -16,3 +16,11 @@ dependencies {
     compile 'com.eclipsesource.j2v8:j2v8_linux_x86_64:4.5.0'
     compile 'org.slf4j:slf4j-api:1.7.21'
 }
+
+sourceSets.main.resources {
+    srcDir "${projectDir}/src/main/js/"
+}
+
+idea.module {
+    sourceDirs += file("${projectDir}/src/main/js/")
+}
