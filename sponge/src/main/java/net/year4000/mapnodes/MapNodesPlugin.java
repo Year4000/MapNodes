@@ -22,6 +22,9 @@ import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
@@ -96,7 +99,13 @@ public class MapNodesPlugin implements MapNodes {
   @Listener
   public void onClientPing(ClientPingServerEvent event) throws IOException {
     if (currentNode() == null) return;
-    Favicon favicon = game.getRegistry().loadFavicon(new ByteArrayInputStream(currentNode().map().image().array()));
+    // Resize to 64 x 64
+    BufferedImage bufferedImage = ImageIO.read(new ByteArrayInputStream(currentNode().map().image().array()));
+    BufferedImage bufferedIcon = new BufferedImage(64, 64, BufferedImage.TYPE_INT_RGB);
+    Graphics graphic = bufferedIcon.createGraphics();
+    graphic.drawImage(bufferedImage, 0, 0, 64, 64, null);
+    graphic.dispose();
+    Favicon favicon = game.getRegistry().loadFavicon(bufferedIcon);
     event.getResponse().setFavicon(favicon);
     event.getResponse().setDescription(Text.of(currentNode().name() + " version " + currentNode().version()));
   }
