@@ -12,7 +12,7 @@ repositories {
 
 dependencies {
     testCompile 'junit:junit:4.12'
-    compile 'net.year4000.utilities:core:master-SNAPSHOT'
+    compile 'net.year4000.utilities:core:merge-SNAPSHOT'
     compile 'com.eclipsesource.j2v8:j2v8_linux_x86_64:4.5.0'
     compile 'org.slf4j:slf4j-api:1.7.21'
 }

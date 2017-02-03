@@ -3,20 +3,16 @@
  */
 package net.year4000.mapnodes;
 
-import com.flowpowered.math.vector.Vector3d;
 import com.google.inject.Inject;
+import com.google.inject.Injector;
 import net.year4000.mapnodes.nodes.NodeFactory;
-import net.year4000.mapnodes.nodes.SpongeNode;
 import net.year4000.mapnodes.nodes.SpongeNodeFactory;
+import net.year4000.utilities.Conditions;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
-import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
-import org.spongepowered.api.event.entity.SpawnEntityEvent;
-import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.event.game.state.*;
-import org.spongepowered.api.event.network.ClientConnectionEvent;
 import org.spongepowered.api.event.server.ClientPingServerEvent;
 import org.spongepowered.api.network.status.Favicon;
 import org.spongepowered.api.plugin.Dependency;
@@ -26,7 +22,6 @@ import org.spongepowered.api.text.format.TextColors;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.util.concurrent.TimeUnit;
 
 /** Sponge plugin to provide support for the MapNodes system */
 @Plugin(id = "mapnodes", name = "MapNodes", version = "3.0.0-SNAPSHOT", dependencies = {@Dependency(id = "utilities")})
@@ -36,12 +31,11 @@ public class MapNodesPlugin implements MapNodes {
   private static MapNodesPlugin inst;
 
   /** The game instance injected for mapnodes */
-  @Inject
-  private Game game;
-
+  @Inject private Game game;
   /** The logger injected from Sponge */
-  @Inject
-  private Logger logger;
+  @Inject private Logger logger;
+  /** The injector injected from Sponge */
+  @Inject private Injector injector;
 
   /** Get the instance of this plugin */
   public static MapNodesPlugin get() {
@@ -65,6 +59,12 @@ public class MapNodesPlugin implements MapNodes {
   @Override
   public NodeFactory nodeFactory() {
     return nodeFactory;
+  }
+
+  /** Inject the object instance with the object from sponge */
+  public void inject(Object instance) {
+    Conditions.nonNull(instance, "Must supply a valid instance");
+    injector.injectMembers(instance);
   }
 
   // Events for MapNodes
