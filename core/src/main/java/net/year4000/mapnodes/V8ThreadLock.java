@@ -1,9 +1,8 @@
 /*
- * Copyright 2016 Year4000. All Rights Reserved.
+ * Copyright 2017 Year4000. All Rights Reserved.
  */
 package net.year4000.mapnodes;
 
-import com.eclipsesource.v8.V8;
 import com.eclipsesource.v8.V8Locker;
 import com.eclipsesource.v8.V8Value;
 import net.year4000.utilities.Conditions;
