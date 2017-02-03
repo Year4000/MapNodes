@@ -7,7 +7,6 @@ import com.google.inject.Inject;
 import com.google.inject.Injector;
 import net.year4000.mapnodes.nodes.NodeFactory;
 import net.year4000.mapnodes.nodes.SpongeNode;
-import net.year4000.mapnodes.nodes.SpongeNodeFactory;
 import net.year4000.utilities.Conditions;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
@@ -29,9 +28,8 @@ import java.io.IOException;
 /** Sponge plugin to provide support for the MapNodes system */
 @Plugin(id = "mapnodes", name = "MapNodes", version = "3.0.0-SNAPSHOT", dependencies = {@Dependency(id = "utilities")})
 public class MapNodesPlugin implements MapNodes {
-  private final SpongeBindings bindings = new SpongeBindings();
-  private final SpongeNodeFactory nodeFactory = new SpongeNodeFactory();
   private static MapNodesPlugin inst;
+  private Injector mapNodesInjector;
 
   /** The game instance injected for mapnodes */
   @Inject private Game game;
@@ -56,12 +54,12 @@ public class MapNodesPlugin implements MapNodes {
 
   @Override
   public Bindings bindings() {
-    return bindings;
+    return mapNodesInjector.getInstance(Bindings.class);
   }
 
   @Override
   public NodeFactory nodeFactory() {
-    return nodeFactory;
+    return mapNodesInjector.getInstance(NodeFactory.class);
   }
 
   /** Inject the object instance with the object from sponge */
@@ -74,6 +72,9 @@ public class MapNodesPlugin implements MapNodes {
 
   @Listener
   public void onLoad(GameConstructionEvent event) {
+    logger().info("Creating child injector for MapNodes");
+    Conditions.nonNull(injector, "injector");
+    mapNodesInjector = injector.createChildInjector(new MapNodesModule(this));
     load();
   }
 
