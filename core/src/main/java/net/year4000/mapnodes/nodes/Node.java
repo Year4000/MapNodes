@@ -44,11 +44,8 @@ public abstract class Node {
   /** Get the name of the map */
   public String name() {
     try (V8ThreadLock<V8Object> lock = new V8ThreadLock<>(v8Object)) {
-      V8Object map = lock.v8().getObject("map");
-      try {
-        return map.getString("name");
-      } finally {
-        map.release();
+      try (V8ThreadLock<V8Object> map = new V8ThreadLock<>(lock.v8().getObject("map"))) {
+        return map.v8().getString("name");
       }
     } catch (Exception error) {
       ErrorReporter.builder(error).hideStackTrace().buildAndReport(System.err);
@@ -59,11 +56,8 @@ public abstract class Node {
   /** Get the version of the map */
   public String version() {
     try (V8ThreadLock<V8Object> lock = new V8ThreadLock<>(v8Object)) {
-      V8Object map = lock.v8().getObject("map");
-      try {
-        return map.getString("version");
-      } finally {
-        map.release();
+      try (V8ThreadLock<V8Object> map = new V8ThreadLock<>(lock.v8().getObject("map"))) {
+        return map.v8().getString("version");
       }
     } catch (Exception error) {
       ErrorReporter.builder(error).hideStackTrace().buildAndReport(System.err);
