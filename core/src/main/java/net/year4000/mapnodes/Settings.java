@@ -15,6 +15,9 @@ public final class Settings {
   /** The location to store the cached maps */
   public final String cache = (String) value("mapnodes.world_cache").getOrElse("/tmp/MapNodes");
 
+  /** The path where we will get the maps */
+  public final String mapPath = (String) value("mapnodes.map_path").getOrElse("maps/");
+
   /** Get the value from the system properties */
   private static TypeValue value(String key) {
     Conditions.nonNullOrEmpty(key, "key");
