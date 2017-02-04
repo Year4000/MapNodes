@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Year4000. All Rights Reserved.
+ * Copyright 2017 Year4000. All Rights Reserved.
  */
 package net.year4000.mapnodes;
 
@@ -15,7 +15,7 @@ public class Testing {
   private static final Bindings BINDINGS = new TestBindings();
 
   public static void main(String[] args) throws Exception {
-    String bindings = read(Testing.class.getResourceAsStream("/js/bindings.js"));
+    String bindings = read(Testing.class.getResourceAsStream("/net/year4000/mapnodes/js/bindings.js"));
     try (V8ThreadLock<V8> thread = BINDINGS.v8Thread()) {
       thread.v8().executeVoidScript(bindings);
       thread.v8().executeScript("print('Hello');");

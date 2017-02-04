@@ -24,3 +24,5 @@ sourceSets.main.resources {
 idea.module {
     sourceDirs += file("${projectDir}/src/main/js/")
 }
+
+test.testLogging.showStandardStreams = true
