@@ -29,7 +29,7 @@ public class SpongeNode extends Node {
 
   public SpongeNode(SpongeNodeFactory factory, MapPackage map) throws Exception {
     super(factory, map);
-    MapNodesPlugin.get().inject(this);
+    MapNodesPlugin.get().injector().injectMembers(this);
   }
 
   @Override

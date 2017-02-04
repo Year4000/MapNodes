@@ -65,10 +65,9 @@ public class MapNodesPlugin implements MapNodes {
     return mapNodesInjector.getInstance(NodeFactory.class);
   }
 
-  /** Inject the object instance with the object from sponge */
-  public void inject(Object instance) {
-    Conditions.nonNull(instance, "Must supply a valid instance");
-    injector.injectMembers(instance);
+  /** Get the injector for MapNodes its a child injector from Sponge */
+  public Injector injector() {
+    return Conditions.nonNull(mapNodesInjector, "mapNodesInjector");
   }
 
   // Events for MapNodes
