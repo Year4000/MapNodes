@@ -43,7 +43,7 @@ public class SpongeNodeFactory implements NodeFactory {
     try {
       Files.walk(path, FileVisitOption.FOLLOW_LINKS).forEach(dir -> {
         // Maps must have the world zip in them
-        if (Files.isDirectory(dir) && Files.isRegularFile(dir.resolve("world.zip"))) {
+        if (Files.isDirectory(dir) && Files.isRegularFile(dir.resolve(MapPackage.PACKAGE_WORLD)) && Files.isRegularFile(dir.resolve(MapPackage.PACKAGE_MAP))) {
           try {
             mapPackages.add(new MapPackage(dir.toUri()));
           } catch (IOException error) { // Could be multiple problems when map can not load

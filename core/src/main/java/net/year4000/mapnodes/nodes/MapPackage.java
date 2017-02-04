@@ -4,31 +4,43 @@
 package net.year4000.mapnodes.nodes;
 
 import com.google.common.io.ByteStreams;
+import net.year4000.mapnodes.MapNodes;
+import net.year4000.utilities.Conditions;
 import net.year4000.utilities.Utils;
 
 import java.io.*;
 import java.net.URI;
 import java.nio.ByteBuffer;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 /** Represents a Map package on where to gather the needed objects */
 public class MapPackage {
+  public static final String PACKAGE_MAP = "map.js";
+  public static final String PACKAGE_ICON = "icon.png";
+  public static final String PACKAGE_DEFAULT_ICON = "server-icon.png";
+  public static final String PACKAGE_WORLD = "world.zip";
   private final String location;
   private byte[] image, map, world;
 
   /** Convert the URI into the string */
   public MapPackage(URI location) throws IOException {
-    this(location.toString());
+    this(Conditions.nonNull(location, "location").toString().replaceAll("%20", " "));
   }
 
   /** Load the package based on the url */
   public MapPackage(String location) throws IOException {
-    this.location = location;
+    this.location = Conditions.nonNullOrEmpty(location, "location");
     if (location.startsWith("file://")) {
       // load from tmp folder where the map is cached
       location = location.substring(7); // cut off file://
-      image = ByteStreams.toByteArray(new FileInputStream(location + "/icon.png"));
-      map = ByteStreams.toByteArray(new FileInputStream(location + "/map.js"));
-      world = ByteStreams.toByteArray(new FileInputStream(location + "/world.zip"));
+      if (Files.exists(Paths.get(location).resolve(PACKAGE_ICON))) {
+        image = ByteStreams.toByteArray(new FileInputStream(location + "/" + PACKAGE_ICON));
+      } else { // Default to ours
+        image = ByteStreams.toByteArray(MapNodes.class.getResourceAsStream("/" + PACKAGE_DEFAULT_ICON));
+      }
+      map = ByteStreams.toByteArray(new FileInputStream(location + "/" + PACKAGE_MAP));
+      world = ByteStreams.toByteArray(new FileInputStream(location + "/" + PACKAGE_WORLD));
     } else if (location.startsWith("https://") || location.startsWith("http://")) {
       // load from the API server and cache the results
       // todo when fetching from API server

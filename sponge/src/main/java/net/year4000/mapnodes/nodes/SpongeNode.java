@@ -55,11 +55,21 @@ public class SpongeNode extends Node {
 
   /** Load the world*/
   private void loadWorld(String id) {
-    game.getServer().loadWorld(id).ifPresent(world -> this.world = world);
+    try {
+      game.getServer().loadWorld(id).ifPresent(world -> this.world = world);
+    } catch (Exception error) {
+      logger.error("Fail to load world");
+      try {
+        unload();
+      } catch (Exception exception) {
+        logger.error("Fail to unload world, enforcing runtime is released");
+      }
+    }
   }
 
   @Override
   public void unload() throws Exception {
+    // todo remove world from system
     super.unload();
   }
 
