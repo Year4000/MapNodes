@@ -4,7 +4,6 @@
 package net.year4000.mapnodes.gson.adapters;
 
 import com.eclipsesource.v8.V8Object;
-import com.eclipsesource.v8.V8Value;
 import com.google.gson.stream.JsonWriter;
 
 import java.io.IOException;

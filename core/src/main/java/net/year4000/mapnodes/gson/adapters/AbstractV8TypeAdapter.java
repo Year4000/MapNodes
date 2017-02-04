@@ -9,7 +9,7 @@ import com.eclipsesource.v8.V8Value;
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
-import net.year4000.mapnodes.gson.Gsons;
+import net.year4000.mapnodes.MapNodes;
 
 import java.io.IOException;
 
@@ -21,8 +21,8 @@ public abstract class AbstractV8TypeAdapter<T extends V8Value> extends TypeAdapt
     .put(Integer.class, (out, value, unused) -> out.value((int) value))
     .put(Boolean.class, (out, value, unused) -> out.value((boolean) value))
     .put(Double.class, (out, value, unused) -> out.value((double) value))
-    .put(V8Object.class, (out, value, unused) -> Gsons.GSON.toJson(value, V8Object.class, out))
-    .put(V8Array.class, (out, value, unused) -> Gsons.GSON.toJson(value, V8Array.class, out))
+    .put(V8Object.class, (out, value, unused) -> MapNodes.GSON.toJson(value, V8Object.class, out))
+    .put(V8Array.class, (out, value, unused) -> MapNodes.GSON.toJson(value, V8Array.class, out))
     .build();
   /** Map the V8Value types to handler that will write the JSON */
   protected static final ImmutableMap<Integer, ValueHandler<V8Object>> V8_TYPE_MAP = ImmutableMap.<Integer, ValueHandler<V8Object>>builder()

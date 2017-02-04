@@ -11,6 +11,8 @@ import net.year4000.utilities.Conditions;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.command.CommandResult;
+import org.spongepowered.api.command.spec.CommandSpec;
 import org.spongepowered.api.entity.living.player.gamemode.GameModes;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.*;
@@ -88,6 +90,14 @@ public class MapNodesPlugin implements MapNodes {
       logger().warn(message);
       game.getServer().shutdown(Text.of(TextColors.RED, message));
     }
+    Sponge.getCommandManager().register(this, CommandSpec.builder().executor((src, args) -> {
+      try {
+        MapNodes.NODE_MANAGER.loadNextNode();
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+      return CommandResult.success();
+    }).build(), "next");
   }
 
   @Listener

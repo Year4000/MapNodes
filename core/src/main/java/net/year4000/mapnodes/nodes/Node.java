@@ -5,7 +5,9 @@ package net.year4000.mapnodes.nodes;
 
 import com.eclipsesource.v8.V8;
 import com.eclipsesource.v8.V8Object;
+import net.year4000.mapnodes.MapNodes;
 import net.year4000.mapnodes.V8ThreadLock;
+import net.year4000.mapnodes.game.InfoComponent;
 import net.year4000.utilities.ErrorReporter;
 
 import java.io.BufferedReader;
@@ -18,6 +20,7 @@ import java.util.stream.Collectors;
 /** The node that contains the map object */
 public abstract class Node {
   private static AtomicInteger idTracker = new AtomicInteger(1);
+  private final InfoComponent info;
   protected final V8Object v8Object;
   protected final MapPackage map;
   protected final int id;
@@ -29,7 +32,8 @@ public abstract class Node {
     try (BufferedReader buffer = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(map.map().array())))) {
       String script = buffer.lines().collect(Collectors.joining("\n"));
       try (V8ThreadLock<V8> lock = factory.v8Thread()) {
-        this.v8Object = lock.v8().executeObjectScript("eval(" + script + ");");
+        v8Object = lock.v8().executeObjectScript("eval(" + script + ");");
+        info = MapNodes.GSON.fromJson(MapNodes.GSON.toJsonTree(v8Object.get("map")), InfoComponent.class);
       }
     } catch (IOException | NullPointerException error) {
       throw ErrorReporter.builder(error).add("Node id", id).buildAndReport(System.err);
@@ -43,32 +47,12 @@ public abstract class Node {
 
   /** Get the name of the map */
   public String name() {
-    try (V8ThreadLock<V8Object> lock = new V8ThreadLock<>(v8Object)) {
-      V8Object map = lock.v8().getObject("map");
-      try {
-        return map.getString("name");
-      } finally {
-        map.release();
-      }
-    } catch (Exception error) {
-      ErrorReporter.builder(error).hideStackTrace().buildAndReport(System.err);
-      return "unknown";
-    }
+    return info.name();
   }
 
   /** Get the version of the map */
   public String version() {
-    try (V8ThreadLock<V8Object> lock = new V8ThreadLock<>(v8Object)) {
-      V8Object map = lock.v8().getObject("map");
-      try {
-        return map.getString("version");
-      } finally {
-        map.release();
-      }
-    } catch (Exception error) {
-      ErrorReporter.builder(error).hideStackTrace().buildAndReport(System.err);
-      return "unknown";
-    }
+    return info.version();
   }
 
   /** Get the internal id of this node */

@@ -5,6 +5,9 @@ package net.year4000.mapnodes;
 
 import com.eclipsesource.v8.V8;
 import com.google.common.collect.ImmutableSet;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import net.year4000.mapnodes.gson.V8TypeAdapterFactory;
 import net.year4000.mapnodes.nodes.Node;
 import net.year4000.mapnodes.nodes.NodeFactory;
 import net.year4000.mapnodes.nodes.NodeManager;
@@ -21,6 +24,10 @@ import java.util.stream.Collectors;
 public interface MapNodes {
   Settings SETTINGS = new Settings();
   NodeManager NODE_MANAGER = new NodeManager();
+  Gson GSON = new GsonBuilder()
+    .setVersion(3.0)
+    .registerTypeAdapterFactory(new V8TypeAdapterFactory())
+    .create();
 
   /** Get the logger for the system */
   Logger logger();
