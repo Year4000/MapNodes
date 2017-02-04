@@ -32,7 +32,7 @@ public abstract class Node {
         this.v8Object = lock.v8().executeObjectScript("eval(" + script + ");");
       }
     } catch (IOException | NullPointerException error) {
-      throw ErrorReporter.builder(error).buildAndReport(System.err);
+      throw ErrorReporter.builder(error).add("Node id", id).buildAndReport(System.err);
     }
   }
 
@@ -83,6 +83,10 @@ public abstract class Node {
   public void unload() throws Exception {
     try (V8ThreadLock<V8Object> lock = new V8ThreadLock<>(v8Object)) {
       lock.v8().release();
+    } finally {
+      if (!v8Object.isReleased()) {
+        v8Object.release();
+      }
     }
   }
 }
