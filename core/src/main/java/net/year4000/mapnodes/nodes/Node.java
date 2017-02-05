@@ -5,6 +5,7 @@ package net.year4000.mapnodes.nodes;
 
 import com.eclipsesource.v8.V8;
 import com.eclipsesource.v8.V8Object;
+import com.eclipsesource.v8.utils.MemoryManager;
 import net.year4000.mapnodes.MapNodes;
 import net.year4000.mapnodes.V8ThreadLock;
 import net.year4000.mapnodes.game.InfoComponent;
@@ -21,6 +22,7 @@ import java.util.stream.Collectors;
 public abstract class Node {
   private static AtomicInteger idTracker = new AtomicInteger(1);
   private final InfoComponent info;
+  private final MemoryManager memoryManager;
   protected final V8Object v8Object;
   protected final MapPackage map;
   protected final int id;
@@ -33,7 +35,8 @@ public abstract class Node {
       String script = buffer.lines().collect(Collectors.joining("\n"));
       try (V8ThreadLock<V8> lock = factory.v8Thread()) {
         v8Object = lock.v8().executeObjectScript("eval(" + script + ");");
-        info = MapNodes.GSON.fromJson(MapNodes.GSON.toJsonTree(v8Object.get("map")), InfoComponent.class);
+        memoryManager = new MemoryManager(v8Object.getRuntime());
+        info = MapNodes.GSON.fromJson(MapNodes.GSON.toJsonTree(v8Object.getObject("map")), InfoComponent.class);
       }
     } catch (IOException | NullPointerException error) {
       throw ErrorReporter.builder(error).add("Node id", id).buildAndReport(System.err);
@@ -66,6 +69,7 @@ public abstract class Node {
   /** Unloads the node */
   public void unload() throws Exception {
     try (V8ThreadLock<V8Object> lock = new V8ThreadLock<>(v8Object)) {
+      memoryManager.release();
       lock.v8().release();
     } finally {
       if (!v8Object.isReleased()) {

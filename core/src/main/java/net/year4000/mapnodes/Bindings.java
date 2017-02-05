@@ -6,6 +6,7 @@ package net.year4000.mapnodes;
 import com.eclipsesource.v8.Releasable;
 import com.eclipsesource.v8.V8;
 import com.eclipsesource.v8.V8Object;
+import com.eclipsesource.v8.utils.MemoryManager;
 import com.google.common.base.CaseFormat;
 
 import java.lang.annotation.ElementType;
@@ -26,6 +27,7 @@ public abstract class Bindings implements Releasable {
   }
   /** The V8 Runtime for everything */
   private static V8 engine = V8.createV8Runtime();
+  private static MemoryManager memoryManager = new MemoryManager(engine);
   /** The V8 Object that is bind to the JAVA var */
   private V8Object object = new V8Object(engine);
 
@@ -51,7 +53,7 @@ public abstract class Bindings implements Releasable {
   @Override
   public void release() {
     try (V8ThreadLock<V8> lock = v8Thread()) {
-      object.release();
+      memoryManager.release();
       lock.v8().release();
     }
   }
