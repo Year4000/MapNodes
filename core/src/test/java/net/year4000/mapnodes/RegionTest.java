@@ -2,9 +2,10 @@
  * Copyright 2016 Year4000. All Rights Reserved.
  */
 
-package net.year4000.mapnodes.game.regions;
+package net.year4000.mapnodes;
 
 import com.flowpowered.math.vector.Vector3i;
+import net.year4000.mapnodes.regions.*;
 import org.junit.Assert;
 import org.junit.Test;
 
