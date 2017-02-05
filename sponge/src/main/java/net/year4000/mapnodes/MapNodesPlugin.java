@@ -76,6 +76,8 @@ public class MapNodesPlugin implements MapNodes {
 
   @Listener
   public void onLoad(GameConstructionEvent event) {
+    logger().info("Fetching locales for cache");
+    Messages.Factory.inst.get();
     logger().info("Creating child injector for MapNodes");
     Conditions.nonNull(injector, "injector");
     mapNodesInjector = injector.createChildInjector(new MapNodesModule(this));
