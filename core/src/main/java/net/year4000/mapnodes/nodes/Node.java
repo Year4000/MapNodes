@@ -34,8 +34,8 @@ public abstract class Node {
     try (BufferedReader buffer = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(map.map().array())))) {
       String script = buffer.lines().collect(Collectors.joining("\n"));
       try (V8ThreadLock<V8> lock = factory.v8Thread()) {
+        memoryManager = new MemoryManager(lock.v8());
         v8Object = lock.v8().executeObjectScript("eval(" + script + ");");
-        memoryManager = new MemoryManager(v8Object.getRuntime());
         info = MapNodes.GSON.fromJson(MapNodes.GSON.toJsonTree(v8Object.getObject("map")), InfoComponent.class);
       }
     } catch (IOException | NullPointerException error) {
