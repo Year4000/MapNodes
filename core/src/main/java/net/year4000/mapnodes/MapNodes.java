@@ -1,10 +1,9 @@
 /*
- * Copyright 2016 Year4000. All Rights Reserved.
+ * Copyright 2017 Year4000. All Rights Reserved.
  */
 package net.year4000.mapnodes;
 
-import com.eclipsesource.v8.V8;
-import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableList;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import net.year4000.mapnodes.gson.V8TypeAdapterFactory;
@@ -13,12 +12,6 @@ import net.year4000.mapnodes.nodes.NodeFactory;
 import net.year4000.mapnodes.nodes.NodeManager;
 import net.year4000.utilities.ErrorReporter;
 import org.slf4j.Logger;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.stream.Collectors;
 
 /** The system to handle the Maps and load their games */
 public interface MapNodes {
@@ -47,18 +40,8 @@ public interface MapNodes {
   default void load() {
     // Inject the javascript files into v8
     logger().info("Loading javascript files into v8 runtime");
-    ImmutableSet.of("bindings.js", "game.js", "player.js", "team.js", "utils.js").forEach(file -> {
-      logger().info("Loading javascript file: " + file);
-      InputStream stream = MapNodes.class.getResourceAsStream("/net/year4000/mapnodes/js/" + file);
-      try (BufferedReader buffer = new BufferedReader(new InputStreamReader(stream))) {
-        String script = buffer.lines().collect(Collectors.joining("\n"));
-        try (V8ThreadLock<V8> lock = bindings().v8Thread()) {
-          lock.v8().executeVoidScript(script);
-        }
-      } catch (IOException | NullPointerException error) {
-        logger().error(ErrorReporter.builder(error).add("file: ", file).build().toString());
-      }
-    });
+    // Load just the bindings and the bootstrap it will handle the rest
+    ImmutableList.of("bindings.js", "bootstrap.js").forEach(file -> bindings().include(file));
     // Generate the maps
     logger().info("Generating map packages");
     nodeFactory().generatePackages();

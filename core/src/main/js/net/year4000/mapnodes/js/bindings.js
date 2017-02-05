@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Year4000. All Rights Reserved.
+ * Copyright 2017 Year4000. All Rights Reserved.
  */
 
 /**
@@ -34,6 +34,11 @@ class $ {
   static send_message(player, message) {
       $.bindings.send_message(player.uuid, message);
   }
+}
+
+/** Include the resource into the V8 runtime */
+function include(path) {
+  $.bindings.delayed_include(path);
 }
 
 /** Print the message to the console */
