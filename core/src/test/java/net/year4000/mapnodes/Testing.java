@@ -6,7 +6,8 @@ package net.year4000.mapnodes;
 import com.eclipsesource.v8.V8;
 import com.eclipsesource.v8.V8Object;
 import com.google.gson.Gson;
-import net.year4000.mapnodes.gson.Gsons;
+import com.google.gson.GsonBuilder;
+import net.year4000.mapnodes.gson.V8TypeAdapterFactory;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -50,7 +51,7 @@ public class Testing {
       thread.v8().executeScript("println(' World!');");
       thread.v8().executeScript("var_dump(PLATFORMS);");
       V8Object v8Object = thread.v8().executeObjectScript("eval(" + MAP + ");");
-      Gson gson = Gsons.gsonBuilder().setPrettyPrinting().create();
+      Gson gson = new GsonBuilder().registerTypeAdapterFactory(new V8TypeAdapterFactory()).setPrettyPrinting().create();
       System.out.println(gson.toJson(v8Object));
     }
   }

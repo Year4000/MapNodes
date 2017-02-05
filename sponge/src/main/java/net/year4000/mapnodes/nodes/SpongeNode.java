@@ -17,8 +17,10 @@ import org.spongepowered.api.event.EventManager;
 import org.spongepowered.api.event.game.state.GameStartedServerEvent;
 import org.spongepowered.api.world.World;
 import org.spongepowered.api.world.WorldArchetypes;
+import org.spongepowered.api.world.storage.WorldProperties;
 
 import java.io.File;
+import java.util.UUID;
 
 public class SpongeNode extends Node {
   private World world;
@@ -40,23 +42,23 @@ public class SpongeNode extends Node {
     Files.write(map.world().array(), zipLocationFile);
     ZipFile zip = new ZipFile(zipLocation);
     zip.extractAll("world/mapnodes-" + id());
-    game.getServer().createWorldProperties("mapnodes-" + id(), WorldArchetypes.THE_VOID);
+    WorldProperties properties = game.getServer().createWorldProperties("mapnodes-" + id(), WorldArchetypes.THE_VOID);
     // Trigger the world to be loaded once the server has been started
     if (game.getState() == GameState.SERVER_ABOUT_TO_START) {
       eventManager.registerListener(MapNodesPlugin.get(), GameStartedServerEvent.class, event -> {
         logger.info("Loading the world from event");
-        loadWorld("mapnodes-" + id());
+        loadWorld(properties.getUniqueId());
       });
     } else {
       logger.info("Loading the world at will");
-      loadWorld("mapnodes-" + id());
+      loadWorld(properties.getUniqueId());
     }
   }
 
   /** Load the world*/
-  private void loadWorld(String id) {
+  private void loadWorld(UUID uuid) {
     try {
-      game.getServer().loadWorld(id).ifPresent(world -> this.world = world);
+      game.getServer().loadWorld(uuid).ifPresent(world -> this.world = world);
     } catch (Exception error) {
       logger.error("Fail to load world");
       try {
