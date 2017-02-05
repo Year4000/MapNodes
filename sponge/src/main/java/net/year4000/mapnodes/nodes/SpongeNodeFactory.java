@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Year4000. All Rights Reserved.
+ * Copyright 2017 Year4000. All Rights Reserved.
  */
 package net.year4000.mapnodes.nodes;
 
@@ -16,12 +16,14 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collection;
+import java.util.Random;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 /** This will generate the maps for sponge */
 public class SpongeNodeFactory implements NodeFactory {
   private Set<MapPackage> mapPackages = Sets.newHashSet();
+  private final Random random = new Random();
 
   @Inject private Logger logger;
   @Inject private Bindings bindings;
@@ -34,7 +36,7 @@ public class SpongeNodeFactory implements NodeFactory {
 
   @Override
   public Collection<MapPackage> packages() {
-    return mapPackages.stream().collect(Collectors.toSet());
+    return mapPackages.stream().sorted((x, y) -> random.nextInt(2) - 1).collect(Collectors.toList());
   }
 
   @Override

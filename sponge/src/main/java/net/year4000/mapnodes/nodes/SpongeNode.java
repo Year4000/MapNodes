@@ -1,18 +1,16 @@
 /*
- * Copyright 2016 Year4000. All Rights Reserved.
+ * Copyright 2017 Year4000. All Rights Reserved.
  */
 package net.year4000.mapnodes.nodes;
 
 import com.eclipsesource.v8.V8Object;
 import com.flowpowered.math.vector.Vector3d;
-import com.google.common.collect.Lists;
 import com.google.common.io.Files;
 import com.google.inject.Inject;
 import net.lingala.zip4j.core.ZipFile;
 import net.year4000.mapnodes.MapNodes;
 import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.V8ThreadLock;
-import net.year4000.mapnodes.regions.PointRegion;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.GameState;
@@ -24,7 +22,6 @@ import org.spongepowered.api.world.WorldArchetypes;
 import org.spongepowered.api.world.storage.WorldProperties;
 
 import java.io.File;
-import java.util.Arrays;
 import java.util.UUID;
 
 public class SpongeNode extends Node {
