@@ -36,11 +36,3 @@ allprojects {
         maven { url "https://jitpack.io" }
     }
 }
-
-/** Copy the plugin to the sponge server */
-task copyPlugin(dependsOn: 'sponge:assemble') {
-    copy {
-        from file("sponge/build/libs/mapnodes-$version-all.jar")
-        into file("run/sponge-server/mods/")
-    }
-}

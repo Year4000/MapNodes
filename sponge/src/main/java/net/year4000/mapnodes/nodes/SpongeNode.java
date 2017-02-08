@@ -17,12 +17,15 @@ import org.spongepowered.api.GameState;
 import org.spongepowered.api.entity.Transform;
 import org.spongepowered.api.event.EventManager;
 import org.spongepowered.api.event.game.state.GameStartedServerEvent;
+import org.spongepowered.api.extra.modifier.empty.VoidWorldGeneratorModifier;
+import org.spongepowered.api.world.GeneratorTypes;
 import org.spongepowered.api.world.World;
 import org.spongepowered.api.world.WorldArchetypes;
+import org.spongepowered.api.world.gen.WorldGeneratorModifiers;
 import org.spongepowered.api.world.storage.WorldProperties;
 
 import java.io.File;
-import java.util.UUID;
+import java.util.Collections;
 
 public class SpongeNode extends Node {
   private World world;
@@ -42,25 +45,32 @@ public class SpongeNode extends Node {
     File zipLocationFile = new File(zipLocation);
     Files.createParentDirs(zipLocationFile);
     Files.write(map.world().array(), zipLocationFile);
-    ZipFile zip = new ZipFile(zipLocation);
-    zip.extractAll("world/mapnodes-" + id());
-    WorldProperties properties = game.getServer().createWorldProperties("mapnodes-" + id(), WorldArchetypes.THE_VOID);
+    new ZipFile(zipLocation).extractAll("world/mapnodes-" + id());
     // Trigger the world to be loaded once the server has been started
     if (game.getState() == GameState.SERVER_ABOUT_TO_START) {
+      game.getServer().createWorldProperties("mapnodes-" + id(), WorldArchetypes.THE_VOID);
       eventManager.registerListener(MapNodesPlugin.get(), GameStartedServerEvent.class, event -> {
         logger.info("Loading the world from event");
-        loadWorld(properties.getUniqueId());
+        loadWorld("mapnodes-" + id()); // todo world loads wonky
       });
     } else {
       logger.info("Loading the world at will");
-      loadWorld(properties.getUniqueId());
+      loadWorld("mapnodes-" + id());
     }
   }
 
   /** Load the world*/
-  private void loadWorld(UUID uuid) {
+  private void loadWorld(String name) {
     try {
-      game.getServer().loadWorld(uuid).ifPresent(world -> this.world = world);
+      game.getServer().loadWorld(name).ifPresent(world -> this.world = world);
+      game.getServer().getWorldProperties(name).ifPresent(properties -> {
+        properties.setEnabled(true);
+        properties.setKeepSpawnLoaded(false);
+        properties.setMapFeaturesEnabled(false);
+        properties.setGeneratorType(GeneratorTypes.FLAT);
+        properties.setGeneratorModifiers(Collections.singleton(WorldGeneratorModifiers.VOID));
+        game.getServer().saveWorldProperties(properties);
+      });
     } catch (Exception error) {
       logger.error("Fail to load world");
       try {

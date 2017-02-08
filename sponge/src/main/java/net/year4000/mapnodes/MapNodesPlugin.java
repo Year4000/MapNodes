@@ -5,6 +5,7 @@ package net.year4000.mapnodes;
 
 import com.google.inject.Inject;
 import com.google.inject.Injector;
+import net.year4000.mapnodes.nodes.Node;
 import net.year4000.mapnodes.nodes.NodeFactory;
 import net.year4000.mapnodes.nodes.SpongeNode;
 import net.year4000.utilities.Conditions;
@@ -94,7 +95,8 @@ public class MapNodesPlugin implements MapNodes {
     }
     Sponge.getCommandManager().register(this, CommandSpec.builder().executor((src, args) -> {
       try {
-        MapNodes.NODE_MANAGER.loadNextNode();
+        Node node = NODE_MANAGER.loadNextNode();
+        logger().info("Map " + node.name() + " version " + node.version());
       } catch (Exception e) {
         e.printStackTrace();
       }
