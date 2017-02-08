@@ -18,25 +18,36 @@ import java.io.InputStreamReader;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
-/** The node that contains the map object */
+/**
+ * The node that contains the map object.
+ *
+ * Important thing to note about the V8 object and the memory manager.
+ * During the creation of the node, we load the map into the v8object.
+ * At the end of the nodes life time we will release all objects created.
+ */
 public abstract class Node {
   private static AtomicInteger idTracker = new AtomicInteger(1);
   private final InfoComponent info;
-  private final MemoryManager memoryManager;
+  protected MemoryManager memoryManager;
   protected final V8Object v8Object;
   protected final MapPackage map;
   protected final int id;
 
-  /** Create the node */
+  /**
+   * Create the node, we are just testing the validity of the map
+   * and generating the facts we need before starting the node.
+   */
   public Node(NodeFactory factory, MapPackage map) throws Exception {
     id = idTracker.getAndIncrement();
     this.map = map;
     try (BufferedReader buffer = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(map.map().array())))) {
       String script = buffer.lines().collect(Collectors.joining("\n"));
       try (V8ThreadLock<V8> lock = factory.v8Thread()) {
-        memoryManager = new MemoryManager(lock.v8());
         v8Object = lock.v8().executeObjectScript("eval(" + script + ");");
+        // Create a memory manager, gather facts about the map then release the memory manager
+        memoryManager = new MemoryManager(lock.v8());
         info = MapNodes.GSON.fromJson(MapNodes.GSON.toJsonTree(v8Object.getObject("map")), InfoComponent.class);
+        memoryManager.release();
       }
     } catch (IOException | NullPointerException error) {
       throw ErrorReporter.builder(error).add("Node id", id).buildAndReport(System.err);
@@ -69,12 +80,10 @@ public abstract class Node {
   /** Unloads the node */
   public void unload() throws Exception {
     try (V8ThreadLock<V8Object> lock = new V8ThreadLock<>(v8Object)) {
-      memoryManager.release();
-      lock.v8().release();
-    } finally {
-      if (!v8Object.isReleased()) {
-        v8Object.release();
+      if (memoryManager != null) {
+        memoryManager.release(); // release any object's created during the existence of this node
       }
+      lock.v8().release(); // release the object that the map.js is stored in
     }
   }
 }

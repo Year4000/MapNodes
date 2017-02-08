@@ -3,7 +3,9 @@
  */
 package net.year4000.mapnodes.nodes;
 
+import com.eclipsesource.v8.V8;
 import com.eclipsesource.v8.V8Object;
+import com.eclipsesource.v8.utils.MemoryManager;
 import com.flowpowered.math.vector.Vector3d;
 import com.google.common.io.Files;
 import com.google.inject.Inject;
@@ -41,6 +43,10 @@ public class SpongeNode extends Node {
 
   @Override
   public void load() throws Exception {
+    try (V8ThreadLock<V8> lock = new V8ThreadLock<>(v8Object.getRuntime())) {
+      memoryManager = new MemoryManager(lock.v8());
+    }
+
     String zipLocation = MapNodes.SETTINGS.cache + "/" + id() + ".zip";
     File zipLocationFile = new File(zipLocation);
     Files.createParentDirs(zipLocationFile);
