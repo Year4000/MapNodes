@@ -9,11 +9,8 @@ import com.eclipsesource.v8.V8Object;
 import com.eclipsesource.v8.utils.MemoryManager;
 import com.google.common.base.CaseFormat;
 import com.google.common.collect.Queues;
-import net.year4000.mapnodes.game.InfoComponent;
 import net.year4000.utilities.Conditions;
 import net.year4000.utilities.ErrorReporter;
-import net.year4000.utilities.reflection.Gateways;
-import net.year4000.utilities.reflection.Reflections;
 
 import java.io.*;
 import java.lang.annotation.ElementType;
@@ -37,25 +34,28 @@ public abstract class Bindings implements Releasable {
   }
   /** The V8 Runtime for everything */
   private static V8 engine = V8.createV8Runtime();
+  /** The memory manager for any javascript object that were created */
   private static MemoryManager memoryManager = new MemoryManager(engine);
   /** The V8 Object that is bind to the JAVA var */
-  private final V8Object object = new V8Object(engine);
+  private final V8Object object;
   /** Paths that need to be included after import */
   private final ArrayDeque<String> paths = Queues.newArrayDeque();
   /** The handler to interact with the Javascript object */
-  protected final InvocationHandler handler = new V8InvocationHandler(() -> engine.getObject("JAVASCRIPT"));
+  protected final InvocationHandler handler = new V8InvocationHandler(engine);
 
   /** Map the java methods to the javascript functions */
   protected Bindings() {
-    for (Method method : getClass().getMethods()) {
-      if (method.getAnnotation(Bind.class) != null) {
-        String lower = CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, method.getName());
-        object.registerJavaMethod(this, method.getName(), lower, method.getParameterTypes());
+    try (V8ThreadLock<V8> lock = v8Thread()) {
+      object = new V8Object(engine);
+      for (Method method : getClass().getMethods()) {
+        if (method.getAnnotation(Bind.class) != null) {
+          String lower = CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, method.getName());
+          object.registerJavaMethod(this, method.getName(), lower, method.getParameterTypes());
+        }
       }
+      lock.v8().add("PLATFORM", "java");
+      lock.v8().add("JAVA", object);
     }
-    engine.add("PLATFORM", "java");
-    engine.add("JAVA", object);
-    engine.getLocker().release(); // release the locker
   }
 
   /** Get the v8 instance */
@@ -111,7 +111,7 @@ public abstract class Bindings implements Releasable {
   @Bind public abstract void sendMessage(String player, String message);
 
   /** Run function from the JavaScript side */
-  interface V8Bindings {
-    @Bind void platformName();
+  public interface V8Bindings {
+    @Bind String platformName();
   }
 }

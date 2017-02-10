@@ -20,11 +20,13 @@ var PLATFORMS = {
   "PE": "java" // Nukkit
 };
 
-/** Decorator that just exists to notify the function is to be bound */
-class Bind {}
-
 /** Used to interact the Javascript with MapNodes base game */
 class $ {
+  /** Get the instance of this javascript object */
+  static get js() {
+    return $._js || ($._js = new $());
+  }
+
   /** Map a specific object to this bindings var */
   static get bindings() {
     if (PLATFORM == PLATFORMS.PE) {
@@ -42,13 +44,10 @@ class $ {
   }
 
   /** This function just makes sure the bindings were properly established */
-  @Bind platform_name() {
+  /*@Bind*/ platform_name() {
     return PLATFORM;
   }
 }
-
-/** Set up the bindings from Javascript to Java */
-var JAVASCRIPT = new $();
 
 /** Include the resource into the V8 runtime */
 function include(path) {

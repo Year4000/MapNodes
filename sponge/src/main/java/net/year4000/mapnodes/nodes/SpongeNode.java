@@ -19,12 +19,10 @@ import org.spongepowered.api.GameState;
 import org.spongepowered.api.entity.Transform;
 import org.spongepowered.api.event.EventManager;
 import org.spongepowered.api.event.game.state.GameStartedServerEvent;
-import org.spongepowered.api.extra.modifier.empty.VoidWorldGeneratorModifier;
 import org.spongepowered.api.world.GeneratorTypes;
 import org.spongepowered.api.world.World;
 import org.spongepowered.api.world.WorldArchetypes;
 import org.spongepowered.api.world.gen.WorldGeneratorModifiers;
-import org.spongepowered.api.world.storage.WorldProperties;
 
 import java.io.File;
 import java.util.Collections;
