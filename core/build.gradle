@@ -3,27 +3,24 @@
  */
 
 plugins {
-    id 'java'
-}
-
-repositories {
-    mavenCentral()
+  id 'java'
+  id 'idea'
 }
 
 dependencies {
-    testCompile 'junit:junit:4.12'
-    compile 'net.year4000.utilities:core:master-SNAPSHOT'
-    compile 'com.flowpowered:flow-math:1.0.3'
-    compile 'com.eclipsesource.j2v8:j2v8_linux_x86_64:4.6.0'
-    compile 'org.slf4j:slf4j-api:1.7.21'
+  testCompile 'junit:junit:4.12'
+  compile 'net.year4000.utilities:core:master-SNAPSHOT'
+  compile 'com.flowpowered:flow-math:1.0.3'
+  compile 'com.eclipsesource.j2v8:j2v8_linux_x86_64:4.6.0'
+  compile 'org.slf4j:slf4j-api:1.7.21'
 }
 
 sourceSets.main.resources {
-    srcDir "${projectDir}/src/main/js/"
+  srcDir "${projectDir}/src/main/js/"
 }
 
 idea.module {
-    sourceDirs += file("${projectDir}/src/main/js/")
+  sourceDirs += file("${projectDir}/src/main/js/")
 }
 
 test.testLogging.showStandardStreams = true
