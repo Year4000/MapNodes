@@ -1,11 +1,11 @@
 /*
- * Copyright 2016 Year4000. All Rights Reserved.
+ * Copyright 2017 Year4000. All Rights Reserved.
  */
 
 plugins {
     id 'java'
     id 'org.spongepowered.plugin' version '0.5.1'
-    id 'com.github.johnrengelman.shadow' version '1.2.3'
+    id 'com.github.johnrengelman.shadow' version '1.2.4'
 }
 
 //apply from: utilities.file('gradle/sponge.gradle')
