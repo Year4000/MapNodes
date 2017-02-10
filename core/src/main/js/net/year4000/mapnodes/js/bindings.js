@@ -9,13 +9,19 @@
 */
 
 /** This constant is created by the runtime no need for it */
-var PLATFORM = _PLATFORM;
+var PLATFORM;
+
+/** This constant is created by the runtime no need for it */
+var JAVA;
 
 /** The constants that are known when the JS runtime is created */
 var PLATFORMS = {
   "PC": "java", // Sponge
   "PE": "java" // Nukkit
 };
+
+/** Decorator that just exists to notify the function is to be bound */
+class Bind {}
 
 /** Used to interact the Javascript with MapNodes base game */
 class $ {
@@ -34,7 +40,15 @@ class $ {
   static send_message(player, message) {
       $.bindings.send_message(player.uuid, message);
   }
+
+  /** This function just makes sure the bindings were properly established */
+  @Bind platform_name() {
+    return PLATFORM;
+  }
 }
+
+/** Set up the bindings from Javascript to Java */
+var JAVASCRIPT = new $();
 
 /** Include the resource into the V8 runtime */
 function include(path) {

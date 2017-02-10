@@ -12,12 +12,15 @@ import com.google.common.collect.Queues;
 import net.year4000.mapnodes.game.InfoComponent;
 import net.year4000.utilities.Conditions;
 import net.year4000.utilities.ErrorReporter;
+import net.year4000.utilities.reflection.Gateways;
+import net.year4000.utilities.reflection.Reflections;
 
 import java.io.*;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.util.ArrayDeque;
 import java.util.stream.Collectors;
@@ -36,9 +39,11 @@ public abstract class Bindings implements Releasable {
   private static V8 engine = V8.createV8Runtime();
   private static MemoryManager memoryManager = new MemoryManager(engine);
   /** The V8 Object that is bind to the JAVA var */
-  private V8Object object = new V8Object(engine);
+  private final V8Object object = new V8Object(engine);
   /** Paths that need to be included after import */
-  private ArrayDeque<String> paths = Queues.newArrayDeque();
+  private final ArrayDeque<String> paths = Queues.newArrayDeque();
+  /** The handler to interact with the Javascript object */
+  protected final InvocationHandler handler = new V8InvocationHandler(() -> engine.getObject("JAVASCRIPT"));
 
   /** Map the java methods to the javascript functions */
   protected Bindings() {
@@ -48,7 +53,7 @@ public abstract class Bindings implements Releasable {
         object.registerJavaMethod(this, method.getName(), lower, method.getParameterTypes());
       }
     }
-    engine.add("_PLATFORM", "java");
+    engine.add("PLATFORM", "java");
     engine.add("JAVA", object);
     engine.getLocker().release(); // release the locker
   }
@@ -104,4 +109,9 @@ public abstract class Bindings implements Releasable {
 
   /** Send a message to a player */
   @Bind public abstract void sendMessage(String player, String message);
+
+  /** Run function from the JavaScript side */
+  interface V8Bindings {
+    @Bind void platformName();
+  }
 }

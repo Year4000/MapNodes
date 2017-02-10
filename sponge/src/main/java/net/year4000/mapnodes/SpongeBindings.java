@@ -3,6 +3,8 @@
  */
 package net.year4000.mapnodes;
 
+import net.year4000.utilities.reflection.Gateways;
+import net.year4000.utilities.reflection.Reflections;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
@@ -13,6 +15,15 @@ import java.util.function.Consumer;
 /** Bindings for Sponge */
 public final class SpongeBindings extends Bindings {
 
+  /** Translate the Sponge to the V8Bindings interface */
+  interface SpongeV8Bindings extends V8Bindings {
+
+  }
+
+  /** The class type of the child bindings */
+  protected SpongeV8Bindings bindings() {
+    return Reflections.proxy(SpongeV8Bindings.class, handler, Gateways.reflectiveImplements(SpongeV8Bindings.class));
+  }
 
   @Override
   @Bind
