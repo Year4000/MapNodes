@@ -10,6 +10,7 @@ import com.flowpowered.math.vector.Vector3d;
 import com.google.common.io.Files;
 import com.google.inject.Inject;
 import net.lingala.zip4j.core.ZipFile;
+import net.lingala.zip4j.exception.ZipException;
 import net.year4000.mapnodes.MapNodes;
 import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.V8ThreadLock;
@@ -44,15 +45,20 @@ public class SpongeNode extends Node {
     try (V8ThreadLock<V8> lock = new V8ThreadLock<>(v8Object.getRuntime())) {
       memoryManager = new MemoryManager(lock.v8());
     }
-
     String zipLocation = MapNodes.SETTINGS.cache + "/" + id() + ".zip";
     File zipLocationFile = new File(zipLocation);
     Files.createParentDirs(zipLocationFile);
     Files.write(map.world().array(), zipLocationFile);
-    new ZipFile(zipLocation).extractAll("world/mapnodes-" + id());
+    ZipFile zipFile = new ZipFile(zipLocation);
+    try {
+      zipFile.removeFile("level.dat"); // Sponge Really Does not like level.dat
+    } catch (ZipException ignore) {
+      logger.warn("level.dat was not found, this is actually good");
+    }
+    zipFile.extractAll("world/mapnodes-" + id());
+    game.getServer().createWorldProperties("mapnodes-" + id(), WorldArchetypes.THE_VOID);
     // Trigger the world to be loaded once the server has been started
     if (game.getState() == GameState.SERVER_ABOUT_TO_START) {
-      game.getServer().createWorldProperties("mapnodes-" + id(), WorldArchetypes.THE_VOID);
       eventManager.registerListener(MapNodesPlugin.get(), GameStartedServerEvent.class, event -> {
         logger.info("Loading the world from event");
         loadWorld("mapnodes-" + id()); // todo world loads wonky
@@ -66,7 +72,6 @@ public class SpongeNode extends Node {
   /** Load the world*/
   private void loadWorld(String name) {
     try {
-      game.getServer().loadWorld(name).ifPresent(world -> this.world = world);
       game.getServer().getWorldProperties(name).ifPresent(properties -> {
         properties.setEnabled(true);
         properties.setKeepSpawnLoaded(false);
@@ -75,6 +80,7 @@ public class SpongeNode extends Node {
         properties.setGeneratorModifiers(Collections.singleton(WorldGeneratorModifiers.VOID));
         game.getServer().saveWorldProperties(properties);
       });
+      game.getServer().loadWorld(name).ifPresent(world -> this.world = world);
     } catch (Exception error) {
       logger.error("Fail to load world");
       try {
