@@ -5,8 +5,6 @@ package net.year4000.mapnodes.listeners;
 
 import com.google.inject.Inject;
 import net.year4000.mapnodes.MapNodesPlugin;
-import net.year4000.mapnodes.nodes.NodeManager;
-import net.year4000.mapnodes.nodes.SpongeNode;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.entity.living.player.gamemode.GameModes;
 import org.spongepowered.api.event.Listener;
@@ -23,8 +21,8 @@ import java.io.IOException;
 
 public class GameListener {
 
-  @Inject MapNodesPlugin mapnodes;
-  @Inject Game game;
+  @Inject private MapNodesPlugin mapnodes;
+  @Inject private Game game;
 
   @Listener
   public void onClientPing(ClientPingServerEvent event) throws IOException {

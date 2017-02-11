@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Year4000. All Rights Reserved.
+ * Copyright 2017 Year4000. All Rights Reserved.
  */
 package net.year4000.mapnodes;
 
@@ -8,32 +8,20 @@ import com.google.inject.Inject;
 import com.google.inject.Injector;
 import net.year4000.mapnodes.listeners.GameListener;
 import net.year4000.mapnodes.listeners.WorldListener;
-import net.year4000.mapnodes.nodes.Node;
 import net.year4000.mapnodes.nodes.NodeFactory;
 import net.year4000.mapnodes.nodes.SpongeNode;
+import net.year4000.mapnodes.nodes.SpongeNodeFactory;
 import net.year4000.utilities.Conditions;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
-import org.spongepowered.api.command.CommandResult;
-import org.spongepowered.api.command.spec.CommandSpec;
-import org.spongepowered.api.entity.living.player.gamemode.GameModes;
 import org.spongepowered.api.event.EventManager;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.*;
-import org.spongepowered.api.event.network.ClientConnectionEvent;
-import org.spongepowered.api.event.server.ClientPingServerEvent;
-import org.spongepowered.api.network.status.Favicon;
 import org.spongepowered.api.plugin.Dependency;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
-
-import javax.imageio.ImageIO;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
 
 /** Sponge plugin to provide support for the MapNodes system */
 @Plugin(id = "mapnodes", name = "MapNodes", version = "3.0.0-SNAPSHOT", dependencies = {@Dependency(id = "utilities")})
@@ -65,13 +53,13 @@ public class MapNodesPlugin implements MapNodes {
   }
 
   @Override
-  public Bindings bindings() {
-    return mapNodesInjector.getInstance(Bindings.class);
+  public SpongeBindings bindings() {
+    return (SpongeBindings) mapNodesInjector.getInstance(Bindings.class);
   }
 
   @Override
-  public NodeFactory nodeFactory() {
-    return mapNodesInjector.getInstance(NodeFactory.class);
+  public SpongeNodeFactory nodeFactory() {
+    return (SpongeNodeFactory) mapNodesInjector.getInstance(NodeFactory.class);
   }
 
   @Override

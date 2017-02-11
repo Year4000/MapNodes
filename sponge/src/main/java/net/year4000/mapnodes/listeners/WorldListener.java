@@ -9,20 +9,37 @@ import net.year4000.mapnodes.SpongeBindings;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.block.ChangeBlockEvent;
+import org.spongepowered.api.event.entity.DamageEntityEvent;
+import org.spongepowered.api.event.world.SaveWorldEvent;
 
 /** Listeners that are for world events */
 public class WorldListener {
 
-  @Inject MapNodesPlugin mapnodes;
-  @Inject SpongeBindings $;
-  @Inject Game game;
+  @Inject private MapNodesPlugin mapnodes;
+  @Inject private SpongeBindings $;
+  @Inject private Game game;
 
-
+  /** Do not modify the world when the game is not running */
   @Listener
   public void on(ChangeBlockEvent event) {
     if (!$.js.isGameRunning()) {
-      mapnodes.logger().debug("Game is not running canceling event: " + event.getClass().getSimpleName());
+      //mapnodes.logger().debug("Game is not running canceling event: " + event.getClass().getSimpleName());
       event.setCancelled(true);
     }
+  }
+
+  /** Do not damage entities when game is not running */
+  @Listener
+  public void on(DamageEntityEvent event) {
+    if (!$.js.isGameRunning()) {
+      //mapnodes.logger().debug("Game is not running canceling event: " + event.getClass().getSimpleName());
+      event.setCancelled(true);
+    }
+  }
+
+  /** There is no need to save the world to disk */
+  @Listener
+  public void on(SaveWorldEvent event) {
+    event.setCancelled(true);
   }
 }
