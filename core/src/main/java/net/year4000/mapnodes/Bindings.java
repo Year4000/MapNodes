@@ -9,6 +9,7 @@ import com.eclipsesource.v8.V8Object;
 import com.eclipsesource.v8.utils.MemoryManager;
 import com.google.common.base.CaseFormat;
 import com.google.common.collect.Queues;
+import com.google.common.io.Files;
 import net.year4000.utilities.Conditions;
 import net.year4000.utilities.ErrorReporter;
 
@@ -33,7 +34,7 @@ public abstract class Bindings implements Releasable {
     V8.setFlags("--harmony --use_strict");
   }
   /** The V8 Runtime for everything */
-  private static V8 engine = V8.createV8Runtime();
+  private static V8 engine = V8.createV8Runtime("mapnodes", Files.createTempDir().getAbsolutePath());
   /** The memory manager for any javascript object that were created */
   private static MemoryManager memoryManager = new MemoryManager(engine);
   /** The V8 Object that is bind to the JAVA var */
