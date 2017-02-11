@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Year4000. All Rights Reserved.
+ * Copyright 2017 Year4000. All Rights Reserved.
  */
 package net.year4000.mapnodes;
 
@@ -16,11 +16,6 @@ import java.util.function.Consumer;
 public final class SpongeBindings extends Bindings {
   public final SpongeV8Bindings js = Reflections.proxy(SpongeV8Bindings.class, handler, Gateways.reflectiveImplements(SpongeV8Bindings.class));
 
-  /** Translate the Sponge to the V8Bindings interface */
-  public interface SpongeV8Bindings extends V8Bindings {
-
-  }
-
   @Override
   @Bind
   public void sendMessage(String player, String message) {
@@ -31,5 +26,10 @@ public final class SpongeBindings extends Bindings {
     } catch (IllegalArgumentException error) {
       Sponge.getServer().getPlayer(player).ifPresent(consumer);
     }
+  }
+
+  /** Translate the Sponge to the V8Bindings interface */
+  public interface SpongeV8Bindings extends V8Bindings {
+
   }
 }

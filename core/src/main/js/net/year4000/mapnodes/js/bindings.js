@@ -9,10 +9,10 @@
 */
 
 /** This constant is created by the runtime no need for it */
-var PLATFORM;
+var PLATFORM = PLATFORM || 'none';
 
 /** This constant is created by the runtime no need for it */
-var JAVA;
+var JAVA = JAVA || {};
 
 /** The constants that are known when the JS runtime is created */
 var PLATFORMS = {
@@ -30,9 +30,9 @@ class $ {
   /** Map a specific object to this bindings var */
   static get bindings() {
     if (PLATFORM == PLATFORMS.PE) {
-      return JAVA || {};
+      return JAVA;
     } else if (PLATFORM == PLATFORMS.PC) {
-      return JAVA || {};
+      return JAVA;
     } else {
       throw "PLATFORM is not defined!";
     }
@@ -47,6 +47,11 @@ class $ {
   /*@Bind*/ platform_name() {
     return PLATFORM;
   }
+
+  /** Is the game currently running */
+  /*@Bind*/ is_game_running() {
+  return false;
+}
 }
 
 /** Include the resource into the V8 runtime */

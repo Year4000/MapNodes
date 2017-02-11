@@ -112,6 +112,8 @@ public abstract class Bindings implements Releasable {
 
   /** Run function from the JavaScript side */
   public interface V8Bindings {
-    @Bind String platformName();
+    String platformName();
+
+    boolean isGameRunning();
   }
 }

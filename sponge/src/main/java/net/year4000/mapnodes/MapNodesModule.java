@@ -23,7 +23,7 @@ public class MapNodesModule extends AbstractModule {
     bind(NodeManager.class).toInstance(MapNodes.NODE_MANAGER);
     SpongeBindings bindings = new SpongeBindings();
     bind(Bindings.class).toInstance(bindings);
-    bind(Bindings.V8Bindings.class).toInstance(bindings.js);
     bind(NodeFactory.class).toInstance(new SpongeNodeFactory());
+    bind(MapNodes.class).toInstance(plugin);
   }
 }

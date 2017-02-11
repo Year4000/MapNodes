@@ -3,8 +3,11 @@
  */
 package net.year4000.mapnodes;
 
+import com.google.common.collect.ImmutableList;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
+import net.year4000.mapnodes.listeners.GameListener;
+import net.year4000.mapnodes.listeners.WorldListener;
 import net.year4000.mapnodes.nodes.Node;
 import net.year4000.mapnodes.nodes.NodeFactory;
 import net.year4000.mapnodes.nodes.SpongeNode;
@@ -15,6 +18,7 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.spec.CommandSpec;
 import org.spongepowered.api.entity.living.player.gamemode.GameModes;
+import org.spongepowered.api.event.EventManager;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.*;
 import org.spongepowered.api.event.network.ClientConnectionEvent;
@@ -43,6 +47,8 @@ public class MapNodesPlugin implements MapNodes {
   @Inject private Logger logger;
   /** The injector injected from Sponge */
   @Inject private Injector injector;
+  /** The event manager from sponge */
+  @Inject private EventManager eventManager;
 
   /** Get the instance of this plugin */
   public static MapNodesPlugin get() {
@@ -66,6 +72,11 @@ public class MapNodesPlugin implements MapNodes {
   @Override
   public NodeFactory nodeFactory() {
     return mapNodesInjector.getInstance(NodeFactory.class);
+  }
+
+  @Override
+  public SpongeNode currentNode() {
+    return (SpongeNode) MapNodes.super.currentNode();
   }
 
   /** Get the injector for MapNodes its a child injector from Sponge */
@@ -93,44 +104,15 @@ public class MapNodesPlugin implements MapNodes {
       logger().warn(message);
       game.getServer().shutdown(Text.of(TextColors.RED, message));
     }
-    Sponge.getCommandManager().register(this, CommandSpec.builder().executor((src, args) -> {
-      try {
-        Node node = NODE_MANAGER.loadNextNode();
-        logger().info("Map " + node.name() + " version " + node.version());
-      } catch (Exception e) {
-        e.printStackTrace();
-      }
-      return CommandResult.success();
-    }).build(), "next");
+    // Register listeners
+    ImmutableList.of(GameListener.class, WorldListener.class).forEach(clazz -> {
+      logger().info("Injecting and registering listener for: " + clazz.getSimpleName());
+      eventManager.registerListeners(MapNodesPlugin.this, mapNodesInjector.getInstance(clazz));
+    });
   }
 
   @Listener
   public void onUnload(GameStoppingEvent event) {
     unload();
-  }
-
-  @Listener
-  public void onClientPing(ClientPingServerEvent event) throws IOException {
-    if (currentNode() == null) return;
-    // Resize to 64 x 64
-    BufferedImage bufferedImage = ImageIO.read(new ByteArrayInputStream(currentNode().map().image().array()));
-    BufferedImage bufferedIcon = new BufferedImage(64, 64, BufferedImage.TYPE_INT_RGB);
-    Graphics graphic = bufferedIcon.createGraphics();
-    graphic.drawImage(bufferedImage, 0, 0, 64, 64, null);
-    graphic.dispose();
-    Favicon favicon = game.getRegistry().loadFavicon(bufferedIcon);
-    event.getResponse().setFavicon(favicon);
-    event.getResponse().setDescription(Text.of(currentNode().name() + " version " + currentNode().version()));
-  }
-
-  @Listener
-  public void join(ClientConnectionEvent.Login event) {
-    SpongeNode node = (SpongeNode) currentNode();
-    event.setToTransform(node.worldTransformer());
-  }
-
-  @Listener
-  public void join(ClientConnectionEvent.Join event) {
-    event.getTargetEntity().gameMode().set(GameModes.SPECTATOR);
   }
 }
