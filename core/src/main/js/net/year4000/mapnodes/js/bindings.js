@@ -44,19 +44,24 @@ class $ {
   }
 
   /** This function just makes sure the bindings were properly established */
-  /*@Bind*/ platform_name() {
+  platform_name() { // @Bind
     return PLATFORM;
   }
 
   /** Is the game currently running */
-  /*@Bind*/ is_game_running() {
-  return false;
-}
+  is_game_running() { // @Bind
+    return false;
+  }
+
+  /** Load the environment */
+  load() { // @Bind
+    println("Loading environment from the Javascript side");
+  }
 }
 
 /** Include the resource into the V8 runtime */
 function include(path) {
-  $.bindings.delayed_include(path);
+  $.bindings.include(path);
 }
 
 /** Print the message to the console */

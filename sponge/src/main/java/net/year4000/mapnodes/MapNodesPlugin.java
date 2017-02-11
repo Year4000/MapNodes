@@ -82,6 +82,7 @@ public class MapNodesPlugin implements MapNodes {
     Conditions.nonNull(injector, "injector");
     mapNodesInjector = injector.createChildInjector(new MapNodesModule(this));
     load();
+    bindings().js.load();
   }
 
   @Listener

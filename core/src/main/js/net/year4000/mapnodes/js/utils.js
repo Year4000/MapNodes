@@ -23,3 +23,11 @@ function point_and_look(x, y, z, point_to) {
   var pitch = Math.atan(pitch_width / height) * 180 / Math.PI;
   return point(x, y, z, yaw, pitch);
 }
+
+/** Make sure the value is not null */
+function not_null(value, message) {
+  if (value == null) {
+    throw new Error(message || 'The value was null');
+  }
+  return value;
+}

@@ -72,13 +72,15 @@ public abstract class Bindings implements Releasable {
     }
   }
 
-  /** Print the message */
-  @Bind public void print(String message) {
+  /** $.bindings.print */
+  @Bind
+  public void print(String message) {
     System.out.print(message);
   }
 
-  /** Will include other JavaScript files in the runtime */
-  @Bind public void delayedInclude(String path) {
+  /** $.bindings.include */
+  @Bind
+  public void delayedInclude(String path) {
     Conditions.nonNullOrEmpty(path, "path");
     if (!engine.isReleased()) {
       paths.add(path);
@@ -87,8 +89,9 @@ public abstract class Bindings implements Releasable {
     }
   }
 
-  /** Will include other JavaScript files in the runtime */
-  @Bind public void include(String path) {
+  /** $.bindings.include */
+  @Bind
+  public void include(String path) {
     // Include the system
     System.out.println("Loading javascript file: " + Conditions.nonNullOrEmpty(path, "path"));
     InputStream stream = Bindings.class.getResourceAsStream("/net/year4000/mapnodes/js/" + path);
@@ -107,13 +110,18 @@ public abstract class Bindings implements Releasable {
     }
   }
 
-  /** Send a message to a player */
+  /** $.bindings.send_message */
   @Bind public abstract void sendMessage(String player, String message);
 
   /** Run function from the JavaScript side */
   public interface V8Bindings {
+    /** $.js.platform_name */
     String platformName();
 
+    /** $.js.is_game_running */
     boolean isGameRunning();
+
+    /** $.js.load */
+    void load();
   }
 }

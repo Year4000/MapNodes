@@ -19,11 +19,11 @@ public class MapNodesModule extends AbstractModule {
 
   @Override
   protected void configure() {
+    bind(MapNodes.class).toInstance(plugin);
     bind(Settings.class).toInstance(MapNodes.SETTINGS);
     bind(NodeManager.class).toInstance(MapNodes.NODE_MANAGER);
     SpongeBindings bindings = new SpongeBindings();
     bind(Bindings.class).toInstance(bindings);
     bind(NodeFactory.class).toInstance(new SpongeNodeFactory());
-    bind(MapNodes.class).toInstance(plugin);
   }
 }
