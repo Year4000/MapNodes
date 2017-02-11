@@ -61,7 +61,7 @@ class $ {
 
 /** Include the resource into the V8 runtime */
 function include(path) {
-  $.bindings.include(path);
+  $.bindings._include(path);
 }
 
 /** Print the message to the console */

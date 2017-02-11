@@ -78,9 +78,9 @@ public abstract class Bindings implements Releasable {
     System.out.print(message);
   }
 
-  /** $.bindings.include */
+  /** $.bindings._include */
   @Bind
-  public void delayedInclude(String path) {
+  public void _include(String path) {
     Conditions.nonNullOrEmpty(path, "path");
     if (!engine.isReleased()) {
       paths.add(path);
