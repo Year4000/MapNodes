@@ -1,0 +1,10 @@
+---
+# Build the docker image for the various mapnodes configurations
+
+version: '2'
+
+services:
+  spongevanilla:
+    build: sponge/
+    image: year4000/mapnodes:spongevanilla
+
