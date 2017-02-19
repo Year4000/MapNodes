@@ -1,13 +1,16 @@
 /*
- * Copyright 2016 Year4000. All Rights Reserved.
+ * Copyright 2017 Year4000. All Rights Reserved.
  */
 
-class Team {
-  constructor(json) {
-    this._meta = json;
+/** Represents a team from the json object */
+class Team extends JsonObject {
+
+  constructor(id, team) {
+    super(id, team);
   }
 
-  get id() {
-    return 1;
+  /** Get the json for this team */
+  get team() {
+    return super._json;
   }
 }

@@ -1,18 +1,20 @@
 /*
- * Copyright 2016 Year4000. All Rights Reserved.
+ * Copyright 2017 Year4000. All Rights Reserved.
  */
 
-/**
- The class that is the game
- */
-class Game {
+/** Represents a game from the json object */
+class Game extends JsonObject {
   constructor(id, map) {
-    this._id = Conditions.not_null(id, 'id');
-    this._map = Conditions.not_null(map, 'map');
+    super(id, map);
+    this._teams = Immutable.Map();
+    this._kits = Immutable.Map();
+    this._regions = Immutable.Map();
+    this._clazzes = Immutable.Map();
   }
 
-  get id() {
-    return this._id;
+  /** Get the json for this map */
+  get map() {
+    return this._map;
   }
 
   /** Load the game from the JSON object */
@@ -39,31 +41,32 @@ class Game {
     this.$event_emitter.trigger('game_unload', [this]);
   }
 
+  /** The abstraction to register the object */
+  _register(obj_id, obj_json, clazz, collection_name, event_id) {
+    Conditions.not_null(obj_id, 'obj_id');
+    Conditions.is_object(obj_json, 'obj_json');
+    let obj = new clazz(obj_id, obj_json);
+    this[collection_name] = this[collection_name].set(obj_id, obj);
+    this.$event_emitter.trigger(event_id, [obj, this]);
+  }
+
   /** Register the team into the system */
-  _register_team(team_id, team) {
-    Conditions.not_null(team_id, 'team_id');
-    Conditions.is_object(team, 'team');
-    // todo register the team and inject things
+  _register_team(team_id, team_json) {
+    this._register(team_id, team_json, Team, '_teams', 'register_team');
   }
 
   /** Register the class into the system */
-  _register_class(class_id, clazz) {
-    Conditions.not_null(class_id, 'class_id');
-    Conditions.is_object(clazz, 'clazz');
-    // todo register the class and inject things
+  _register_class(class_id, clazz_json) {
+    this._register(class_id, clazz_json, Clazz, '_clazzes', 'register_class');
   }
 
   /** Register the kit into the system */
-  _register_kit(kit_id, kit) {
-    Conditions.not_null(kit_id, 'kit_id');
-    Conditions.is_object(kit, 'kit');
-    // todo register the kit and inject things
+  _register_kit(kit_id, kit_json) {
+    this._register(kit_id, kit_json, Kit, '_kits', 'register_kit');
   }
 
   /** Register the region into the system */
-  _register_region(region_id, region) {
-    Conditions.not_null(region_id, 'region_id');
-    Conditions.is_object(region, 'region');
-    // todo register the region and inject things
+  _register_region(region_id, region_json) {
+    this._register(region_id, region_json, Region, '_regions', 'register_region');
   }
 }
