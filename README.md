@@ -29,5 +29,9 @@ If you ran the command bellow with out reading you must *delete* the build folde
 
 > ./pytasks runDockerImage
 
+You can also use the following command to combine the compiling and running of the docker image.
+
+> ./pytasks devServer
+
 ## License
 MapNodes is copyright &copy; 2017 [year4000](https://www.year4000.net/)
