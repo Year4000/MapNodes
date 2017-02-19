@@ -3,11 +3,19 @@
  */
 package net.year4000.mapnodes.listeners;
 
+import com.eclipsesource.v8.V8Object;
+import com.google.common.base.CaseFormat;
+import com.google.gson.Gson;
 import com.google.inject.Inject;
 import net.year4000.mapnodes.MapNodesPlugin;
+import net.year4000.mapnodes.SpongeBindings;
+import net.year4000.utilities.Utils;
+import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.entity.living.player.gamemode.GameModes;
+import org.spongepowered.api.event.Event;
 import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.entity.MoveEntityEvent;
 import org.spongepowered.api.event.network.ClientConnectionEvent;
 import org.spongepowered.api.event.server.ClientPingServerEvent;
 import org.spongepowered.api.network.status.Favicon;

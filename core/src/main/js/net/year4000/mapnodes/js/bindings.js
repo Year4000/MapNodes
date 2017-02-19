@@ -52,7 +52,12 @@ class $ {
 
   /** Load the environment */
   load() { // @Bind
-    map_nodes.$event_emitter.trigger('load', [{}]);
+    map_nodes.$event_emitter.trigger('load');
+  }
+
+  /** View only access to the event in minecraft */
+  on_event(event_id, event) { // @Bind
+    map_nodes.$event_emitter.trigger(event_id, [event]);
   }
 }
 

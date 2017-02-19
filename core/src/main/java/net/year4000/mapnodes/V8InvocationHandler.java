@@ -7,6 +7,9 @@ import com.eclipsesource.v8.V8;
 import com.google.common.base.CaseFormat;
 import net.year4000.utilities.Conditions;
 
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 
@@ -23,6 +26,14 @@ class V8InvocationHandler implements InvocationHandler {
 
   @Override
   public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+    if (method.isDefault()) { // Handle Defaults as is
+      Constructor<MethodHandles.Lookup> constructor = MethodHandles.Lookup.class.getDeclaredConstructor(Class.class, int.class);
+      constructor.setAccessible(true);
+      return constructor.newInstance(proxy.getClass(), MethodHandles.Lookup.PRIVATE)
+        .unreflectSpecial(method, proxy.getClass())
+        .bindTo(proxy)
+        .invokeWithArguments(args);
+    }
     try (V8ThreadLock<V8> lock = new V8ThreadLock<>(engine)) {
       String lower = CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, method.getName());
       return lock.v8().executeObjectScript(lookup).executeJSFunction(lower, args);

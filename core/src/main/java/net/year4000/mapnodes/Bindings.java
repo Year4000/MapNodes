@@ -128,5 +128,8 @@ public abstract class Bindings implements Releasable {
 
     /** $.js.load */
     void load();
+
+    /** $.js.on_event */
+    void onEvent(String id, String event);
   }
 }

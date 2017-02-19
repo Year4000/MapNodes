@@ -3,12 +3,15 @@
  */
 package net.year4000.mapnodes;
 
+import com.google.common.base.CaseFormat;
 import com.google.inject.Inject;
+import net.year4000.utilities.Utils;
 import net.year4000.utilities.reflection.Gateways;
 import net.year4000.utilities.reflection.Reflections;
 import org.slf4j.Logger;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.event.Event;
 import org.spongepowered.api.text.Text;
 
 import java.util.UUID;
@@ -36,5 +39,10 @@ public final class SpongeBindings extends Bindings {
   /** Translate the Sponge to the V8Bindings interface */
   public interface SpongeV8Bindings extends V8Bindings {
 
+    /** $.js.on_event */
+    default void onEvent(Event event) {
+      String className = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, event.getClass().getSimpleName());
+      onEvent("on_" + className.replaceAll("(\\$_impl|\\$)", ""), Utils.toString(event.getCause().all()));
+    }
   }
 }
