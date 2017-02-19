@@ -15,6 +15,7 @@ run/
 .idea/
 *.iml
 *.gitignore
+!.gitignore
 
 # Mac
 ._*
