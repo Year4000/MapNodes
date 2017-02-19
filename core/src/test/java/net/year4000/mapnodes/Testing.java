@@ -17,40 +17,16 @@ import java.util.stream.Collectors;
 
 public class Testing {
   private static final Bindings BINDINGS = new TestBindings();
-  private static final String MAP = "{\n" +
-    "  map: {\n" +
-    "    name: () => 'Test Map',\n" +
-    "    version: \"2.0\",\n" +
-    "    description: \"Welcome to Year4000!\",\n" +
-    "    authors: [\"98b35bed-9d73-47fe-a811-9436aa32335b\", \"bc3b90f1-2a7e-49ab-9241-81c1bf7dcf53\"]\n" +
-    "  },\n" +
-    "\n" +
-    "  world: {\n" +
-    "    spawn: [{point: {\"xyz\": \"0, 64, 0\"}}]\n" +
-    "  },\n" +
-    "\n" +
-    "  games: {\n" +
-    "    \"hub\": {}\n" +
-    "  },\n" +
-    "\n" +
-    "  teams: {\n" +
-    "    players: {\n" +
-    "      name: \"Players\",\n" +
-    "      color: () => { return ['a','n']},\n" +
-    "      size: () => -1,\n" +
-    "      spawns: [{point: {xyz: \"0, 64, 0\"}}]\n" +
-    "    }\n" +
-    "  }\n" +
-    "}\n";
 
   public static void main(String[] args) throws Exception {
     String bindings = read(Testing.class.getResourceAsStream("/net/year4000/mapnodes/js/bindings.js"));
+    String map = read(Testing.class.getResourceAsStream("/map.js"));
     try (V8ThreadLock<V8> thread = BINDINGS.v8Thread()) {
       thread.v8().executeVoidScript(bindings);
       thread.v8().executeScript("print('Hello');");
       thread.v8().executeScript("println(' World!');");
       thread.v8().executeScript("var_dump(PLATFORMS);");
-      V8Object v8Object = thread.v8().executeObjectScript("eval(" + MAP + ");");
+      V8Object v8Object = thread.v8().executeObjectScript("eval(" + map + ");");
       Gson gson = new GsonBuilder().registerTypeAdapterFactory(new V8TypeAdapterFactory()).setPrettyPrinting().create();
       System.out.println(gson.toJson(v8Object));
     }
