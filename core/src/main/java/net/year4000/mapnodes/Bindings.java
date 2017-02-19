@@ -10,8 +10,10 @@ import com.eclipsesource.v8.utils.MemoryManager;
 import com.google.common.base.CaseFormat;
 import com.google.common.collect.Queues;
 import com.google.common.io.Files;
+import com.google.inject.Inject;
 import net.year4000.utilities.Conditions;
 import net.year4000.utilities.ErrorReporter;
+import org.slf4j.Logger;
 
 import java.io.*;
 import java.lang.annotation.ElementType;
@@ -43,6 +45,8 @@ public abstract class Bindings implements Releasable {
   private final ArrayDeque<String> paths = Queues.newArrayDeque();
   /** The handler to interact with the Javascript object */
   protected final InvocationHandler handler = new V8InvocationHandler(engine);
+  /** Inject the logger used in the application */
+  @Inject Logger logger;
 
   /** Map the java methods to the javascript functions */
   protected Bindings() {
@@ -76,7 +80,7 @@ public abstract class Bindings implements Releasable {
   /** $.bindings.print */
   @Bind
   public void print(String message) {
-    System.out.print(message);
+    logger.info(message.replaceAll("\n", ""));
   }
 
   /** $.bindings._include */
@@ -94,7 +98,7 @@ public abstract class Bindings implements Releasable {
   @Bind
   public void include(String path) {
     // Include the system
-    System.out.println("Loading javascript file: " + Conditions.nonNullOrEmpty(path, "path"));
+    logger.info("Loading javascript file: " + Conditions.nonNullOrEmpty(path, "path"));
     InputStream stream = Bindings.class.getResourceAsStream(path);
     try (BufferedReader buffer = new BufferedReader(new InputStreamReader(stream))) {
       String script = buffer.lines().collect(Collectors.joining("\n"));
@@ -102,7 +106,7 @@ public abstract class Bindings implements Releasable {
         lock.v8().executeVoidScript(script);
       }
     } catch (IOException | NullPointerException error) {
-      System.err.println(ErrorReporter.builder(error).add("path: ", path).build().toString());
+      logger.error(ErrorReporter.builder(error).add("path: ", path).build().toString());
     } finally {
       // Check for pending imports
       if (!paths.isEmpty()) {

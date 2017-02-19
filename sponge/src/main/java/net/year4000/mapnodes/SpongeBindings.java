@@ -33,13 +33,6 @@ public final class SpongeBindings extends Bindings {
     }
   }
 
-  /** $.bindings.print */
-  @Override
-  @Bind
-  public void print(String message) {
-    logger.info(message.replaceAll("\n", ""));
-  }
-
   /** Translate the Sponge to the V8Bindings interface */
   public interface SpongeV8Bindings extends V8Bindings {
 

@@ -7,10 +7,10 @@ class MapNodes {
 
   constructor() {
     // Create the injector and inject our self with the injector
-    new Injector(this._modules({
+    new Injector({
       map_nodes: this,
       event_emitter: new EventEmitter(),
-    }));
+    });
   }
 
   /** Get the current game */

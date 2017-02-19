@@ -15,15 +15,6 @@ class Game {
     return this._id;
   }
 
-  /** When a user or team has won the game */
-  winner(winner) {
-    if (winner instanceof Player) {
-      $.end_game_player(winner.uuid);
-    } else if (winner instanceof Team) {
-      $.end_game_team(winner.id);
-    }
-  }
-
   /** Load the game from the JSON object */
   load() {
     println(`The game(${this._id}) is loading...`);
