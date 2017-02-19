@@ -1,4 +1,4 @@
-# MapNodes [![CircleCI](https://circleci.com/gh/Year4000/MapNodes.svg?style=svg)](https://circleci.com/gh/Year4000/MapNodes)
+# MapNodes [![CircleCI](https://circleci.com/gh/Year4000/MapNodes.svg?style=svg&circle-token=4cc9f4f8f96660538137825d50f5c9249b4251fe)](https://circleci.com/gh/Year4000/MapNodes)
 This is the plugin that handles the games that `Year4000` runs.
 
 ## Building
