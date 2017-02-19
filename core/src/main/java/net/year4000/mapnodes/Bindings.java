@@ -44,7 +44,7 @@ public abstract class Bindings implements Releasable {
   /** Paths that need to be included after import */
   private final ArrayDeque<String> paths = Queues.newArrayDeque();
   /** The handler to interact with the Javascript object */
-  protected final InvocationHandler handler = new V8InvocationHandler(engine);
+  protected final InvocationHandler handler = new V8InvocationHandler(engine, "$.js");
   /** Inject the logger used in the application */
   @Inject private Logger logger;
 

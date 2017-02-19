@@ -14,16 +14,18 @@ import java.lang.reflect.Method;
 class V8InvocationHandler implements InvocationHandler {
   /** The object that the methods will execute the Javascript function */
   private final V8 engine;
+  private final String lookup;
 
-  V8InvocationHandler(V8 engine) {
+  V8InvocationHandler(V8 engine, String lookup) {
     this.engine = Conditions.nonNull(engine, "engine");
+    this.lookup = Conditions.nonNullOrEmpty(lookup, "lookup");
   }
 
   @Override
   public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
     try (V8ThreadLock<V8> lock = new V8ThreadLock<>(engine)) {
       String lower = CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, method.getName());
-      return lock.v8().executeObjectScript("$.js").executeJSFunction(lower, args);
+      return lock.v8().executeObjectScript(lookup).executeJSFunction(lower, args);
     }
   }
 }
