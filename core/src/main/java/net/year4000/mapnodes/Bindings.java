@@ -46,7 +46,7 @@ public abstract class Bindings implements Releasable {
   /** The handler to interact with the Javascript object */
   protected final InvocationHandler handler = new V8InvocationHandler(engine);
   /** Inject the logger used in the application */
-  @Inject Logger logger;
+  @Inject private Logger logger;
 
   /** Map the java methods to the javascript functions */
   protected Bindings() {
