@@ -29,4 +29,18 @@ class MapNodes {
   }
 }
 
-var map_nodes = new MapNodes();
+const map_nodes = new MapNodes();
+
+// Event Listeners
+
+/**
+ The events used for the internal needs of MapNodes.
+ They are able to interact with the bindings.
+ Note that this file must be known after mapnodes.js.
+ */
+
+/** Called when the system has been loaded  */
+map_nodes.$event_emitter.on('load', () => {
+  println("Loading environment from the Javascript side");
+  println('Lodash Version: ' + _.VERSION);
+});

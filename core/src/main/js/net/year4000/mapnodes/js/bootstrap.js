@@ -12,7 +12,6 @@ include('/net/year4000/mapnodes/js/utils.js');
 include('/net/year4000/mapnodes/js/conditions.js');
 include('/net/year4000/mapnodes/js/injection.js');
 include('/net/year4000/mapnodes/js/mapnodes.js');
-include('/net/year4000/mapnodes/js/events.js');
 include('/net/year4000/mapnodes/js/game/player.js');
 include('/net/year4000/mapnodes/js/game/team.js');
 include('/net/year4000/mapnodes/js/game/game.js');

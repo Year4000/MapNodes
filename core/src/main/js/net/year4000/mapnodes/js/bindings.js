@@ -8,14 +8,16 @@
   the low level forms the data types are transmitted between.
 */
 
+// noinspection ES6ConvertVarToLetConst
 /** This constant is created by the runtime no need for it */
 var PLATFORM = PLATFORM || 'none';
 
+// noinspection ES6ConvertVarToLetConst
 /** This constant is created by the runtime no need for it */
 var JAVA = JAVA || {};
 
 /** The constants that are known when the JS runtime is created */
-var PLATFORMS = {
+const PLATFORMS = {
   "PC": "java", // Sponge
   "PE": "java" // Nukkit
 };
