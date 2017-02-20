@@ -95,7 +95,7 @@ public abstract class Bindings implements Releasable {
   public void include(String path) {
     // Include the system
     System.out.println("Loading javascript file: " + Conditions.nonNullOrEmpty(path, "path"));
-    InputStream stream = Bindings.class.getResourceAsStream("/net/year4000/mapnodes/js/" + path);
+    InputStream stream = Bindings.class.getResourceAsStream(path);
     try (BufferedReader buffer = new BufferedReader(new InputStreamReader(stream))) {
       String script = buffer.lines().collect(Collectors.joining("\n"));
       try (V8ThreadLock<V8> lock = v8Thread()) {
