@@ -1,6 +1,7 @@
 # MapNodes
 run/
 **/src/generated
+.tasks.py
 
 # Gradle
 .gradle/

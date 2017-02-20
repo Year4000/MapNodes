@@ -8,7 +8,7 @@ services:
     build: sponge/
     image: year4000/mapnodes:spongevanilla
     ports:
-      - 25565:25565
+      - "25565:25565"
     volumes:
       - ./run/sponge-server/mods:/opt/year4000/minecraft/mods
       - ./run/sponge-server/maps:/opt/year4000/minecraft/maps
