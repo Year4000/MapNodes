@@ -57,7 +57,7 @@ class $ {
   load() { // @Bind
     println("Loading environment from the Javascript side");
     println('Lodash Version: ' + _.VERSION);
-    println('Immutable Version: ' + typeof Immutable);
+    println('Immutable Type: ' + typeof Immutable);
   }
 }
 
