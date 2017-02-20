@@ -1,5 +1,6 @@
 # MapNodes
 run/
+**/src/generated
 
 # Gradle
 .gradle/

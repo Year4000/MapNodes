@@ -9,3 +9,5 @@ include('/net/year4000/mapnodes/js/team.js');
 include('/net/year4000/mapnodes/js/game.js');
 
 // Utils Shaded with Gradle
+include('/modules/lodash.js');
+include('/modules/immutable.js');

@@ -5,6 +5,7 @@
 plugins {
   id 'java'
   id 'idea'
+  id 'de.undercouch.download' version '3.2.0'
 }
 
 dependencies {
@@ -17,6 +18,7 @@ dependencies {
 
 sourceSets.main.resources {
   srcDir "${projectDir}/src/main/js/"
+  srcDir "${projectDir}/src/generated/js/"
 }
 
 idea.module {
@@ -24,3 +26,18 @@ idea.module {
 }
 
 test.testLogging.showStandardStreams = true
+
+// Download and shade Javascript utils that MapNodes needs
+task generateJsUtils(dependsOn: 'processResources') {
+  def depends = [
+    'https://raw.githubusercontent.com/lodash/lodash/4.17.4/dist/lodash.js',
+    'https://cdnjs.cloudflare.com/ajax/libs/immutable/3.8.1/immutable.js',
+  ]
+  // The task to download all needed libs
+  download {
+    quiet true
+    onlyIfNewer true
+    src depends
+    dest "${projectDir}/src/generated/js/modules/"
+  }
+}
