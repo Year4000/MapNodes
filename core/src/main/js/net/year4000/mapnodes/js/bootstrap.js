@@ -4,9 +4,10 @@
 
 // The files needed for MapNodes
 include('/net/year4000/mapnodes/js/utils.js');
-include('/net/year4000/mapnodes/js/player.js');
-include('/net/year4000/mapnodes/js/team.js');
-include('/net/year4000/mapnodes/js/game.js');
+include('/net/year4000/mapnodes/js/conditions.js');
+include('/net/year4000/mapnodes/js/game/player.js');
+include('/net/year4000/mapnodes/js/game/team.js');
+include('/net/year4000/mapnodes/js/game/game.js');
 
 // Utils Shaded with Gradle
 include('/modules/lodash.js');
