@@ -23,4 +23,52 @@ class Game {
       $.end_game_team(winner.id);
     }
   }
+
+  /** Load the game from the JSON object */
+  load() {
+    println(`The game(${this._id}) is loading...`);
+  }
+
+  /** Start the game and unload the previous game */
+  start() {
+    println(`The game(${this._id}) has started...`);
+  }
+
+  /** Stop the game and get ready to load the next game */
+  stop() {
+    println(`The game(${this._id}) has stopped...`);
+  }
+
+  /** Unload the game, clean things up for the next game */
+  unload() {
+    println(`The game(${this._id}) has been unloaded...`);
+  }
+
+  /** Register the team into the system */
+  __register_team(team_id, team) {
+    Conditions.not_null(team_id, 'team_id');
+    Conditions.is_object(team, 'team');
+    // todo register the team and inject things
+  }
+
+  /** Register the class into the system */
+  __register_class(class_id, clazz) {
+    Conditions.not_null(class_id, 'class_id');
+    Conditions.is_object(clazz, 'clazz');
+    // todo register the class and inject things
+  }
+
+  /** Register the kit into the system */
+  __register_kit(kit_id, kit) {
+    Conditions.not_null(kit_id, 'kit_id');
+    Conditions.is_object(kit, 'kit');
+    // todo register the kit and inject things
+  }
+
+  /** Register the region into the system */
+  __register_region(region_id, region) {
+    Conditions.not_null(region_id, 'region_id');
+    Conditions.is_object(region, 'region');
+    // todo register the region and inject things
+  }
 }

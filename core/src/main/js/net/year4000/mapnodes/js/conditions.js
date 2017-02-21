@@ -9,4 +9,12 @@ class Conditions {
     }
     return value;
   }
+
+  /** Make sure the value is an object */
+  static is_object(value, message) {
+      if (typeof value === 'object') {
+          throw new Error(message || 'The value was not an object');
+      }
+      return value;
+  }
 }
