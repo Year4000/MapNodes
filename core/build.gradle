@@ -32,6 +32,7 @@ task generateJsUtils(dependsOn: 'processResources') {
   def depends = [
     'https://raw.githubusercontent.com/lodash/lodash/4.17.4/dist/lodash.js',
     'https://cdnjs.cloudflare.com/ajax/libs/immutable/3.8.1/immutable.js',
+    'https://raw.githubusercontent.com/Olical/EventEmitter/master/EventEmitter.js',
   ]
   // The task to download all needed libs
   download {

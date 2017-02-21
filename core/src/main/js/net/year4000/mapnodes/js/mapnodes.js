@@ -9,6 +9,7 @@ class MapNodes {
     // Create the injector and inject our self with the injector
     new Injector(this._modules({
       map_nodes: this,
+      event_emitter: new EventEmitter(),
     }));
   }
 
@@ -28,4 +29,4 @@ class MapNodes {
   }
 }
 
-_$.mapnodes = new MapNodes();
+var mapnodes = new MapNodes();

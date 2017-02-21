@@ -38,11 +38,6 @@ class $ {
     }
   }
 
-  /** Send a message to the player */
-  static send_message(player, message) {
-      $.bindings.send_message(player.uuid, message);
-  }
-
   /** This function just makes sure the bindings were properly established */
   platform_name() { // @Bind
     return PLATFORM;

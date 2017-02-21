@@ -17,6 +17,6 @@ class Player {
 
   /** Send a message to this player */
   send_message(message) {
-    $.send_message(this, message);
+    $.bindings.send_message(this.uuid, message);
   }
 }
