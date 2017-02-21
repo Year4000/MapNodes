@@ -34,7 +34,7 @@ public abstract class Bindings implements Releasable {
     V8.setFlags("--harmony --use_strict");
   }
   /** The V8 Runtime for everything */
-  private static V8 engine = V8.createV8Runtime("mapnodes", Files.createTempDir().getAbsolutePath());
+  private static V8 engine = V8.createV8Runtime("_$", Files.createTempDir().getAbsolutePath());
   /** The memory manager for any javascript object that were created */
   private static MemoryManager memoryManager = new MemoryManager(engine);
   /** The V8 Object that is bind to the JAVA var */
