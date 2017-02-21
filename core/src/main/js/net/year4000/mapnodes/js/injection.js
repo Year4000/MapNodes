@@ -8,7 +8,7 @@ class Injector {
   /** Create the injector and inject the modules with the other modules */
   constructor(modules) {
     this._modules = Conditions.not_null(modules, 'modules');
-    _.forEach(this._modules, (module, key) => module === this._modules[key] && this.inject_instance(module))
+    _.forEach(this._modules, (module, key) => !(module === this._modules[key]) && this.inject_instance(module))
   }
 
   /** Inject the modules into the object prefixed with $ */
