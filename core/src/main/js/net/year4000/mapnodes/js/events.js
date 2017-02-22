@@ -8,8 +8,7 @@
 */
 
 /** Called when the system has been loaded  */
-map_nodes.$event_emitter.on('load', event => {
-    println("Loading environment from the Javascript side");
-    println('Lodash Version: ' + _.VERSION);
-    println('Immutable Type: ' + typeof Immutable);
+map_nodes.$event_emitter.on('load', () => {
+  println("Loading environment from the Javascript side");
+  println('Lodash Version: ' + _.VERSION);
 });
