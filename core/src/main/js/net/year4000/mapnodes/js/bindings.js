@@ -50,7 +50,7 @@ class $ {
 
   /** Load the environment */
   load() { // @Bind
-    map_nodes.$event_emitter.emitEvent('load', {});
+    map_nodes.$event_emitter.trigger('load', [{}]);
   }
 }
 

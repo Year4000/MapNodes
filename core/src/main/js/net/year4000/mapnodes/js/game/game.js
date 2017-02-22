@@ -27,21 +27,25 @@ class Game {
   /** Load the game from the JSON object */
   load() {
     println(`The game(${this._id}) is loading...`);
+    this.$event_emitter.trigger('game_load', [this]);
   }
 
   /** Start the game and unload the previous game */
   start() {
     println(`The game(${this._id}) has started...`);
+    this.$event_emitter.trigger('game_start', [this]);
   }
 
   /** Stop the game and get ready to load the next game */
   stop() {
     println(`The game(${this._id}) has stopped...`);
+    this.$event_emitter.trigger('game_stop', [this]);
   }
 
   /** Unload the game, clean things up for the next game */
   unload() {
     println(`The game(${this._id}) has been unloaded...`);
+    this.$event_emitter.trigger('game_unload', [this]);
   }
 
   /** Register the team into the system */
