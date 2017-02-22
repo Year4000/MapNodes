@@ -50,9 +50,7 @@ class $ {
 
   /** Load the environment */
   load() { // @Bind
-    println("Loading environment from the Javascript side");
-    println('Lodash Version: ' + _.VERSION);
-    println('Immutable Type: ' + typeof Immutable);
+    map_nodes.$event_emitter.emitEvent('load', {});
   }
 }
 

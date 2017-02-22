@@ -29,4 +29,4 @@ class MapNodes {
   }
 }
 
-var mapnodes = new MapNodes();
+var map_nodes = new MapNodes();
