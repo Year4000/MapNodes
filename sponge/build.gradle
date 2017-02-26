@@ -34,3 +34,12 @@ dependencies {
   compile 'org.spongepowered:spongeapi:6.0.0-SNAPSHOT'
   compile group: 'net.lingala.zip4j', name: 'zip4j', version: '1.3.2'
 }
+
+// Always tell idea to show the debug as a source dir
+idea.module.sourceDirs += file("src/debug/java")
+
+// Toggle this comment if you want to add the debug into the classpath
+//sourceSets.main {
+//  java.srcDir "${projectDir}/src/debug/java/"
+//  resources.srcDir "${projectDir}/src/debug/resources/"
+//}

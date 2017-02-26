@@ -102,20 +102,6 @@ public class MapNodesPlugin implements MapNodes {
       logger().info("Injecting and registering listener for: " + clazz.getSimpleName());
       eventManager.registerListeners(MapNodesPlugin.this, mapNodesInjector.getInstance(clazz));
     });
-    // debug while creating the core system
-    Sponge.getCommandManager().register(this, CommandSpec.builder().executor((src, args) -> {
-      try {
-          SpongeNode node = (SpongeNode) NODE_MANAGER.loadNextNode();
-          logger().info("Map " + node.name() + " version " + node.version());
-          Sponge.getServer().getOnlinePlayers().forEach(player -> {
-            Transform<World> transform = node.worldTransformer();
-            player.transferToWorld(transform.getExtent(), transform.getPosition());
-          });
-        } catch (Exception e) {
-          e.printStackTrace();
-      }
-      return CommandResult.success();
-    }).build(), "next");
   }
 
   @Listener
