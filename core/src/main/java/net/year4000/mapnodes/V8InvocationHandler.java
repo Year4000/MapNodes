@@ -35,8 +35,9 @@ class V8InvocationHandler implements InvocationHandler {
         .invokeWithArguments(args);
     }
     try (V8ThreadLock<V8> lock = new V8ThreadLock<>(engine)) {
-      String lower = CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, method.getName());
-      return lock.v8().executeObjectScript(lookup).executeJSFunction(lower, args);
+      return lock.v8()
+        .executeObjectScript(lookup)
+        .executeJSFunction(CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, method.getName()), args);
     }
   }
 }

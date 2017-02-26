@@ -39,12 +39,12 @@ public abstract class Bindings implements Releasable {
   private static V8 engine = V8.createV8Runtime("_$", Files.createTempDir().getAbsolutePath());
   /** The memory manager for any javascript object that were created */
   private static MemoryManager memoryManager = new MemoryManager(engine);
+  /** The handler to interact with the Javascript object */
+  protected final InvocationHandler handler = new V8InvocationHandler(engine, "$.js");
   /** The V8 Object that is bind to the JAVA var */
   private final V8Object object;
   /** Paths that need to be included after import */
   private final ArrayDeque<String> paths = Queues.newArrayDeque();
-  /** The handler to interact with the Javascript object */
-  protected final InvocationHandler handler = new V8InvocationHandler(engine, "$.js");
   /** Inject the logger used in the application */
   @Inject private Logger logger;
 
