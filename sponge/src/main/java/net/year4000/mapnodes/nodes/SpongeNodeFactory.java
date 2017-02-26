@@ -6,6 +6,8 @@ package net.year4000.mapnodes.nodes;
 import com.eclipsesource.v8.V8;
 import com.google.common.collect.Sets;
 import com.google.inject.Inject;
+import com.google.inject.Injector;
+import com.google.inject.Module;
 import net.year4000.mapnodes.*;
 import net.year4000.utilities.ErrorReporter;
 import org.slf4j.Logger;
@@ -25,13 +27,14 @@ public class SpongeNodeFactory implements NodeFactory {
   private Set<MapPackage> mapPackages = Sets.newHashSet();
   private final Random random = new Random();
 
+  @Inject private Injector injector;
   @Inject private Logger logger;
   @Inject private Bindings bindings;
   @Inject private Settings settings;
 
   @Override
   public Node create(MapPackage map) throws Exception {
-    return new SpongeNode(this, map);
+    return injector.createChildInjector((Module) binder -> binder.bind(MapPackage.class).toInstance(map)).getInstance(SpongeNode.class);
   }
 
   @Override

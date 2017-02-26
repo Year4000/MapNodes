@@ -30,12 +30,8 @@ public class MapNodesDebugPlugin {
     // debug while creating the core system
     Sponge.getCommandManager().register(this, CommandSpec.builder().executor((src, args) -> {
       try {
-        SpongeNode node = (SpongeNode) NODE_MANAGER.loadNextNode();
-        logger.info("Map " + node.name() + " version " + node.version());
-        Sponge.getServer().getOnlinePlayers().forEach(player -> {
-          Transform<World> transform = node.worldTransformer();
-          player.transferToWorld(transform.getExtent(), transform.getPosition());
-        });
+        SpongeNode node = (SpongeNode) NODE_MANAGER.getNode();
+        node.gameManager().cycle();
       } catch (Exception e) {
         e.printStackTrace();
       }

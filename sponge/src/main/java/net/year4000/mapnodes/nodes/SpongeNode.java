@@ -14,6 +14,7 @@ import net.lingala.zip4j.exception.ZipException;
 import net.year4000.mapnodes.MapNodes;
 import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.V8ThreadLock;
+import net.year4000.utilities.value.Value;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.GameState;
@@ -31,13 +32,15 @@ import java.util.Collections;
 public class SpongeNode extends Node {
   private World world;
 
+  @Inject private GameManager manager;
+  @Inject private MapNodesPlugin plugin;
   @Inject private Logger logger;
   @Inject private Game game;
   @Inject private EventManager eventManager;
 
+  @Inject
   public SpongeNode(SpongeNodeFactory factory, MapPackage map) throws Exception {
     super(factory, map);
-    MapNodesPlugin.get().injector().injectMembers(this);
   }
 
   @Override
@@ -59,7 +62,7 @@ public class SpongeNode extends Node {
     game.getServer().createWorldProperties("mapnodes-" + id(), WorldArchetypes.THE_VOID);
     // Trigger the world to be loaded once the server has been started
     if (game.getState() == GameState.SERVER_ABOUT_TO_START) {
-      eventManager.registerListener(MapNodesPlugin.get(), GameStartedServerEvent.class, event -> {
+      eventManager.registerListener(plugin, GameStartedServerEvent.class, event -> {
         logger.info("Loading the world from event");
         loadWorld("mapnodes-" + id());
       });
@@ -94,8 +97,7 @@ public class SpongeNode extends Node {
 
   @Override
   public void unload() throws Exception {
-    // todo remove world from system
-    super.unload();
+    super.unload(); //  Handle the V8
   }
 
   /** Create the world transformer to spawn the player into the map */
@@ -108,6 +110,18 @@ public class SpongeNode extends Node {
         Integer.valueOf(xyz[2].replaceAll(" ", ""))
       };
       return new Transform<>(world, new Vector3d(vector[0], vector[1], vector[2]));
+    } catch (IllegalStateException error) { // tmp until region system works
+      return new Transform<>(world);
     }
+  }
+
+  /** Get the world of this node */
+  public Value<World> world() {
+    return Value.of(world);
+  }
+
+  /** Get the game manager for this node */
+  public GameManager gameManager() {
+    return manager;
   }
 }

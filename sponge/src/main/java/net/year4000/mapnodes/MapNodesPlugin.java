@@ -7,6 +7,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import net.year4000.mapnodes.listeners.GameListener;
+import net.year4000.mapnodes.listeners.MapNodesListener;
 import net.year4000.mapnodes.listeners.WorldListener;
 import net.year4000.mapnodes.nodes.NodeFactory;
 import net.year4000.mapnodes.nodes.SpongeNode;
@@ -15,9 +16,6 @@ import net.year4000.utilities.Conditions;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
-import org.spongepowered.api.command.CommandResult;
-import org.spongepowered.api.command.spec.CommandSpec;
-import org.spongepowered.api.entity.Transform;
 import org.spongepowered.api.event.EventManager;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.*;
@@ -25,7 +23,6 @@ import org.spongepowered.api.plugin.Dependency;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
-import org.spongepowered.api.world.World;
 
 /** Sponge plugin to provide support for the MapNodes system */
 @Plugin(id = "mapnodes", name = "MapNodes", version = "3.0.0-SNAPSHOT", dependencies = {@Dependency(id = "utilities")})
@@ -98,7 +95,7 @@ public class MapNodesPlugin implements MapNodes {
       game.getServer().shutdown(Text.of(TextColors.RED, message));
     }
     // Register listeners
-    ImmutableList.of(GameListener.class, WorldListener.class).forEach(clazz -> {
+    ImmutableList.of(MapNodesListener.class, GameListener.class, WorldListener.class).forEach(clazz -> {
       logger().info("Injecting and registering listener for: " + clazz.getSimpleName());
       eventManager.registerListeners(MapNodesPlugin.this, mapNodesInjector.getInstance(clazz));
     });
