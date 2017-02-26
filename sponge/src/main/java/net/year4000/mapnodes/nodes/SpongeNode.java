@@ -61,7 +61,7 @@ public class SpongeNode extends Node {
     if (game.getState() == GameState.SERVER_ABOUT_TO_START) {
       eventManager.registerListener(MapNodesPlugin.get(), GameStartedServerEvent.class, event -> {
         logger.info("Loading the world from event");
-        loadWorld("mapnodes-" + id()); // todo world loads wonky
+        loadWorld("mapnodes-" + id());
       });
     } else {
       logger.info("Loading the world at will");
