@@ -4,27 +4,29 @@
 package net.year4000.mapnodes.listeners;
 
 import com.google.inject.Inject;
-import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.SpongeBindings;
-import org.spongepowered.api.Game;
+import org.slf4j.Logger;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.block.ChangeBlockEvent;
 import org.spongepowered.api.event.entity.DamageEntityEvent;
-import org.spongepowered.api.event.entity.MoveEntityEvent;
+import org.spongepowered.api.event.filter.Getter;
+import org.spongepowered.api.event.world.LoadWorldEvent;
 import org.spongepowered.api.event.world.SaveWorldEvent;
+import org.spongepowered.api.world.World;
 
 /** Listeners that are for world events */
 public class WorldListener {
 
-  @Inject private MapNodesPlugin mapnodes;
   @Inject private SpongeBindings $;
-  @Inject private Game game;
+  @Inject private Logger logger;
 
   /** Do not modify the world when the game is not running */
   @Listener
   public void on(ChangeBlockEvent event) {
     if (!$.js.isGameRunning()) {
-      //mapnodes.logger().debug("Game is not running canceling event: " + event.getClass().getSimpleName());
+      if (logger.isDebugEnabled()) {
+        logger.debug("Game is not running canceling event: " + event.getClass().getSimpleName());
+      }
       event.setCancelled(true);
     }
   }
@@ -33,7 +35,9 @@ public class WorldListener {
   @Listener
   public void on(DamageEntityEvent event) {
     if (!$.js.isGameRunning()) {
-      //mapnodes.logger().debug("Game is not running canceling event: " + event.getClass().getSimpleName());
+      if (logger.isDebugEnabled()) {
+        logger.debug("Game is not running canceling event: " + event.getClass().getSimpleName());
+      }
       event.setCancelled(true);
     }
   }
@@ -42,5 +46,17 @@ public class WorldListener {
   @Listener
   public void on(SaveWorldEvent event) {
     event.setCancelled(true);
+  }
+
+  /** Only load MapNodes worlds and disable spawn chunks */
+  @Listener
+  public void on(LoadWorldEvent event, @Getter("getTargetWorld") World world) {
+    world.getProperties().setGenerateSpawnOnLoad(false);
+    if (!world.getName().startsWith("mapnodes")) {
+      if (logger.isDebugEnabled()) {
+        logger.debug("Not loading this world: " + world.getName());
+      }
+      event.setCancelled(true);
+    }
   }
 }

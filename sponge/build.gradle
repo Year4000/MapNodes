@@ -39,7 +39,9 @@ dependencies {
 idea.module.sourceDirs += file("src/debug/java")
 
 // Toggle this comment if you want to add the debug into the classpath
-//sourceSets.main {
-//  java.srcDir "${projectDir}/src/debug/java/"
-//  resources.srcDir "${projectDir}/src/debug/resources/"
-//}
+if (System.getenv('DEBUG') != null) {
+  sourceSets.main {
+    java.srcDir "${projectDir}/src/debug/java/"
+    resources.srcDir "${projectDir}/src/debug/resources/"
+  }
+}

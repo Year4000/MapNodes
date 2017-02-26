@@ -75,6 +75,7 @@ public class SpongeNode extends Node {
       game.getServer().getWorldProperties(name).ifPresent(properties -> {
         properties.setEnabled(true);
         properties.setKeepSpawnLoaded(false);
+        properties.setGenerateSpawnOnLoad(false);
         properties.setMapFeaturesEnabled(false);
         properties.setGeneratorType(GeneratorTypes.FLAT);
         properties.setGeneratorModifiers(Collections.singleton(WorldGeneratorModifiers.VOID));
