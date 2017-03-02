@@ -32,7 +32,7 @@ import java.util.Collections;
 public class SpongeNode extends Node {
   private World world;
 
-  @Inject private GameManager manager;
+  @Inject private GameManager gameManager;
   @Inject private MapNodesPlugin plugin;
   @Inject private Logger logger;
   @Inject private Game game;
@@ -46,6 +46,7 @@ public class SpongeNode extends Node {
   @Override
   public void load() throws Exception {
     try (V8ThreadLock<V8> lock = new V8ThreadLock<>(v8Object.getRuntime())) {
+      logger.info("Creating MemoryManager for current game");
       memoryManager = new MemoryManager(lock.v8());
     }
     String zipLocation = MapNodes.SETTINGS.cache + "/" + id() + ".zip";
@@ -70,6 +71,8 @@ public class SpongeNode extends Node {
       logger.info("Loading the world at will");
       loadWorld("mapnodes-" + id());
     }
+    logger.info("Registering listeners for current node");
+    eventManager.registerListeners(plugin, gameManager);
   }
 
   /** Load the world*/
@@ -97,6 +100,8 @@ public class SpongeNode extends Node {
 
   @Override
   public void unload() throws Exception {
+    logger.info("Unregister listeners and releasing v8 bindings");
+    eventManager.unregisterListeners(gameManager);
     super.unload(); //  Handle the V8
   }
 
@@ -122,6 +127,6 @@ public class SpongeNode extends Node {
 
   /** Get the game manager for this node */
   public GameManager gameManager() {
-    return manager;
+    return gameManager;
   }
 }

@@ -6,8 +6,8 @@ package net.year4000.mapnodes;
 import com.google.common.collect.ImmutableList;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
+import net.year4000.mapnodes.events.DeleteWorldEvent;
 import net.year4000.mapnodes.listeners.GameListener;
-import net.year4000.mapnodes.listeners.MapNodesListener;
 import net.year4000.mapnodes.listeners.WorldListener;
 import net.year4000.mapnodes.nodes.NodeFactory;
 import net.year4000.mapnodes.nodes.SpongeNode;
@@ -94,8 +94,8 @@ public class MapNodesPlugin implements MapNodes {
       logger().warn(message);
       game.getServer().shutdown(Text.of(TextColors.RED, message));
     }
-    // Register listeners
-    ImmutableList.of(MapNodesListener.class, GameListener.class, WorldListener.class).forEach(clazz -> {
+    // Register listeners and inject them
+    ImmutableList.of(GameListener.class, WorldListener.class).forEach(clazz -> {
       logger().info("Injecting and registering listener for: " + clazz.getSimpleName());
       eventManager.registerListeners(MapNodesPlugin.this, mapNodesInjector.getInstance(clazz));
     });
@@ -103,6 +103,7 @@ public class MapNodesPlugin implements MapNodes {
 
   @Listener
   public void onUnload(GameStoppingEvent event) {
+    eventManager.post(new DeleteWorldEvent(currentNode()));
     unload();
   }
 }
