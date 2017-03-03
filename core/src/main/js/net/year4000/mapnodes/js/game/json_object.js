@@ -15,4 +15,9 @@ class JsonObject {
   get id() {
     return this._id;
   }
+
+  /** The JSON object of this object */
+  toJSON() {
+    return this._json;
+  }
 }
