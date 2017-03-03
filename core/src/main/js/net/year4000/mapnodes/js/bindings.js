@@ -59,6 +59,11 @@ class $ {
   on_event(event_id, event) { // @Bind
     map_nodes.$event_emitter.trigger(event_id, [event]);
   }
+
+  /** Swap out the current game */
+  swap_game(id, map) {
+    map_nodes.current_game = new Game(id, map);
+  }
 }
 
 /** Include the resource into the V8 runtime */

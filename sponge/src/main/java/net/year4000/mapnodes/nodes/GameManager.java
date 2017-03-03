@@ -6,6 +6,7 @@ package net.year4000.mapnodes.nodes;
 import com.google.inject.Inject;
 import net.year4000.mapnodes.SpongeBindings;
 import net.year4000.mapnodes.events.DeleteWorldEvent;
+import net.year4000.mapnodes.events.GameCycleEvent;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.entity.Transform;
@@ -45,13 +46,15 @@ public class GameManager {
         Transform<World> transform = nextNode.worldTransformer();
         player.transferToWorld(transform.getExtent(), transform.getPosition());
       });
-      eventManager.post(new DeleteWorldEvent(node));
-    }).ifEmpty(() -> eventManager.post(new DeleteWorldEvent(node)));
+    });
+    eventManager.post(new DeleteWorldEvent(node));
+    eventManager.post(new GameCycleEvent());
   }
 
-  /** Get the internal id of from this GameManager */
-  public int id() {
-    return node.id();
+  /** Construct the game object within the v8 engine */
+  @Listener
+  public void onGameCycle(GameCycleEvent event) {
+    $.js.swapGame(node.id(), node.v8Object);
   }
 
   @Listener

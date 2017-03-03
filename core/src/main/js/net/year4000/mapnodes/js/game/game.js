@@ -10,6 +10,7 @@ class Game extends JsonObject {
     this._kits = Immutable.Map();
     this._regions = Immutable.Map();
     this._clazzes = Immutable.Map();
+    println(`Construct the game id ${id}`);
   }
 
   /** Get the json for this map */

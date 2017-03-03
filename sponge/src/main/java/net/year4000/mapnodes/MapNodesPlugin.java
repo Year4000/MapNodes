@@ -7,6 +7,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import net.year4000.mapnodes.events.DeleteWorldEvent;
+import net.year4000.mapnodes.events.GameCycleEvent;
 import net.year4000.mapnodes.listeners.GameListener;
 import net.year4000.mapnodes.listeners.WorldListener;
 import net.year4000.mapnodes.nodes.NodeFactory;
@@ -99,6 +100,8 @@ public class MapNodesPlugin implements MapNodes {
       logger().info("Injecting and registering listener for: " + clazz.getSimpleName());
       eventManager.registerListeners(MapNodesPlugin.this, mapNodesInjector.getInstance(clazz));
     });
+    // Construct the initial game object in v8
+    eventManager.post(new GameCycleEvent());
   }
 
   @Listener
