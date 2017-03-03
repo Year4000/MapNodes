@@ -37,6 +37,17 @@ public class MapNodesDebugPlugin {
       }
       return CommandResult.success();
     }).build(), "next");
+
+    // debug while creating the core system
+    Sponge.getCommandManager().register(this, CommandSpec.builder().executor((src, args) -> {
+      try {
+        SpongeNode node = (SpongeNode) NODE_MANAGER.getNode();
+        node.gameManager().start();
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+      return CommandResult.success();
+    }).build(), "start");
   }
 
 }

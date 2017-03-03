@@ -47,7 +47,7 @@ class $ {
 
   /** Is the game currently running */
   is_game_running() { // @Bind
-    return false;
+    return map_nodes.current_game.is_running();
   }
 
   /** Load the environment */
@@ -63,6 +63,21 @@ class $ {
   /** Swap out the current game */
   swap_game(id, map) {
     map_nodes.current_game = new Game(id, map);
+  }
+
+  /** Start the current game */
+  start() {
+    map_nodes.current_game.start();
+  }
+
+  /** Stop the current game */
+  stop() {
+    map_nodes.current_game.stop();
+  }
+
+  /** Get the current state of the game */
+  game_state() {
+    return map_nodes.current_game._state;
   }
 }
 

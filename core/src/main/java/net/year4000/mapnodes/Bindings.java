@@ -134,5 +134,14 @@ public abstract class Bindings implements Releasable {
 
     /** $.js.swap_game */
     void swapGame(int id, V8Object map);
+
+    /** $.js.start */
+    void start();
+
+    /** $.js.stop */
+    void stop();
+
+    /** $.js.game_state */
+    String gameState();
   }
 }

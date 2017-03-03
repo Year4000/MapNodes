@@ -10,6 +10,7 @@ class Game extends JsonObject {
     this._kits = Immutable.Map();
     this._regions = Immutable.Map();
     this._clazzes = Immutable.Map();
+    this._state = 'WAITING';
     println(`Constructing the game id ${id}`);
   }
 
@@ -27,6 +28,11 @@ class Game extends JsonObject {
     _.forEach(this._json.classes, (json, id) => game._register_class(id, json));
   }
 
+  /** Check if the game is running */
+  is_running() {
+    return this._state === 'RUNNING';
+  }
+
   /** Load the game from the JSON object */
   load() {
     println(`The game(${this._id}) is loading...`);
@@ -36,12 +42,14 @@ class Game extends JsonObject {
   /** Start the game and unload the previous game */
   start() {
     println(`The game(${this._id}) has started...`);
+    this._state = 'RUNNING';
     this.$event_emitter.trigger('game_start', [this]);
   }
 
   /** Stop the game and get ready to load the next game */
   stop() {
     println(`The game(${this._id}) has stopped...`);
+    this._state = 'ENDED';
     this.$event_emitter.trigger('game_stop', [this]);
   }
 

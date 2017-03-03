@@ -29,6 +29,8 @@ import java.io.IOException;
 
 /** This handles all the game logic to and from the v8 engine */
 public class GameManager {
+  /** The current state of the game */
+  enum GameState {WAITING, RUNNING, ENDED}
 
   @Inject private Game game;
   @Inject private SpongeNode node;
@@ -39,6 +41,9 @@ public class GameManager {
 
   /** This will cycle to the next game */
   public void cycle() throws Exception {
+    if (gameState() != GameState.ENDED) {
+      stop(); // Make sure we stop the game
+    }
     SpongeNode nextNode = (SpongeNode) nodeManager.loadNextNode();
     logger.info("Cycling to Map " + nextNode.name() + " version " + nextNode.version());
     node.world().ifPresent(world -> { // World never loaded
@@ -49,6 +54,29 @@ public class GameManager {
     });
     eventManager.post(new DeleteWorldEvent(node));
     eventManager.post(new GameCycleEvent());
+  }
+
+  /** Get the current state the v8 instance has with the game */
+  public GameState gameState() {
+    return GameState.valueOf($.js.gameState());
+  }
+
+  /** Tell the v8 instance that we want to start the game */
+  public void start() {
+    if (gameState() == GameState.WAITING) {
+      $.js.start();
+    } else {
+      logger.warn("Can not start a game that is all ready running");
+    }
+  }
+
+  /** Tell the v8 instance that we want to start the game */
+  public void stop() {
+    if (gameState() != GameState.ENDED) {
+      $.js.stop();
+    } else {
+      logger.warn("Can not stop a game that has been stopped");
+    }
   }
 
   /** Construct the game object within the v8 engine */
