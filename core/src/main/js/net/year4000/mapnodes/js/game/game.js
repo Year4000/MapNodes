@@ -10,12 +10,21 @@ class Game extends JsonObject {
     this._kits = Immutable.Map();
     this._regions = Immutable.Map();
     this._clazzes = Immutable.Map();
-    println(`Construct the game id ${id}`);
+    println(`Constructing the game id ${id}`);
   }
 
   /** Get the json for this map */
   get map() {
     return this._map;
+  }
+
+  /** Register the things the map has */
+  register_map() {
+    let game = this;
+    _.forEach(this._json.teams, (json, id) => game._register_team(id, json));
+    _.forEach(this._json.kits, (json, id) => game._register_kit(id, json));
+    _.forEach(this._json.regions, (json, id) => game._register_region(id, json));
+    _.forEach(this._json.classes, (json, id) => game._register_class(id, json));
   }
 
   /** Load the game from the JSON object */
@@ -45,7 +54,8 @@ class Game extends JsonObject {
   /** The abstraction to register the object */
   _register(obj_id, obj_json, clazz, collection_name, event_id) {
     Conditions.not_null(obj_id, 'obj_id');
-    Conditions.is_object(obj_json, 'obj_json');
+    Conditions.not_null(obj_json, 'obj_json');
+    println(`Registering ${collection_name} with id ${obj_id}`);
     let obj = new clazz(obj_id, obj_json);
     this[collection_name] = this[collection_name].set(obj_id, obj);
     this.$event_emitter.trigger(event_id, [obj, this]);

@@ -15,10 +15,11 @@ class Injector {
   inject_instance(instance) {
     Conditions.not_null(instance, 'instance');
     _.merge(instance, _.reduce(this._modules, (result, value, key) => {
-      result['$' + key] = value;
+      if (instance !== value) { // Don't inject your self in the same instance
+        result['$' + key] = value;
+      }
       return result;
     }));
-    instance['$injector'] = this; // always replace the injector with ourselves
   }
 
   /** Create a child injector from this injector */

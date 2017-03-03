@@ -7,7 +7,7 @@ class MapNodes {
 
   constructor() {
     // Create the injector and inject our self with the injector
-    new Injector({
+    this.$injector = new Injector({
       map_nodes: this,
       event_emitter: new EventEmitter(),
     });
@@ -23,9 +23,10 @@ class MapNodes {
     Conditions.not_null(game, 'game');
     this._last_game = this._current_game;
     this._current_game = game;
-    this.$injector.child_injector({
+    this._current_game.$injector = this.$injector.child_injector({
       game: this._current_game,
     });
+    this._current_game.register_map();
   }
 }
 
