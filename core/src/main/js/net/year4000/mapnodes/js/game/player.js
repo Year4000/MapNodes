@@ -3,6 +3,7 @@
  */
 
 class Player {
+
   constructor(json) {
     this._meta = json;
   }

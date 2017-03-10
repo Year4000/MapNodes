@@ -4,6 +4,7 @@
 
 /** Represents a game from the json object */
 class Game extends JsonObject {
+
   constructor(id, map) {
     super(id, map);
     this._teams = Immutable.Map();

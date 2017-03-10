@@ -19,3 +19,4 @@ include('/net/year4000/mapnodes/js/game/game.js');
 include('/net/year4000/mapnodes/js/game/kit.js');
 include('/net/year4000/mapnodes/js/game/region.js');
 include('/net/year4000/mapnodes/js/game/clazz.js');
+include('/net/year4000/mapnodes/js/game/game_mode.js');
