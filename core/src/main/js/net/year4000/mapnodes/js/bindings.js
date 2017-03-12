@@ -30,7 +30,7 @@ class $ {
   }
 
   /** Map a specific object to this bindings var */
-  static get bindings() {
+  static get _bindings() {
     if (PLATFORM == PLATFORMS.PE) {
       return JAVA
     } else if (PLATFORM == PLATFORMS.PC) {
@@ -38,6 +38,20 @@ class $ {
     } else {
       throw "PLATFORM is not defined!"
     }
+  }
+
+  /** Wrap the internal bindings in a proxy to catch unimplemented variables */
+  static get bindings() {
+    // todo when j2v8 supports newer v8 versions
+    // return new Proxy($._bindings, {
+    //   get: (target, name, receiver) => {
+    //     if (target[name] == null) {
+    //       println(`${name} has not been defined in the bindings mappings`)
+    //     }
+    //     return target[name] || () => {}
+    //   }
+    // })
+    return $._bindings
   }
 
   /** This function just makes sure the bindings were properly established */
