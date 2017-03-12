@@ -1,3 +1,6 @@
+/*
+ * Copyright 2017 Year4000. All Rights Reserved.
+ */
 
 /** Conditions that must be meet */
 class Conditions {
@@ -8,6 +11,13 @@ class Conditions {
       throw new Error(message || 'The value was null');
     }
     return value;
+  }
+
+  /** Make sure the value is true */
+  static is_true(value, message) {
+    if (value) {
+      throw new Error(message || 'The value was not true');
+    }
   }
 
   /** Make sure the value is an object */
