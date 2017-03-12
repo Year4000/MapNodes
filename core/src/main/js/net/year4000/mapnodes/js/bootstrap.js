@@ -10,6 +10,7 @@ include('/modules/EventEmitter.js');
 // The files needed for MapNodes
 include('/net/year4000/mapnodes/js/utils.js');
 include('/net/year4000/mapnodes/js/conditions.js');
+include('/net/year4000/mapnodes/js/facts.js');
 include('/net/year4000/mapnodes/js/injection.js');
 include('/net/year4000/mapnodes/js/mapnodes.js');
 include('/net/year4000/mapnodes/js/game/json_object.js');
