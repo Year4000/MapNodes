@@ -45,12 +45,14 @@ const map_nodes = new MapNodes()
 
 /** Called when the system has been loaded  */
 map_nodes.$event_emitter.on('load', () => {
-  println("Loading environment from the Javascript side")
-  println('Lodash Version: ' + _.VERSION)
+  Logger.setHandler((messages, context) => println(`[${context.level.name}] ${messages[0]}`))
+  Logger.setLevel(Logger.INFO)
+  Logger.info("Loading environment from the Javascript side")
+  Logger.info('Lodash Version: ' + _.VERSION)
 })
 
 map_nodes.$event_emitter.on('join_team', (player, team, game) => {
-  println(`The player ${player.username} joined the team ${team.name} size ${team.size}`)
+  Logger.info(`The player ${player.username} joined the team ${team.name} size ${team.size}`)
 })
 
 /** Help in debuging events */

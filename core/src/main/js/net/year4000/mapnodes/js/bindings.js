@@ -46,7 +46,7 @@ class $ {
     // return new Proxy($._bindings, {
     //   get: (target, name, receiver) => {
     //     if (target[name] == null) {
-    //       println(`${name} has not been defined in the bindings mappings`)
+    //       Logger.info(`${name} has not been defined in the bindings mappings`)
     //     }
     //     return target[name] || () => {}
     //   }

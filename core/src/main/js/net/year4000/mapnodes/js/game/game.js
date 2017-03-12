@@ -13,7 +13,7 @@ class Game extends JsonObject {
     this._clazzes = Immutable.Map()
     this._state = 'WAITING'
     this._players = []
-    println(`Constructing the game id ${id}`)
+    Logger.info(`Constructing the game id ${id}`)
   }
 
   /** Get the json for this map */
@@ -47,20 +47,20 @@ class Game extends JsonObject {
 
   /** Load the game from the JSON object */
   load() {
-    println(`The game(${this._id}) is loading...`)
+    Logger.info(`The game(${this._id}) is loading...`)
     this.$event_emitter.trigger('game_load', [this])
   }
 
   /** Start the game and unload the previous game */
   start() {
-    println(`The game(${this._id}) has started...`)
+    Logger.info(`The game(${this._id}) has started...`)
     this._state = 'RUNNING'
     this.$event_emitter.trigger('game_start', [this])
   }
 
   /** Stop the game and get ready to load the next game */
   stop() {
-    println(`The game(${this._id}) has stopped...`)
+    Logger.info(`The game(${this._id}) has stopped...`)
     this._state = 'ENDED'
     this.$event_emitter.trigger('game_stop', [this])
   }
@@ -79,7 +79,7 @@ class Game extends JsonObject {
 
   /** Unload the game, clean things up for the next game */
   unload() {
-    println(`The game(${this._id}) has been unloaded...`)
+    Logger.info(`The game(${this._id}) has been unloaded...`)
     this.$event_emitter.trigger('game_unload', [this])
   }
 
@@ -120,7 +120,7 @@ class Game extends JsonObject {
   _register(obj_id, obj_json, clazz, collection_name, event_id) {
     Conditions.not_null(obj_id, 'obj_id')
     Conditions.not_null(obj_json, 'obj_json')
-    println(`Registering ${collection_name} with id ${obj_id}`)
+    Logger.info(`Registering ${collection_name} with id ${obj_id}`)
     let obj = new clazz(obj_id, obj_json)
     this.$injector.inject_instance(obj)
     this[collection_name] = this[collection_name].set(obj_id, obj)
