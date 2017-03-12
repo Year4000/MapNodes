@@ -6,11 +6,11 @@
 class Kit extends JsonObject {
 
   constructor(id, kit) {
-    super(id, kit);
+    super(id, kit)
   }
 
   /** Get the json for this kit */
   get kit() {
-    return super._json;
+    return super._json
   }
 }

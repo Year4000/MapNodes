@@ -6,11 +6,11 @@
 class Region extends JsonObject {
 
   constructor(id, region) {
-    super(id, region);
+    super(id, region)
   }
 
   /** Get the json for this region */
   get region() {
-    return super._json;
+    return super._json
   }
 }

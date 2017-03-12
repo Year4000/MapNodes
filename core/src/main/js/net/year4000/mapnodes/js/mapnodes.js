@@ -10,27 +10,27 @@ class MapNodes {
     this.$injector = new Injector({
       map_nodes: this,
       event_emitter: new EventEmitter(),
-    });
+    })
   }
 
   /** Get the current game */
   get current_game() {
-    return Conditions.not_null(this._current_game, '_current_game');
+    return Conditions.not_null(this._current_game, '_current_game')
   }
 
   /** Set the current game and set the current game to the last game */
   set current_game(game) {
-    Conditions.not_null(game, 'game');
-    this._last_game = this._current_game;
-    this._current_game = game;
+    Conditions.not_null(game, 'game')
+    this._last_game = this._current_game
+    this._current_game = game
     this._current_game.$injector = this.$injector.child_injector({
       game: this._current_game,
-    });
-    this._current_game.register_map();
+    })
+    this._current_game.register_map()
   }
 }
 
-const map_nodes = new MapNodes();
+const map_nodes = new MapNodes()
 
 // Event Listeners
 
@@ -42,6 +42,6 @@ const map_nodes = new MapNodes();
 
 /** Called when the system has been loaded  */
 map_nodes.$event_emitter.on('load', () => {
-  println("Loading environment from the Javascript side");
-  println('Lodash Version: ' + _.VERSION);
-});
+  println("Loading environment from the Javascript side")
+  println('Lodash Version: ' + _.VERSION)
+})

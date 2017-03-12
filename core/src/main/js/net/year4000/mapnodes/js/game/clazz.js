@@ -6,11 +6,11 @@
 class Clazz extends JsonObject {
 
   constructor(id, clazz) {
-    super(id, clazz);
+    super(id, clazz)
   }
 
   /** Get the json for this clazz */
   get clazz() {
-    return super._json;
+    return super._json
   }
 }
