@@ -3,14 +3,11 @@
  */
 package net.year4000.mapnodes;
 
-import com.eclipsesource.v8.V8;
-import com.eclipsesource.v8.V8Object;
 import com.google.common.base.CaseFormat;
 import com.google.inject.Inject;
 import net.year4000.utilities.Utils;
 import net.year4000.utilities.reflection.Gateways;
 import net.year4000.utilities.reflection.Reflections;
-import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
@@ -42,13 +39,9 @@ public final class SpongeBindings extends Bindings {
   /** $.bindings.player_meta_uuid */
   @Override
   @Bind
-  public V8Object playerMetaUuid(String uuid) {
-    try (V8ThreadLock<V8> lock = v8Thread()) {
-      Player player = game.getServer().getPlayer(UUID.fromString(uuid)).orElse(null);
-      return new V8Object(lock.v8())
-        .add("uuid", player.getUniqueId().toString())
-        .add("username", player.getName());
-    }
+  public String playerMetaUuid(String uuid) {
+    Player player = game.getServer().getPlayer(UUID.fromString(uuid)).orElse(null);
+    return player.getName() + ":" + uuid;
   }
 
   /** Translate the Sponge to the V8Bindings interface */

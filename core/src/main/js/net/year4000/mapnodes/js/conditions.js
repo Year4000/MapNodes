@@ -15,7 +15,7 @@ class Conditions {
 
   /** Make sure the value is true */
   static is_true(value, message) {
-    if (value) {
+    if (!value) {
       throw new Error(message || 'The value was not true');
     }
   }

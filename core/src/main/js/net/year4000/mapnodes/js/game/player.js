@@ -5,8 +5,10 @@
 /** Generates the player object */
 class Player {
 
-  constructor(json) {
-    this._meta = json;
+  constructor(username, uuid) {
+    Conditions.not_null(username, 'username');
+    Conditions.not_null(uuid, 'uuid');
+    this._meta = {username: username, uuid: uuid};
   }
 
   /** Create the instance of this player */
@@ -23,13 +25,15 @@ class Player {
   /** Generate the player meta from the uuid */
   static of_uuid(uuid) {
     Conditions.not_null(uuid, 'uuid');
-    return new Player($.bindings.player_meta_uuid(uuid));
+    let meta = $.bindings.player_meta_uuid(uuid).split(':');
+    return new Player(meta[0], meta[1]);
   }
 
   /** Generate the player meta from a username */
   static of_username(username) {
     Conditions.not_null(username, 'username');
-    return new Player($.bindings.player_meta_username(username));
+    let meta = $.bindings.player_meta_username(username).split(':');
+    return new Player(meta[0], meta[1]);
   }
 
   get uuid() {

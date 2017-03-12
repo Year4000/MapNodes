@@ -119,7 +119,7 @@ public abstract class Bindings implements Releasable {
   @Bind public abstract void sendMessage(String player, String message);
 
   /** $.bindings.player_meta_uuid */
-  @Bind public abstract V8Object playerMetaUuid(String uuid);
+  @Bind public abstract String playerMetaUuid(String uuid);
 
   /** Run function from the JavaScript side */
   public interface V8Bindings {
