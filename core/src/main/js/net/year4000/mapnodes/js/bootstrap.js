@@ -7,6 +7,7 @@ include('/modules/lodash.js')
 include('/modules/immutable.js')
 include('/modules/EventEmitter.js')
 include('/modules/logger.js')
+include('/modules/reflect.js')
 
 // The files needed for MapNodes
 include('/net/year4000/mapnodes/js/utils.js')

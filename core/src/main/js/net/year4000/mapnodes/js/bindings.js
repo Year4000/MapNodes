@@ -42,16 +42,20 @@ class $ {
 
   /** Wrap the internal bindings in a proxy to catch unimplemented variables */
   static get bindings() {
-    // todo when j2v8 supports newer v8 versions
-    // return new Proxy($._bindings, {
-    //   get: (target, name, receiver) => {
-    //     if (target[name] == null) {
-    //       Logger.info(`${name} has not been defined in the bindings mappings`)
-    //     }
-    //     return target[name] || () => {}
-    //   }
-    // })
-    return $._bindings
+    if ($._proxy == null) { // Lazy load the proxy
+      $._proxy = Proxy($._bindings, {
+        get: (target, name, receiver) => {
+          if (target[name]) {
+            // todo other possiblyiest???
+            return (a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z) => target[name](a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z)
+          } else {
+            Logger.error(`${name} has not been defined in the bindings mappings`)
+            return () => {}
+          }
+        }
+      })
+    }
+    return $._proxy
   }
 
   /** This function just makes sure the bindings were properly established */
@@ -107,12 +111,12 @@ class $ {
 
 /** Include the resource into the V8 runtime */
 function include(path) {
-  $.bindings._include(path)
+  $._bindings._include(path)
 }
 
 /** Print the message to the console */
 function print(message) {
-  $.bindings.print(message)
+  $._bindings.print(message)
 }
 
 /** Print a line to the console */
