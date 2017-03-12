@@ -19,7 +19,7 @@ class Team extends JsonObject {
   join(player) {
     Conditions.not_null(player, 'player')
     this._members.push(player)
-    this.$event_emitter.trigger('join_game', [player, this, this.$game])
+    this.$event_emitter.trigger('join_team', [player, this, this.$game])
   }
 
   /** Get the size of the team */
