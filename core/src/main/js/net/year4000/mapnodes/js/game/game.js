@@ -12,6 +12,7 @@ class Game extends JsonObject {
     this._regions = Immutable.Map();
     this._clazzes = Immutable.Map();
     this._state = 'WAITING';
+    this._players = [];
     println(`Constructing the game id ${id}`);
   }
 
@@ -60,12 +61,27 @@ class Game extends JsonObject {
     this.$event_emitter.trigger('game_unload', [this]);
   }
 
+  /** Join the player to the game */
+  join_game(player) {
+    Conditions.not_null(player, 'player');
+    let player_object = Player.of(player);
+    this._players.push(player_object);
+    //this._smallest_team.join(player_object); todo join spectator team
+    this.$event_emitter.trigger('join_game', [player_object, this]);
+  }
+
+  /** Generate the Team object containing the least about of players */
+  get _smallest_team() {
+    return _(this._teams).sortBy('size').last();
+  }
+
   /** The abstraction to register the object */
   _register(obj_id, obj_json, clazz, collection_name, event_id) {
     Conditions.not_null(obj_id, 'obj_id');
     Conditions.not_null(obj_json, 'obj_json');
     println(`Registering ${collection_name} with id ${obj_id}`);
     let obj = new clazz(obj_id, obj_json);
+    this.$injector.inject_instance(obj);
     this[collection_name] = this[collection_name].set(obj_id, obj);
     this.$event_emitter.trigger(event_id, [obj, this]);
   }

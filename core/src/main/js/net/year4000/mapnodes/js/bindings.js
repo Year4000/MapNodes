@@ -79,6 +79,11 @@ class $ {
   game_state() {
     return map_nodes.current_game._state;
   }
+
+  /** Join the player to the game */
+  join_game(player) {
+    map_nodes.current_game.join_game(player);
+  }
 }
 
 /** Include the resource into the V8 runtime */

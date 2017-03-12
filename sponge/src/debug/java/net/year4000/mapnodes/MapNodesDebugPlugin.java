@@ -10,6 +10,7 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.spec.CommandSpec;
 import org.spongepowered.api.entity.Transform;
+import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.*;
 import org.spongepowered.api.plugin.Dependency;
@@ -27,7 +28,7 @@ public class MapNodesDebugPlugin {
 
   @Listener
   public void onEnable(GameAboutToStartServerEvent event) {
-    // debug while creating the core system
+    // go to the next game
     Sponge.getCommandManager().register(this, CommandSpec.builder().executor((src, args) -> {
       try {
         SpongeNode node = (SpongeNode) NODE_MANAGER.getNode();
@@ -38,7 +39,7 @@ public class MapNodesDebugPlugin {
       return CommandResult.success();
     }).build(), "next");
 
-    // debug while creating the core system
+    // start the game
     Sponge.getCommandManager().register(this, CommandSpec.builder().executor((src, args) -> {
       try {
         SpongeNode node = (SpongeNode) NODE_MANAGER.getNode();
@@ -48,6 +49,17 @@ public class MapNodesDebugPlugin {
       }
       return CommandResult.success();
     }).build(), "start");
+
+    // Join the player to the smallest team
+    Sponge.getCommandManager().register(this, CommandSpec.builder().executor((src, args) -> {
+      try {
+        SpongeNode node = (SpongeNode) NODE_MANAGER.getNode();
+        //node.gameManager().join((Player) src);
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+      return CommandResult.success();
+    }).build(), "team");
   }
 
 }

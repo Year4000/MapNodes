@@ -108,7 +108,7 @@ public class GameManager {
   @Listener
   public void join(ClientConnectionEvent.Join event, @Getter("getTargetEntity") Player player) {
     $.js.onEvent(event);
-    player.gameMode().set(GameModes.SPECTATOR);
+    $.js.joinGame(player);
   }
 
 }

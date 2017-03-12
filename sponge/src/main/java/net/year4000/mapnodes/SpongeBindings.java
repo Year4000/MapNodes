@@ -3,12 +3,15 @@
  */
 package net.year4000.mapnodes;
 
+import com.eclipsesource.v8.V8;
+import com.eclipsesource.v8.V8Object;
 import com.google.common.base.CaseFormat;
 import com.google.inject.Inject;
 import net.year4000.utilities.Utils;
 import net.year4000.utilities.reflection.Gateways;
 import net.year4000.utilities.reflection.Reflections;
 import org.slf4j.Logger;
+import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Event;
@@ -21,7 +24,7 @@ import java.util.function.Consumer;
 public final class SpongeBindings extends Bindings {
   public final SpongeV8Bindings js = Reflections.proxy(SpongeV8Bindings.class, handler, Gateways.reflectiveImplements(SpongeV8Bindings.class));
 
-  @Inject Logger logger;
+  @Inject private Game game;
 
   /** $.bindings.send_message */
   @Override
@@ -36,6 +39,18 @@ public final class SpongeBindings extends Bindings {
     }
   }
 
+  /** $.bindings.player_meta_uuid */
+  @Override
+  @Bind
+  public V8Object playerMetaUuid(String uuid) {
+    try (V8ThreadLock<V8> lock = v8Thread()) {
+      Player player = game.getServer().getPlayer(UUID.fromString(uuid)).orElse(null);
+      return new V8Object(lock.v8())
+        .add("uuid", player.getUniqueId().toString())
+        .add("username", player.getName());
+    }
+  }
+
   /** Translate the Sponge to the V8Bindings interface */
   public interface SpongeV8Bindings extends V8Bindings {
 
@@ -43,6 +58,11 @@ public final class SpongeBindings extends Bindings {
     default void onEvent(Event event) {
       String className = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, event.getClass().getSimpleName());
       onEvent("on_" + className.replaceAll("(\\$_impl|\\$)", ""), Utils.toString(event.getCause().all()));
+    }
+
+    /** $.js.join_game */
+    default void joinGame(Player player) {
+      joinGame(player.getUniqueId().toString());
     }
   }
 }

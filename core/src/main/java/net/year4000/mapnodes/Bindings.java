@@ -118,6 +118,9 @@ public abstract class Bindings implements Releasable {
   /** $.bindings.send_message */
   @Bind public abstract void sendMessage(String player, String message);
 
+  /** $.bindings.player_meta_uuid */
+  @Bind public abstract V8Object playerMetaUuid(String uuid);
+
   /** Run function from the JavaScript side */
   public interface V8Bindings {
     /** $.js.platform_name */
@@ -143,5 +146,8 @@ public abstract class Bindings implements Releasable {
 
     /** $.js.game_state */
     String gameState();
+
+    /** $.js.join_game */
+    void joinGame(String uuid);
   }
 }
