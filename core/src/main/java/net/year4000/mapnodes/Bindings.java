@@ -77,6 +77,12 @@ public abstract class Bindings implements Releasable {
     }
   }
 
+  /** $.bindings.v8_version */
+  @Bind
+  public String v8Version() {
+    return V8.getV8Version();
+  }
+
   /** $.bindings.print */
   @Bind
   public void print(String message) {
