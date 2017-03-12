@@ -45,3 +45,6 @@ map_nodes.$event_emitter.on('load', () => {
   println("Loading environment from the Javascript side")
   println('Lodash Version: ' + _.VERSION)
 })
+
+/** Help in debuging events */
+//map_nodes.$event_emitter.on(/\\.*/, args => var_dump(args))
