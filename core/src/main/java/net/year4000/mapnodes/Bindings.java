@@ -149,5 +149,8 @@ public abstract class Bindings implements Releasable {
 
     /** $.js.join_game */
     void joinGame(String uuid);
+
+    /** $.js.leave_game */
+    void leaveGame(String uuid);
   }
 }

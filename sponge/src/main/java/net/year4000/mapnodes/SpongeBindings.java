@@ -57,5 +57,9 @@ public final class SpongeBindings extends Bindings {
     default void joinGame(Player player) {
       joinGame(player.getUniqueId().toString());
     }
+    /** $.js.leave_game */
+    default void leaveGame(Player player) {
+      leaveGame(player.getUniqueId().toString());
+    }
   }
 }

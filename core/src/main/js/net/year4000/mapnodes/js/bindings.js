@@ -98,6 +98,11 @@ class $ {
   join_game(player) {
     map_nodes.current_game.join_game(player)
   }
+
+  /** Leave the player to the game */
+  leave_game(player) {
+    map_nodes.current_game.leave_game(player)
+  }
 }
 
 /** Include the resource into the V8 runtime */

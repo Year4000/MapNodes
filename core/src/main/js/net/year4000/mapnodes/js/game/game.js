@@ -18,12 +18,22 @@ class Game extends JsonObject {
 
   /** Get the json for this map */
   get map() {
-    return this._map
+    return this._json
   }
 
   /** Register the things the map has */
   register_map() {
     let game = this
+    // Register internal instances
+    this._register_kit(Facts.SPECTATOR_ID, {})
+    this._register_team(Facts.SPECTATOR_ID, {
+      name: 'Spectator',
+      color: 'gray',
+      kit: Facts.SPECTATOR_ID,
+      size: -1,
+      spawns: this.map.world.spawn
+    })
+    // Register instances controlled by the map
     _.forEach(this._json.teams, (json, id) => game._register_team(id, json))
     _.forEach(this._json.kits, (json, id) => game._register_kit(id, json))
     _.forEach(this._json.regions, (json, id) => game._register_region(id, json))
@@ -55,19 +65,50 @@ class Game extends JsonObject {
     this.$event_emitter.trigger('game_stop', [this])
   }
 
+  /** Cycle to the next game */
+  cycle(next_game) {
+    Conditions.not_null(next_game, 'next_game')
+    // Have all the players leave the game
+    let game = this;
+    _.forEach(this._players, player => {
+      next_game._join_game(player)
+      game._leave_game(player)
+    })
+    this.$event_emitter.trigger('game_cycle', [next_game, game])
+  }
+
   /** Unload the game, clean things up for the next game */
   unload() {
     println(`The game(${this._id}) has been unloaded...`)
     this.$event_emitter.trigger('game_unload', [this])
   }
 
-  /** Join the player to the game */
+  /** Join the player to the game, player should be a uuid but can be a username */
   join_game(player) {
     Conditions.not_null(player, 'player')
-    let player_object = Player.of(player)
-    this._players.push(player_object)
-    //this._smallest_team.join(player_object) todo join spectator team
-    this.$event_emitter.trigger('join_game', [player_object, this])
+    this._join_game(Player.of(player))
+  }
+
+  /** Actually have the player join the game */
+  _join_game(player) {
+    Conditions.not_null(player, 'player')
+    this.$injector.inject_instance(player)
+    this._players.push(player)
+    this._teams.get(Facts.SPECTATOR_ID).join(player);
+    this.$event_emitter.trigger('join_game', [player, this])
+  }
+
+  /** Clean up the player, player should be a uuid but can be a username */
+  leave_game(player) {
+    Conditions.not_null(player, 'player')
+    this._leave_game(_.find(this._players, object => object.is_equal(Player.of(player))))
+  }
+
+  /** Actually have the player leave the game */
+  _leave_game(player) {
+    player.leave()
+    _.remove(this._players, player)
+    this.$event_emitter.trigger('leave_game', [player, this])
   }
 
   /** Generate the Team object containing the least about of players */

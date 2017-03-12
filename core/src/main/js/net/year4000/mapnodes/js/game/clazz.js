@@ -11,6 +11,6 @@ class Clazz extends JsonObject {
 
   /** Get the json for this clazz */
   get clazz() {
-    return super._json
+    return this._json
   }
 }

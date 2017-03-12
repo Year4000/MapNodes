@@ -27,6 +27,9 @@ class MapNodes {
       game: this._current_game,
     })
     this._current_game.register_map()
+    if (this._last_game) { // Cycle to the next game
+      this._last_game.cycle(game)
+    }
   }
 }
 
@@ -44,6 +47,10 @@ const map_nodes = new MapNodes()
 map_nodes.$event_emitter.on('load', () => {
   println("Loading environment from the Javascript side")
   println('Lodash Version: ' + _.VERSION)
+})
+
+map_nodes.$event_emitter.on('join_team', (player, team, game) => {
+  println(`The player ${player.username} joined the team ${team.name} size ${team.size}`)
 })
 
 /** Help in debuging events */

@@ -111,4 +111,9 @@ public class GameManager {
     $.js.joinGame(player);
   }
 
+  @Listener
+  public void leave(ClientConnectionEvent.Disconnect event, @Getter("getTargetEntity") Player player) {
+    $.js.onEvent(event);
+    $.js.leaveGame(player);
+  }
 }

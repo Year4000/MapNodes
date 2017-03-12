@@ -11,6 +11,6 @@ class Region extends JsonObject {
 
   /** Get the json for this region */
   get region() {
-    return super._json
+    return this._json
   }
 }

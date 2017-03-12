@@ -11,6 +11,6 @@ class Kit extends JsonObject {
 
   /** Get the json for this kit */
   get kit() {
-    return super._json
+    return this._json
   }
 }

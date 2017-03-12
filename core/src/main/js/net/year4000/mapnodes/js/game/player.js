@@ -9,6 +9,7 @@ class Player {
     Conditions.not_null(username, 'username')
     Conditions.not_null(uuid, 'uuid')
     this._meta = {username: username, uuid: uuid}
+    this._current_team = null;
   }
 
   /** Create the instance of this player */
@@ -44,8 +45,26 @@ class Player {
     return this._meta.username
   }
 
+  /** Update the team refrence for the player */
+  set _team(team) {
+    Conditions.not_null(team, 'team')
+    this._current_team = team;
+  }
+
   /** Send a message to this player */
   send_message(message) {
-    $.bindings.send_message(this.uuid, message)
+    $.bindings.send_message(this.uuid, message || '')
+  }
+
+  /** Have the player leave the team they are on */
+  leave() {
+    if (this._current_team) {
+      this._current_team.leave(this)
+    }
+  }
+
+  /** Checks if the two player objects are equal */
+  is_equal(player) {
+    return typeof player === 'object' && this.uuid === player.uuid
   }
 }

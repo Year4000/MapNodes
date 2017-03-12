@@ -11,6 +11,6 @@ class GameMode extends JsonObject {
 
   /** Get the json for this kit */
   game_mode() {
-    return super._json
+    return this._json
   }
 }
