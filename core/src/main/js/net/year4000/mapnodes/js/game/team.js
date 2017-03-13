@@ -32,6 +32,16 @@ class Team extends JsonObject {
     this.$event_emitter.trigger('join_team', [player, this, this.$game])
   }
 
+  /** Tell the player its time to start */
+  start_player(player) {
+    this.$event_emitter.trigger('start_team', [player, this, this.$game])
+  }
+
+  /** Have the entire team start */
+  start() {
+    _.forEach(this._members, member => this.start_player(member))
+  }
+
   /** Have the player leave the team*/
   leave(player) {
     Conditions.not_null(player, 'player')

@@ -8,6 +8,7 @@ import com.google.inject.Inject;
 import net.year4000.utilities.Utils;
 import net.year4000.utilities.reflection.Gateways;
 import net.year4000.utilities.reflection.Reflections;
+import net.year4000.utilities.value.Value;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
@@ -45,6 +46,11 @@ public final class SpongeBindings extends Bindings {
   public String playerMetaUuid(String uuid) {
     Player player = player(uuid).get();
     return player.getName() + ":" + uuid;
+  }
+
+  /** $.bindings.teleport */
+  public void teleport(String uuid, int x, int y, int z) {
+    player(uuid).ifPresent(player -> player.transferToWorld(player.getWorld(), Commons.center(x, y, z)));
   }
 
   /** Translate the Sponge to the V8Bindings interface */

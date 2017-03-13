@@ -54,6 +54,10 @@ class Player {
     $.bindings.send_message(this.uuid, message || '')
   }
 
+  teleport(x, y, z, yaw, pitch) {
+    $.bindings.teleport(this.uuid, x, y, z, yaw || 0, pitch || 0)
+  }
+
   /** Have the player leave the team they are on */
   leave() {
     if (this._current_team) {
