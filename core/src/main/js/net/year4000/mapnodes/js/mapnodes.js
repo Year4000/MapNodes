@@ -50,6 +50,8 @@ map_nodes.$event_emitter.on('load', () => {
   Logger.info('Loading environment from the Javascript side')
   Logger.info('V8 Engine Version: ' + $.bindings.v8_version())
   Logger.info('Lodash Version: ' + _.VERSION)
+  Logger.info('Three Version: ' + THREE.REVISION)
+  Logger.info('Logger Version: ' + Logger.VERSION)
 })
 
 map_nodes.$event_emitter.on('join_team', (player, team, game) => {

@@ -36,6 +36,7 @@ task generateJsUtils(dependsOn: 'processResources') {
     'https://raw.githubusercontent.com/Olical/EventEmitter/v4.2.11/EventEmitter.js',
     'https://raw.githubusercontent.com/jonnyreeves/js-logger/1.3.0/src/logger.js',
     'https://raw.githubusercontent.com/tvcutsem/harmony-reflect/v1.5.1/reflect.js',
+    'https://raw.githubusercontent.com/mrdoob/three.js/r84/build/three.js',
   ]
   // The task to download all needed libs
   download {
