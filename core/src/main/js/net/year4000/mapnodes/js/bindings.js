@@ -46,8 +46,9 @@ class $ {
       $._proxy = Proxy($._bindings, {
         get: (target, name, receiver) => {
           if (target[name]) {
-            // todo other possiblyiest???
-            return (a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z) => target[name](a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z)
+            return function() { // Must be a function to capture ...arguments
+              return target[name](...arguments)
+            }
           } else {
             Logger.error(`${name} has not been defined in the bindings mappings`)
             return () => {}
