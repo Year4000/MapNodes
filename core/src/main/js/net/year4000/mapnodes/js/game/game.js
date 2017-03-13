@@ -23,7 +23,6 @@ class Game extends JsonObject {
 
   /** Register the things the map has */
   register_map() {
-    let game = this
     // Register internal instances
     this._register_kit(Facts.SPECTATOR_ID, {})
     this._register_team(Facts.SPECTATOR_ID, {
@@ -34,10 +33,10 @@ class Game extends JsonObject {
       spawns: this.map.world.spawn
     })
     // Register instances controlled by the map
-    _.forEach(this._json.teams, (json, id) => game._register_team(id, json))
-    _.forEach(this._json.kits, (json, id) => game._register_kit(id, json))
-    _.forEach(this._json.regions, (json, id) => game._register_region(id, json))
-    _.forEach(this._json.classes, (json, id) => game._register_class(id, json))
+    _.forEach(this._json.teams, (json, id) => this._register_team(id, json))
+    _.forEach(this._json.kits, (json, id) => this._register_kit(id, json))
+    _.forEach(this._json.regions, (json, id) => this._register_region(id, json))
+    _.forEach(this._json.classes, (json, id) => this._register_class(id, json))
   }
 
   /** Check if the game is running */
@@ -69,12 +68,11 @@ class Game extends JsonObject {
   cycle(next_game) {
     Conditions.not_null(next_game, 'next_game')
     // Have all the players leave the game
-    let game = this;
     _.forEach(this._players, player => {
       next_game._join_game(player)
-      game._leave_game(player)
+      this._leave_game(player)
     })
-    this.$event_emitter.trigger('game_cycle', [next_game, game])
+    this.$event_emitter.trigger('game_cycle', [next_game, this])
   }
 
   /** Unload the game, clean things up for the next game */

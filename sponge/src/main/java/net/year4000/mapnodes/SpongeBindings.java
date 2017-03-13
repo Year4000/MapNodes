@@ -23,24 +23,27 @@ public final class SpongeBindings extends Bindings {
 
   @Inject private Game game;
 
+  /** Internal method to get the player from the uuid or user name*/
+  private Value<Player> player(String player) {
+    if (player.length() > 16) {
+      return Value.of(game.getServer().getPlayer(UUID.fromString(player)));
+    } else {
+      return Value.of(game.getServer().getPlayer(player));
+    }
+  }
+
   /** $.bindings.send_message */
   @Override
   @Bind
   public void sendMessage(String player, String message) {
-    Consumer<Player> consumer = value -> value.sendMessage(Text.of(message));
-    try {
-      UUID uuid = UUID.fromString(player);
-      Sponge.getServer().getPlayer(uuid).ifPresent(consumer);
-    } catch (IllegalArgumentException error) {
-      Sponge.getServer().getPlayer(player).ifPresent(consumer);
-    }
+    player(player).ifPresent(value -> value.sendMessage(Text.of(message)));
   }
 
   /** $.bindings.player_meta_uuid */
   @Override
   @Bind
   public String playerMetaUuid(String uuid) {
-    Player player = game.getServer().getPlayer(UUID.fromString(uuid)).orElse(null);
+    Player player = player(uuid).get();
     return player.getName() + ":" + uuid;
   }
 
