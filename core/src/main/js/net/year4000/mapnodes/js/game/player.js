@@ -26,15 +26,13 @@ class Player {
   /** Generate the player meta from the uuid */
   static of_uuid(uuid) {
     Conditions.not_null(uuid, 'uuid')
-    let meta = $.bindings.player_meta_uuid(uuid).split(':')
-    return new Player(meta[0], meta[1])
+    return new Player(...$.bindings.player_meta_uuid(uuid).split(':'))
   }
 
   /** Generate the player meta from a username */
   static of_username(username) {
     Conditions.not_null(username, 'username')
-    let meta = $.bindings.player_meta_username(username).split(':')
-    return new Player(meta[0], meta[1])
+    return new Player(...$.bindings.player_meta_username(username).split(':'))
   }
 
   get uuid() {
