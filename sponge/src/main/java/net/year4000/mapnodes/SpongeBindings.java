@@ -59,7 +59,7 @@ public final class SpongeBindings extends Bindings {
     /** $.js.on_event */
     default void onEvent(Event event) {
       String className = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, event.getClass().getSimpleName());
-      onEvent("on_" + className.replaceAll("(\\$_impl|\\$)", ""), Utils.toString(event.getCause().all()));
+      onEvent("on_" + className.replaceAll("(\\$_impl|\\$)", ""), className);
     }
 
     /** $.js.join_game */
