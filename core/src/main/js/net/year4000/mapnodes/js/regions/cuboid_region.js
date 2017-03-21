@@ -10,12 +10,15 @@ class CuboidRegion extends AbstractRegion {
     super()
     this._point_one = Conditions.not_null(point_one, 'point_one')
     this._point_two = Conditions.not_null(point_two, 'point_two')
+    // Set point_one as min and point_two as max
+    this._point_one = this._point_one.clone().min(this._point_two)
+    this._point_two = this._point_one.clone().max(this._point_two)
   }
 
   /** Checks if the vector contains in this cuboid */
   contains(vector3) {
-    let min = this._point_one.clone().min(this._point_two)
-    let max = this._point_one.clone().max(this._point_two)
+    let min = this._point_one
+    let max = this._point_two
     let x = vector3.x >= min.x && vector3.x <= max.x
     let y = vector3.y >= min.y && vector3.y <= max.y
     let z = vector3.z >= min.z && vector3.z <= max.z
@@ -25,8 +28,8 @@ class CuboidRegion extends AbstractRegion {
   /** Generate all the points in this cuboid */
   _points() {
     let points = Immutable.Set.of();
-    let min = this._point_one.clone().min(this._point_two)
-    let max = this._point_one.clone().max(this._point_two)
+    let min = this._point_one
+    let max = this._point_two
     for (let y = min.y; y < max.y; y++) {
       for (let x = min.x; x < max.x; x++) {
         for (let z = min.z; z < max.z; z++) {
@@ -40,7 +43,7 @@ class CuboidRegion extends AbstractRegion {
   /** Get all the points this cuboid has */
   get points() {
     // todo cache the results in some type of weak var
-    return CuboidRegion.__points || (CuboidRegion.__points = this._points());
+    return this.__points || (this.__points = this._points());
   }
 
   /** Checks if the two cuboids are equal */

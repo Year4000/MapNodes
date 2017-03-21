@@ -8,7 +8,6 @@ class Team extends JsonObject {
   constructor(id, team) {
     super(id, team)
     this._members = []
-    this._spawns = _.map(team.spawns, zone => Regions.map_region(zone))
   }
 
   /** Get the json for this team */
@@ -55,9 +54,14 @@ class Team extends JsonObject {
     return _.size(this._members)
   }
 
+  /** Lazy load all spawn regions */
+  get spawns() {
+    return this._spawns || (this._spawns = _.map(this.team.spawns, zone => Regions.map_region(zone)))
+  }
+
   /** Get a random point from the list of spawns */
   get spawn_point() {
     // todo random spawn
-    return this._spawns[0].points.first()
+    return this.spawns[0].points.first()
   }
 }

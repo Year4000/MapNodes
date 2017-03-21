@@ -37,6 +37,7 @@ class Game extends JsonObject {
     _.forEach(this.map.kits, (json, id) => this._register_kit(id, json))
     _.forEach(this.map.regions, (json, id) => this._register_region(id, json))
     _.forEach(this.map.classes, (json, id) => this._register_class(id, json))
+    Logger.info('Finish registering map components')
   }
 
   /** Check if the game is running */
