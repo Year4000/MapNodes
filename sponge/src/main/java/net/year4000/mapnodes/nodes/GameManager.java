@@ -9,6 +9,7 @@ import net.year4000.mapnodes.events.DeleteWorldEvent;
 import net.year4000.mapnodes.events.GameCycleEvent;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
+import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.Transform;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.living.player.gamemode.GameModes;
@@ -106,6 +107,8 @@ public class GameManager {
 
   @Listener
   public void join(ClientConnectionEvent.Join event, @Getter("getTargetEntity") Player player) {
+    player.offer(Keys.CAN_FLY, true);
+    player.offer(Keys.IS_FLYING, true);
     $.js.onEvent(event);
     $.js.joinGame(player);
   }
