@@ -6,14 +6,14 @@
 class Game extends JsonObject {
 
   constructor(id, map) {
-    super(id, map)
+    super(id, _.merge(Game.DEFAULT_MAP, map))
     this._teams = Immutable.Map()
     this._kits = Immutable.Map()
     this._regions = Immutable.Map()
     this._clazzes = Immutable.Map()
     this._state = 'WAITING'
     this._players = []
-    Logger.info(`Constructing the game id ${id}`)
+    Logger.info(`Constructing the game ${id} for ${this._json.map.name}`)
   }
 
   /** Get the json for this map */
@@ -144,4 +144,13 @@ class Game extends JsonObject {
   _register_region(region_id, region_json) {
     this._register(region_id, region_json, Region, '_regions', 'register_region')
   }
+}
+
+/** The defaults for the map */
+Game.DEFAULT_MAP = {
+  map: {
+    name: 'Unknown',
+    version: '0.1',
+    descripton: 'Unknown Map',
+  },
 }
