@@ -54,4 +54,10 @@ class Team extends JsonObject {
   get size() {
     return _.size(this._members)
   }
+
+  /** Get a random point from the list of spawns */
+  get spawn_point() {
+    // todo random spawn
+    return this._spawns[0].points.first()
+  }
 }

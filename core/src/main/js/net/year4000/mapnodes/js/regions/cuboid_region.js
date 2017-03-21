@@ -23,8 +23,8 @@ class CuboidRegion extends AbstractRegion {
   }
 
   /** Generate all the points in this cuboid */
-  get _points() {
-    let points = new Immutable.Set.of();
+  _points() {
+    let points = Immutable.Set.of();
     let min = this._point_one.clone().min(this._point_two)
     let max = this._point_one.clone().max(this._point_two)
     for (let y = min.y; y < max.y; y++) {
@@ -39,7 +39,8 @@ class CuboidRegion extends AbstractRegion {
 
   /** Get all the points this cuboid has */
   get points() {
-    return _.memoize(this._points);
+    // todo cache the results in some type of weak var
+    return CuboidRegion.__points || (CuboidRegion.__points = this._points());
   }
 
   /** Checks if the two cuboids are equal */

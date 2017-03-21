@@ -87,7 +87,7 @@ public class GameManager {
 
   @Listener
   public void onClientPing(ClientPingServerEvent event) throws IOException {
-    $.js.onEvent(event);
+    // $.js.onEvent(event);
     // Resize to 64 x 64
     BufferedImage bufferedImage = ImageIO.read(new ByteArrayInputStream(node.map().image().array()));
     BufferedImage bufferedIcon = new BufferedImage(64, 64, BufferedImage.TYPE_INT_RGB);
@@ -101,19 +101,19 @@ public class GameManager {
 
   @Listener
   public void join(ClientConnectionEvent.Login event) {
-    $.js.onEvent(event);
+    // $.js.onEvent(event);
     event.setToTransform(node.worldTransformer());
   }
 
   @Listener
   public void join(ClientConnectionEvent.Join event, @Getter("getTargetEntity") Player player) {
-    $.js.onEvent(event);
+    // $.js.onEvent(event);
     $.js.joinGame(player);
   }
 
   @Listener
   public void leave(ClientConnectionEvent.Disconnect event, @Getter("getTargetEntity") Player player) {
-    $.js.onEvent(event);
+    // $.js.onEvent(event);
     $.js.leaveGame(player);
   }
 }

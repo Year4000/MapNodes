@@ -87,6 +87,11 @@ class Game extends JsonObject {
     this._join_game(Player.of(player))
   }
 
+  /** Get a random point from the list of spawns by the spectator team */
+  get spawn_point() {
+    return this._teams.get(Facts.SPECTATOR_ID).spawn_point
+  }
+
   /** Actually have the player join the game */
   _join_game(player) {
     Conditions.not_null(player, 'player')

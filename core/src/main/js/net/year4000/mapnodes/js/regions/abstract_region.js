@@ -12,7 +12,7 @@ class AbstractRegion {
 
   /** Check when the vector is in the region */
   contains(vector3) {
-    this.points.has(vector3)
+    return this.points.has(vector3)
   }
 
   /** Are both regions equal */

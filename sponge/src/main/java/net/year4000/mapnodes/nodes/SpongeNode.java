@@ -4,15 +4,20 @@
 package net.year4000.mapnodes.nodes;
 
 import com.eclipsesource.v8.V8;
+import com.eclipsesource.v8.V8Array;
 import com.eclipsesource.v8.V8Object;
 import com.eclipsesource.v8.utils.MemoryManager;
+import com.eclipsesource.v8.utils.V8ObjectUtils;
+import com.eclipsesource.v8.utils.V8Thread;
 import com.flowpowered.math.vector.Vector3d;
 import com.google.common.io.Files;
+import com.google.gson.Gson;
 import com.google.inject.Inject;
 import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
 import net.year4000.mapnodes.MapNodes;
 import net.year4000.mapnodes.MapNodesPlugin;
+import net.year4000.mapnodes.SpongeBindings;
 import net.year4000.mapnodes.V8ThreadLock;
 import net.year4000.utilities.value.Value;
 import org.slf4j.Logger;
@@ -37,6 +42,7 @@ public class SpongeNode extends Node {
   @Inject private Logger logger;
   @Inject private Game game;
   @Inject private EventManager eventManager;
+  @Inject private SpongeBindings $;
 
   @Inject
   public SpongeNode(SpongeNodeFactory factory, MapPackage map) throws Exception {
@@ -107,16 +113,8 @@ public class SpongeNode extends Node {
 
   /** Create the world transformer to spawn the player into the map */
   public Transform<World> worldTransformer() {
-    try (V8ThreadLock<V8Object> lock = new V8ThreadLock<>(v8Object)) {
-      String[] xyz = lock.v8().getObject("world").getArray("spawn").getObject(0).getObject("point").getString("xyz").split(",");
-      int[] vector = {
-        Integer.valueOf(xyz[0].replaceAll(" ", "")),
-        Integer.valueOf(xyz[1].replaceAll(" ", "")),
-        Integer.valueOf(xyz[2].replaceAll(" ", ""))
-      };
-      return new Transform<>(world, new Vector3d(vector[0], vector[1], vector[2]));
-    } catch (IllegalStateException error) { // tmp until region system works
-      return new Transform<>(world);
+    try (V8ThreadLock<V8Array> lock = new V8ThreadLock<>($.js.spawnPoint())) {
+      return new Transform<>(world, new Vector3d(lock.v8().getDouble(0), lock.v8().getDouble(1), lock.v8().getDouble(2)));
     }
   }
 

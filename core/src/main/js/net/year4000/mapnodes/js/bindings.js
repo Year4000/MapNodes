@@ -108,6 +108,16 @@ class $ {
   leave_game(player) {
     map_nodes.current_game.leave_game(player)
   }
+
+  /** Send the x,y,z cords of the spawn point */
+  spawn_point() {
+    let point = map_nodes.current_game.spawn_point
+    if (point) {
+      return [point.x, point.y, point.z]
+    }
+    Logger.warn('There was no spawn point found, using [0, 64, 0]')
+    return [0, 64, 0]
+  }
 }
 
 /** Include the resource into the V8 runtime */

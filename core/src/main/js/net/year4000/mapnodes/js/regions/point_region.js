@@ -12,7 +12,7 @@ class PointRegion extends AbstractRegion {
 
   /** Get the point of this region */
   get points() {
-    return new Immutable.Set.of(this._point)
+    return Immutable.Set.of(this._point)
   }
 
   /** Get the x cord */
@@ -33,5 +33,11 @@ class PointRegion extends AbstractRegion {
   /** Create a copy of the point for vector3 */
   clone() {
     return this._point.clone()
+  }
+
+  // Override
+  valueOf() {
+    // todo support for Immutable Sets
+    return (this.x * 211 + this.y) * 97 + this.z
   }
 }

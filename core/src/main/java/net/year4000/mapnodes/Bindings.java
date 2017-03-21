@@ -5,6 +5,7 @@ package net.year4000.mapnodes;
 
 import com.eclipsesource.v8.Releasable;
 import com.eclipsesource.v8.V8;
+import com.eclipsesource.v8.V8Array;
 import com.eclipsesource.v8.V8Object;
 import com.eclipsesource.v8.utils.MemoryManager;
 import com.google.common.base.CaseFormat;
@@ -158,5 +159,8 @@ public abstract class Bindings implements Releasable {
 
     /** $.js.leave_game */
     void leaveGame(String uuid);
+
+    /** $.js.spawn_point */
+    V8Array spawnPoint();
   }
 }
