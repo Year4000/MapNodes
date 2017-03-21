@@ -33,10 +33,10 @@ class Game extends JsonObject {
       spawns: this.map.world.spawn
     })
     // Register instances controlled by the map
-    _.forEach(this._json.teams, (json, id) => this._register_team(id, json))
-    _.forEach(this._json.kits, (json, id) => this._register_kit(id, json))
-    _.forEach(this._json.regions, (json, id) => this._register_region(id, json))
-    _.forEach(this._json.classes, (json, id) => this._register_class(id, json))
+    _.forEach(this.map.teams, (json, id) => this._register_team(id, json))
+    _.forEach(this.map.kits, (json, id) => this._register_kit(id, json))
+    _.forEach(this.map.regions, (json, id) => this._register_region(id, json))
+    _.forEach(this.map.classes, (json, id) => this._register_class(id, json))
   }
 
   /** Check if the game is running */

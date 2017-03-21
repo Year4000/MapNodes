@@ -7,6 +7,7 @@ class CubeRegion extends AbstractRegion {
 
   /** Center is a vector3, when width is not there height becomes radius */
   constructor(center, height, width) {
+    super()
     Conditions.not_null(center, 'center')
     Conditions.not_null(height, 'height')
     width = width || height

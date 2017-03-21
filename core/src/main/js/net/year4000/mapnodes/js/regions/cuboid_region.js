@@ -7,6 +7,7 @@ class CuboidRegion extends AbstractRegion {
 
   /** point_one and point_two are both vector3 */
   constructor(point_one, point_two) {
+    super()
     this._point_one = Conditions.not_null(point_one, 'point_one')
     this._point_two = Conditions.not_null(point_two, 'point_two')
   }

@@ -8,6 +8,7 @@ class Team extends JsonObject {
   constructor(id, team) {
     super(id, team)
     this._members = []
+    this._spawns = _.map(team.spawns, zone => Regions.map_region(zone))
   }
 
   /** Get the json for this team */
