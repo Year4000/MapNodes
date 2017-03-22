@@ -100,8 +100,7 @@ class Game extends JsonObject {
     this._players.push(player)
     this._teams.get(Facts.SPECTATOR_ID).join(player);
     this.$event_emitter.trigger('join_game', [player, this])
-    let spawn = this.spawn_point
-    $.bindings.teleport(player.uuid, spawn.x, spawn.y, spawn.z)
+    player.teleport(...this.spawn_point.toArray())
   }
 
   /** Clean up the player, player should be a uuid but can be a username */
