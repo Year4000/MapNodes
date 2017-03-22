@@ -11,5 +11,5 @@ services:
       - "25565:25565"
     volumes:
       - ./sponge/build/libs/mapnodes-3.0.0-all.jar:/opt/year4000/minecraft/mods/mapnodes.jar
-      - ./run/sponge-server/maps:/opt/year4000/minecraft/maps
+      - ./run/maps:/opt/year4000/minecraft/maps
 

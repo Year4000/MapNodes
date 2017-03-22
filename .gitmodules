@@ -1,0 +1,3 @@
+[submodule "run/maps"]
+	path = run/maps
+	url = git@github.com:Year4000/Maps.git
