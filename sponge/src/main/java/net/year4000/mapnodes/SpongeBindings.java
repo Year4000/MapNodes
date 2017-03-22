@@ -49,7 +49,8 @@ public final class SpongeBindings extends Bindings {
   }
 
   /** $.bindings.teleport */
-  public void teleport(String uuid, int x, int y, int z) {
+  @Bind
+  public void teleport(String uuid, double x, double y, double z) {
     player(uuid).ifPresent(player -> player.transferToWorld(player.getWorld(), Commons.center(x, y, z)));
   }
 

@@ -6,7 +6,7 @@
 class Game extends JsonObject {
 
   constructor(id, map) {
-    super(id, _.merge(Game.DEFAULT_MAP, map))
+    super(id, _.merge(JSON.parse(JSON.stringify(Game.DEFAULT_MAP)), map))
     this._teams = Immutable.Map()
     this._kits = Immutable.Map()
     this._regions = Immutable.Map()
@@ -100,6 +100,8 @@ class Game extends JsonObject {
     this._players.push(player)
     this._teams.get(Facts.SPECTATOR_ID).join(player);
     this.$event_emitter.trigger('join_game', [player, this])
+    let spawn = this.spawn_point
+    $.bindings.teleport(player.uuid, spawn.x, spawn.y, spawn.z)
   }
 
   /** Clean up the player, player should be a uuid but can be a username */

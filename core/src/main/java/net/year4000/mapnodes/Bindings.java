@@ -162,5 +162,8 @@ public abstract class Bindings implements Releasable {
 
     /** $.js.spawn_point */
     V8Array spawnPoint();
+
+    /** $.js.last_spawn_point */
+    V8Array lastSpawnPoint();
   }
 }

@@ -13,7 +13,7 @@ public final class Commons {
   }
 
   /** Center the cords */
-  public static Vector3d center(int x, int y, int z) {
-    return new Vector3d(x, y, z).add(0.5, 0.5, 0.5);
+  public static Vector3d center(double x, double y, double z) {
+    return new Vector3d((int) x, (int) y, (int) z).add(0.5, 0.5, 0.5);
   }
 }

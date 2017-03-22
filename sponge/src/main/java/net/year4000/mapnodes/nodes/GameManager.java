@@ -48,10 +48,7 @@ public class GameManager {
     SpongeNode nextNode = (SpongeNode) nodeManager.loadNextNode();
     logger.info("Cycling to Map " + nextNode.name() + " version " + nextNode.version());
     node.world().ifPresent(world -> { // World never loaded
-      world.getPlayers().forEach(player -> {
-        Transform<World> transform = nextNode.worldTransformer();
-        player.transferToWorld(transform.getExtent(), transform.getPosition());
-      });
+      world.getPlayers().forEach(player ->  player.transferToWorld(nextNode.worldTransformer().getExtent()));
     });
     eventManager.post(new DeleteWorldEvent(node));
     eventManager.post(new GameCycleEvent());

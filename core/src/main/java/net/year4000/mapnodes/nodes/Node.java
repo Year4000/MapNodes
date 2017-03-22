@@ -74,6 +74,11 @@ public abstract class Node {
     return id;
   }
 
+  /** Is this node the current node */
+  public boolean isCurrentNode() {
+    return MapNodes.NODE_MANAGER.isCurrentNode(id);
+  }
+
   /** Loads the node */
   public abstract void load() throws Exception;
 

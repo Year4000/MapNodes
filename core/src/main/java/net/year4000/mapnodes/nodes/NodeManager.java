@@ -48,6 +48,16 @@ public final class NodeManager {
     return Value.of(queue.poll());
   }
 
+  /** Checks if the id is the current node */
+  public boolean isCurrentNode(int id) {
+    return current != null && current.id() == id;
+  }
+
+  /** Checks if the node is the current node */
+  public boolean isCurrentNode(Node node) {
+    return isCurrentNode(node.id());
+  }
+
   /** Check if there are more nodes */
   private boolean isNextNode() {
     return queue.size() > 0;
