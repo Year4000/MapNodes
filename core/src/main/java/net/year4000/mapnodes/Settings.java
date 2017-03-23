@@ -21,6 +21,6 @@ public final class Settings {
   /** Get the value from the system properties */
   private static TypeValue value(String key) {
     Conditions.nonNullOrEmpty(key, "key");
-    return new TypeValue(System.getProperty(key));
+    return new TypeValue(System.getProperty(key, System.getenv(key.toUpperCase().replaceAll("\\.", "_"))));
   }
 }
