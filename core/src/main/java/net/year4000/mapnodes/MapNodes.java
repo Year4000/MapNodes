@@ -51,12 +51,12 @@ public interface MapNodes {
   default void enable() {
     logger().info("Adding maps to queue (max: " + SETTINGS.loadMaps + ")");
     nodeFactory().packages().forEach(map -> {
-      logger().info("Adding map: " + map.toString());
       try {
         Node node = nodeFactory().create(map);
-        logger().info("Map " + node.name() + " version " + node.version());
+        logger().info("Added Map {} version {} location: {}", node.name(), node.version(), map.location());
         NODE_MANAGER.addToQueue(node);
       } catch (Exception error) {
+        logger().info("Adding map: " + map.toString());
         logger().error(ErrorReporter.builder(error).build().toString());
       }
     });

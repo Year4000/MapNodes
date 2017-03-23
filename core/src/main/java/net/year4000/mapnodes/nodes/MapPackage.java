@@ -62,6 +62,11 @@ public class MapPackage {
     return ByteBuffer.wrap(world);
   }
 
+  /** Get the location of this map, can be local or a remote location */
+  public String location() {
+    return location;
+  }
+
   @Override
   public boolean equals(Object other) {
     return Utils.equals(this, other);
