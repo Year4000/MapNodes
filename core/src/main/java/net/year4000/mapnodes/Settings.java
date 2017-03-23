@@ -9,6 +9,9 @@ import net.year4000.utilities.value.TypeValue;
 /** Settings for MapNodes */
 public final class Settings {
 
+  /** Check if the system is running in debug */
+  public final boolean debug = value("debug").toBoolean(false);
+
   /** The number of maps to load */
   public final int loadMaps = value("mapnodes.load_maps").toInt(30);
 

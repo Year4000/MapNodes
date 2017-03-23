@@ -48,6 +48,8 @@ public abstract class Bindings implements Releasable {
   private final ArrayDeque<String> paths = Queues.newArrayDeque();
   /** Inject the logger used in the application */
   @Inject private Logger logger;
+  /** Inject the setting for use in the application */
+  @Inject private Settings settings;
 
   /** Map the java methods to the javascript functions */
   protected Bindings() {
@@ -76,6 +78,12 @@ public abstract class Bindings implements Releasable {
       memoryManager.release();
       lock.v8().release();
     }
+  }
+
+  /** $.bindings.debug */
+  @Bind
+  public boolean debug() {
+    return settings.debug;
   }
 
   /** $.bindings.v8_version */

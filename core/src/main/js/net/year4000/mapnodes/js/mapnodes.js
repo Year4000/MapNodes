@@ -46,7 +46,7 @@ const map_nodes = new MapNodes()
 /** Called when the system has been loaded  */
 map_nodes.$event_emitter.on('load', () => {
   Logger.setHandler((messages, context) => println(`[${context.level.name}] ${messages[0]}`))
-  Logger.setLevel(Logger.INFO)
+  Logger.setLevel($.bindings.debug() ? Logger.DEBUG : Logger.INFO)
   Logger.info('Loading environment from the Javascript side')
   Logger.info('V8 Engine Version: ' + $.bindings.v8_version())
   Logger.info('Lodash Version: ' + _.VERSION)
