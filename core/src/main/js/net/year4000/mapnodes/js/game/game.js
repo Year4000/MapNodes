@@ -55,8 +55,9 @@ class Game extends JsonObject {
 
   /** Start the game and unload the previous game */
   start() {
-    Logger.info(`The game(${this._id}) has started...`)
     this._state = 'RUNNING'
+    this._start_time = _.now()
+    Logger.info(`The game(${this._id}) has started as ${moment(this._start_time).format('l LTS')}...`)
     this.$event_emitter.trigger('game_start', [this])
     for (let team of this._teams.values()) { // todo filter out spectators
       team.start()
@@ -65,8 +66,9 @@ class Game extends JsonObject {
 
   /** Stop the game and get ready to load the next game */
   stop() {
-    Logger.info(`The game(${this._id}) has stopped...`)
     this._state = 'ENDED'
+    this._stop_time = _.now()
+    Logger.info(`The game(${this._id}) has stopped as ${moment(this._stop_time).format('l LTS')}...`)
     this.$event_emitter.trigger('game_stop', [this])
     for (let player of this._players) {
       this.$event_emitter.trigger('stop_game_player', [player, this])
@@ -89,6 +91,21 @@ class Game extends JsonObject {
   unload() {
     Logger.info(`The game(${this._id}) has been unloaded...`)
     this.$event_emitter.trigger('game_unload', [this])
+  }
+
+  /** Get the time the game has started, -1 if hasent started yet */
+  get start_time() {
+    return this._start_time || -1
+  }
+
+  /** Get the time the game has stopped, -1 if hasent stoped yet */
+  get stop_time() {
+    return this._stop_time || -1
+  }
+
+  /** Get the delta time the game has been running for */
+  get game_time() {
+    return _.now() - this.start_time
   }
 
   /** Get a random point from the list of spawns by the spectator team */
