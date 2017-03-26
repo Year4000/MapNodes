@@ -56,6 +56,13 @@ public final class SpongeBindings extends Bindings {
     player(uuid).ifPresent(setHeader).ifEmpty(() -> game.getServer().getOnlinePlayers().forEach(setHeader));
   }
 
+  /** $.bindings.has_permission */
+  @Bind
+  public boolean hasPermission(String uuid, String permission) {
+    Value<Player> player = player(uuid);
+    return player.isPresent() && player.get().hasPermission(permission);
+  }
+
   /** $.bindings.teleport */
   @Bind
   public void teleport(String uuid, double x, double y, double z) {
