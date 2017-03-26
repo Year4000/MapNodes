@@ -26,4 +26,10 @@ class Injector {
   child_injector(modules) {
     return new Injector(_.merge(modules, this._modules))
   }
+
+  /** Get the value of this injector */
+  // Override
+  toString() {
+    return `modules: ${_.map(this._modules, (value, key) => `${key}::${value.toString()}`)}`
+  }
 }

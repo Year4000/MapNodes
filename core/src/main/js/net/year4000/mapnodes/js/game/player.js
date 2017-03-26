@@ -67,6 +67,12 @@ class Player {
 
   /** Checks if the two player objects are equal */
   is_equal(player) {
-    return typeof player === 'object' && this.uuid === player.uuid
+    return typeof player === 'object' && this.valueOf() === player.valueOf()
+  }
+
+  /** Get the value of this player */
+  // Override
+  valueOf() {
+    return this.uuid
   }
 }

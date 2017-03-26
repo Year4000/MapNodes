@@ -151,6 +151,12 @@ class Game extends JsonObject {
   _register_region(region_id, region_json) {
     this._register(region_id, region_json, Region, '_regions', 'register_region')
   }
+
+  /** Get the value of this game */
+  // Override
+  valueOf() {
+    return `id: ${this.id} title: ${this.title}`
+  }
 }
 
 /** The defaults for the map */
