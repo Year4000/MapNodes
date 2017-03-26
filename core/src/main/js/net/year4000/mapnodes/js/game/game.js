@@ -57,6 +57,9 @@ class Game extends JsonObject {
     Logger.info(`The game(${this._id}) has started...`)
     this._state = 'RUNNING'
     this.$event_emitter.trigger('game_start', [this])
+    for (let team of this._teams.values()) {
+      team.start()
+    }
   }
 
   /** Stop the game and get ready to load the next game */
