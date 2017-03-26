@@ -5,15 +5,14 @@ package net.year4000.mapnodes;
 
 import com.google.common.base.CaseFormat;
 import com.google.inject.Inject;
-import net.year4000.utilities.Utils;
 import net.year4000.utilities.reflection.Gateways;
 import net.year4000.utilities.reflection.Reflections;
 import net.year4000.utilities.value.Value;
 import org.spongepowered.api.Game;
-import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Event;
 import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.serializer.TextSerializers;
 
 import java.util.UUID;
 import java.util.function.Consumer;
@@ -47,6 +46,14 @@ public final class SpongeBindings extends Bindings {
   public String playerMetaUuid(String uuid) {
     Player player = player(uuid).get();
     return player.getName() + ":" + uuid;
+  }
+
+  /** $.bindings.tablist_header */
+  @Bind
+  public void tablistHeader(String uuid, String header) {
+    Text deserialize = TextSerializers.FORMATTING_CODE.deserialize(header);
+    Consumer<Player> setHeader = player -> player.getTabList().setHeader(deserialize);
+    player(uuid).ifPresent(setHeader).ifEmpty(() -> game.getServer().getOnlinePlayers().forEach(setHeader));
   }
 
   /** $.bindings.teleport */

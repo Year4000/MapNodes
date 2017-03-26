@@ -54,12 +54,28 @@ class Player {
     $.bindings.send_message(this.uuid, message || '')
   }
 
+  /** Set the header for the tablist */
+  set tablist_header(header) {
+    $.bindings.tablist_header(this.uuid, header)
+  }
+
   teleport(x, y, z, yaw, pitch) {
     $.bindings.teleport(this.uuid, x, y, z, yaw || 0, pitch || 0)
   }
 
-  /** Have the player leave the team they are on */
+  /** Start the game for the player */
+  start() {
+    this.$event_emitter.trigger('start_player', [this, this.$game])
+  }
+
+  /** Stop the game for the player */
+  stop() {
+    this.leave()
+  }
+
+  /** Have the player leave the game they are on */
   leave() {
+    this.$event_emitter.trigger('stop_player', [this, this.$game])
     if (this._current_team) {
       this._current_team.leave(this)
     }

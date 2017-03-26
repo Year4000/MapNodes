@@ -57,7 +57,7 @@ class Game extends JsonObject {
     Logger.info(`The game(${this._id}) has started...`)
     this._state = 'RUNNING'
     this.$event_emitter.trigger('game_start', [this])
-    for (let team of this._teams.values()) {
+    for (let team of this._teams.values()) { // todo filter out spectators
       team.start()
     }
   }
@@ -67,6 +67,10 @@ class Game extends JsonObject {
     Logger.info(`The game(${this._id}) has stopped...`)
     this._state = 'ENDED'
     this.$event_emitter.trigger('game_stop', [this])
+    for (let player of this._players) {
+      this.$event_emitter.trigger('stop_game_player', [player, this])
+      player.stop()
+    }
   }
 
   /** Cycle to the next game */
@@ -104,6 +108,11 @@ class Game extends JsonObject {
   /** Get the color of the current game state */
   get state_color() {
     return Game._STATE_COLORS[this._state] || '&4'
+  }
+
+  /** Get the tablist header*/
+  get tablist_header() {
+    return `${this.state_color}${this.title_color}`
   }
 
   /** Join the player to the game, player should be a uuid but can be a username */

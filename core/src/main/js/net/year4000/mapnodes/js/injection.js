@@ -15,11 +15,13 @@ class Injector {
   inject_instance(instance) {
     Conditions.not_null(instance, 'instance')
     _.merge(instance, _.mapKeys(this._modules, (value, key) => `$${key}`))
-    instance.$injector = this
   }
 
   /** Create a child injector from this injector */
-  child_injector(modules) {
+  child_injector(modules, injected) {
+    if (injected) {
+      return injected.$injector = new Injector(_.merge(modules, this._modules))
+    }
     return new Injector(_.merge(modules, this._modules))
   }
 

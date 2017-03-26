@@ -25,7 +25,7 @@ class MapNodes {
     this._current_game = game
     this.$injector.child_injector({
       game: this._current_game,
-    })
+    }, this._current_game)
     this._current_game.register_map()
     if (this._last_game) { // Cycle to the next game
       this._last_game.cycle(game)
@@ -57,6 +57,12 @@ map_nodes.$event_emitter.on('load', () => {
 map_nodes.$event_emitter.on('join_team', (player, team, game) => {
   Logger.info(`The player ${player.username} joined the team ${team.name} size ${team.size}`)
 })
+
+/** Update the tablist when ever we need it to */
+_.forEach(['join_game', 'start_player', 'stop_game_player'], key => map_nodes.$event_emitter.on(key, player => {
+  map_nodes.$event_emitter.trigger('tablist_header', [player, player.$game])
+  player.tablist_header = player.$game.tablist_header
+}))
 
 /** Help in debuging events */
 //map_nodes.$event_emitter.on(/\\.*/, args => var_dump(args))
