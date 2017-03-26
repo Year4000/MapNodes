@@ -51,7 +51,7 @@ task testNodeJs(type: NodeTask) {
 
 // Test the javascript files
 task testJs {
-  dependsOn 'nodeSetup'
+  dependsOn 'npmInstall'
   dependsOn 'copyTestJs'
   dependsOn 'testNodeJs'
 }
