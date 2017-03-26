@@ -12,6 +12,7 @@ class Game extends JsonObject {
     this._regions = Immutable.Map()
     this._clazzes = Immutable.Map()
     this._state = 'WAITING'
+    this._state_colors = {WAITING: '&e', RUNNING: '"&a', ENDED: '&c'}
     this._players = []
     Logger.info(`Constructing the game ${id} for ${this._json.map.name}`)
   }
@@ -82,15 +83,30 @@ class Game extends JsonObject {
     this.$event_emitter.trigger('game_unload', [this])
   }
 
+  /** Get a random point from the list of spawns by the spectator team */
+  get spawn_point() {
+    return this._teams.get(Facts.SPECTATOR_ID).spawn_point
+  }
+
+  /** Get the title of the game */
+  get title() {
+    return `${this.map.map.name} ${this.map.map.version}`
+  }
+
+  /** Get the title of the game */
+  get title_color() {
+    return `${this.map.map.name} &7${this.map.map.version.replace(/([.])/, '&8$1&7')}`
+  }
+
+  /** Get the color of the current game state */
+  get state_color() {
+    return Game._STATE_COLORS[this._state] || '&4'
+  }
+
   /** Join the player to the game, player should be a uuid but can be a username */
   join_game(player) {
     Conditions.not_null(player, 'player')
     this._join_game(Player.of(player))
-  }
-
-  /** Get a random point from the list of spawns by the spectator team */
-  get spawn_point() {
-    return this._teams.get(Facts.SPECTATOR_ID).spawn_point
   }
 
   /** Actually have the player join the game */
@@ -167,3 +183,6 @@ Game.DEFAULT_MAP = {
     descripton: 'Unknown Map',
   },
 }
+
+/** The colors for each game state */
+Game._STATE_COLORS = {WAITING: '&e', RUNNING: '&a', ENDED: '&c'}
