@@ -8,8 +8,9 @@ class MapNodes {
 
   constructor() {
     // Create the injector and inject our self with the injector
+    let self = this
     this.$injector = new Injector({
-      map_nodes: this,
+      map_nodes: self,
       event_emitter: new EventEmitter(),
     })
   }
