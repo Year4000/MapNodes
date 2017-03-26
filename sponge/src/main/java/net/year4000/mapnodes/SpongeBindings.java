@@ -37,7 +37,8 @@ public final class SpongeBindings extends Bindings {
   @Override
   @Bind
   public void sendMessage(String player, String message) {
-    player(player).ifPresent(value -> value.sendMessage(Text.of(message)));
+    Text deserialize = TextSerializers.FORMATTING_CODE.deserialize(message);
+    player(player).ifPresent(value -> value.sendMessage(Text.of(deserialize)));
   }
 
   /** $.bindings.player_meta_uuid */
