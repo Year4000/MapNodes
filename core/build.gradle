@@ -43,10 +43,8 @@ task copyTestJs(type: Copy) {
 
 // Actually Test Node
 task testNodeJs(type: NodeTask) {
-  //script = file("${projectDir}/build/test/js/test.js")
   script = file("${projectDir}/node_modules/mocha/bin/mocha")
   args = ["${projectDir}/build/test/js/test.js"]
-  options = ['--harmony']
 }
 
 // Test the javascript files
