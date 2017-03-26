@@ -1,6 +1,7 @@
 /*
  * Copyright 2017 Year4000. All Rights Reserved.
  */
+'use strict'
 
 /** The abstract region that handles the creation of points */
 class AbstractRegion {

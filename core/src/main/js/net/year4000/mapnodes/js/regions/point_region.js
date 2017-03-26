@@ -1,6 +1,7 @@
 /*
  * Copyright 2017 Year4000. All Rights Reserved.
  */
+'use strict'
 
 /** A region that contains a single point, must wrap with THREE.Vector3 */
 class PointRegion extends AbstractRegion {

@@ -1,6 +1,7 @@
 /*
  * Copyright 2017 Year4000. All Rights Reserved.
  */
+'use strict'
 
 /** Represents a cube region that wraps a cuboid region */
 class CubeRegion extends AbstractRegion {

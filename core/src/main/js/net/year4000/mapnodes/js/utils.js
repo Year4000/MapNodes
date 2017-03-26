@@ -1,6 +1,7 @@
 /*
  * Copyright 2016 Year4000. All Rights Reserved.
  */
+'use strict'
 
 /**
   Util functions and constants are provided for the aid of creating the JSON

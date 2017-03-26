@@ -1,6 +1,7 @@
 /*
  * Copyright 2017 Year4000. All Rights Reserved.
  */
+'use strict'
 
 /** Represents a cuboid region with two positions */
 class CuboidRegion extends AbstractRegion {

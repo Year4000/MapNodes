@@ -1,6 +1,7 @@
 /*
  * Copyright 2016 Year4000. All Rights Reserved.
  */
+'use strict'
 
 /** Represents a team from the json object */
 class JsonObject {

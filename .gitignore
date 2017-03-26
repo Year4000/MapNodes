@@ -2,6 +2,7 @@
 run/
 **/src/generated
 .tasks.py
+node_modules/
 
 # Gradle
 .gradle/

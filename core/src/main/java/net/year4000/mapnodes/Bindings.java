@@ -34,10 +34,10 @@ public abstract class Bindings implements Releasable {
   @interface Bind {}
   // Set the flags for the V8 runtime
   static {
-    V8.setFlags("--harmony --harmony_proxies --use_strict");
+    V8.setFlags("--harmony --harmony_proxies");
   }
   /** The V8 Runtime for everything */
-  private static V8 engine = V8.createV8Runtime("_$", Files.createTempDir().getAbsolutePath());
+  private static V8 engine = V8.createV8Runtime("global", Files.createTempDir().getAbsolutePath());
   /** The memory manager for any javascript object that were created */
   private static MemoryManager memoryManager = new MemoryManager(engine);
   /** The handler to interact with the Javascript object */

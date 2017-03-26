@@ -1,9 +1,13 @@
 /*
  * Copyright 2017 Year4000. All Rights Reserved.
  */
+'use strict'
+
+const _ = global._ || require('../../../../modules/lodash')
+const Conditions = global.Conditions || require('./conditions')
 
 /** The class to create an injector to inject other JavaScript objects */
-class Injector {
+global.Injector = class Injector {
 
   /** Create the injector and inject the modules with the other modules */
   constructor(modules) {

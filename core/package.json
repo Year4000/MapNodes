@@ -1,0 +1,7 @@
+{
+  "name": "mapnodes_test",
+  "description": "Test the Javascript side of MapNodes",
+  "devDependencies": {
+    "mocha": "^3.2.0"
+  }
+}

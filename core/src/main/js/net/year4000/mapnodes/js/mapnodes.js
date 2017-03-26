@@ -1,6 +1,7 @@
 /*
  * Copyright 2017 Year4000. All Rights Reserved.
  */
+'use strict'
 
 /** The service to handle pretty much everything with the JS side of MapNodes */
 class MapNodes {

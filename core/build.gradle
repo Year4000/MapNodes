@@ -1,11 +1,12 @@
 /*
- * Copyright 2016 Year4000. All Rights Reserved.
+ * Copyright 2017 Year4000. All Rights Reserved.
  */
 
 plugins {
   id 'java'
   id 'idea'
   id 'de.undercouch.download' version '3.2.0'
+  id 'com.moowork.node' version '1.1.1'
 }
 
 dependencies {
@@ -22,11 +23,45 @@ sourceSets.main.resources {
   srcDir "${projectDir}/src/generated/js/"
 }
 
+sourceSets.test.resources {
+  srcDir "${projectDir}/src/test/js/"
+}
+
 idea.module {
   sourceDirs += file("${projectDir}/src/main/js/")
 }
 
 test.testLogging.showStandardStreams = true
+
+// Copy all files to known path
+task copyTestJs(type: Copy) {
+  from "${projectDir}/src/test/js/"
+  from "${projectDir}/src/main/js/"
+  from "${projectDir}/src/generated/js/"
+  into "${projectDir}/build/test/js/"
+}
+
+// Actually Test Node
+task testNodeJs(type: NodeTask) {
+  //script = file("${projectDir}/build/test/js/test.js")
+  script = file("${projectDir}/node_modules/mocha/bin/mocha")
+  args = ["${projectDir}/build/test/js/test.js"]
+  options = ['--harmony', '--use_strict']
+}
+
+// Test the javascript files
+task testJs {
+  dependsOn 'nodeSetup'
+  dependsOn 'copyTestJs'
+  dependsOn 'testNodeJs'
+}
+
+test.dependsOn testJs
+
+node {
+  version = '7.7.4'
+  download = true
+}
 
 // Download and shade Javascript utils that MapNodes needs
 task generateJsUtils(dependsOn: 'processResources') {
