@@ -25,8 +25,8 @@ class Team extends JsonObject {
   join(player) {
     Conditions.not_null(player, 'player')
     if (player._current_team) { // Swap the teams the player is on
-      player.leave()
       this.$event_emitter.trigger('swap_team', [player, player._current_team, this, this.$game])
+      player.leave_team()
     }
     this._members.push(player)
     player._team = this

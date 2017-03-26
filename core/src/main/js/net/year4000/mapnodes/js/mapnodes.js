@@ -24,9 +24,9 @@ class MapNodes {
     Conditions.not_null(game, 'game')
     this._last_game = this._current_game
     this._current_game = game
-    this.$injector.child_injector({
+    this._current_game.$injector = this.$injector.child_injector({
       game: this._current_game,
-    }, this._current_game)
+    })
     this._current_game.register_map()
     if (this._last_game) { // Cycle to the next game
       this._last_game.cycle(game)

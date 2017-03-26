@@ -71,12 +71,12 @@ class Player {
 
   /** Stop the game for the player */
   stop() {
-    this.leave()
+    this.$event_emitter.trigger('stop_player', [this, this.$game])
+    this.leave_team()
   }
 
   /** Have the player leave the game they are on */
-  leave() {
-    this.$event_emitter.trigger('stop_player', [this, this.$game])
+  leave_team() {
     if (this._current_team) {
       this._current_team.leave(this)
     }

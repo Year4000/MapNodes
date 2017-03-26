@@ -22,10 +22,7 @@ global.Injector = class Injector {
   }
 
   /** Create a child injector from this injector */
-  child_injector(modules, injected) {
-    if (injected) {
-      return injected.$injector = new Injector(_.merge(modules, this._modules))
-    }
+  child_injector(modules) {
     return new Injector(_.merge(modules, this._modules))
   }
 
