@@ -14,12 +14,8 @@ class Injector {
   /** Inject the modules into the object prefixed with $ */
   inject_instance(instance) {
     Conditions.not_null(instance, 'instance')
-    _.merge(instance, _.reduce(this._modules, (result, value, key) => {
-      if (instance !== value) { // Don't inject your self in the same instance
-        result['$' + key] = value
-      }
-      return result
-    }))
+    _.merge(instance, _.mapKeys(this._modules, (value, key) => `$${key}`))
+    instance.$injector = this
   }
 
   /** Create a child injector from this injector */
