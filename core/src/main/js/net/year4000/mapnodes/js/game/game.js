@@ -13,7 +13,6 @@ class Game extends JsonObject {
     this._regions = Immutable.Map()
     this._clazzes = Immutable.Map()
     this._state = 'WAITING'
-    this._state_colors = {WAITING: '&e', RUNNING: '"&a', ENDED: '&c'}
     this._players = []
     Logger.info(`Constructing the game ${id} for ${this._json.map.name}`)
   }
