@@ -44,7 +44,7 @@ class $ {
   /** Wrap the internal bindings in a proxy to catch unimplemented variables */
   static get bindings() {
     if ($._proxy == null) { // Lazy load the proxy
-      $._proxy = Proxy($._bindings, {
+      $._proxy = new Proxy($._bindings, {
         get: (target, name, receiver) => {
           if (target[name]) {
             return function() { // Must be a function to capture ...arguments

@@ -14,7 +14,7 @@ dependencies {
   compile 'net.year4000.utilities:core:master-SNAPSHOT'
   compile 'com.google.inject:guice:4.0'
   compile 'com.flowpowered:flow-math:1.0.3'
-  compile 'com.eclipsesource.j2v8:j2v8_linux_x86_64:4.6.0'
+  compile 'com.eclipsesource.j2v8:j2v8_linux_x86_64:4.7.1'
   compile 'org.slf4j:slf4j-api:1.7.21'
 }
 
@@ -68,7 +68,6 @@ task generateJsUtils(dependsOn: 'processResources') {
     'https://cdnjs.cloudflare.com/ajax/libs/immutable/3.8.1/immutable.js',
     'https://raw.githubusercontent.com/Olical/EventEmitter/v4.2.11/EventEmitter.js',
     'https://raw.githubusercontent.com/jonnyreeves/js-logger/1.3.0/src/logger.js',
-    'https://raw.githubusercontent.com/tvcutsem/harmony-reflect/v1.5.1/reflect.js',
     'https://raw.githubusercontent.com/mrdoob/three.js/r84/build/three.js',
     'https://raw.githubusercontent.com/moment/moment/2.18.1/moment.js',
   ]

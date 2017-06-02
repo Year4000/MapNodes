@@ -8,7 +8,6 @@ include('/modules/lodash.js')
 include('/modules/immutable.js')
 include('/modules/EventEmitter.js')
 include('/modules/logger.js')
-include('/modules/reflect.js')
 include('/modules/three.js')
 include('/modules/moment.js')
 

@@ -156,7 +156,7 @@ class Game extends JsonObject {
 
   /** Actually have the player leave the game */
   _leave_game(player) {
-    player.leave()
+    player.leave_team()
     _.remove(this._players, player)
     this.$event_emitter.trigger('leave_game', [player, this])
   }

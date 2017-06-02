@@ -34,7 +34,7 @@ public abstract class Bindings implements Releasable {
   @interface Bind {}
   // Set the flags for the V8 runtime
   static {
-    V8.setFlags("--harmony --harmony_proxies");
+    V8.setFlags("--harmony");
   }
   /** The V8 Runtime for everything */
   private static V8 engine = V8.createV8Runtime("global", Files.createTempDir().getAbsolutePath());
