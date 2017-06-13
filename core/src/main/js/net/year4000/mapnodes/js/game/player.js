@@ -27,13 +27,13 @@ class Player {
   /** Generate the player meta from the uuid */
   static of_uuid(uuid) {
     Conditions.not_null(uuid, 'uuid')
-    return new Player(...$.bindings.player_meta_uuid(uuid).split(':'))
+    return new Player(...$.bindings.player_meta_uuid(String(uuid)).split(':'))
   }
 
   /** Generate the player meta from a username */
   static of_username(username) {
     Conditions.not_null(username, 'username')
-    return new Player(...$.bindings.player_meta_username(username).split(':'))
+    return new Player(...$.bindings.player_meta_username(String(username)).split(':'))
   }
 
   get uuid() {
@@ -52,12 +52,17 @@ class Player {
 
   /** Send a message to this player */
   send_message(message) {
-    $.bindings.send_message(this.uuid, message || '')
+    $.bindings.send_message(this.uuid, String(message || ''))
+  }
+
+  /** Check if the player has the permission */
+  has_permission(permission) {
+    return $.bindings.has_permission(this.uuid, String(permission))
   }
 
   /** Set the header for the tablist */
   set tablist_header(header) {
-    $.bindings.tablist_header(this.uuid, header)
+    $.bindings.tablist_header(this.uuid, String(header))
   }
 
   teleport(x, y, z, yaw, pitch) {

@@ -12,7 +12,13 @@ class MapNodes {
     this.$injector = new Injector({
       map_nodes: self,
       event_emitter: new EventEmitter(),
+      command_manager: new CommandManager(),
     })
+  }
+
+  /** Get the command manager for mapnodes */
+  register_command(command, action) {
+    return this.$command_manager.register_command(command, action)
   }
 
   /** Get the current game */

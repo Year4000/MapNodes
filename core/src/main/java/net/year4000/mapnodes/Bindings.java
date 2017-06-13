@@ -173,5 +173,11 @@ public abstract class Bindings implements Releasable {
 
     /** $.js.last_spawn_point */
     V8Array lastSpawnPoint();
+
+    /** $.js.on_player_command */
+    V8Object onPlayerCommand(String uuid, String username, String command, String args);
+
+    /** $.js.is_command */
+    boolean isCommand(String command);
   }
 }

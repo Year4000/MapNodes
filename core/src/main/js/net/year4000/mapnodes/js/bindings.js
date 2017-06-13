@@ -110,6 +110,20 @@ class $ {
     map_nodes.current_game.leave_game(player)
   }
 
+  /** Pass the command to the manager */
+  on_player_command(uuid, username, command, args) {
+    let player = new CommandExecutor(new Player(username, uuid))
+    return map_nodes.$command_manager.execute_command(player, command, args)
+  }
+
+  /** Check if the command part of the system */
+  is_command(command) {
+    if (!command) {
+      return false
+    }
+    return map_nodes.$command_manager.is_command(command)
+  }
+
   /** Send the x,y,z cords of the spawn point */
   spawn_point() {
     let point = map_nodes.current_game.spawn_point

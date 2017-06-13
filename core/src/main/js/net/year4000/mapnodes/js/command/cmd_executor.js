@@ -7,13 +7,13 @@
 class CommandExecutor {
 
     constructor(executor) {
-      this._executor = executor
+      this._executor = executor // the executor is an instance of a player
     }
 
     /** Send the message to the executor */
     send_message(message) {
       if (this._executor) {
-        return $.bindings.send_message(this._executor, message)
+        return this._executor.send_message(message)
       }
       return println(message)
     }
@@ -21,8 +21,18 @@ class CommandExecutor {
     /** Does the executor has a permission */
     has_permission(permission) {
       if (this._executor) {
-        return $.bindings.has_permission(this._executor, permission)
+        return this._executor.has_permission(permission)
       }
       return true
+    }
+
+    /** Is the executor a player */
+    is_player() {
+      return this._executor != null
+    }
+
+    /** Is the executor the console */
+    is_console() {
+      return this._executor == null
     }
 }
