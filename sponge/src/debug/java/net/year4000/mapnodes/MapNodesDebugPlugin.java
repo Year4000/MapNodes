@@ -49,17 +49,6 @@ public class MapNodesDebugPlugin {
       }
       return CommandResult.success();
     }).build(), "start");
-
-    // Join the player to the smallest team
-    Sponge.getCommandManager().register(this, CommandSpec.builder().executor((src, args) -> {
-      try {
-        SpongeNode node = (SpongeNode) NODE_MANAGER.getNode();
-        //node.gameManager().join((Player) src);
-      } catch (Exception e) {
-        e.printStackTrace();
-      }
-      return CommandResult.success();
-    }).build(), "team");
   }
 
 }

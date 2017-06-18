@@ -3,12 +3,17 @@
  */
 'use strict'
 
+/** The instance of all the player that has ever joined this server's instance */
+const _player_instances = {}
+
 /** Generates the player object */
 class Player {
 
   constructor(username, uuid) {
     Conditions.not_null(username, 'username')
     Conditions.not_null(uuid, 'uuid')
+    _player_instances[uuid] = this
+    _player_instances[username] = this // todo there may be a name clash, should add some checks later
     this._meta = {username: username, uuid: uuid}
     this._current_team = null;
   }
@@ -17,7 +22,13 @@ class Player {
   static of(player) {
     Conditions.not_null(player, 'player')
     Conditions.is_true(typeof player === 'string')
-    if (_.size(player) > Facts.MAX_USERNAME_SIZE) { // must be uuid
+    if (player in _player_instances) { // check the cache first
+        Logger.info('useing player cache')
+      return _player_instances[player]
+    }
+      Logger.info('creating player')
+
+      if (_.size(player) > Facts.MAX_USERNAME_SIZE) { // must be uuid
       return Player.of_uuid(player)
     } else { // Must be username
       return Player.of_username(player)
@@ -42,12 +53,6 @@ class Player {
 
   get username() {
     return this._meta.username
-  }
-
-  /** Update the team refrence for the player */
-  set _team(team) {
-    Conditions.not_null(team, 'team')
-    this._current_team = team;
   }
 
   /** Send a message to this player */
@@ -80,16 +85,24 @@ class Player {
     this.leave_team()
   }
 
+  /** Have the player join the specific team */
+  join_team(team) {
+    Conditions.not_null(team, 'team')
+    team.join(this)
+    this._current_team = team;
+  }
+
   /** Have the player leave the game they are on */
   leave_team() {
     if (this._current_team) {
       this._current_team.leave(this)
+      this._current_team = null
     }
   }
 
   /** Checks if the two player objects are equal */
   is_equal(player) {
-    return typeof player === 'object' && this.valueOf() === player.valueOf()
+    return typeof player === 'object' && this.valueOf() == player.valueOf() // only use == since the strings are not exactly the same string
   }
 
   /** Get the value of this player */

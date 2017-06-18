@@ -143,7 +143,9 @@ class Game extends JsonObject {
     Conditions.not_null(player, 'player')
     this.$injector.inject_instance(player)
     this._players.push(player)
-    this._teams.get(Facts.SPECTATOR_ID).join(player);
+    let spectator = this._teams.get(Facts.SPECTATOR_ID)
+    spectator.join(player)
+    player._current_team = spectator
     this.$event_emitter.trigger('join_game', [player, this])
     player.teleport(...this.spawn_point.toArray())
   }
@@ -151,7 +153,8 @@ class Game extends JsonObject {
   /** Clean up the player, player should be a uuid but can be a username */
   leave_game(player) {
     Conditions.not_null(player, 'player')
-    this._leave_game(_.find(this._players, object => object.is_equal(Player.of(player))))
+    let player_object = Player.of(player)
+    this._leave_game(_.find(this._players, object => object.is_equal(player_object)))
   }
 
   /** Actually have the player leave the game */
@@ -163,7 +166,7 @@ class Game extends JsonObject {
 
   /** Generate the Team object containing the least about of players */
   get _smallest_team() {
-    return _(this._teams).sortBy('size').last()
+    return this._teams.filterNot(team => team.id == Facts.SPECTATOR_ID).sortBy(team => team.size).first()
   }
 
   /** The abstraction to register the object */

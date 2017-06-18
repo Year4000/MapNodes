@@ -21,6 +21,21 @@ class Team extends JsonObject {
     return this.team.name
   }
 
+  /** Get the name of the team with the color code */
+  get color_name() {
+    return this.color_code + this.name
+  }
+
+  /** Get the name of the color the team bellongs to */
+  get color() {
+    return _.lowerCase(this.team.color);
+  }
+
+  /** Get the color code for the team */
+  get color_code() {
+    return Colors[this.color] || '&k'
+  }
+
   /** Have the player join this team */
   join(player) {
     Conditions.not_null(player, 'player')
@@ -29,7 +44,6 @@ class Team extends JsonObject {
       player.leave_team()
     }
     this._members.push(player)
-    player._team = this
     this.$event_emitter.trigger('join_team', [player, this, this.$game])
   }
 

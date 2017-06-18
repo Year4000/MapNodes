@@ -112,7 +112,7 @@ class $ {
 
   /** Pass the command to the manager */
   on_player_command(uuid, username, command, args) {
-    let player = new CommandExecutor(new Player(username, uuid))
+    let player = new CommandExecutor(Player.of(uuid))
     return map_nodes.$command_manager.execute_command(player, command, args)
   }
 

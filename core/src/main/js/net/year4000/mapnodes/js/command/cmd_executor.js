@@ -26,6 +26,11 @@ class CommandExecutor {
       return true
     }
 
+    /** Get the executor of the command may be null */
+    get player() {
+      return this._executor
+    }
+
     /** Is the executor a player */
     is_player() {
       return this._executor != null
