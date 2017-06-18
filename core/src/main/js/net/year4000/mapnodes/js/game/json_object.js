@@ -12,8 +12,13 @@ class JsonObject {
     this._json = Conditions.not_null(json, 'json')
   }
 
-  /** Get the id of this JsonObject */
+  /** Get the id of this JsonObject, also makes the id lowercase */
   get id() {
+    return _.lowerCase(this._id)
+  }
+
+  /** Get the name for the object defaults to id */
+  get name() {
     return this._id
   }
 

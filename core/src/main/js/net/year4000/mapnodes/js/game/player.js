@@ -23,12 +23,9 @@ class Player {
     Conditions.not_null(player, 'player')
     Conditions.is_true(typeof player === 'string')
     if (player in _player_instances) { // check the cache first
-        Logger.info('useing player cache')
       return _player_instances[player]
     }
-      Logger.info('creating player')
-
-      if (_.size(player) > Facts.MAX_USERNAME_SIZE) { // must be uuid
+    if (_.size(player) > Facts.MAX_USERNAME_SIZE) { // must be uuid
       return Player.of_uuid(player)
     } else { // Must be username
       return Player.of_username(player)

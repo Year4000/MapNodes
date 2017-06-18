@@ -16,9 +16,9 @@ class Team extends JsonObject {
     return this._json
   }
 
-  /** The name of the team */
+  /** The name of the team, use legacy first then default to new standard */
   get name() {
-    return this.team.name
+    return this.team.name || super.name()
   }
 
   /** Get the name of the team with the color code */
