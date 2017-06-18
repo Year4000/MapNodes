@@ -14,13 +14,17 @@ public class V8ThreadLock<T extends V8Value> implements AutoCloseable {
   private final T instance;
   private final V8Locker locker;
   private final ReentrantLock lock = new ReentrantLock();
+  private final boolean notSameThread;
 
   /** Create the lock when this instance is created */
   public V8ThreadLock(T instance) {
     this.instance = Conditions.nonNull(instance, "instance");
     locker = instance.getRuntime().getLocker();
-    lock.lock();
-    locker.acquire();
+    notSameThread = locker.getThread() != Thread.currentThread();
+    if (notSameThread) {
+      lock.lock();
+      locker.acquire();
+    }
   }
 
   /** Get the instance of the v8 runtime */
@@ -31,7 +35,9 @@ public class V8ThreadLock<T extends V8Value> implements AutoCloseable {
   /** Release the locks that were placed */
   @Override
   public void close() {
-    locker.release();
-    lock.unlock();
+    if (notSameThread) {
+      locker.release();
+      lock.unlock();
+    }
   }
 }

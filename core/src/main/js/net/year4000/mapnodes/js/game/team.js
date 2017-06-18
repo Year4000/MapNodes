@@ -28,7 +28,7 @@ class Team extends JsonObject {
 
   /** Get the name of the color the team bellongs to */
   get color() {
-    return _.lowerCase(this.team.color);
+    return _.lowerCase(this.team.color)
   }
 
   /** Get the color code for the team */
