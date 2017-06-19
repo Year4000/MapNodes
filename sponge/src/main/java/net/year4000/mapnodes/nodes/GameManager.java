@@ -10,9 +10,7 @@ import net.year4000.mapnodes.events.GameCycleEvent;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.data.key.Keys;
-import org.spongepowered.api.entity.Transform;
 import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.entity.living.player.gamemode.GameModes;
 import org.spongepowered.api.event.EventManager;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.filter.Getter;
@@ -20,7 +18,9 @@ import org.spongepowered.api.event.network.ClientConnectionEvent;
 import org.spongepowered.api.event.server.ClientPingServerEvent;
 import org.spongepowered.api.network.status.Favicon;
 import org.spongepowered.api.text.Text;
-import org.spongepowered.api.world.World;
+import org.spongepowered.api.text.format.TextColor;
+import org.spongepowered.api.text.format.TextColors;
+import org.spongepowered.api.text.format.TextStyles;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -32,6 +32,10 @@ import java.io.IOException;
 public class GameManager {
   /** The current state of the game */
   enum GameState {WAITING, RUNNING, ENDED}
+  /** The colors, index matches the ordinal of the game state */
+  private final TextColor[] GAME_STATE_COLORS = {TextColors.YELLOW, TextColors.GREEN, TextColors.RED};
+  /** Predict the game state the game is in, this is to avoid unneeded access to the v8 engine */
+  private GameState predictGameState = GameState.WAITING;
 
   @Inject private Game game;
   @Inject private SpongeNode node;
@@ -62,6 +66,7 @@ public class GameManager {
   /** Tell the v8 instance that we want to start the game */
   public void start() {
     if (gameState() == GameState.WAITING) {
+      predictGameState = GameState.RUNNING;
       $.js.start();
     } else {
       logger.warn("Can not start a game that is all ready running");
@@ -71,6 +76,7 @@ public class GameManager {
   /** Tell the v8 instance that we want to start the game */
   public void stop() {
     if (gameState() != GameState.ENDED) {
+      predictGameState = GameState.ENDED;
       $.js.stop();
     } else {
       logger.warn("Can not stop a game that has been stopped");
@@ -93,7 +99,7 @@ public class GameManager {
     graphic.dispose();
     Favicon favicon = game.getRegistry().loadFavicon(bufferedIcon);
     event.getResponse().setFavicon(favicon);
-    event.getResponse().setDescription(Text.of(node.name() + " version " + node.version()));
+    event.getResponse().setDescription(Text.of(GAME_STATE_COLORS[predictGameState.ordinal()], predictGameState.name(), TextColors.GRAY, " | ", TextColors.DARK_PURPLE, TextStyles.ITALIC, node.name(), TextColors.LIGHT_PURPLE, " v", node.version()));
   }
 
   @Listener
