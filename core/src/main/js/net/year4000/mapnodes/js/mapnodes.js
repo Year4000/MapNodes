@@ -13,6 +13,7 @@ class MapNodes {
       map_nodes: self,
       event_emitter: new EventEmitter(),
       command_manager: new CommandManager(),
+      event_manager: new EventManager(),
     })
   }
 

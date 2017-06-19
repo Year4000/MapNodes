@@ -21,4 +21,4 @@ const Colors = {
   dark_green: '&2',
   dark_blue: '&1',
   black: '&0',
-};
+}
