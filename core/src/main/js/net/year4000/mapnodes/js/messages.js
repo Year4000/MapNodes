@@ -6,6 +6,13 @@
 /** Translate the messages from the locale system */
 const Messages = new Proxy({}, {
   get: (target, name, receiver) => {
-    // todo translate the message for the specific player, also provide an option to send the message.
+    return {
+      send: (player, args) => {
+        $.bindings.send_locale_message(player.uuid, name, args || [])
+      },
+      get: (player, args) => {
+        return $.bindings.get_locale_message(player.uuid, name, args || [])
+      }
+    }
   }
 })

@@ -33,7 +33,7 @@ class Team extends JsonObject {
 
   /** Get the color code for the team */
   get color_code() {
-    return Colors[this.color] || '&k'
+    return Colors[this.color] || '&f&k'
   }
 
   /** Have the player join this team */

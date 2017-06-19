@@ -12,7 +12,13 @@ map_nodes.register_command('ping', (executor, args) => {
 map_nodes.register_command('team', (executor, args) => {
   if (executor.is_player()) {
     let team = map_nodes.current_game._smallest_team;
-    executor.send_message(`&6Joining team&8: ${team.color_name}`)
+    Messages.TEAM_JOIN.send(executor.player, [team.color_name])
     executor.player.join_team(team)
   }
+})
+
+/** Just check the locale of the current user */
+map_nodes.register_command('locale', (executor, args) => {
+  Messages.CMD_MAPNODES_LOCALE_NAME.send(executor.player, [Messages.LOCALE_NAME.get(executor.player)])
+  Messages.CMD_MAPNODES_LOCALE_CODE.send(executor.player, [Messages.LOCALE_CODE.get(executor.player)])
 })

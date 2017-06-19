@@ -18,6 +18,11 @@ public enum Messages implements LocaleKeys<CommandSource, Text> {
   // Locale Header
   LOCALE_CODE,
   LOCALE_NAME,
+
+  CMD_MAPNODES_LOCALE_NAME,
+  CMD_MAPNODES_LOCALE_CODE,
+
+  TEAM_JOIN
   ;
 
   public static final Text SUCCESS = net.year4000.utilities.sponge.Messages.SUCCESS;

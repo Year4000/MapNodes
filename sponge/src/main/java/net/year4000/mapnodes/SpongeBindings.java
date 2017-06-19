@@ -3,6 +3,7 @@
  */
 package net.year4000.mapnodes;
 
+import com.eclipsesource.v8.V8Array;
 import com.google.common.base.CaseFormat;
 import com.google.inject.Inject;
 import net.year4000.utilities.reflection.Gateways;
@@ -29,6 +30,23 @@ public final class SpongeBindings extends Bindings {
       return Value.of(game.getServer().getPlayer(UUID.fromString(player)));
     } else {
       return Value.of(game.getServer().getPlayer(player));
+    }
+  }
+
+  /** $.bindings.send_locale_message */
+  @Bind
+  public void sendLocaleMessage(String player, String name, V8Array array) {
+    player(player).ifPresent(value -> value.sendMessage(Messages.valueOf(name).get(value, Commons.toObjectArray(array))));
+  }
+
+  /** $.bindings.get_locale_message */
+  @Bind
+  public String getLocaleMessage(String player, String name, V8Array array) {
+    Value<Player> playerValue = player(player);
+    if (playerValue.isPresent()) {
+      return TextSerializers.FORMATTING_CODE.serializeSingle(Messages.valueOf(name).get(playerValue.get(), Commons.toObjectArray(array)));
+    } else {
+      return "null";
     }
   }
 
