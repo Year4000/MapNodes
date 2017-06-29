@@ -48,7 +48,13 @@ class $ {
         get: (target, name, receiver) => {
           if (target[name]) {
             return function() { // Must be a function to capture ...arguments
-              return target[name](...arguments)
+              try {
+                return target[name](...arguments)
+              } catch (any) {
+                Logger.error(`An error has been thrown from: ${PLATFORM}`)
+                Logger.error(any)
+                return () => {}
+              }
             }
           } else {
             Logger.error(`${name} has not been defined in the bindings mappings`)
