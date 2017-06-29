@@ -11,9 +11,11 @@ import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.event.EventManager;
-import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.*;
+import org.spongepowered.api.event.Event;
+import org.spongepowered.api.event.block.ChangeBlockEvent;
 import org.spongepowered.api.event.filter.Getter;
+import org.spongepowered.api.event.filter.type.Include;
 import org.spongepowered.api.event.network.ClientConnectionEvent;
 import org.spongepowered.api.event.server.ClientPingServerEvent;
 import org.spongepowered.api.network.status.Favicon;
@@ -120,5 +122,12 @@ public class GameManager {
   public void leave(ClientConnectionEvent.Disconnect event, @Getter("getTargetEntity") Player player) {
     $.js.onEvent(event);
     $.js.leaveGame(player);
+  }
+
+  /** Listen to events */
+  @Listener(order = Order.LAST)
+  @Include({ChangeBlockEvent.class})
+  public void event(Event event) {
+    $.js.onEvent(event);
   }
 }

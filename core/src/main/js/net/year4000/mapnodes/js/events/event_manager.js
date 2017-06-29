@@ -3,6 +3,13 @@
  */
 'use strict'
 
+/** Register all the events the javascript system needs to handle */
 class EventManager {
+  constructor() {
 
+  }
+
+  handle_event(name, event) {
+
+  }
 }
