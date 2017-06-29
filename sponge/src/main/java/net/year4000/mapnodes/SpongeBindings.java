@@ -9,6 +9,7 @@ import com.google.inject.Inject;
 import net.year4000.utilities.reflection.Gateways;
 import net.year4000.utilities.reflection.Reflections;
 import net.year4000.utilities.value.Value;
+import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Event;
@@ -23,6 +24,7 @@ public final class SpongeBindings extends Bindings {
   public final SpongeV8Bindings js = Reflections.proxy(SpongeV8Bindings.class, handler, Gateways.reflectiveImplements(SpongeV8Bindings.class));
 
   @Inject private Game game;
+  @Inject private Logger logger;
 
   /** Internal method to get the player from the uuid or user name*/
   private Value<Player> player(String player) {
@@ -36,7 +38,14 @@ public final class SpongeBindings extends Bindings {
   /** $.bindings.send_locale_message */
   @Bind
   public void sendLocaleMessage(String player, String name, V8Array array) {
-    player(player).ifPresent(value -> value.sendMessage(Messages.valueOf(name).get(value, Commons.toObjectArray(array))));
+    player(player).ifPresent(value -> {
+      try {
+        // todo support messages that are not in the enum
+        value.sendMessage(Messages.valueOf(name).get(value, Commons.toObjectArray(array)));
+      } catch (IllegalArgumentException error) {
+        logger.error("Locale for {} is not found in Messages.class", name);
+      }
+    });
   }
 
   /** $.bindings.get_locale_message */
@@ -44,7 +53,13 @@ public final class SpongeBindings extends Bindings {
   public String getLocaleMessage(String player, String name, V8Array array) {
     Value<Player> playerValue = player(player);
     if (playerValue.isPresent()) {
-      return TextSerializers.FORMATTING_CODE.serializeSingle(Messages.valueOf(name).get(playerValue.get(), Commons.toObjectArray(array)));
+      try {
+        // todo support messages that are not in the enum
+        return TextSerializers.FORMATTING_CODE.serializeSingle(Messages.valueOf(name).get(playerValue.get(), Commons.toObjectArray(array)));
+      } catch (IllegalArgumentException error) {
+        logger.error("Locale for {} is not found in Messages.class", name);
+        return "null";
+      }
     } else {
       return "null";
     }

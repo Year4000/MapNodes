@@ -7,7 +7,6 @@ import com.eclipsesource.v8.V8;
 import com.google.common.base.CaseFormat;
 import net.year4000.utilities.Conditions;
 
-import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationHandler;
