@@ -80,8 +80,8 @@ class Game extends JsonObject {
     Conditions.not_null(next_game, 'next_game')
     // Have all the players leave the game
     _.forEach(this._players, player => {
-      next_game._join_game(player)
       this._leave_game(player)
+      next_game._join_game(player)
     })
     this.$event_emitter.trigger('game_cycle', [next_game, this])
   }
