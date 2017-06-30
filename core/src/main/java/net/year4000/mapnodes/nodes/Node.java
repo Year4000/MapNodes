@@ -3,11 +3,9 @@
  */
 package net.year4000.mapnodes.nodes;
 
-import com.eclipsesource.v8.V8;
 import com.eclipsesource.v8.V8Object;
 import com.eclipsesource.v8.utils.MemoryManager;
 import net.year4000.mapnodes.MapNodes;
-import net.year4000.mapnodes.V8ThreadLock;
 import net.year4000.mapnodes.game.InfoComponent;
 import net.year4000.utilities.ErrorReporter;
 
@@ -42,13 +40,11 @@ public abstract class Node {
     this.map = map;
     try (BufferedReader buffer = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(map.map().array())))) {
       String script = buffer.lines().collect(Collectors.joining("\n"));
-      try (V8ThreadLock<V8> lock = factory.v8Thread()) {
-        v8Object = lock.v8().executeObjectScript("eval(" + script + ");");
-        // Create a memory manager, gather facts about the map then release the memory manager
-        memoryManager = new MemoryManager(lock.v8());
-        info = MapNodes.GSON.fromJson(MapNodes.GSON.toJsonTree(v8Object.getObject("map")), InfoComponent.class);
-        memoryManager.release();
-      }
+      v8Object = factory.v8().executeObjectScript("eval(" + script + ");");
+      // Create a memory manager, gather facts about the map then release the memory manager
+      memoryManager = new MemoryManager(factory.v8());
+      info = MapNodes.GSON.fromJson(MapNodes.GSON.toJsonTree(v8Object.getObject("map")), InfoComponent.class);
+      memoryManager.release();
     } catch (IOException | NullPointerException error) {
       throw ErrorReporter.builder(error).add("Node id", id).buildAndReport(System.err);
     }
@@ -84,11 +80,9 @@ public abstract class Node {
 
   /** Unloads the node */
   public void unload() throws Exception {
-    try (V8ThreadLock<V8Object> lock = new V8ThreadLock<>(v8Object)) {
-      if (memoryManager != null) {
-        memoryManager.release(); // release any object's created during the existence of this node
-      }
-      lock.v8().release(); // release the object that the map.js is stored in
+    if (memoryManager != null) {
+      memoryManager.release(); // release any object's created during the existence of this node
     }
+    v8Object.release(); // release the object that the map.js is stored in
   }
 }

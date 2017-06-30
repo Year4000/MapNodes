@@ -62,7 +62,7 @@ public class SpongeNodeFactory implements NodeFactory {
   }
 
   @Override
-  public V8ThreadLock<V8> v8Thread() {
-    return bindings.v8Thread();
+  public V8 v8() {
+    return bindings.v8();
   }
 }

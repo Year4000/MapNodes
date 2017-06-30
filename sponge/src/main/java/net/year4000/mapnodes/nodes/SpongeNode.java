@@ -3,22 +3,16 @@
  */
 package net.year4000.mapnodes.nodes;
 
-import com.eclipsesource.v8.V8;
 import com.eclipsesource.v8.V8Array;
-import com.eclipsesource.v8.V8Object;
 import com.eclipsesource.v8.utils.MemoryManager;
-import com.eclipsesource.v8.utils.V8ObjectUtils;
-import com.eclipsesource.v8.utils.V8Thread;
 import com.flowpowered.math.vector.Vector3d;
 import com.google.common.io.Files;
-import com.google.gson.Gson;
 import com.google.inject.Inject;
 import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
 import net.year4000.mapnodes.MapNodes;
 import net.year4000.mapnodes.MapNodesPlugin;
 import net.year4000.mapnodes.SpongeBindings;
-import net.year4000.mapnodes.V8ThreadLock;
 import net.year4000.utilities.value.Value;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
@@ -51,10 +45,8 @@ public class SpongeNode extends Node {
 
   @Override
   public void load() throws Exception {
-    try (V8ThreadLock<V8> lock = new V8ThreadLock<>(v8Object.getRuntime())) {
-      logger.info("Creating MemoryManager for current game");
-      memoryManager = new MemoryManager(lock.v8());
-    }
+    logger.info("Creating MemoryManager for current game");
+    memoryManager = new MemoryManager(v8Object.getRuntime());
     String zipLocation = MapNodes.SETTINGS.cache + "/" + id() + ".zip";
     File zipLocationFile = new File(zipLocation);
     Files.createParentDirs(zipLocationFile);
@@ -113,9 +105,8 @@ public class SpongeNode extends Node {
 
   /** Create the world transformer to spawn the player into the map */
   public Transform<World> worldTransformer() {
-    try (V8ThreadLock<V8Array> lock = new V8ThreadLock<>($.js.spawnPoint())) {
-      return new Transform<>(world, new Vector3d(lock.v8().getDouble(0), lock.v8().getDouble(1), lock.v8().getDouble(2)));
-    }
+    V8Array array = $.js.spawnPoint();
+    return new Transform<>(world, new Vector3d(array.getDouble(0), array.getDouble(1), array.getDouble(2)));
   }
 
   /** Get the world of this node */

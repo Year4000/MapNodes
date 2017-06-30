@@ -33,10 +33,8 @@ class V8InvocationHandler implements InvocationHandler {
         .bindTo(proxy)
         .invokeWithArguments(args);
     }
-    try (V8ThreadLock<V8> lock = new V8ThreadLock<>(engine)) {
-      return lock.v8()
-        .executeObjectScript(lookup)
-        .executeJSFunction(CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, method.getName()), args);
-    }
+    return engine
+      .executeObjectScript(lookup)
+      .executeJSFunction(CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, method.getName()), args);
   }
 }

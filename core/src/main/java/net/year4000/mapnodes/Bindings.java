@@ -50,41 +50,36 @@ public abstract class Bindings implements Releasable {
 
   /** Map the java methods to the javascript functions */
   protected Bindings() {
-    try (V8ThreadLock<V8> lock = v8Thread()) {
-      object = new V8Object(engine);
-      for (Method method : getClass().getMethods()) {
-        if (method.getAnnotation(Bind.class) != null) {
-          String lower = CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, method.getName());
-          object.registerJavaMethod(this, method.getName(), lower, method.getParameterTypes());
-        }
+    object = new V8Object(engine);
+    for (Method method : getClass().getMethods()) {
+      if (method.getAnnotation(Bind.class) != null) {
+        String lower = CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, method.getName());
+        object.registerJavaMethod(this, method.getName(), lower, method.getParameterTypes());
       }
-      lock.v8().add("PLATFORM", "java");
-      lock.v8().add("JAVA", object);
     }
+    engine.add("PLATFORM", "java");
+    engine.add("JAVA", object);
   }
 
   /** Acquire the v8 lock on the current thread */
   public void acquire() {
     V8Locker locker = engine.getLocker();
     if (locker.getThread() == Thread.currentThread()) {
-      locker.acquire();
+      //locker.acquire();
     } else {
       logger.error("V8 is attached to a different thread");
     }
   }
 
   /** Get the v8 instance */
-  public V8ThreadLock<V8> v8Thread() {
-    return new V8ThreadLock<>(engine);
+  public V8 v8() {
+    return engine;
   }
 
   /** Release the bindings */
   @Override
   public void release() {
-    try (V8ThreadLock<V8> lock = v8Thread()) {
-      memoryManager.release();
-      lock.v8().release();
-    }
+    memoryManager.release();
   }
 
   /** $.bindings.debug */
@@ -124,9 +119,7 @@ public abstract class Bindings implements Releasable {
     InputStream stream = Bindings.class.getResourceAsStream(path);
     try (BufferedReader buffer = new BufferedReader(new InputStreamReader(stream))) {
       String script = buffer.lines().collect(Collectors.joining("\n"));
-      try (V8ThreadLock<V8> lock = v8Thread()) {
-        lock.v8().executeVoidScript(script);
-      }
+      engine.executeVoidScript(script);
     } catch (IOException | NullPointerException error) {
       logger.error(ErrorReporter.builder(error).add("path: ", path).build().toString());
     } finally {
