@@ -3,10 +3,7 @@
  */
 package net.year4000.mapnodes;
 
-import com.eclipsesource.v8.Releasable;
-import com.eclipsesource.v8.V8;
-import com.eclipsesource.v8.V8Array;
-import com.eclipsesource.v8.V8Object;
+import com.eclipsesource.v8.*;
 import com.eclipsesource.v8.utils.MemoryManager;
 import com.google.common.base.CaseFormat;
 import com.google.common.collect.Queues;
@@ -63,6 +60,16 @@ public abstract class Bindings implements Releasable {
       }
       lock.v8().add("PLATFORM", "java");
       lock.v8().add("JAVA", object);
+    }
+  }
+
+  /** Acquire the v8 lock on the current thread */
+  public void acquire() {
+    V8Locker locker = engine.getLocker();
+    if (locker.getThread() == Thread.currentThread()) {
+      locker.acquire();
+    } else {
+      logger.error("V8 is attached to a different thread");
     }
   }
 
