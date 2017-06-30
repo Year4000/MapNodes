@@ -21,15 +21,14 @@ public class Testing {
   public static void main(String[] args) throws Exception {
     String bindings = read(Testing.class.getResourceAsStream("/net/year4000/mapnodes/js/bindings.js"));
     String map = read(Testing.class.getResourceAsStream("/map.js"));
-    try (V8ThreadLock<V8> thread = BINDINGS.v8Thread()) {
-      thread.v8().executeVoidScript(bindings);
-      thread.v8().executeScript("print('Hello');");
-      thread.v8().executeScript("println(' World!');");
-      thread.v8().executeScript("var_dump(PLATFORMS);");
-      V8Object v8Object = thread.v8().executeObjectScript("eval(" + map + ");");
-      Gson gson = new GsonBuilder().registerTypeAdapterFactory(new V8TypeAdapterFactory()).setPrettyPrinting().create();
-      System.out.println(gson.toJson(v8Object));
-    }
+    V8 v8 = BINDINGS.v8();
+    v8.executeVoidScript(bindings);
+    v8.executeScript("print('Hello');");
+    v8.executeScript("println(' World!');");
+    v8.executeScript("var_dump(PLATFORMS);");
+    V8Object v8Object = v8.executeObjectScript("eval(" + map + ");");
+    Gson gson = new GsonBuilder().registerTypeAdapterFactory(new V8TypeAdapterFactory()).setPrettyPrinting().create();
+    System.out.println(gson.toJson(v8Object));
   }
 
   private static String read(InputStream input) throws IOException {
