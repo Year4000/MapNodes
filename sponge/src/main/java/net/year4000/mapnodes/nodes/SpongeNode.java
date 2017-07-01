@@ -106,7 +106,11 @@ public class SpongeNode extends Node {
   /** Create the world transformer to spawn the player into the map */
   public Transform<World> worldTransformer() {
     V8Array array = $.js.spawnPoint();
-    return new Transform<>(world, new Vector3d(array.getDouble(0), array.getDouble(1), array.getDouble(2)));
+    try {
+      return new Transform<>(world, new Vector3d(array.getDouble(0), array.getDouble(1), array.getDouble(2)));
+    } finally {
+      array.release();
+    }
   }
 
   /** Get the world of this node */
