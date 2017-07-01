@@ -69,7 +69,6 @@ public class GameManager {
   public void start() {
     if (gameState() == GameState.WAITING) {
       predictGameState = GameState.RUNNING;
-      $.acquire(); // acquire the lock to allow future interactions speed up
       $.js.start();
     } else {
       logger.warn("Can not start a game that is all ready running");
