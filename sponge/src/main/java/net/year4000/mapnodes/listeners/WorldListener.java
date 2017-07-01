@@ -12,6 +12,7 @@ import org.spongepowered.api.event.block.ChangeBlockEvent;
 import org.spongepowered.api.event.entity.ConstructEntityEvent;
 import org.spongepowered.api.event.entity.DamageEntityEvent;
 import org.spongepowered.api.event.filter.Getter;
+import org.spongepowered.api.event.statistic.ChangeStatisticEvent;
 import org.spongepowered.api.event.world.LoadWorldEvent;
 import org.spongepowered.api.event.world.SaveWorldEvent;
 import org.spongepowered.api.world.World;
@@ -58,6 +59,12 @@ public class WorldListener {
   /** There is no need to save the world to disk */
   @Listener(order = Order.FIRST)
   public void on(SaveWorldEvent event) {
+    event.setCancelled(true);
+  }
+
+  /** There is no need to save the player stats */
+  @Listener(order = Order.FIRST)
+  public void on(ChangeStatisticEvent event) {
     event.setCancelled(true);
   }
 
