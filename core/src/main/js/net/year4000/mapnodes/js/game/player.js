@@ -82,6 +82,16 @@ class Player {
     this.leave_team()
   }
 
+  /** Check if the player is playing */
+  is_playing() {
+    return this._current_team && this._current_team.id != Facts.SPECTATOR_ID && this.$game.is_running()
+  }
+
+  /** Check if the player is playing */
+  is_spectating() {
+    return this._current_team && this._current_team.id == Facts.SPECTATOR_ID
+  }
+
   /** Have the player join the specific team */
   join_team(team) {
     Conditions.not_null(team, 'team')

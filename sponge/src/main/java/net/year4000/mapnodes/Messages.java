@@ -22,6 +22,8 @@ public enum Messages implements LocaleKeys<CommandSource, Text> {
   CMD_MAPNODES_LOCALE_NAME,
   CMD_MAPNODES_LOCALE_CODE,
 
+  MAP_CREATED,
+
   TEAM_JOIN
   ;
 

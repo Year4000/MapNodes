@@ -59,6 +59,7 @@ public abstract class Bindings implements Releasable {
     }
     engine.add("PLATFORM", "java");
     engine.add("JAVA", object);
+    engine.getLocker().acquire(); // acquire the lock because idk
   }
 
   /** Get the v8 instance */

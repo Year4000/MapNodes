@@ -70,10 +70,22 @@ class MapNodes {
 
   static join_game$listener(player) {
     MapNodes._tab_list(player)
+    // todo open team selector gui
   }
 
   static start_player$listener(player) {
     MapNodes._tab_list(player)
+    // todo set kit
+    // todo set scoreboard
+    if (player.is_playing()) { // Message when the game starts for players
+      let map_info = player.$game.map.map
+      player.send_message()
+      player.send_message('&7&m' + _.pad(`&a ${map_info.name} &7${map_info.version.replace(/\./, '&8.&7')} &7&m`, 55, '*'))
+      player.send_message(Messages.MAP_CREATED.get(player) + map_info.authors)
+      player.send_message('&a&o' + map_info.description) // todo multi line description
+      player.send_message('&7&m' + _.repeat('*', 45))
+      player.send_message()
+    }
   }
 
   static stop_game_player$listener(player) {
