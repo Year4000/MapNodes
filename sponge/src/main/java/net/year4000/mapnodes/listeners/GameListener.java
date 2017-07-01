@@ -58,7 +58,7 @@ public class GameListener {
         manager.register(plugin, CommandSpec.builder().executor((src, commandContext) -> {
           if (src instanceof Player) {
             Player player = (Player) src;
-            $.js.onPlayerCommand(player.getUniqueId().toString(), player.getName(), command, args);
+            $.js.onPlayerCommand(player.getUniqueId().toString(), player.getName(), command, args).release(); // todo do something with the results
           }
           return CommandResult.empty();
         }).build(), command);

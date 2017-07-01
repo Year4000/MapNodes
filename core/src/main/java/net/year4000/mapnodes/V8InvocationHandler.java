@@ -4,8 +4,11 @@
 package net.year4000.mapnodes;
 
 import com.eclipsesource.v8.V8;
+import com.eclipsesource.v8.V8Object;
 import com.google.common.base.CaseFormat;
+import com.google.inject.Inject;
 import net.year4000.utilities.Conditions;
+import org.slf4j.Logger;
 
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Constructor;
@@ -17,6 +20,8 @@ class V8InvocationHandler implements InvocationHandler {
   /** The object that the methods will execute the Javascript function */
   private final V8 engine;
   private final String lookup;
+
+  @Inject private Logger logger;
 
   V8InvocationHandler(V8 engine, String lookup) {
     this.engine = Conditions.nonNull(engine, "engine");
@@ -33,8 +38,11 @@ class V8InvocationHandler implements InvocationHandler {
         .bindTo(proxy)
         .invokeWithArguments(args);
     }
-    return engine
-      .executeObjectScript(lookup)
-      .executeJSFunction(CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, method.getName()), args);
+    V8Object binding = engine.executeObjectScript(lookup);
+    try {
+      return binding.executeJSFunction(CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, method.getName()), args);
+    } finally {
+      binding.release(); // release the object that we were looking up
+    }
   }
 }

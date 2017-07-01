@@ -5,9 +5,11 @@ package net.year4000.mapnodes.nodes;
 
 import com.eclipsesource.v8.V8Object;
 import com.eclipsesource.v8.utils.MemoryManager;
+import com.google.inject.Inject;
 import net.year4000.mapnodes.MapNodes;
 import net.year4000.mapnodes.game.InfoComponent;
 import net.year4000.utilities.ErrorReporter;
+import org.slf4j.Logger;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -30,6 +32,8 @@ public abstract class Node {
   protected final V8Object v8Object;
   protected final MapPackage map;
   protected final int id;
+
+  @Inject private Logger logger;
 
   /**
    * Create the node, we are just testing the validity of the map
@@ -81,6 +85,7 @@ public abstract class Node {
   /** Unloads the node */
   public void unload() throws Exception {
     if (memoryManager != null) {
+      logger.info("Releasing {} references lost in the world", memoryManager.getObjectReferenceCount());
       memoryManager.release(); // release any object's created during the existence of this node
     }
     v8Object.release(); // release the object that the map.js is stored in

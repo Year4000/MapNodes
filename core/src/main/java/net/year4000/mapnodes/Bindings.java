@@ -70,6 +70,7 @@ public abstract class Bindings implements Releasable {
   /** Release the bindings */
   @Override
   public void release() {
+    logger.info("Releasing {} references lost in the void", memoryManager.getObjectReferenceCount());
     memoryManager.release();
   }
 
