@@ -7,18 +7,24 @@ import com.google.inject.Inject;
 import net.year4000.mapnodes.SpongeBindings;
 import net.year4000.mapnodes.events.DeleteWorldEvent;
 import net.year4000.mapnodes.events.GameCycleEvent;
+import net.year4000.mapnodes.events.MapNodesEvent;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.entity.living.player.gamemode.GameModes;
 import org.spongepowered.api.event.*;
 import org.spongepowered.api.event.Event;
 import org.spongepowered.api.event.block.ChangeBlockEvent;
+import org.spongepowered.api.event.entity.MoveEntityEvent;
 import org.spongepowered.api.event.filter.Getter;
 import org.spongepowered.api.event.filter.type.Include;
+import org.spongepowered.api.event.item.inventory.InteractInventoryEvent;
 import org.spongepowered.api.event.network.ClientConnectionEvent;
 import org.spongepowered.api.event.server.ClientPingServerEvent;
 import org.spongepowered.api.network.status.Favicon;
+import org.spongepowered.api.scoreboard.Scoreboard;
+import org.spongepowered.api.scoreboard.Team;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColor;
 import org.spongepowered.api.text.format.TextColors;
@@ -29,6 +35,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.Collections;
 
 /** This handles all the game logic to and from the v8 engine */
 public class GameManager {
@@ -38,6 +45,9 @@ public class GameManager {
   private final TextColor[] GAME_STATE_COLORS = {TextColors.YELLOW, TextColors.GREEN, TextColors.RED};
   /** Predict the game state the game is in, this is to avoid unneeded access to the v8 engine */
   private GameState predictGameState = GameState.WAITING;
+  /** The score board for the game, todo make it a score bord for each player */
+  private Team spectator = Team.builder().name("spectator").color(TextColors.GRAY).allowFriendlyFire(false).prefix(Text.of(TextColors.GRAY)).suffix(Text.of(TextColors.RESET)).build();
+  private Scoreboard scoreboard = Scoreboard.builder().teams(Collections.singletonList(spectator)).build();
 
   @Inject private Game game;
   @Inject private SpongeNode node;
@@ -114,19 +124,25 @@ public class GameManager {
   public void join(ClientConnectionEvent.Join event, @Getter("getTargetEntity") Player player) {
     player.offer(Keys.CAN_FLY, true);
     player.offer(Keys.IS_FLYING, true);
+    player.offer(Keys.GAME_MODE, GameModes.SPECTATOR);
     $.js.onEvent(event);
     $.js.joinGame(player);
+    // scoreboard things
+    scoreboard.getTeam("spectator").get().addMember(Text.of(player.getName()));
+    player.setScoreboard(scoreboard);
   }
 
   @Listener
   public void leave(ClientConnectionEvent.Disconnect event, @Getter("getTargetEntity") Player player) {
     $.js.onEvent(event);
     $.js.leaveGame(player);
+    // scoreboard things
+    scoreboard.getTeam("spectator").get().removeMember(Text.of(player.getName()));
   }
 
-  /** Listen to events */
+  /** Listen to events to pass into the game */
   @Listener(order = Order.LAST)
-  @Include({ChangeBlockEvent.class})
+  @Include({ChangeBlockEvent.class, MapNodesEvent.class, InteractInventoryEvent.class, MoveEntityEvent.class})
   public void event(Event event) {
     $.js.onEvent(event);
   }
