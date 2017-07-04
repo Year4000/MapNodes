@@ -11,9 +11,24 @@ map_nodes.register_command('ping', (executor, args) => {
 /** Have the executor join the smallest team */
 map_nodes.register_command('team', (executor, args) => {
   if (executor.is_player()) {
-    let team = map_nodes.current_game._smallest_team;
+    let team = (args == '') ? map_nodes.current_game._smallest_team : map_nodes.current_game._teams.get(args)
+    if (team) {
+      Messages.TEAM_JOIN.send(executor.player, [team.color_name])
+      executor.player.join_team(team)
+    } else {
+      Messages.TEAM_NOT_FOUND.send(executor.player, [args])
+    }
+  }
+})
+
+/** Have the executor join the smallest team */
+map_nodes.register_command('spec', (executor, args) => {
+  if (executor.is_player()) {
+    let team = map_nodes.current_game._teams.get(Facts.SPECTATOR_ID)
     Messages.TEAM_JOIN.send(executor.player, [team.color_name])
+    executor.player.leave_team()
     executor.player.join_team(team)
+    executor.player.teleport(...team.spawn_point.toArray())
   }
 })
 

@@ -58,8 +58,8 @@ class Game extends JsonObject {
     this._start_time = _.now()
     Logger.info(`The game(${this._id}) has started as ${moment(this._start_time).format('l LTS')}...`)
     this.$event_emitter.trigger('game_start', [this])
-    for (let team of this._teams.values()) { // todo filter out spectators
-      team.start()
+    for (let team of this._teams.values()) {
+      team.start() // spectators and players should be handle differently
     }
   }
 

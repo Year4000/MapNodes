@@ -95,6 +95,16 @@ class Player {
   /** Have the player join the specific team */
   join_team(team) {
     Conditions.not_null(team, 'team')
+    if (this.$game.is_running() && this.is_playing()) {
+      return Messages.TEAM_MENU_NOT_NOW.send(this)
+    }
+    if (this.$game.is_running() && this.is_spectating()) {
+      this.leave_team()
+      team.join(this)
+      this._current_team = team;
+      this.start()
+      return
+    }
     team.join(this)
     this._current_team = team;
   }
@@ -109,7 +119,7 @@ class Player {
 
   /** Get the current team for the player, this should always return something */
   get team() {
-    return this._current_team;
+    return this._current_team
   }
 
   /** Checks if the two player objects are equal */
