@@ -107,6 +107,11 @@ class Player {
     }
   }
 
+  /** Get the current team for the player, this should always return something */
+  get team() {
+    return this._current_team;
+  }
+
   /** Checks if the two player objects are equal */
   is_equal(player) {
     return typeof player === 'object' && this.valueOf() == player.valueOf() // only use == since the strings are not exactly the same string

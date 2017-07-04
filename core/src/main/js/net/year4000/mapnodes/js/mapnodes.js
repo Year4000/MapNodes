@@ -85,6 +85,8 @@ class MapNodes {
       player.send_message('&a&o' + map_info.description) // todo multi line description
       player.send_message('&7&m' + _.repeat('*', 45))
       player.send_message()
+      // send player to spawn
+      player.teleport(...player.team.spawn_point.toArray())
     }
   }
 
