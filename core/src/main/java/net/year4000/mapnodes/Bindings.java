@@ -171,5 +171,11 @@ public abstract class Bindings implements Releasable {
 
     /** $.js.is_command */
     boolean isCommand(String command);
+
+    /** $.js.command_description */
+    String commandDescription(String command);
+
+    /** $.js.command_permission */
+    String commandPermission(String command);
   }
 }

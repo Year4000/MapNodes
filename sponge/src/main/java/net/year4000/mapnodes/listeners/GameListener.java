@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.command.CommandManager;
 import org.spongepowered.api.command.CommandResult;
+import org.spongepowered.api.command.args.*;
 import org.spongepowered.api.command.spec.CommandSpec;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.EventManager;
@@ -20,6 +21,8 @@ import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.command.SendCommandEvent;
 import org.spongepowered.api.event.filter.Getter;
 import org.spongepowered.api.scheduler.SpongeExecutorService;
+import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.serializer.TextSerializers;
 import org.spongepowered.api.world.World;
 
 import java.util.concurrent.TimeUnit;
@@ -51,17 +54,22 @@ public class GameListener {
   }
 
   @Listener
-  public void on(SendCommandEvent event, @Getter("getCommand") String command, @Getter("getArguments") String args) {
+  public void on(SendCommandEvent event, @Getter("getCommand") String command) {
     if ($.js.isCommand(command)) {
       CommandManager manager = game.getCommandManager();
       if (!manager.get(command).isPresent()) { // register the command
-        manager.register(plugin, CommandSpec.builder().executor((src, commandContext) -> {
-          if (src instanceof Player) {
-            Player player = (Player) src;
-            $.js.onPlayerCommand(player.getUniqueId().toString(), player.getName(), command, args).release(); // todo do something with the results
-          }
-          return CommandResult.empty();
-        }).build(), command);
+        manager.register(plugin, CommandSpec.builder()
+          .description(TextSerializers.FORMATTING_CODE.deserialize($.js.commandDescription(command)))
+          .permission($.js.commandPermission(command))
+          .arguments(GenericArguments.optional(GenericArguments.remainingRawJoinedStrings(Text.of("args"))))
+          .executor((src, commandContext) -> {
+            if (src instanceof Player) {
+              Player player = (Player) src;
+              String args = commandContext.<String>getOne("args").orElse("");
+              $.js.onPlayerCommand(player.getUniqueId().toString(), player.getName(), command, args).release(); // todo do something with the results
+            }
+            return CommandResult.empty();
+         }).build(), command);
       }
     }
   }

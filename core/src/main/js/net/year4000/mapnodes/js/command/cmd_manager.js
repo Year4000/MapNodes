@@ -26,7 +26,7 @@ class CommandManager {
     try {
       let command_action = this._command_map[command];
       if (command_action) {
-        command_action(executor || new CommandExecutor(), args);
+        command_action(executor || new CommandExecutor(), args)
       } else {
         return new CommandError() // todo replace with command not found error
       }
@@ -34,7 +34,7 @@ class CommandManager {
       if (error instanceof CommandError) {
         return error
       } else {
-        return new CommandError(error)
+        throw error
       }
     }
   }

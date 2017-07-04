@@ -120,5 +120,15 @@ public final class SpongeBindings extends Bindings {
     default void leaveGame(Player player) {
       leaveGame(player.getUniqueId().toString());
     }
+
+    /** $.js.command_description */
+    default String commandDescription(String command) {
+      return "No description is present yet"; // todo allow getting the description from command
+    }
+
+    /** $.js.command_permission */
+    default String commandPermission(String command) {
+      return null; // todo allow getting permissions from command
+    }
   }
 }
