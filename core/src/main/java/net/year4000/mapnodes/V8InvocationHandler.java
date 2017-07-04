@@ -21,8 +21,6 @@ class V8InvocationHandler implements InvocationHandler {
   private final V8 engine;
   private final String lookup;
 
-  @Inject private Logger logger;
-
   V8InvocationHandler(V8 engine, String lookup) {
     this.engine = Conditions.nonNull(engine, "engine");
     this.lookup = Conditions.nonNullOrEmpty(lookup, "lookup");

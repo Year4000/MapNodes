@@ -111,7 +111,7 @@ public abstract class Bindings implements Releasable {
     InputStream stream = Bindings.class.getResourceAsStream(path);
     try (BufferedReader buffer = new BufferedReader(new InputStreamReader(stream))) {
       String script = buffer.lines().collect(Collectors.joining("\n"));
-      engine.executeVoidScript(script);
+      engine.executeVoidScript(script, path, 0); // The path is the scriptName for errors
     } catch (IOException | NullPointerException error) {
       logger.error(ErrorReporter.builder(error).add("path: ", path).build().toString());
     } finally {
