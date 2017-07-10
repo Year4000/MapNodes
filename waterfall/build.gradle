@@ -1,0 +1,41 @@
+
+plugins {
+    id 'java'
+    id 'idea'
+    id 'com.github.johnrengelman.shadow' version '1.2.4'
+}
+
+//apply from: utilities.file('gradle/sponge.gradle')
+
+assemble.dependsOn shadowJar {
+    baseName = mapnodes.name.toLowerCase()
+    version = mapnodes.rawVersion
+
+    dependencies {
+        include dependency('com.eclipsesource.j2v8:.*')
+        include dependency('net.lingala.zip4j:.*')
+        include dependency(':core')
+        exclude dependency('net.year4000.utilities:.*')
+    }
+}
+
+repositories {
+    maven { url 'https://repo.spongepowered.org/maven/' }
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+    compile 'net.year4000.utilities:sponge:master-SNAPSHOT'
+    compile group: 'net.lingala.zip4j', name: 'zip4j', version: '1.3.2'
+}
+
+// Always tell idea to show the debug as a source dir
+idea.module.sourceDirs += file("src/debug/java")
+
+// Toggle this comment if you want to add the debug into the classpath
+if (System.getenv('DEBUG') != null) {
+    sourceSets.main {
+        java.srcDir "${projectDir}/src/debug/java/"
+        resources.srcDir "${projectDir}/src/debug/resources/"
+    }
+}
