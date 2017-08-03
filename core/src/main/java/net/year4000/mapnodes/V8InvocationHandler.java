@@ -6,9 +6,10 @@ package net.year4000.mapnodes;
 import com.eclipsesource.v8.V8;
 import com.eclipsesource.v8.V8Object;
 import com.google.common.base.CaseFormat;
-import com.google.inject.Inject;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 import net.year4000.utilities.Conditions;
-import org.slf4j.Logger;
 
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Constructor;
@@ -20,6 +21,15 @@ class V8InvocationHandler implements InvocationHandler {
   /** The object that the methods will execute the Javascript function */
   private final V8 engine;
   private final String lookup;
+  /** The method name cache for the translation of java method names to the javascript function names */
+  private final LoadingCache<String, String> methodNameCache = CacheBuilder.<String, String>newBuilder()
+    .concurrencyLevel(1) // You can only access the v8 engine with only one thread
+    .build(new CacheLoader<String, String>() {
+      @Override
+      public String load(String key) throws Exception {
+        return CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, key);
+      }
+    });
 
   V8InvocationHandler(V8 engine, String lookup) {
     this.engine = Conditions.nonNull(engine, "engine");
@@ -38,7 +48,9 @@ class V8InvocationHandler implements InvocationHandler {
     }
     V8Object binding = engine.executeObjectScript(lookup);
     try {
-      return binding.executeJSFunction(CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, method.getName()), args);
+      // Cache the conversion of the java method name to the js function name
+      // It is O(n) on first run, n being the length of the string then O(1) if the cache is present
+      return binding.executeJSFunction(methodNameCache.get(method.getName()), args);
     } finally {
       binding.release(); // release the object that we were looking up
     }
