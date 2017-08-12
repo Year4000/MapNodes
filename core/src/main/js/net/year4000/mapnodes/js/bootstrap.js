@@ -12,6 +12,7 @@ include('/modules/three.js')
 include('/modules/moment.js')
 
 // The files needed for MapNodes
+include('/net/year4000/mapnodes/js/commons.js')
 include('/net/year4000/mapnodes/js/colors.js')
 include('/net/year4000/mapnodes/js/utils.js')
 include('/net/year4000/mapnodes/js/conditions.js')

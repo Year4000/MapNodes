@@ -15,7 +15,7 @@ class MapNodes {
       command_manager: new CommandManager(),
       event_manager: new EventManager(),
     })
-    this.register_listeners(MapNodes)
+    Commons.register_listeners(MapNodes, this.$event_emitter, this);
   }
 
   /** Get the command manager for mapnodes */
@@ -42,14 +42,6 @@ class MapNodes {
     }
   }
 
-  /** Register all listeners into the event emitter */
-  register_listeners(clazz) {
-    Reflect.ownKeys(clazz).filter(name => _.endsWith(name, '$listener')).forEach(name => {
-      let event_name = name.substring(0, name.indexOf('$'))
-      this.$event_emitter.on(event_name, Reflect.get(clazz, name))
-    })
-  }
-
   // Event Listeners
 
   /** Called when the system has been loaded  */
@@ -64,8 +56,8 @@ class MapNodes {
   }
 
   /** Let us know that a player joined the team */
-  static join_team$listener(player, team, game) {
-    Logger.info(`The player ${player.username} joined the team ${team.name} size ${team.size}`)
+  static join_team$listener({username}, {name, size}, game) {
+    Logger.info(`The player ${username} joined the team ${name} size ${size}`)
   }
 
   static join_game$listener(player) {
@@ -78,11 +70,12 @@ class MapNodes {
     // todo set kit
     // todo set scoreboard
     if (player.is_playing()) { // Message when the game starts for players
-      let map_info = player.$game.map.map
+      let {name, version, description, authors} = player.$game.map.map
+      let author_names = _.map(authors, author => _.truncate(author, {length: 3}));
       player.send_message()
-      player.send_message('&7&m' + _.pad(`&a ${map_info.name} &7${map_info.version.replace(/\./, '&8.&7')} &7&m`, 55, '*'))
-      player.send_message(Messages.MAP_CREATED.get(player) + map_info.authors)
-      player.send_message('&a&o' + map_info.description) // todo multi line description
+      player.send_message('&7&m' + _.pad(`&a ${name} &7${version.replace(/\./, '&8.&7')} &7&m`, 55, '*'))
+      player.send_message(Messages.MAP_CREATED.get(player) + author_names)
+      player.send_message('&a&o' + description) // todo multi line description
       player.send_message('&7&m' + _.repeat('*', 45))
       player.send_message()
       // send player to spawn
