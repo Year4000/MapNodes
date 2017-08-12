@@ -54,4 +54,11 @@ class V8InvocationHandler implements InvocationHandler {
     // It is O(n) on first run, n being the length of the string then O(1) if the cache is present
     return object.executeJSFunction(methodNameCache.get(method.getName()), args);
   }
+
+  /** Release the v8 object */
+  public void release() {
+    if (object != null && !object.isReleased()) {
+      object.release();
+    }
+  }
 }

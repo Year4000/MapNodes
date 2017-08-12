@@ -18,7 +18,6 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.util.ArrayDeque;
 import java.util.stream.Collectors;
@@ -38,7 +37,7 @@ public abstract class Bindings implements Releasable {
   /** The memory manager for any javascript object that were created */
   private static MemoryManager memoryManager = new MemoryManager(engine);
   /** The handler to interact with the Javascript object */
-  protected final InvocationHandler handler = new V8InvocationHandler(engine, "$.js");
+  protected final V8InvocationHandler handler = new V8InvocationHandler(engine, "$.js");
   /** The V8 Object that is bind to the JAVA var */
   private final V8Object object;
   /** Paths that need to be included after import */
@@ -67,9 +66,16 @@ public abstract class Bindings implements Releasable {
     return engine;
   }
 
+  /** Release the object that the handler is using */
+  public void releaseHandler() {
+    handler.release();
+  }
+
   /** Release the bindings */
   @Override
   public void release() {
+    object.release(); // release the object that holds the bindings
+    releaseHandler();
     logger.info("Releasing {} references lost in the void", memoryManager.getObjectReferenceCount());
     memoryManager.release();
   }

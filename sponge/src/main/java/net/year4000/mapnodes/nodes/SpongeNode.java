@@ -99,6 +99,7 @@ public class SpongeNode extends Node {
   @Override
   public void unload() throws Exception {
     logger.info("Unregister listeners and releasing v8 bindings");
+    $.releaseHandler();
     eventManager.unregisterListeners(gameManager);
     super.unload(); //  Handle the V8
   }
