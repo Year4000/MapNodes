@@ -12,6 +12,7 @@ class Game extends JsonObject {
     this._kits = Immutable.Map()
     this._regions = Immutable.Map()
     this._clazzes = Immutable.Map()
+    this._events = Immutable.Map()
     this._state = 'WAITING'
     this._players = []
     Logger.info(`Constructing the game ${id} for ${this._json.map.name}`)
@@ -38,6 +39,7 @@ class Game extends JsonObject {
     _.forEach(this.map.kits, (json, id) => this._register_kit(id, json))
     _.forEach(this.map.regions, (json, id) => this._register_region(id, json))
     _.forEach(this.map.classes, (json, id) => this._register_class(id, json))
+    _.forEach(this.map.events, (json, id) => this._register_event(id, json))
     Logger.info('Finish registering map components')
   }
 
@@ -73,6 +75,7 @@ class Game extends JsonObject {
       this.$event_emitter.trigger('stop_game_player', [player, this])
       player.stop()
     }
+    this.unload() // unload things in the game
   }
 
   /** Cycle to the next game */
@@ -90,6 +93,7 @@ class Game extends JsonObject {
   unload() {
     Logger.info(`The game(${this._id}) has been unloaded...`)
     this.$event_emitter.trigger('game_unload', [this])
+    _.forEach(this.map.events, (json, id) => this._unregister_event(id, json))
   }
 
   /** Get the time the game has started, -1 if hasent started yet */
@@ -198,6 +202,30 @@ class Game extends JsonObject {
   /** Register the region into the system */
   _register_region(region_id, region_json) {
     this._register(region_id, region_json, Region, '_regions', 'register_region')
+  }
+
+  /** Register the event into the system */
+  _register_event(event_id, event_function) {
+    Conditions.not_null(event_id, 'event_id')
+    Conditions.not_null(event_function, 'event_function')
+    let wrapper = function() {
+      try {
+        // todo figure a way not to use eval
+        eval(String(this.events[event_id]))(...arguments) // run the function in the context of this wrapper
+      } catch (any) {
+        Logger.error(any)
+      }
+    }.bind(this.map)
+    this._events = this._events.set(event_id, wrapper)
+    this.$event_emitter.on(event_id, wrapper)
+  }
+
+  /** Unregister the event into the system */
+  _unregister_event(event_id, event_function) {
+    Conditions.not_null(event_id, 'event_id')
+    Conditions.not_null(event_function, 'event_function')
+    let listener = this._events.get(event_id)
+    this.$event_emitter.off(event_id, listener)
   }
 
   /** Get the value of this game */
