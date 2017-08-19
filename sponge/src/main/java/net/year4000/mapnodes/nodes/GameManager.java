@@ -23,6 +23,7 @@ import org.spongepowered.api.event.item.inventory.InteractInventoryEvent;
 import org.spongepowered.api.event.network.ClientConnectionEvent;
 import org.spongepowered.api.event.server.ClientPingServerEvent;
 import org.spongepowered.api.network.status.Favicon;
+import org.spongepowered.api.scheduler.SpongeExecutorService;
 import org.spongepowered.api.scoreboard.Scoreboard;
 import org.spongepowered.api.scoreboard.Team;
 import org.spongepowered.api.text.Text;
@@ -55,6 +56,7 @@ public class GameManager {
   @Inject private EventManager eventManager;
   @Inject private NodeManager nodeManager;
   @Inject private SpongeBindings $;
+  @Inject private SpongeExecutorService scheduler;
 
   /** This will cycle to the next game */
   public void cycle() throws Exception {
@@ -72,13 +74,13 @@ public class GameManager {
 
   /** Get the current state the v8 instance has with the game */
   public GameState gameState() {
-    return GameState.valueOf($.js.gameState());
+    predictGameState = GameState.valueOf($.js.gameState());
+    return predictGameState;
   }
 
   /** Tell the v8 instance that we want to start the game */
   public void start() {
     if (gameState() == GameState.WAITING) {
-      predictGameState = GameState.RUNNING;
       $.js.start();
     } else {
       logger.warn("Can not start a game that is all ready running");
@@ -88,7 +90,6 @@ public class GameManager {
   /** Tell the v8 instance that we want to start the game */
   public void stop() {
     if (gameState() != GameState.ENDED) {
-      predictGameState = GameState.ENDED;
       $.js.stop();
     } else {
       logger.warn("Can not stop a game that has been stopped");
@@ -103,6 +104,7 @@ public class GameManager {
 
   @Listener
   public void onClientPing(ClientPingServerEvent event) throws IOException {
+    scheduler.execute(this::gameState); // update the game state on pings
     // Resize to 64 x 64
     BufferedImage bufferedImage = ImageIO.read(new ByteArrayInputStream(node.map().image().array()));
     BufferedImage bufferedIcon = new BufferedImage(64, 64, BufferedImage.TYPE_INT_RGB);

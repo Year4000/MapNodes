@@ -41,6 +41,11 @@ class Game extends JsonObject {
     _.forEach(this.map.classes, (json, id) => this._register_class(id, json))
     _.forEach(this.map.events, (json, id) => this._register_event(id, json))
     Logger.info('Finish registering map components')
+    // start the game auto
+    if (this.map.map_nodes.start_game_on_load) {
+      Logger.info('Starting the game right now because the map overrides this')
+      this.start()
+    }
   }
 
   /** Check if the game is running */
@@ -131,9 +136,9 @@ class Game extends JsonObject {
     return Game._STATE_COLORS[this._state] || '&4'
   }
 
-  /** Get the tablist header*/
+  /** Get the tablist header use map override if needed */
   get tablist_header() {
-    return `${this.state_color}${this.title_color}`
+    return this.map.map_nodes.tab_list_header || `${this.state_color}${this.title_color}`
   }
 
   /** Join the player to the game, player should be a uuid but can be a username */
@@ -147,11 +152,17 @@ class Game extends JsonObject {
     Conditions.not_null(player, 'player')
     this.$injector.inject_instance(player)
     this._players.push(player)
-    let spectator = this._teams.get(Facts.SPECTATOR_ID)
-    spectator.join(player)
-    player._current_team = spectator
-    this.$event_emitter.trigger('join_game', [player, this])
-    player.teleport(...this.spawn_point.toArray())
+    if (this.map.map_nodes.join_game_on_join) { // should players auto join the game when they login
+      player.join_team(this._smallest_team)
+      this.$event_emitter.trigger('join_game', [player, this])
+      player.start()
+    } else {
+      let spectator = this._teams.get(Facts.SPECTATOR_ID)
+      spectator.join(player)
+      player._current_team = spectator
+      this.$event_emitter.trigger('join_game', [player, this])
+      player.teleport(...this.spawn_point.toArray())
+    }
   }
 
   /** Clean up the player, player should be a uuid but can be a username */
@@ -245,8 +256,15 @@ Game.DEFAULT_MAP = {
 
   // Settings that maps or games can override
   map_nodes: {
+    // The header for the tab list to override the system one
+    tab_list_header: null,
+    // The footer for the tab list
     tab_list_footer: '&3[&bYear4000&3] &7- &bmc&3.&byear4000&3.&bnet',
-  }
+    // Do players join the game when they enter the server
+    join_game_on_join: false,
+    // Does the game start when the map is loaded
+    start_game_on_load: false,
+  },
 }
 
 /** The colors for each game state */
