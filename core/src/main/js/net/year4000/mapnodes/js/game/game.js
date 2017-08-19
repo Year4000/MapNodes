@@ -42,7 +42,7 @@ class Game extends JsonObject {
     _.forEach(this.map.events, (json, id) => this._register_event(id, json))
     Logger.info('Finish registering map components')
     // start the game auto
-    if (this.map.map_nodes.start_game_on_load) {
+    if (this.settings.start_game_on_load) {
       Logger.info('Starting the game right now because the map overrides this')
       this.start()
     }
@@ -101,6 +101,30 @@ class Game extends JsonObject {
     _.forEach(this.map.events, (json, id) => this._unregister_event(id, json))
   }
 
+  /** Get the proxy object for the map_nodes object in the map, function are called and return the value */
+  get settings() {
+    if (!this._settings) {
+      this._settings = new Proxy(this.map.map_nodes, {
+        get: (target, name) => {
+          if (name in target) {
+            let variable = target[name]
+            if (typeof variable === 'function') {
+              try {
+                return variable()
+              } catch (any) {
+                Logger.error(any)
+              }
+            } else {
+              return variable
+            }
+          }
+          return null;
+        }
+      });
+    }
+    return this._settings;
+  }
+
   /** Get the time the game has started, -1 if hasent started yet */
   get start_time() {
     return this._start_time || -1
@@ -138,7 +162,7 @@ class Game extends JsonObject {
 
   /** Get the tablist header use map override if needed */
   get tablist_header() {
-    return this.map.map_nodes.tab_list_header || `${this.state_color}${this.title_color}`
+    return this.settings.tab_list_header || `${this.state_color}${this.title_color}`
   }
 
   /** Join the player to the game, player should be a uuid but can be a username */
@@ -152,7 +176,7 @@ class Game extends JsonObject {
     Conditions.not_null(player, 'player')
     this.$injector.inject_instance(player)
     this._players.push(player)
-    if (this.map.map_nodes.join_game_on_join) { // should players auto join the game when they login
+    if (this.settings.join_game_on_join) { // should players auto join the game when they login
       player.join_team(this._smallest_team)
       this.$event_emitter.trigger('join_game', [player, this])
       player.start()
