@@ -62,6 +62,7 @@ class MapNodes {
 
   static join_game$listener(player) {
     MapNodes._tab_list(player)
+    player.tablist_footer = player.$game.map.map_nodes.tab_list_footer
     // todo open team selector gui
   }
 

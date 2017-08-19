@@ -67,6 +67,11 @@ class Player {
     $.bindings.tablist_header(this.uuid, String(header))
   }
 
+  /** Set the header for the tablist */
+  set tablist_footer(footer) {
+    $.bindings.tablist_footer(this.uuid, String(footer))
+  }
+
   teleport(x, y, z, yaw, pitch) {
     $.bindings.teleport(this.uuid, x, y, z, yaw || 0, pitch || 0)
   }

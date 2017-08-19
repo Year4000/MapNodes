@@ -89,6 +89,14 @@ public final class SpongeBindings extends Bindings {
     player(uuid).ifPresent(setHeader).ifEmpty(() -> game.getServer().getOnlinePlayers().forEach(setHeader));
   }
 
+  /** $.bindings.tablist_footer */
+  @Bind
+  public void tablistFooter(String uuid, String footer) {
+    Text deserialize = TextSerializers.FORMATTING_CODE.deserialize(footer);
+    Consumer<Player> setFooter = player -> player.getTabList().setFooter(deserialize);
+    player(uuid).ifPresent(setFooter).ifEmpty(() -> game.getServer().getOnlinePlayers().forEach(setFooter));
+  }
+
   /** $.bindings.has_permission */
   @Bind
   public boolean hasPermission(String uuid, String permission) {

@@ -242,6 +242,11 @@ Game.DEFAULT_MAP = {
     version: '0.1',
     descripton: 'Unknown Map',
   },
+
+  // Settings that maps or games can override
+  map_nodes: {
+    tab_list_footer: '&3[&bYear4000&3] &7- &bmc&3.&byear4000&3.&bnet',
+  }
 }
 
 /** The colors for each game state */
