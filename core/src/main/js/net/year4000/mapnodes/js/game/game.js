@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Year4000. All Rights Reserved.
+ * Copyright 2018 Year4000. All Rights Reserved.
  */
 'use strict'
 
@@ -243,10 +243,17 @@ class Game extends JsonObject {
   _register_event(event_id, event_function) {
     Conditions.not_null(event_id, 'event_id')
     Conditions.not_null(event_function, 'event_function')
+    Logger.info(`Registering event type ${event_id}`)
+    if (typeof event_function !== 'function') {
+      Logger.error('Event is not a function')
+      return
+    }
     let wrapper = function() {
       try {
-        // todo figure a way not to use eval
-        eval(String(this.events[event_id]))(...arguments) // run the function in the context of this wrapper
+        if (!wrapper.$compiled) {
+          wrapper.$compiled = eval(String(this.events[event_id]))
+        }
+        wrapper.$compiled(...arguments) // run the function in the context of this wrapper
       } catch (any) {
         Logger.error(any)
       }
