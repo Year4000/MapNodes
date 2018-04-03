@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Year4000. All Rights Reserved.
+ * Copyright 2018 Year4000. All Rights Reserved.
  */
 package net.year4000.mapnodes.nodes;
 
@@ -12,6 +12,7 @@ import net.year4000.mapnodes.*;
 import net.year4000.utilities.ErrorReporter;
 import org.slf4j.Logger;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileVisitOption;
 import java.nio.file.Files;
@@ -46,6 +47,10 @@ public class SpongeNodeFactory implements NodeFactory {
   public void generatePackages() {
     Path path = Paths.get(settings.mapPath);
     try {
+      File testMap = new File(settings.mapPath, "__test__");
+      if (testMap.exists()) { // If the __test__ folder exists only load that specific map
+        path = Paths.get(testMap.toURI());
+      }
       Files.walk(path, FileVisitOption.FOLLOW_LINKS).forEach(dir -> {
         // Maps must have the world zip in them
         if (Files.isDirectory(dir) && Files.isRegularFile(dir.resolve(MapPackage.PACKAGE_WORLD)) && Files.isRegularFile(dir.resolve(MapPackage.PACKAGE_MAP))) {
