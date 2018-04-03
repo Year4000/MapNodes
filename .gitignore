@@ -21,3 +21,6 @@ node_modules/
 # Mac
 ._*
 .DS_Store
+
+# Temp untill we can get our custom version working
+core/src/main/resources/libj2v8_linux_x86_64.so
