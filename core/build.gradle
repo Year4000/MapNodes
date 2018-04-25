@@ -1,8 +1,9 @@
 /*
- * Copyright 2017 Year4000. All Rights Reserved.
+ * Copyright 2018 Year4000. All Rights Reserved.
  */
 
 plugins {
+  id 'cpp'
   id 'java'
   id 'idea'
   id 'de.undercouch.download' version '3.2.0'
@@ -29,6 +30,7 @@ sourceSets.test.resources {
 
 idea.module {
   sourceDirs += file("${projectDir}/src/main/js/")
+  sourceDirs += file("${projectDir}/src/main/jni/")
 }
 
 test.testLogging.showStandardStreams = true
@@ -77,5 +79,52 @@ task generateJsUtils(dependsOn: 'processResources') {
     onlyIfNewer true
     src depends
     dest "${projectDir}/src/generated/js/modules/"
+  }
+}
+
+// todo install v8 within .gradle and compile it
+
+// Compile the C++ JNI files for the project
+model{
+  components {
+    mapnodes(NativeLibrarySpec) {
+      sources.cpp {
+        source {
+          srcDir 'src/main/jni'
+          include "**/*.cpp"
+        }
+
+        // JNI and extra lib header files
+        exportedHeaders {
+          srcDir "${System.getProperty('java.home')}/../include"
+          srcDir "${System.getProperty('java.home')}/../include/darwin"
+          srcDir "${projectDir}/.gradle/v8/include"
+          srcDir "${projectDir}/.gradle/v8/include/libplatform"
+        }
+      }
+
+      buildTypes {
+        release
+      }
+    }
+  }
+
+  /*
+    Raw Command that gets ran at project root, if any problems just use this command.
+    Must have v8 cloned and compiled in the .gradle folder within the core sub module.
+
+    g++ -I /Users/joshua/Documents/year4000/MapNodes/core/.gradle/v8/include -I /Library/Java/JavaVirtualMachines/jdk1.8.0_131.jdk/Contents/Home/include -I /Library/Java/JavaVirtualMachines/jdk1.8.0_131.jdk/Contents/Home/include/darwin /Users/joshua/Documents/year4000/MapNodes/core/src/main/jni/net_year4000_mapnodes_v8_V8Engine.cpp -o /Users/joshua/Documents/year4000/MapNodes/core/build/libs/mapnodes/shared/libmapnodes.dylib -std=c++17 -fPIC -shared -Wl /Users/joshua/Documents/year4000/MapNodes/core/.gradle/v8/out.gn/x64.release/obj/libv8_lib{base,platform}.a
+   */
+  toolChains {
+    all {
+      eachPlatform {
+        // todo match the raw command above using clang
+        cppCompiler.withArguments { args ->
+          args << "-std=c++17"
+          args << "-fPIC"
+          args <<"-Wl /Users/joshua/Documents/year4000/MapNodes/core/src/main/v8/out.gn/x64.release/obj/libv8_lib{base, platform}.a"
+        }
+      }
+    }
   }
 }
