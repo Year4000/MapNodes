@@ -122,7 +122,7 @@ model {
     clang -I ./core/.gradle/v8/include -I /Library/Java/JavaVirtualMachines/jdk1.8.0_131.jdk/Contents/Home/include -I /Library/Java/JavaVirtualMachines/jdk1.8.0_131.jdk/Contents/Home/include/darwin ./core/src/main/jni/net_year4000_mapnodes_v8_V8Engine.cpp -o ./core/build/libs/mapnodes/shared/libmapnodes.dylib -std=c++11 -fPIC -Wl,-undefined -Wl,dynamic_lookup -Wl,./core/.gradle/v8/out.gn/x64.release/obj/libv8_lib{base,platform}.a
    */
   toolChains {
-    gcc(Gcc) {
+    all {
       eachPlatform {
         cppCompiler.withArguments { args ->
           args << "-std=c++11"
@@ -135,18 +135,14 @@ model {
         }
       }
     }
+
+    gcc(Gcc) {}
+
     clang(Clang) {
       eachPlatform {
-        cppCompiler.withArguments { args ->
-          args << "-std=c++11"
-          args << "-fPIC"
-        }
         linker.withArguments { args ->
           args << "-undefined"
           args << "dynamic_lookup"
-          args << "-shared"
-          args << "${projectDir}/.gradle/v8/out.gn/x64.release/obj/libv8_libbase.a"
-          args << "${projectDir}/.gradle/v8/out.gn/x64.release/obj/libv8_libplatform.a"
         }
       }
     }
