@@ -54,5 +54,6 @@ JNIEXPORT jboolean JNICALL Java_net_year4000_mapnodes_v8_V8Engine_startVm(JNIEnv
 //    v8::V8::ShutdownPlatform();
 //    delete create_params.array_buffer_allocator;
 
-  cout << "Hello World" << endl;
+  cout << "Hello, World!" << endl;
+  return true;
 }
