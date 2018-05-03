@@ -130,10 +130,16 @@ model {
         }
         linker.withArguments { args ->
           args << "-shared"
-          args << "-undefined"
-          args << "dynamic_lookup"
           args << "${projectDir}/.gradle/v8/out.gn/x64.release/obj/libv8_libbase.a"
           args << "${projectDir}/.gradle/v8/out.gn/x64.release/obj/libv8_libplatform.a"
+        }
+      }
+    }
+    clang(Clang) {
+      eachPlatform {
+        linker.withArguments { args ->
+          args << "-undefined"
+          args << "dynamic_lookup"
         }
       }
     }
