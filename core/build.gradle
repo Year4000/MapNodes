@@ -101,6 +101,7 @@ model {
         exportedHeaders {
           srcDir "${System.getProperty('java.home')}/../include"
           srcDir "${System.getProperty('java.home')}/../include/darwin"
+          srcDir "${System.getProperty('java.home')}/../include/linux"
           srcDir "${projectDir}/.gradle/v8/include"
           srcDir "${projectDir}/.gradle/v8/include/libplatform"
         }
