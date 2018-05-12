@@ -84,6 +84,8 @@ task generateJsUtils(dependsOn: 'processResources') {
 }
 
 // todo install v8 within .gradle and compile it
+// todo look at this https://github.com/v8/v8/wiki/Getting-Started-with-Embedding
+
 // This ensures the library is generated before packaging the resources to be added to the jar
 processResources.dependsOn 'mapnodesSharedLibrary'
 
@@ -125,13 +127,19 @@ model {
     all {
       eachPlatform {
         cppCompiler.withArguments { args ->
-          args << "-std=c++11"
+          args << "-std=c++17"
           args << "-fPIC"
         }
         linker.withArguments { args ->
           args << "-shared"
+          args << "${projectDir}/.gradle/v8/out.gn/x64.release/obj/libv8_base.a"
           args << "${projectDir}/.gradle/v8/out.gn/x64.release/obj/libv8_libbase.a"
+          args << "${projectDir}/.gradle/v8/out.gn/x64.release/obj/libv8_external_snapshot.a"
           args << "${projectDir}/.gradle/v8/out.gn/x64.release/obj/libv8_libplatform.a"
+          args << "${projectDir}/.gradle/v8/out.gn/x64.release/obj/libv8_libsampler.a"
+          args << "${projectDir}/.gradle/v8/out.gn/x64.release/obj/third_party/icu/libicuuc.a"
+          args << "${projectDir}/.gradle/v8/out.gn/x64.release/obj/third_party/icu/libicui18n.a"
+          args << "${projectDir}/.gradle/v8/out.gn/x64.release/obj/src/inspector/libinspector.a"
         }
       }
     }

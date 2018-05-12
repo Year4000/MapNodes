@@ -3,6 +3,7 @@ run/
 **/src/generated
 .tasks.py
 node_modules/
+*.log
 
 # Gradle
 .gradle/
