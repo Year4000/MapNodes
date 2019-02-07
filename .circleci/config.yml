@@ -1,0 +1,44 @@
+---
+# CircleCI Config to build MapNodes and Deploy Docker Images
+version: 2
+
+jobs:
+  # We want to build and run tests
+  build:
+    docker:
+      - image: sgrio/java-oracle:latest
+    steps:
+      - checkout
+      - run: ./gradlew clean build test
+      - store_artifacts:
+          path: core/build/libs/
+          destination: artifacts/
+      - store_artifacts:
+          path: sponge/build/libs/
+          destination: artifacts/
+
+  # Deploy the Docker image
+  deploy:
+    machine:
+      enable: true
+    steps:
+      - checkout
+      - run: ./gradlew clean build
+      - run: curl -sSL https://s3.amazonaws.com/circle-downloads/install-circleci-docker.sh | bash -s -- 1.10.0
+      - run: pip install --upgrade docker-compose
+      - run: docker login -e ${DOCKER_EMAIL} -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}
+      - run: docker-compose build
+      - run: docker-compose push
+
+
+workflows:
+  version: 2
+  build-deploy:
+    jobs:
+      - build
+      - deploy:
+          requires:
+            - build
+          filters:
+            branches:
+              only: master

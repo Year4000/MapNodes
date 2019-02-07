@@ -4,6 +4,9 @@ run/
 .tasks.py
 node_modules/
 
+# Java
+*.log
+
 # Gradle
 .gradle/
 *build/
