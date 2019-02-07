@@ -9,7 +9,7 @@ jobs:
       - image: sgrio/java-oracle:latest
     steps:
       - checkout
-      - run: ./gradlew clean build test
+      - run: ./gradlew clean build
       - store_artifacts:
           path: core/build/libs/
           destination: artifacts/
