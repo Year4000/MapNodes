@@ -1,10 +1,9 @@
 /*
  * Copyright 2017 Year4000. All Rights Reserved.
  */
-'use strict'
 
 /** This contains the common functions that are needed in MapNodes */
-class Commons {
+export default class Commons {
 
   /** Register all listeners into the event emitter */
   static register_listeners(clazz, event_emitter, instance) {

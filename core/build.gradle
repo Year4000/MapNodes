@@ -5,8 +5,7 @@
 plugins {
   id 'java'
   id 'idea'
-  id 'de.undercouch.download' version '3.2.0'
-  id 'com.moowork.node' version '1.1.1'
+  id 'com.moowork.node' version '1.3.1'
 }
 
 dependencies {
@@ -37,14 +36,12 @@ test.testLogging.showStandardStreams = true
 task copyTestJs(type: Copy) {
   from "${projectDir}/src/test/js/"
   from "${projectDir}/src/main/js/"
-  from "${projectDir}/src/generated/js/"
   into "${projectDir}/build/test/js/"
 }
 
 // Actually Test Node
-task testNodeJs(type: NodeTask) {
-  script = file("${projectDir}/node_modules/mocha/bin/mocha")
-  args = ["${projectDir}/build/test/js/test.js"]
+task testNodeJs(type: NpmTask) {
+  args = ['run', 'test', "${projectDir}/build/test/js/test.js"]
 }
 
 // Test the javascript files
@@ -54,28 +51,22 @@ task testJs {
   dependsOn 'testNodeJs'
 }
 
-test.dependsOn testJs
-
-node {
-  version = '7.7.4'
-  download = true
+// Run WebPack build to generate resources into the generated resources
+task webpackBuild(type: NpmTask) {
+  args = ['run', 'build']
 }
 
-// Download and shade Javascript utils that MapNodes needs
-task generateJsUtils(dependsOn: 'processResources') {
-  def depends = [
-    'https://raw.githubusercontent.com/lodash/lodash/4.17.4/dist/lodash.js',
-    'https://cdnjs.cloudflare.com/ajax/libs/immutable/3.8.1/immutable.js',
-    'https://raw.githubusercontent.com/Olical/EventEmitter/v5.2.2/EventEmitter.js',
-    'https://raw.githubusercontent.com/jonnyreeves/js-logger/1.3.0/src/logger.js',
-    'https://raw.githubusercontent.com/mrdoob/three.js/r84/build/three.js',
-    'https://raw.githubusercontent.com/moment/moment/2.18.1/moment.js',
-  ]
-  // The task to download all needed libs
-  download {
-    quiet true
-    onlyIfNewer true
-    src depends
-    dest "${projectDir}/src/generated/js/modules/"
-  }
+// Build the javascript bundles
+task buildJs {
+  dependsOn 'npmInstall'
+  dependsOn 'webpackBuild'
+}
+
+test.dependsOn testJs
+processResources.dependsOn buildJs
+
+node {
+  // The version of node gradle will use, reflect this in `webpack.config.js` aswell
+  version = '7.7.4'
+  download = true
 }

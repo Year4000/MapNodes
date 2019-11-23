@@ -41,7 +41,7 @@ public interface MapNodes {
     // Inject the javascript files into v8
     logger().info("Loading javascript files into v8 runtime");
     // Load just the bindings and the bootstrap it will handle the rest
-    ImmutableList.of("bindings.js", "bootstrap.js").forEach(file -> bindings().include("/net/year4000/mapnodes/js/" + file));
+    ImmutableList.of("bindings.bundle.js", "mapnodes.bundle.js").forEach(file -> bindings().include("/" + file));
     // Generate the maps
     logger().info("Generating map packages");
     nodeFactory().generatePackages();

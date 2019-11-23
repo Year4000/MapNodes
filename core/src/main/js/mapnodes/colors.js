@@ -1,10 +1,9 @@
 /*
  * Copyright 2017 Year4000. All Rights Reserved.
  */
-'use strict'
 
 /** Convert the Minecraft color names to the color codes */
-const Colors = {
+export default {
   white: '&f',
   yellow: '&e',
   light_purple: '&d',

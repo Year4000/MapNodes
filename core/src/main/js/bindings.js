@@ -1,7 +1,7 @@
 /*
- * Copyright 2017 Year4000. All Rights Reserved.
+ * Copyright 2019 Year4000. All Rights Reserved.
  */
-'use strict'
+import Logger from 'js-logger'
 
 /**
   Bindings is the bridge between the multiple languages. The bindings allows
@@ -18,13 +18,13 @@ var PLATFORM = PLATFORM || 'none'
 var JAVA = JAVA || {}
 
 /** The constants that are known when the JS runtime is created */
-const PLATFORMS = {
+export const PLATFORMS = {
   "PC": "java", // Sponge
   "PE": "java" // Nukkit
 }
 
 /** Used to interact the Javascript with MapNodes base game */
-class $ {
+export default class $ {
   /** Get the instance of this javascript object */
   static get js() {
     return $._js || ($._js = new $())
@@ -32,9 +32,9 @@ class $ {
 
   /** Map a specific object to this bindings var */
   static get _bindings() {
-    if (PLATFORM == PLATFORMS.PE) {
+    if (PLATFORM === PLATFORMS.PE) {
       return JAVA
-    } else if (PLATFORM == PLATFORMS.PC) {
+    } else if (PLATFORM === PLATFORMS.PC) {
       return JAVA
     } else {
       throw "PLATFORM is not defined!"
@@ -142,21 +142,21 @@ class $ {
 }
 
 /** Include the resource into the V8 runtime */
-function include(path) {
+export function include(path) {
   $._bindings._include(path)
 }
 
 /** Print the message to the console */
-function print(message) {
+export function print(message) {
   $._bindings.print(message)
 }
 
 /** Print a line to the console */
-function println(message) {
+export function println(message) {
   print(message + "\n")
 }
 
 /** Dump the var to the screen */
-function var_dump(variable) {
+export function var_dump(variable) {
   println(JSON.stringify(variable))
 }

@@ -1,0 +1,43 @@
+const path = require('path')
+
+module.exports = {
+  mode: 'development',
+  devtool: 'inline-source-map',
+  entry: {
+    bindings: './src/main/js/bindings.js',
+    mapnodes: './src/main/js/mapnodes/mapnodes.js',
+  },
+  output: {
+    path: path.resolve(__dirname, 'src/generated/js'),
+    filename: '[name].bundle.js',
+  },
+  module: {
+    rules: [
+      // Transfile the source files so we can use newer syntax
+      {
+        test: /\.js$/,
+        exclude: /(node_modules)/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: [
+              [
+                '@babel/env',
+                {
+                  modules: false,
+                  targets: {
+                    'node': '7.7.4'
+                  }
+                },
+              ],
+            ],
+            plugins: [
+              '@babel/plugin-proposal-class-properties',
+              [ '@babel/plugin-proposal-decorators', { decoratorsBeforeExport: true } ],
+            ]
+          }
+        }
+      },
+    ]
+  }
+};
