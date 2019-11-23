@@ -1,8 +1,16 @@
 const path = require('path')
 
 module.exports = {
-  mode: 'development',
-  devtool: 'inline-source-map',
+  mode: 'production',
+  devtool: 'source-map',
+  // We are not running on the web so we dont need to download files, so changes reflect that
+  optimization: {
+    minimize: false,
+    namedModules: true,
+    namedChunks: true,
+    moduleIds: 'named',
+    chunkIds: 'named',
+  },
   entry: {
     mapnodes: './src/main/js/bindings.js',
   },
@@ -12,7 +20,7 @@ module.exports = {
   },
   module: {
     rules: [
-      // Transfile the source files so we can use newer syntax
+      // Transpile the source files so we can use newer syntax
       {
         test: /\.js$/,
         exclude: /(node_modules)/,
@@ -23,7 +31,6 @@ module.exports = {
               [
                 '@babel/env',
                 {
-                  modules: false,
                   targets: {
                     'node': '7.4.0'
                   }
@@ -40,4 +47,4 @@ module.exports = {
       },
     ]
   }
-};
+}
