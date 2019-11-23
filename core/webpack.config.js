@@ -25,7 +25,7 @@ module.exports = {
                 {
                   modules: false,
                   targets: {
-                    'node': '7.7.4'
+                    'node': '7.4.0'
                   }
                 },
               ],
