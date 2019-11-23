@@ -36,16 +36,10 @@ Though you do have to have the submodule *inited* and *updated* before you run t
 ### Docker
 
 We use Docker to test the MapNodes plugin.
-To run the image for development you must have Built the project already.
-See `Building/Gradle` and `Building/Docker` before running the command bellow.
-If you ran the command bellow with out reading you must *delete* the build folder.
+We have added a gradle task that will build the project and run the `docker-compose` image.
 
-> ./pytasks runDockerImage
-
-You can also use the following command to combine the compiling and running of the docker image.
-
-> ./pytasks devServer
+> ./gradle runDocker
 
 ## License
 
-MapNodes is copyright &copy; 2017 [Year4000](https://www.year4000.net/)
+MapNodes is copyright &copy; 2019 [Year4000](https://www.year4000.net/)
