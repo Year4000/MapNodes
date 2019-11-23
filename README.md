@@ -38,7 +38,7 @@ Though you do have to have the submodule *inited* and *updated* before you run t
 We use Docker to test the MapNodes plugin.
 We have added a gradle task that will build the project and run the `docker-compose` image.
 
-> ./gradle runDocker
+> ./gradlew runDocker
 
 ## License
 
