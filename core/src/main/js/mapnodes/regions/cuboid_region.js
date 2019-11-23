@@ -1,10 +1,14 @@
 /*
  * Copyright 2017 Year4000. All Rights Reserved.
  */
-'use strict'
+import { Set } from 'immutable'
+import { Vector3 } from 'three'
+import _ from 'lodash'
+import AbstractRegion from './abstract_region.js'
+import Conditions from '../conditions.js'
 
 /** Represents a cuboid region with two positions */
-class CuboidRegion extends AbstractRegion {
+export default class CuboidRegion extends AbstractRegion {
 
   /** point_one and point_two are both vector3 */
   constructor(point_one, point_two) {
@@ -28,13 +32,13 @@ class CuboidRegion extends AbstractRegion {
 
   /** Generate all the points in this cuboid */
   _points() {
-    let points = Immutable.Set.of();
+    let points = Set.of();
     let min = this._point_one
     let max = this._point_two
     for (let y = min.y; y < max.y; y++) {
       for (let x = min.x; x < max.x; x++) {
         for (let z = min.z; z < max.z; z++) {
-          points = points.add(new THREE.Vector3(x, y, z));
+          points = points.add(new Vector3(x, y, z));
         }
       }
     }

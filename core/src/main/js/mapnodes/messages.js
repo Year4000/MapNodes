@@ -1,7 +1,6 @@
 /*
  * Copyright 2017 Year4000. All Rights Reserved.
  */
-'use strict'
 
 /** Translate the messages from the locale system */
 const Messages = new Proxy({}, {
@@ -16,3 +15,5 @@ const Messages = new Proxy({}, {
     }
   }
 })
+
+export default Messages

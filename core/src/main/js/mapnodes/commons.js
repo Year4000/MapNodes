@@ -1,6 +1,7 @@
 /*
  * Copyright 2017 Year4000. All Rights Reserved.
  */
+import _ from 'lodash'
 
 /** This contains the common functions that are needed in MapNodes */
 export default class Commons {

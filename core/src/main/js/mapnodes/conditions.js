@@ -1,10 +1,9 @@
 /*
  * Copyright 2017 Year4000. All Rights Reserved.
  */
-'use strict'
 
 /** Conditions that must be meet */
-global.Conditions = class Conditions {
+export default class Conditions {
 
   /** Make sure the value is not null */
   static not_null(value, message) {

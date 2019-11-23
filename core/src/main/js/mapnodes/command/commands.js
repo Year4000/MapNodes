@@ -1,7 +1,9 @@
 /*
  * Copyright 2017 Year4000. All Rights Reserved.
  */
-'use strict'
+import { map_nodes } from '../mapnodes.js'
+import Messages from '../messages.js'
+import Facts from '../facts.js'
 
 /** Simple ping / pong command to test command system */
 map_nodes.register_command('ping', (executor, args) => {
@@ -11,7 +13,7 @@ map_nodes.register_command('ping', (executor, args) => {
 /** Have the executor join the smallest team */
 map_nodes.register_command('team', (executor, args) => {
   if (executor.is_player()) {
-    let team = (args == '') ? map_nodes.current_game._smallest_team : map_nodes.current_game._teams.get(args)
+    let team = (args === '') ? map_nodes.current_game._smallest_team : map_nodes.current_game._teams.get(args)
     if (team) {
       Messages.TEAM_JOIN.send(executor.player, [team.color_name])
       executor.player.join_team(team)

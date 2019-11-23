@@ -1,7 +1,16 @@
 /*
  * Copyright 2017 Year4000. All Rights Reserved.
  */
-'use strict'
+import _ from 'lodash'
+import { REVISION } from 'three'
+import Logger from 'js-logger'
+import EventEmitter from 'wolfy87-eventemitter'
+import Injector from './injection.js'
+import Commons from './commons.js'
+import Conditions from './conditions.js'
+import CommandManager from './command/cmd_manager.js'
+import EventManager from './events/event_manager.js'
+import Messages from './messages.js'
 
 /** The service to handle pretty much everything with the JS side of MapNodes */
 class MapNodes {
@@ -51,7 +60,7 @@ class MapNodes {
     Logger.info('Loading environment from the Javascript side')
     Logger.info('V8 Engine Version: ' + $.bindings.v8_version())
     Logger.info('Lodash Version: ' + _.VERSION)
-    Logger.info('Three Version: ' + THREE.REVISION)
+    Logger.info('Three Version: ' + REVISION)
     Logger.info('Logger Version: ' + Logger.VERSION)
   }
 
@@ -94,4 +103,4 @@ class MapNodes {
   }
 }
 
-const map_nodes = new MapNodes()
+export const map_nodes = new MapNodes()

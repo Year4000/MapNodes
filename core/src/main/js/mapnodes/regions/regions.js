@@ -1,7 +1,14 @@
 /*
  * Copyright 2017 Year4000. All Rights Reserved.
  */
-'use strict'
+import _ from 'lodash'
+import Logger from 'js-logger'
+import AbstractRegion from './abstract_region'
+import PointRegion from './point_region.js'
+import CubeRegion from './cube_region.js'
+import CuboidRegion from './cuboid_region.js'
+import GlobalRegion from './global_region.js'
+
 
 /** The known regions the system knows how to handle */
 const Regions = {
@@ -46,3 +53,5 @@ const Regions = {
     }
   }
 }
+
+export default Regions

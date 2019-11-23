@@ -1,10 +1,10 @@
 /*
  * Copyright 2017 Year4000. All Rights Reserved.
  */
-'use strict'
+import JsonObject from './json_object.js'
 
 /** Represents a game mode */
-class GameMode extends JsonObject {
+export default class GameMode extends JsonObject {
 
   constructor(id, json) {
     super(id, json)

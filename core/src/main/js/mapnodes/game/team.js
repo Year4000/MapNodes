@@ -1,10 +1,14 @@
 /*
  * Copyright 2017 Year4000. All Rights Reserved.
  */
-'use strict'
+import _ from 'lodash'
+import JsonObject from './json_object.js'
+import Conditions from '../conditions.js'
+import Colors from '../colors.js'
+import Regions from '../regions/regions.js'
 
 /** Represents a team from the json object */
-class Team extends JsonObject {
+export default class Team extends JsonObject {
 
   constructor(id, team) {
     super(id, team)

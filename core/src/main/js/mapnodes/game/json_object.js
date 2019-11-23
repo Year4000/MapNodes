@@ -1,10 +1,11 @@
 /*
  * Copyright 2016 Year4000. All Rights Reserved.
  */
-'use strict'
+import _ from 'lodash'
+import Conditions from '../conditions.js'
 
 /** Represents a team from the json object */
-class JsonObject {
+export default class JsonObject {
 
   /** Make sure the JsonObject has the id and the object */
   constructor(id, json) {

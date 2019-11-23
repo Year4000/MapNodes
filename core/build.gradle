@@ -18,7 +18,6 @@ dependencies {
 }
 
 sourceSets.main.resources {
-  srcDir "${projectDir}/src/main/js/"
   srcDir "${projectDir}/src/generated/js/"
 }
 

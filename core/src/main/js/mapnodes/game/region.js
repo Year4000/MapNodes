@@ -1,10 +1,12 @@
 /*
  * Copyright 2017 Year4000. All Rights Reserved.
  */
-'use strict'
+import _ from 'lodash'
+import JsonObject from './json_object.js'
+import Regions from '../regions/regions.js'
 
 /** Represents a region from the json object */
-class Region extends JsonObject {
+export default class Region extends JsonObject {
 
   constructor(id, region) {
     super(id, region)

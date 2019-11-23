@@ -1,13 +1,16 @@
 /*
  * Copyright 2016 Year4000. All Rights Reserved.
  */
-'use strict'
+import _ from 'lodash'
+import Conditions from '../conditions.js'
+import Facts from '../facts.js'
+import Messages from '../messages.js'
 
 /** The instance of all the player that has ever joined this server's instance */
 const _player_instances = {}
 
 /** Generates the player object */
-class Player {
+export default class Player {
 
   constructor(username, uuid) {
     Conditions.not_null(username, 'username')
@@ -89,12 +92,12 @@ class Player {
 
   /** Check if the player is playing */
   is_playing() {
-    return this._current_team && this._current_team.id != Facts.SPECTATOR_ID && this.$game.is_running()
+    return this._current_team && this._current_team.id !== Facts.SPECTATOR_ID && this.$game.is_running()
   }
 
   /** Check if the player is playing */
   is_spectating() {
-    return this._current_team && this._current_team.id == Facts.SPECTATOR_ID
+    return this._current_team && this._current_team.id === Facts.SPECTATOR_ID
   }
 
   /** Have the player join the specific team */

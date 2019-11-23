@@ -1,10 +1,13 @@
 /*
  * Copyright 2017 Year4000. All Rights Reserved.
  */
-'use strict'
+import Logger from 'js-logger'
+import Conditions from '../conditions.js'
+import { CommandError } from './cmd_errors.js'
+import CommandExecutor from './cmd_executor.js'
 
 /** The command manager that will handle processing commands and ect */
-class CommandManager {
+export default class CommandManager {
 
   constructor() {
     this._command_map = {};

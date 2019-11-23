@@ -4,8 +4,7 @@ module.exports = {
   mode: 'development',
   devtool: 'inline-source-map',
   entry: {
-    bindings: './src/main/js/bindings.js',
-    mapnodes: './src/main/js/mapnodes/mapnodes.js',
+    mapnodes: './src/main/js/bindings.js',
   },
   output: {
     path: path.resolve(__dirname, 'src/generated/js'),

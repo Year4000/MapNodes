@@ -2,6 +2,10 @@
  * Copyright 2019 Year4000. All Rights Reserved.
  */
 import Logger from 'js-logger'
+import { map_nodes } from './mapnodes/mapnodes.js'
+import Game from './mapnodes/game/game.js'
+import Player from './mapnodes/game/player.js'
+import CommandExecutor from './mapnodes/command/cmd_executor.js'
 
 /**
   Bindings is the bridge between the multiple languages. The bindings allows
@@ -11,20 +15,20 @@ import Logger from 'js-logger'
 
 // noinspection ES6ConvertVarToLetConst
 /** This constant is created by the runtime no need for it */
-var PLATFORM = PLATFORM || 'none'
+var PLATFORM = global.PLATFORM || 'none'
 
 // noinspection ES6ConvertVarToLetConst
 /** This constant is created by the runtime no need for it */
-var JAVA = JAVA || {}
+var JAVA = global.JAVA || {}
 
 /** The constants that are known when the JS runtime is created */
-export const PLATFORMS = {
+const PLATFORMS = {
   "PC": "java", // Sponge
   "PE": "java" // Nukkit
 }
 
 /** Used to interact the Javascript with MapNodes base game */
-export default class $ {
+global.$ = class $ {
   /** Get the instance of this javascript object */
   static get js() {
     return $._js || ($._js = new $())
@@ -142,21 +146,21 @@ export default class $ {
 }
 
 /** Include the resource into the V8 runtime */
-export function include(path) {
+global.include = function include(path) {
   $._bindings._include(path)
 }
 
 /** Print the message to the console */
-export function print(message) {
+global.print = function print(message) {
   $._bindings.print(message)
 }
 
 /** Print a line to the console */
-export function println(message) {
+global.println = function println(message) {
   print(message + "\n")
 }
 
 /** Dump the var to the screen */
-export function var_dump(variable) {
+global.var_dump = function var_dump(variable) {
   println(JSON.stringify(variable))
 }

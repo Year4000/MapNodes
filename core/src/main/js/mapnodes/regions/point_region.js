@@ -1,19 +1,21 @@
 /*
  * Copyright 2017 Year4000. All Rights Reserved.
  */
-'use strict'
+import { Vector3 } from 'three'
+import { Set } from 'immutable'
+import AbstractRegion from './abstract_region.js'
 
 /** A region that contains a single point, must wrap with THREE.Vector3 */
-class PointRegion extends AbstractRegion {
+export default class PointRegion extends AbstractRegion {
 
   constructor(x, y, z) {
     super()
-    this._point = new THREE.Vector3(x, y, z)
+    this._point = new Vector3(x, y, z)
   }
 
   /** Get the point of this region */
   get points() {
-    return Immutable.Set.of(this._point)
+    return Set.of(this._point)
   }
 
   /** Get the x cord */

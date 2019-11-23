@@ -1,18 +1,29 @@
 /*
  * Copyright 2018 Year4000. All Rights Reserved.
  */
-'use strict'
+import _ from 'lodash'
+import Logger from 'js-logger'
+import moment from 'moment'
+import { Map } from 'immutable'
+import JsonObject from './json_object.js'
+import Conditions from '../conditions.js'
+import Facts from '../facts.js'
+import Player from './player.js'
+import Kit from './kit.js'
+import Clazz from './clazz.js'
+import Region from './region.js'
+import Team from './team.js'
 
 /** Represents a game from the json object */
-class Game extends JsonObject {
+export default class Game extends JsonObject {
 
   constructor(id, map) {
     super(id, _.merge(JSON.parse(JSON.stringify(Game.DEFAULT_MAP)), map))
-    this._teams = Immutable.Map()
-    this._kits = Immutable.Map()
-    this._regions = Immutable.Map()
-    this._clazzes = Immutable.Map()
-    this._events = Immutable.Map()
+    this._teams = Map()
+    this._kits = Map()
+    this._regions = Map()
+    this._clazzes = Map()
+    this._events = Map()
     this._state = 'WAITING'
     this._players = []
     Logger.info(`Constructing the game ${id} for ${this._json.map.name}`)

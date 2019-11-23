@@ -1,10 +1,10 @@
 /*
  * Copyright 2017 Year4000. All Rights Reserved.
  */
-'use strict'
+import JsonObject from './json_object.js'
 
 /** Represents a kit from the json object */
-class Kit extends JsonObject {
+export default class Kit extends JsonObject {
 
   constructor(id, kit) {
     super(id, kit)
