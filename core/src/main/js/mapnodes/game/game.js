@@ -21,6 +21,16 @@ export default class Game extends JsonObject {
 
   @inject(EventEmitter) $event_emitter
 
+  /** This follows the documented scheme here https://resources.year4000.net/mapnodes/map_component */
+  static get schema() {
+    return {
+      name: { type: 'string' },
+      version: { type: 'string' },
+      description: { type: 'string' },
+      authors: { type: 'array' },
+    }
+  }
+
   constructor(id, map) {
     super(id, _.merge(JSON.parse(JSON.stringify(Game.DEFAULT_MAP)), map))
     this._teams = Map()

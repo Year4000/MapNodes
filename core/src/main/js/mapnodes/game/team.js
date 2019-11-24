@@ -14,9 +14,19 @@ export default class Team extends JsonObject {
 
   @inject(EventEmitter) $event_emitter
 
-  constructor(id, team) {
-    super(id, team)
-    this._members = []
+  _members = []
+
+  /** This follows the documented scheme here https://resources.year4000.net/mapnodes/teams_component */
+  static get schema() {
+    return {
+      name: { type: 'string' },
+      color: { type: 'string', value: 'white' },
+      kit: { type: 'string' },
+      size: { type: 'number', value: 1 },
+      spawns: { type: 'array', value: [] },
+      friendly_fire: { type: 'boolean', value: false },
+      friendly_invisibles: { type: 'boolean', value: true },
+    }
   }
 
   /** Get the json for this team */

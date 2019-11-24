@@ -8,8 +8,12 @@ import Regions from '../regions/regions.js'
 /** Represents a region from the json object */
 export default class Region extends JsonObject {
 
-  constructor(id, region) {
-    super(id, region)
+  /** This follows the documented scheme here https://resources.year4000.net/mapnodes/regions_component */
+  static get schema() {
+    return {
+      events: { type: 'object' },
+      zones: { type: 'array' },
+    }
   }
 
   /** Get the json for this region */

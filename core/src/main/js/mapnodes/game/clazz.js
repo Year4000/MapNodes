@@ -3,11 +3,15 @@
  */
 import JsonObject from './json_object.js'
 
-/** Represents a kit from the json object */
+/** Represents a class from the json object */
 export default class Clazz extends JsonObject {
 
-  constructor(id, clazz) {
-    super(id, clazz)
+  /** This follows the documented scheme here https://resources.year4000.net/mapnodes/map_component */
+  static get schema() {
+    return {
+      name: { type: 'string' },
+      kit: { type: 'string' },
+    }
   }
 
   /** Get the json for this clazz */
