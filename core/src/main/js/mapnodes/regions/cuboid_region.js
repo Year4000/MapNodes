@@ -5,7 +5,7 @@ import { Set } from 'immutable'
 import { Vector3 } from 'three'
 import _ from 'lodash'
 import AbstractRegion from './abstract_region.js'
-import Conditions from '../conditions.js'
+import { not_null } from '../conditions.js'
 
 /** Represents a cuboid region with two positions */
 export default class CuboidRegion extends AbstractRegion {
@@ -13,8 +13,8 @@ export default class CuboidRegion extends AbstractRegion {
   /** point_one and point_two are both vector3 */
   constructor(point_one, point_two) {
     super()
-    this._point_one = Conditions.not_null(point_one, 'point_one')
-    this._point_two = Conditions.not_null(point_two, 'point_two')
+    this._point_one = not_null(point_one, 'point_one')
+    this._point_two = not_null(point_two, 'point_two')
     // Set point_one as min and point_two as max
     this._point_one = this._point_one.clone().min(this._point_two)
     this._point_two = this._point_one.clone().max(this._point_two)

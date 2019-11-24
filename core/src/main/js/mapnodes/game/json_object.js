@@ -2,15 +2,15 @@
  * Copyright 2016 Year4000. All Rights Reserved.
  */
 import _ from 'lodash'
-import Conditions from '../conditions.js'
+import { not_null } from '../conditions.js'
 
 /** Represents a team from the json object */
 export default class JsonObject {
 
   /** Make sure the JsonObject has the id and the object */
   constructor(id, json) {
-    this._id = Conditions.not_null(id, 'id')
-    this._json = Conditions.not_null(json, 'json')
+    this._id = not_null(id, 'id')
+    this._json = not_null(json, 'json')
   }
 
   /** Get the id of this JsonObject, also makes the id lowercase */

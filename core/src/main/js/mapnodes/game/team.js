@@ -5,7 +5,7 @@ import _ from 'lodash'
 import EventEmitter from 'wolfy87-eventemitter'
 import { inject } from '../injection.js'
 import JsonObject from './json_object.js'
-import Conditions from '../conditions.js'
+import { not_null } from '../conditions.js'
 import Colors from '../colors.js'
 import Regions from '../regions/regions.js'
 import Game from './game.js'
@@ -48,7 +48,7 @@ export default class Team extends JsonObject {
 
   /** Have the player join this team */
   join(player) {
-    Conditions.not_null(player, 'player')
+    not_null(player, 'player')
     if (player._current_team) { // Swap the teams the player is on
       this.$event_emitter.trigger('swap_team', [player, player._current_team, this, this.$game])
       player.leave_team()
@@ -71,7 +71,7 @@ export default class Team extends JsonObject {
 
   /** Have the player leave the team*/
   leave(player) {
-    Conditions.not_null(player, 'player')
+    not_null(player, 'player')
     _.remove(this._members, object => object.is_equal(player))
     this.$event_emitter.trigger('leave_team', [player, this, this.$game])
   }

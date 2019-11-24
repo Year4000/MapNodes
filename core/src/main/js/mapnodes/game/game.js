@@ -8,7 +8,7 @@ import { Map } from 'immutable'
 import EventEmitter from 'wolfy87-eventemitter'
 import { inject } from '../injection.js'
 import JsonObject from './json_object.js'
-import Conditions from '../conditions.js'
+import { not_null } from '../conditions.js'
 import Facts from '../facts.js'
 import Player from './player.js'
 import Kit from './kit.js'
@@ -100,7 +100,7 @@ export default class Game extends JsonObject {
 
   /** Cycle to the next game */
   cycle(next_game) {
-    Conditions.not_null(next_game, 'next_game')
+    not_null(next_game, 'next_game')
     // Have all the players leave the game
     _.forEach(this._players, player => {
       this._leave_game(player)
@@ -182,13 +182,13 @@ export default class Game extends JsonObject {
 
   /** Join the player to the game, player should be a uuid but can be a username */
   join_game(player) {
-    Conditions.not_null(player, 'player')
+    not_null(player, 'player')
     this._join_game(Player.of(player))
   }
 
   /** Actually have the player join the game */
   _join_game(player) {
-    Conditions.not_null(player, 'player')
+    not_null(player, 'player')
     this.$injector.inject_instance(player)
     this._players.push(player)
     if (this.settings.join_game_on_join) { // should players auto join the game when they login
@@ -206,7 +206,7 @@ export default class Game extends JsonObject {
 
   /** Clean up the player, player should be a uuid but can be a username */
   leave_game(player) {
-    Conditions.not_null(player, 'player')
+    not_null(player, 'player')
     let player_object = Player.of(player)
     this._leave_game(_.find(this._players, object => object.is_equal(player_object)))
   }
@@ -225,8 +225,8 @@ export default class Game extends JsonObject {
 
   /** The abstraction to register the object */
   _register(obj_id, obj_json, clazz, collection_name, event_id) {
-    Conditions.not_null(obj_id, 'obj_id')
-    Conditions.not_null(obj_json, 'obj_json')
+    not_null(obj_id, 'obj_id')
+    not_null(obj_json, 'obj_json')
     Logger.info(`Registering ${collection_name} with id ${obj_id}`)
     let obj = new clazz(obj_id, obj_json)
     this.$injector.inject_instance(obj)
@@ -256,8 +256,8 @@ export default class Game extends JsonObject {
 
   /** Register the event into the system */
   _register_event(event_id, event_function) {
-    Conditions.not_null(event_id, 'event_id')
-    Conditions.not_null(event_function, 'event_function')
+    not_null(event_id, 'event_id')
+    not_null(event_function, 'event_function')
     Logger.info(`Registering event type ${event_id}`)
     if (typeof event_function !== 'function') {
       Logger.error('Event is not a function')
@@ -279,8 +279,8 @@ export default class Game extends JsonObject {
 
   /** Unregister the event into the system */
   _unregister_event(event_id, event_function) {
-    Conditions.not_null(event_id, 'event_id')
-    Conditions.not_null(event_function, 'event_function')
+    not_null(event_id, 'event_id')
+    not_null(event_function, 'event_function')
     let listener = this._events.get(event_id)
     this.$event_emitter.off(event_id, listener)
   }

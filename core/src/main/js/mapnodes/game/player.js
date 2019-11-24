@@ -4,7 +4,7 @@
 import _ from 'lodash'
 import EventEmitter from 'wolfy87-eventemitter'
 import { inject } from '../injection.js'
-import Conditions from '../conditions.js'
+import { not_null, is_true } from '../conditions.js'
 import Facts from '../facts.js'
 import Messages from '../messages.js'
 import Game from './game.js'
@@ -19,8 +19,8 @@ export default class Player {
   @inject(Game) $game
 
   constructor(username, uuid) {
-    Conditions.not_null(username, 'username')
-    Conditions.not_null(uuid, 'uuid')
+    not_null(username, 'username')
+    not_null(uuid, 'uuid')
     _player_instances[uuid] = this
     _player_instances[username] = this // todo there may be a name clash, should add some checks later
     this._meta = { username, uuid }
@@ -29,8 +29,8 @@ export default class Player {
 
   /** Create the instance of this player */
   static of(player) {
-    Conditions.not_null(player, 'player')
-    Conditions.is_true(typeof player === 'string')
+    not_null(player, 'player')
+    is_true(typeof player === 'string')
     if (player in _player_instances) { // check the cache first
       return _player_instances[player]
     }
@@ -43,13 +43,13 @@ export default class Player {
 
   /** Generate the player meta from the uuid */
   static of_uuid(uuid) {
-    Conditions.not_null(uuid, 'uuid')
+    not_null(uuid, 'uuid')
     return new Player(...$.bindings.player_meta_uuid(String(uuid)).split(':'))
   }
 
   /** Generate the player meta from a username */
   static of_username(username) {
-    Conditions.not_null(username, 'username')
+    not_null(username, 'username')
     return new Player(...$.bindings.player_meta_username(String(username)).split(':'))
   }
 
@@ -108,7 +108,7 @@ export default class Player {
 
   /** Have the player join the specific team */
   join_team(team) {
-    Conditions.not_null(team, 'team')
+    not_null(team, 'team')
     if (this.$game.is_running() && this.is_playing()) {
       return Messages.TEAM_MENU_NOT_NOW.send(this)
     }

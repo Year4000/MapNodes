@@ -2,7 +2,7 @@
  * Copyright 2017 Year4000. All Rights Reserved.
  */
 import _ from 'lodash'
-import Conditions from './conditions.js'
+import { not_null } from './conditions.js'
 
 /** The class to create an injector to inject other JavaScript objects */
 export default class Injector {
@@ -15,7 +15,7 @@ export default class Injector {
 
   /** Inject the modules into the object prefixed with $ */
   inject_instance(instance) {
-    Conditions.not_null(instance, 'instance')
+    not_null(instance, 'instance')
     _.merge(instance, _.mapKeys(this._modules, (value, key) => `$${key}`))
   }
 

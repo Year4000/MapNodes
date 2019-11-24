@@ -152,21 +152,13 @@ global.$ = class $ {
 }
 
 /** Include the resource into the V8 runtime */
-global.include = function include(path) {
-  $._bindings._include(path)
-}
+global.include = $._bindings._include
 
 /** Print the message to the console */
-global.print = function print(message) {
-  $._bindings.print(message)
-}
+global.print = $._bindings.print
 
 /** Print a line to the console */
-global.println = function println(message) {
-  print(message + "\n")
-}
+global.println = message => print(message + '\n')
 
 /** Dump the var to the screen */
-global.var_dump = function var_dump(variable) {
-  println(JSON.stringify(variable))
-}
+global.var_dump = variable => println(JSON.stringify(variable))

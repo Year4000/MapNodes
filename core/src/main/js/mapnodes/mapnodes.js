@@ -7,7 +7,7 @@ import Logger from 'js-logger'
 import EventEmitter from 'wolfy87-eventemitter'
 import Injector, { inject } from './injection.js'
 import Commons from './commons.js'
-import Conditions from './conditions.js'
+import { not_null } from './conditions.js'
 import CommandManager from './command/cmd_manager.js'
 import EventManager from './events/event_manager.js'
 import Messages from './messages.js'
@@ -38,12 +38,12 @@ class MapNodes {
 
   /** Get the current game */
   get current_game() {
-    return Conditions.not_null(this._current_game, '_current_game')
+    return not_null(this._current_game, '_current_game')
   }
 
   /** Set the current game and set the current game to the last game */
   set current_game(game) {
-    Conditions.not_null(game, 'game')
+    not_null(game, 'game')
     this._last_game = this._current_game
     this._current_game = game
     this._current_game.$injector = this.$injector.child_injector({

@@ -2,7 +2,7 @@
  * Copyright 2017 Year4000. All Rights Reserved.
  */
 import Logger from 'js-logger'
-import Conditions from '../conditions.js'
+import { not_null } from '../conditions.js'
 import { CommandError } from './cmd_errors.js'
 import CommandExecutor from './cmd_executor.js'
 
@@ -15,8 +15,8 @@ export default class CommandManager {
 
   /** Register the command in to the system */
   register_command(command, action) {
-    Conditions.not_null(command, 'command')
-    Conditions.not_null(action, 'action')
+    not_null(command, 'command')
+    not_null(action, 'action')
     if (command in this._command_map) {
       Logger.warn(`Command ${command} exists not registering command...`)
     } else {
