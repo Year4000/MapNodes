@@ -26,7 +26,6 @@ export default class Player {
     not_null(username, 'username')
     not_null(uuid, 'uuid')
     this._meta = { username, uuid: hyphenedUuid(uuid), id: serializeUuid(uuid) }
-    console.log(this._meta)
     this._current_team = null
     _player_instances[this._meta.id] = this
     _player_instances[username.toLowerCase()] = this // todo there may be a name clash, should add some checks later
