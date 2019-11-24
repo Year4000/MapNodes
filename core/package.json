@@ -16,15 +16,17 @@
     "@babel/plugin-proposal-decorators": "^7.6.0",
     "@babel/plugin-proposal-optional-chaining": "^7.6.0",
     "@babel/preset-env": "^7.6.3",
+    "assert": "^2.0.0",
     "babel-loader": "^8.0.6",
     "babel-plugin-js-logger": "^1.0.17",
     "babel-register": "^6.26.0",
+    "eslint": "^6.7.0",
     "mocha": "^3.2.0",
     "webpack": "^4.41.2",
     "webpack-cli": "^3.3.10"
   },
   "scripts": {
-    "test": "mocha",
+    "test": "webpack ./build/test/js/index.test.js -o ./build/test/js/index.test.bundle.js && mocha ./build/test/js/index.test.bundle.js",
     "build": "webpack --mode production",
     "dev": "webpack --watch --mode development"
   },

@@ -19,8 +19,8 @@ export const is_true = (value, message) => {
 
 /** Make sure the value is an object */
 export const is_object = (value, message) => {
-  if (typeof value === 'object') {
-    throw new Error(message || 'The value was not an object')
+  if (typeof value !== 'object') {
+    throw new Error(`${message || 'The value was not an object'} it was '${typeof value}' and its value is: ${value}`)
   }
   return value
 }

@@ -40,7 +40,7 @@ task copyTestJs(type: Copy) {
 
 // Actually Test Node
 task testNodeJs(type: NpmTask) {
-  args = ['run', 'test', "${projectDir}/build/test/js/test.js"]
+  args = ['test']
 }
 
 // Test the javascript files
