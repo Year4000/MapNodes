@@ -4,9 +4,13 @@
 import _ from 'lodash'
 import JsonObject from './json_object.js'
 import Regions from '../regions/regions.js'
+import { inject } from '../injection.js'
+import Game from './game.js'
 
 /** Represents a region from the json object */
 export default class Region extends JsonObject {
+
+  @inject(Game) $game
 
   constructor(id, region) {
     super(id, region)

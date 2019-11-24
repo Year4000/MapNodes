@@ -27,6 +27,12 @@ const PLATFORMS = {
   "PE": "java" // Nukkit
 }
 
+/** Will register the method in the bindings map */
+function bind() {
+  // todo register the command in the bindings with out using a proxy
+  return () => {}
+}
+
 /** Used to interact the Javascript with MapNodes base game */
 global.$ = class $ {
   /** Get the instance of this javascript object */
@@ -71,63 +77,63 @@ global.$ = class $ {
   }
 
   /** This function just makes sure the bindings were properly established */
-  platform_name() { // @Bind
+  @bind() platform_name() {
     return PLATFORM
   }
 
   /** Is the game currently running */
-  is_game_running() { // @Bind
+  @bind() is_game_running() {
     return map_nodes.current_game.is_running()
   }
 
   /** Load the environment */
-  load() { // @Bind
+  @bind() load() {
     map_nodes.$event_emitter.trigger('load')
   }
 
   /** View only access to the event in minecraft */
-  on_event(event_id, event) { // @Bind
+  @bind() on_event(event_id, event) { // @Bind
     map_nodes.$event_emitter.trigger(event_id, [event])
   }
 
   /** Swap out the current game */
-  swap_game(id, map) {
+  @bind() swap_game(id, map) {
     map_nodes.current_game = new Game(id, map)
   }
 
   /** Start the current game */
-  start() {
+  @bind() start() {
     map_nodes.current_game.start()
   }
 
   /** Stop the current game */
-  stop() {
+  @bind() stop() {
     map_nodes.current_game.stop()
   }
 
   /** Get the current state of the game */
-  game_state() {
+  @bind() game_state() {
     return map_nodes.current_game._state
   }
 
   /** Join the player to the game */
-  join_game(player) {
+  @bind() join_game(player) {
     map_nodes.current_game.join_game(player)
   }
 
   /** Leave the player to the game */
-  leave_game(player) {
+  @bind() leave_game(player) {
     map_nodes.current_game.leave_game(player)
   }
 
   /** Pass the command to the manager */
-  on_player_command(uuid, username, command, args) {
+  @bind() on_player_command(uuid, username, command, args) {
     let player = new CommandExecutor(Player.of(uuid))
     return map_nodes.$command_manager.execute_command(player, command, args)
   }
 
   /** Check if the command part of the system */
-  is_command(command) {
+  @bind() is_command(command) {
     if (!command) {
       return false
     }
@@ -135,7 +141,7 @@ global.$ = class $ {
   }
 
   /** Send the x,y,z cords of the spawn point */
-  spawn_point() {
+  @bind() spawn_point() {
     let point = map_nodes.current_game.spawn_point
     if (point) {
       return [point.x, point.y, point.z]

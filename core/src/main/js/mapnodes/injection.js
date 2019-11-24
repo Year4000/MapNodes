@@ -30,3 +30,6 @@ export default class Injector {
     return `modules: ${_.map(this._modules, (value, key) => `${key}::${value.toString()}`)}`
   }
 }
+
+/** This will inject the variable from the type */
+export const inject = type => () => {} // this is just dummy right now to allow that you can do this later on

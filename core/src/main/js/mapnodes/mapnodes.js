@@ -5,7 +5,7 @@ import _ from 'lodash'
 import { REVISION } from 'three'
 import Logger from 'js-logger'
 import EventEmitter from 'wolfy87-eventemitter'
-import Injector from './injection.js'
+import Injector, { inject } from './injection.js'
 import Commons from './commons.js'
 import Conditions from './conditions.js'
 import CommandManager from './command/cmd_manager.js'
@@ -14,6 +14,10 @@ import Messages from './messages.js'
 
 /** The service to handle pretty much everything with the JS side of MapNodes */
 class MapNodes {
+
+  @inject(Injector) $injector
+  @inject(EventEmitter) $event_emitter
+  @inject(CommandManager) $command_manager
 
   constructor() {
     // Create the injector and inject our self with the injector

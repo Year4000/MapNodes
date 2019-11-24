@@ -5,6 +5,8 @@ import _ from 'lodash'
 import Logger from 'js-logger'
 import moment from 'moment'
 import { Map } from 'immutable'
+import EventEmitter from 'wolfy87-eventemitter'
+import { inject } from '../injection.js'
 import JsonObject from './json_object.js'
 import Conditions from '../conditions.js'
 import Facts from '../facts.js'
@@ -16,6 +18,8 @@ import Team from './team.js'
 
 /** Represents a game from the json object */
 export default class Game extends JsonObject {
+
+  @inject(EventEmitter) $event_emitter
 
   constructor(id, map) {
     super(id, _.merge(JSON.parse(JSON.stringify(Game.DEFAULT_MAP)), map))

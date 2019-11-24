@@ -2,9 +2,12 @@
  * Copyright 2016 Year4000. All Rights Reserved.
  */
 import _ from 'lodash'
+import EventEmitter from 'wolfy87-eventemitter'
+import { inject } from '../injection.js'
 import Conditions from '../conditions.js'
 import Facts from '../facts.js'
 import Messages from '../messages.js'
+import Game from './game.js'
 
 /** The instance of all the player that has ever joined this server's instance */
 const _player_instances = {}
@@ -12,12 +15,15 @@ const _player_instances = {}
 /** Generates the player object */
 export default class Player {
 
+  @inject(EventEmitter) $event_emitter
+  @inject(Game) $game
+
   constructor(username, uuid) {
     Conditions.not_null(username, 'username')
     Conditions.not_null(uuid, 'uuid')
     _player_instances[uuid] = this
     _player_instances[username] = this // todo there may be a name clash, should add some checks later
-    this._meta = {username: username, uuid: uuid}
+    this._meta = { username, uuid }
     this._current_team = null;
   }
 
