@@ -8,6 +8,12 @@ import { not_null, is_true } from '../conditions.js'
 import Facts from '../facts.js'
 import Messages from '../messages.js'
 
+/** This will serialize the uuid to be used for the lookup table */
+const serializeUuid = uuid => uuid.replace(/-/g, '').toLowerCase()
+
+/** Will take any assumed to be uuid and make sure the hyphens are in there */
+const hyphenedUuid = uuid => serializeUuid(uuid).replace(/(\w{8})(\w{4})(\w{4})(\w{4})(\w{12})/, '$1-$2-$3-$4-$5')
+
 /** The instance of all the player that has ever joined this server's instance */
 const _player_instances = {}
 
@@ -19,21 +25,25 @@ export default class Player {
   constructor(username, uuid) {
     not_null(username, 'username')
     not_null(uuid, 'uuid')
-    _player_instances[uuid] = this
-    _player_instances[username] = this // todo there may be a name clash, should add some checks later
-    this._meta = { username, uuid }
-    this._current_team = null;
+    this._meta = { username, uuid: hyphenedUuid(uuid), id: serializeUuid(uuid) }
+    console.log(this._meta)
+    this._current_team = null
+    _player_instances[this._meta.id] = this
+    _player_instances[username.toLowerCase()] = this // todo there may be a name clash, should add some checks later
   }
 
   /** Create the instance of this player */
   static of(player) {
     not_null(player, 'player')
     is_true(typeof player === 'string')
-    if (player in _player_instances) { // check the cache first
-      return _player_instances[player]
+    // here we will serialize the name since usernames can not have - in it
+    let serializePlayer = serializeUuid(player)
+    if (serializePlayer in _player_instances) { // check the cache first
+      return _player_instances[serializePlayer]
     }
+    // Cache player does not exist get from the Minecraft server
     if (_.size(player) > Facts.MAX_USERNAME_SIZE) { // must be uuid
-      return Player.of_uuid(player)
+      return Player.of_uuid(hyphenedUuid(player))
     } else { // Must be username
       return Player.of_username(player)
     }
@@ -136,12 +146,19 @@ export default class Player {
 
   /** Checks if the two player objects are equal */
   is_equal(player) {
-    return typeof player === 'object' && this.valueOf() == player.valueOf() // only use == since the strings are not exactly the same string
+    return typeof player === 'object' && this.valueOf() === player.valueOf() // only use == since the strings are not exactly the same string
   }
 
   /** Get the value of this player */
-  // Override
   valueOf() {
-    return this.uuid
+    return this._meta.id
   }
 }
+
+/** Export a dummy player that would be Steve */
+export const STEVE_UUID = 'fffffff0-ffff-fff0-ffff-fff0fffffff0'
+export const STEVE = new Player('Steve', STEVE_UUID)
+
+/** Export a dummy player that would be Alex */
+export const ALEX_UUID = 'fffffff0-ffff-fff0-ffff-fff0fffffff1'
+export const ALEX = new Player('Alex', ALEX_UUID)

@@ -10,3 +10,4 @@
 // Bellow are the unit tests the must run and pass
 
 import './mapnodes/game/json_object.test.js'
+import './mapnodes/game/player.test.js'

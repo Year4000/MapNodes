@@ -9,14 +9,12 @@ class SchemaTest extends JsonObject {
   }
 }
 
+const schema_object = new SchemaTest('test', {
+  foo: 'bar'
+})
+
 describe('json object', () => {
-  let schema_object = new SchemaTest('test', {
-    foo: 'bar'
-  })
-
   it('schema must exist', () => assert.ok(SchemaTest.schema))
-
   it('should schema validate', () => assert.ok(schema_object.verify()))
-
   it('should schema not ok', () => assert.ok(!schema_object.verify({ foo: 42 })))
 })
