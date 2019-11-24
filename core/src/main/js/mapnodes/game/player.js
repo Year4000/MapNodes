@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Year4000. All Rights Reserved.
+ * Copyright 2019 Year4000. All Rights Reserved.
  */
 import _ from 'lodash'
 import EventEmitter from 'wolfy87-eventemitter'
@@ -7,6 +7,7 @@ import { inject } from '../injection.js'
 import { not_null, is_true } from '../conditions.js'
 import Facts from '../facts.js'
 import Messages from '../messages.js'
+import { listener } from "../events/event_manager.js"
 
 /** This will serialize the uuid to be used for the lookup table */
 const serializeUuid = uuid => uuid.replace(/-/g, '').toLowerCase()
@@ -111,6 +112,12 @@ export default class Player {
   /** Check if the player is playing */
   is_spectating() {
     return this._current_team && this._current_team.id === Facts.SPECTATOR_ID
+  }
+
+  // THIS IS A PROTOTYPE OF HOW THIS WOULD WORK, this does not run currently
+  @listener('player_join_team')
+  on_player_join_team({ team }) {
+    this._current_team = team;
   }
 
   /** Have the player join the specific team */

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Year4000. All Rights Reserved.
+ * Copyright 2019 Year4000. All Rights Reserved.
  */
 import _ from 'lodash'
 import EventEmitter from 'wolfy87-eventemitter'
@@ -8,6 +8,7 @@ import JsonObject from './json_object.js'
 import { not_null } from '../conditions.js'
 import Colors from '../colors.js'
 import Regions from '../regions/regions.js'
+import { listener } from "../events/event_manager.js"
 
 /** Represents a team from the json object */
 export default class Team extends JsonObject {
@@ -52,6 +53,12 @@ export default class Team extends JsonObject {
   /** Get the color code for the team */
   get color_code() {
     return Colors[this.color] || '&f&k'
+  }
+
+  // THIS IS A PROTOTYPE OF HOW THIS WOULD WORK, this does not run currently
+  @listener('team_join_player')
+  on_team_join_player({ player }) {
+    this._members.push(player)
   }
 
   /** Have the player join this team */
