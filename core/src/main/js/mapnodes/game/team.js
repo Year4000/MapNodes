@@ -8,13 +8,11 @@ import JsonObject from './json_object.js'
 import { not_null } from '../conditions.js'
 import Colors from '../colors.js'
 import Regions from '../regions/regions.js'
-import Game from './game.js'
 
 /** Represents a team from the json object */
 export default class Team extends JsonObject {
 
   @inject(EventEmitter) $event_emitter
-  @inject(Game) $game
 
   constructor(id, team) {
     super(id, team)

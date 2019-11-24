@@ -7,7 +7,6 @@ import { inject } from '../injection.js'
 import { not_null, is_true } from '../conditions.js'
 import Facts from '../facts.js'
 import Messages from '../messages.js'
-import Game from './game.js'
 
 /** The instance of all the player that has ever joined this server's instance */
 const _player_instances = {}
@@ -16,7 +15,6 @@ const _player_instances = {}
 export default class Player {
 
   @inject(EventEmitter) $event_emitter
-  @inject(Game) $game
 
   constructor(username, uuid) {
     not_null(username, 'username')

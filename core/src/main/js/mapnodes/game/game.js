@@ -290,28 +290,28 @@ export default class Game extends JsonObject {
   valueOf() {
     return `id: ${this.id} title: ${this.title}`
   }
+
+  /** The defaults for the map */
+  static DEFAULT_MAP = {
+    map: {
+      name: 'Unknown',
+      version: '0.1',
+      descripton: 'Unknown Map',
+    },
+
+    // Settings that maps or games can override
+    map_nodes: {
+      // The header for the tab list to override the system one
+      tab_list_header: null,
+      // The footer for the tab list
+      tab_list_footer: '&3[&bYear4000&3] &7- &bmc&3.&byear4000&3.&bnet',
+      // Do players join the game when they enter the server
+      join_game_on_join: false,
+      // Does the game start when the map is loaded
+      start_game_on_load: false,
+    },
+  }
+
+  /** The colors for each game state */
+  static _STATE_COLORS = {WAITING: '&e', RUNNING: '&a', ENDED: '&c'}
 }
-
-/** The defaults for the map */
-Game.DEFAULT_MAP = {
-  map: {
-    name: 'Unknown',
-    version: '0.1',
-    descripton: 'Unknown Map',
-  },
-
-  // Settings that maps or games can override
-  map_nodes: {
-    // The header for the tab list to override the system one
-    tab_list_header: null,
-    // The footer for the tab list
-    tab_list_footer: '&3[&bYear4000&3] &7- &bmc&3.&byear4000&3.&bnet',
-    // Do players join the game when they enter the server
-    join_game_on_join: false,
-    // Does the game start when the map is loaded
-    start_game_on_load: false,
-  },
-}
-
-/** The colors for each game state */
-Game._STATE_COLORS = {WAITING: '&e', RUNNING: '&a', ENDED: '&c'}

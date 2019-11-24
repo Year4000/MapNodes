@@ -62,10 +62,10 @@ class MapNodes {
     Logger.setHandler((messages, context) => println(`[${context.level.name}] ${messages[0]}`))
     Logger.setLevel($.bindings.debug() ? Logger.DEBUG : Logger.INFO)
     Logger.info('Loading environment from the Javascript side')
-    Logger.info('V8 Engine Version: ' + $.bindings.v8_version())
-    Logger.info('Lodash Version: ' + _.VERSION)
-    Logger.info('Three Version: ' + REVISION)
-    Logger.info('Logger Version: ' + Logger.VERSION)
+    Logger.info(`V8 Engine Version: ${$.bindings.v8_version()}`)
+    Logger.info(`Lodash Version: ${_.VERSION}`)
+    Logger.info(`Three Version: ${REVISION}`)
+    Logger.info(`Logger Version: ${Logger.VERSION}`)
   }
 
   /** Let us know that a player joined the team */
@@ -90,7 +90,7 @@ class MapNodes {
       player.send_message('&7&m' + _.pad(`&a ${name} &7${version.replace(/\./, '&8.&7')} &7&m`, 55, '*'))
       player.send_message(Messages.MAP_CREATED.get(player) + author_names)
       player.send_message('&a&o' + description) // todo multi line description
-      player.send_message('&7&m' + _.repeat('*', 45))
+      player.send_message('&7&m' + '*'.repeat(45))
       player.send_message()
       // send player to spawn
       player.teleport(...player.team.spawn_point.toArray())

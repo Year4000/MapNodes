@@ -9,7 +9,7 @@ export default class Injector {
 
   /** Create the injector and inject the modules with the other modules */
   constructor(modules) {
-    this._modules = Conditions.not_null(modules, 'modules')
+    this._modules = not_null(modules, 'modules')
     _.forEach(this._modules, (module, key) => this.inject_instance(module))
   }
 
