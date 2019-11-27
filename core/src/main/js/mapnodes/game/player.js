@@ -2,7 +2,6 @@
  * Copyright 2019 Year4000. All Rights Reserved.
  */
 import _ from 'lodash'
-import { event_manager } from '../events/event_manager.js'
 import { not_null, is_true } from '../conditions.js'
 import { listener } from '../events/event_manager.js'
 import { inject } from '../injection.js'
@@ -20,6 +19,7 @@ const _player_instances = {}
 
 /** Generates the player object */
 export default class Player {
+  @inject() event_manager
   @inject() game
 
   constructor(username, uuid) {
@@ -94,12 +94,12 @@ export default class Player {
 
   /** Start the game for the player */
   start() {
-    event_manager.trigger('start_player', [this, this.game])
+    this.event_manager.trigger('start_player', [this, this.game])
   }
 
   /** Stop the game for the player */
   stop() {
-    event_manager.trigger('stop_player', [this, this.game])
+    this.event_manager.trigger('stop_player', [this, this.game])
     this.leave_team()
   }
 

@@ -3,7 +3,6 @@
  */
 import Logger from 'js-logger'
 import { map_nodes } from './mapnodes/mapnodes.js'
-import { event_manager } from './mapnodes/events/event_manager.js'
 import Game from './mapnodes/game/game.js'
 import Player from './mapnodes/game/player.js'
 import CommandExecutor from './mapnodes/command/cmd_executor.js'
@@ -92,13 +91,13 @@ global.$ = class $ {
   /** Load the environment */
   @bind()
   load() {
-    event_manager.trigger('load')
+    map_nodes.event_manager.trigger('load')
   }
 
   /** View only access to the event in minecraft */
   @bind()
   on_event(event_id, event) {
-    event_manager.trigger(event_id, [event])
+    map_nodes.event_manager.trigger(event_id, [event])
   }
 
   /** Swap out the current game */

@@ -5,7 +5,6 @@ import _ from 'lodash'
 import Logger from 'js-logger'
 import moment from 'moment'
 import { Map } from 'immutable'
-import { event_manager, listener } from '../events/event_manager.js'
 import { inject } from '../injection.js'
 import JsonObject from './json_object.js'
 import { not_null } from '../conditions.js'
@@ -18,6 +17,7 @@ import Team from './team.js'
 
 /** Represents a game from the json object */
 export default class Game extends JsonObject {
+  @inject() event_manager
   @inject() injector
 
   /** This follows the documented scheme here https://resources.year4000.net/mapnodes/map_component */
@@ -80,7 +80,7 @@ export default class Game extends JsonObject {
   /** Load the game from the JSON object */
   load() {
     Logger.info(`The game(${this._id}) is loading...`)
-    event_manager.trigger('game_load', [this])
+    this.event_manager.trigger('game_load', [this])
   }
 
   /** Start the game and unload the previous game */
@@ -88,7 +88,7 @@ export default class Game extends JsonObject {
     this._state = 'RUNNING'
     this._start_time = _.now()
     Logger.info(`The game(${this._id}) has started as ${moment(this._start_time).format('l LTS')}...`)
-    event_manager.trigger('game_start', [this])
+    this.event_manager.trigger('game_start', [this])
     for (let team of this._teams.values()) {
       team.start() // spectators and players should be handle differently
     }
@@ -99,9 +99,9 @@ export default class Game extends JsonObject {
     this._state = 'ENDED'
     this._stop_time = _.now()
     Logger.info(`The game(${this._id}) has stopped as ${moment(this._stop_time).format('l LTS')}...`)
-    event_manager.trigger('game_stop', [this])
+    this.event_manager.trigger('game_stop', [this])
     for (let player of this._players) {
-      event_manager.trigger('stop_game_player', [player, this])
+      this.event_manager.trigger('stop_game_player', [player, this])
       player.stop()
     }
     this.unload() // unload things in the game
@@ -115,13 +115,13 @@ export default class Game extends JsonObject {
       this._leave_game(player)
       next_game._join_game(player)
     })
-    event_manager.trigger('game_cycle', [next_game, this])
+    this.event_manager.trigger('game_cycle', [next_game, this])
   }
 
   /** Unload the game, clean things up for the next game */
   unload() {
     Logger.info(`The game(${this._id}) has been unloaded...`)
-    event_manager.trigger('game_unload', [this])
+    this.event_manager.trigger('game_unload', [this])
     _.forEach(this.map.events, (json, id) => this._unregister_event(id, json))
   }
 
@@ -202,13 +202,13 @@ export default class Game extends JsonObject {
     this._players.push(player)
     if (this.settings.join_game_on_join) { // should players auto join the game when they login
       player.join_team(this._smallest_team)
-      event_manager.trigger('join_game', [player, this])
+      this.event_manager.trigger('join_game', [player, this])
       player.start()
     } else {
       let spectator = this._teams.get(Facts.SPECTATOR_ID)
       spectator.join(player)
       player._current_team = spectator
-      event_manager.trigger('join_game', [player, this])
+      this.event_manager.trigger('join_game', [player, this])
       player.teleport(...this.spawn_point.toArray())
     }
   }
@@ -224,7 +224,7 @@ export default class Game extends JsonObject {
   _leave_game(player) {
     player.leave_team()
     _.remove(this._players, player)
-    event_manager.trigger('leave_game', [player, this])
+    this.event_manager.trigger('leave_game', [player, this])
   }
 
   /** Generate the Team object containing the least about of players */
@@ -240,7 +240,7 @@ export default class Game extends JsonObject {
     let obj = new clazz(obj_id, obj_json)
     this.injector.inject_instance(obj)
     this[collection_name] = this[collection_name].set(obj_id, obj)
-    event_manager.trigger(event_id, [obj, this])
+    this.event_manager.trigger(event_id, [obj, this])
   }
 
   /** Register the team into the system */
@@ -283,7 +283,7 @@ export default class Game extends JsonObject {
       }
     }.bind(this.map)
     this._events = this._events.set(event_id, wrapper)
-    event_manager.on(event_id, wrapper)
+    this.event_manager.on(event_id, wrapper)
   }
 
   /** Unregister the event into the system */
@@ -291,7 +291,7 @@ export default class Game extends JsonObject {
     not_null(event_id, 'event_id')
     not_null(event_function, 'event_function')
     let listener = this._events.get(event_id)
-    event_manager.off(event_id, listener)
+    this.event_manager.off(event_id, listener)
   }
 
   /** Get the value of this game */
@@ -305,7 +305,7 @@ export default class Game extends JsonObject {
     map: {
       name: 'Unknown',
       version: '0.1',
-      descripton: 'Unknown Map',
+      description: 'Unknown Map',
     },
 
     // Settings that maps or games can override

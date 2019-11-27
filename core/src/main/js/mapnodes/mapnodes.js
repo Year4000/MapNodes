@@ -2,22 +2,24 @@
  * Copyright 2017 Year4000. All Rights Reserved.
  */
 import _ from 'lodash'
-import { REVISION } from 'three'
 import Logger from 'js-logger'
+import { REVISION } from 'three'
 import { inject } from './injection.js'
 import { not_null } from './conditions.js'
-import CommandManager from './command/cmd_manager.js'
 import { event_manager, listener } from './events/event_manager.js'
+import CommandManager from './command/cmd_manager.js'
 import Messages from './messages.js'
 
 /** The service to handle pretty much everything with the JS side of MapNodes */
 @inject({
   command_manager: new CommandManager(),
+  event_manager
 })
 class MapNodes {
   // Create the injector and inject our self with the injector
   @inject() injector
   @inject() command_manager
+  @inject() event_manager
 
   /** Get the command manager for mapnodes */
   register_command(command, action) {
