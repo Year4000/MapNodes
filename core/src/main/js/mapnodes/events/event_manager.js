@@ -1,6 +1,7 @@
 /*
  * Copyright 2019 Year4000. All Rights Reserved.
  */
+import EventEmitter from 'wolfy87-eventemitter'
 
 /*
  * This event system is directly tied to the object models in a given class,
@@ -59,16 +60,11 @@
  * game_unload
  */
 
-/** Register all the events the javascript system needs to handle */
-export default class EventManager {
-  constructor() {
+/** Use the event emitter as the underlying event manager */
+export const event_manager = new EventEmitter()
 
-  }
-
-  handle_event(name, event) {
-
-  }
+/** Prototype functionally, must be static functions right now */
+export const listener = id => ({ descriptor: { value }}) => {
+  // must include space since we are returning void
+  event_manager.on(id, value)
 }
-
-/** Prototype functionally */
-export const listener = id => () => {}

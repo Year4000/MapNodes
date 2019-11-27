@@ -2,8 +2,7 @@
  * Copyright 2019 Year4000. All Rights Reserved.
  */
 import _ from 'lodash'
-import EventEmitter from 'wolfy87-eventemitter'
-import { inject } from '../injection.js'
+import { event_manager } from '../events/event_manager.js'
 import { not_null, is_true } from '../conditions.js'
 import Facts from '../facts.js'
 import Messages from '../messages.js'
@@ -20,8 +19,6 @@ const _player_instances = {}
 
 /** Generates the player object */
 export default class Player {
-
-  @inject(EventEmitter) $event_emitter
 
   constructor(username, uuid) {
     not_null(username, 'username')
@@ -95,12 +92,12 @@ export default class Player {
 
   /** Start the game for the player */
   start() {
-    this.$event_emitter.trigger('start_player', [this, this.$game])
+    event_manager.trigger('start_player', [this, this.$game])
   }
 
   /** Stop the game for the player */
   stop() {
-    this.$event_emitter.trigger('stop_player', [this, this.$game])
+    event_manager.trigger('stop_player', [this, this.$game])
     this.leave_team()
   }
 
