@@ -4,30 +4,24 @@
 import _ from 'lodash'
 import { REVISION } from 'three'
 import Logger from 'js-logger'
-import Injector, { inject } from './injection.js'
+import { inject } from './injection.js'
 import { not_null } from './conditions.js'
 import CommandManager from './command/cmd_manager.js'
 import { event_manager, listener } from './events/event_manager.js'
 import Messages from './messages.js'
 
 /** The service to handle pretty much everything with the JS side of MapNodes */
+@inject({
+  command_manager: new CommandManager(),
+})
 class MapNodes {
-
-  @inject(Injector) $injector
-  @inject(CommandManager) $command_manager
-
-  constructor() {
-    // Create the injector and inject our self with the injector
-    let self = this
-    this.$injector = new Injector({
-      map_nodes: self,
-      command_manager: new CommandManager(),
-    })
-  }
+  // Create the injector and inject our self with the injector
+  @inject() injector
+  @inject() command_manager
 
   /** Get the command manager for mapnodes */
   register_command(command, action) {
-    return this.$command_manager.register_command(command, action)
+    return this.command_manager.register_command(command, action)
   }
 
   /** Get the current game */
@@ -39,10 +33,7 @@ class MapNodes {
   set current_game(game) {
     not_null(game, 'game')
     this._last_game = this._current_game
-    this._current_game = game
-    this._current_game.$injector = this.$injector.child_injector({
-      game: this._current_game,
-    })
+    this._current_game = this.injector.child_injector({ game }).inject_instance(game)
     this._current_game.register_map()
     if (this._last_game) { // Cycle to the next game
       this._last_game.cycle(game)
@@ -72,7 +63,7 @@ class MapNodes {
   @listener('join_game')
   static on_join_game(player) {
     MapNodes._tab_list(player)
-    player.tablist_footer = player.$game.settings.tab_list_footer
+    player.tablist_footer = player.game.settings.tab_list_footer
     // todo open team selector gui
   }
 
@@ -82,7 +73,7 @@ class MapNodes {
     // todo set kit
     // todo set scoreboard
     if (player.is_playing()) { // Message when the game starts for players
-      let {name, version, description, authors} = player.$game.map.map
+      let {name, version, description, authors} = player.game.map.map
       let author_names = _.map(authors, author => _.truncate(author, {length: 3}));
       player.send_message()
       player.send_message('&7&m' + _.pad(`&a ${name} &7${version.replace(/\./, '&8.&7')} &7&m`, 55, '*'))
@@ -101,8 +92,8 @@ class MapNodes {
   }
 
   static _tab_list(player) {
-    event_manager.trigger('tablist_header', [player, player.$game])
-    player.tablist_header = player.$game.tablist_header
+    event_manager.trigger('tablist_header', [player, player.game])
+    player.tablist_header = player.game.tablist_header
   }
 }
 

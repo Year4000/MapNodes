@@ -4,9 +4,10 @@
 import _ from 'lodash'
 import { event_manager } from '../events/event_manager.js'
 import { not_null, is_true } from '../conditions.js'
+import { listener } from '../events/event_manager.js'
+import { inject } from '../injection.js'
 import Facts from '../facts.js'
 import Messages from '../messages.js'
-import { listener } from "../events/event_manager.js"
 
 /** This will serialize the uuid to be used for the lookup table */
 const serializeUuid = uuid => uuid.replace(/-/g, '').toLowerCase()
@@ -19,6 +20,7 @@ const _player_instances = {}
 
 /** Generates the player object */
 export default class Player {
+  @inject() game
 
   constructor(username, uuid) {
     not_null(username, 'username')
@@ -92,18 +94,18 @@ export default class Player {
 
   /** Start the game for the player */
   start() {
-    event_manager.trigger('start_player', [this, this.$game])
+    event_manager.trigger('start_player', [this, this.game])
   }
 
   /** Stop the game for the player */
   stop() {
-    event_manager.trigger('stop_player', [this, this.$game])
+    event_manager.trigger('stop_player', [this, this.game])
     this.leave_team()
   }
 
   /** Check if the player is playing */
   is_playing() {
-    return this._current_team && this._current_team.id !== Facts.SPECTATOR_ID && this.$game.is_running()
+    return this._current_team && this._current_team.id !== Facts.SPECTATOR_ID && this.game.is_running()
   }
 
   /** Check if the player is playing */
@@ -120,10 +122,10 @@ export default class Player {
   /** Have the player join the specific team */
   join_team(team) {
     not_null(team, 'team')
-    if (this.$game.is_running() && this.is_playing()) {
+    if (this.game.is_running() && this.is_playing()) {
       return Messages.TEAM_MENU_NOT_NOW.send(this)
     }
-    if (this.$game.is_running() && this.is_spectating()) {
+    if (this.game.is_running() && this.is_spectating()) {
       this.leave_team()
       team.join(this)
       this._current_team = team;

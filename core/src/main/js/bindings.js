@@ -141,7 +141,7 @@ global.$ = class $ {
   @bind()
   on_player_command(uuid, username, command, args) {
     let player = new CommandExecutor(Player.of(uuid))
-    return map_nodes.$command_manager.execute_command(player, command, args)
+    return map_nodes.command_manager.execute_command(player, command, args)
   }
 
   /** Check if the command part of the system */
@@ -150,7 +150,7 @@ global.$ = class $ {
     if (!command) {
       return false
     }
-    return map_nodes.$command_manager.is_command(command)
+    return map_nodes.command_manager.is_command(command)
   }
 
   /** Send the x,y,z cords of the spawn point */

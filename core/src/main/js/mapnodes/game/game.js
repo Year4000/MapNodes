@@ -18,6 +18,7 @@ import Team from './team.js'
 
 /** Represents a game from the json object */
 export default class Game extends JsonObject {
+  @inject() injector
 
   /** This follows the documented scheme here https://resources.year4000.net/mapnodes/map_component */
   static get schema() {
@@ -197,7 +198,7 @@ export default class Game extends JsonObject {
   /** Actually have the player join the game */
   _join_game(player) {
     not_null(player, 'player')
-    this.$injector.inject_instance(player)
+    this.injector.inject_instance(player)
     this._players.push(player)
     if (this.settings.join_game_on_join) { // should players auto join the game when they login
       player.join_team(this._smallest_team)
@@ -237,7 +238,7 @@ export default class Game extends JsonObject {
     not_null(obj_json, 'obj_json')
     Logger.info(`Registering ${collection_name} with id ${obj_id}`)
     let obj = new clazz(obj_id, obj_json)
-    this.$injector.inject_instance(obj)
+    this.injector.inject_instance(obj)
     this[collection_name] = this[collection_name].set(obj_id, obj)
     event_manager.trigger(event_id, [obj, this])
   }

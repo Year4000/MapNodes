@@ -7,11 +7,13 @@ import JsonObject from './json_object.js'
 import { not_null } from '../conditions.js'
 import Colors from '../colors.js'
 import Regions from '../regions/regions.js'
-import { listener } from "../events/event_manager.js"
+import { listener } from '../events/event_manager.js'
+import { inject } from '../injection.js'
 
 /** Represents a team from the json object */
 export default class Team extends JsonObject {
 
+  @inject() game
   _members = []
 
   /** This follows the documented scheme here https://resources.year4000.net/mapnodes/teams_component */
@@ -42,7 +44,7 @@ export default class Team extends JsonObject {
     return this.color_code + this.name
   }
 
-  /** Get the name of the color the team bellongs to */
+  /** Get the name of the color the team belongs to */
   get color() {
     return _.lowerCase(this.team.color)
   }
@@ -62,22 +64,22 @@ export default class Team extends JsonObject {
   join(player) {
     not_null(player, 'player')
     if (player._current_team) { // Swap the teams the player is on
-      event_manager.trigger('swap_team', [player, player._current_team, this, this.$game])
+      event_manager.trigger('swap_team', [player, player._current_team, this, this.game])
       player.leave_team()
     }
     this._members.push(player)
-    event_manager.trigger('join_team', [player, this, this.$game])
+    event_manager.trigger('join_team', [player, this, this.game])
   }
 
   /** Tell the player its time to start */
   start_player(player) {
-    event_manager.trigger('start_team_player', [player, this, this.$game])
+    event_manager.trigger('start_team_player', [player, this, this.game])
     player.start()
   }
 
   /** Have the entire team start */
   start() {
-    event_manager.trigger('start_team', [this, this.$game])
+    event_manager.trigger('start_team', [this, this.game])
     _.forEach(this._members, member => this.start_player(member))
   }
 
@@ -85,7 +87,7 @@ export default class Team extends JsonObject {
   leave(player) {
     not_null(player, 'player')
     _.remove(this._members, object => object.is_equal(player))
-    event_manager.trigger('leave_team', [player, this, this.$game])
+    event_manager.trigger('leave_team', [player, this, this.game])
   }
 
   /** Get the size of the team */
