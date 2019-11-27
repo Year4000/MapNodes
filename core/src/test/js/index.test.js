@@ -11,3 +11,4 @@
 
 import './mapnodes/game/json_object.test.js'
 import './mapnodes/game/player.test.js'
+import './mapnodes/mapnodes_loader.test.js'

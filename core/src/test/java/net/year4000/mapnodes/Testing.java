@@ -20,7 +20,7 @@ public class Testing {
 
   public static void main(String[] args) throws Exception {
     String bindings = read(Testing.class.getResourceAsStream("/net/year4000/mapnodes/js/bindings.js"));
-    String map = read(Testing.class.getResourceAsStream("/map.js"));
+    String map = read(Testing.class.getResourceAsStream("/maps/map_test.js"));
     V8 v8 = BINDINGS.v8();
     v8.executeVoidScript(bindings);
     v8.executeScript("print('Hello');");

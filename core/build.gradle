@@ -34,7 +34,9 @@ test.testLogging.showStandardStreams = true
 // Copy all files to known path
 task copyTestJs(type: Copy) {
   from "${projectDir}/src/test/js/"
+  from "${projectDir}/src/test/resources/"
   from "${projectDir}/src/main/js/"
+  from "${projectDir}/src/main/resources"
   into "${projectDir}/build/test/js/"
 }
 

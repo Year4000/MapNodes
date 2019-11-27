@@ -7,13 +7,17 @@ import Player from './player.js'
 /** Represents the map settings from the json object */
 export default class Map extends JsonObject {
 
+  constructor(map) {
+    super(map.name, map)
+  }
+
   /** This follows the documented scheme here https://resources.year4000.net/mapnodes/map_component */
   static get schema() {
     return {
       name: { type: 'string' },
       version: { type: 'string' },
       description: { type: 'string' },
-      author: { type: 'string' },
+      //author: { type: 'string' }, todo
       authors: { type: 'array' },
     }
   }
@@ -35,5 +39,11 @@ export default class Map extends JsonObject {
       return this._json.authors.map(author => Player.of(author))
     }
     return []
+  }
+
+  valueOf() {
+    // get the raw authors from the json not the Player object yet
+    let { name, version, authors } = this.map
+    return `${name} v${version} by${authors.map(author => ' ' + author)}`
   }
 }

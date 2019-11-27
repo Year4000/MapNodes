@@ -3,6 +3,7 @@ const path = require('path')
 module.exports = {
   mode: 'production',
   devtool: 'source-map',
+  target: 'node',
   // We are not running on the web so we dont need to download files, so changes reflect that
   optimization: {
     minimize: false,

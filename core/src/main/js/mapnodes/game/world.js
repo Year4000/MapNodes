@@ -6,11 +6,14 @@ import JsonObject from './json_object.js'
 /** Represents the world from the json object */
 export default class World extends JsonObject {
 
+  constructor(world) {
+    super('world', world)
+  }
+
   /** This follows the documented scheme here https://resources.year4000.net/mapnodes/world_component */
   static get schema() {
     return {
-      spawn: { type: 'string' },
-      spawns: { type: 'array' },
+      spawn: { type: 'array' },
       difficulty: { type: ['number', 'string'] },
       weather: { type: 'boolean' },
       time_lock: { type: ['number', 'string'] },

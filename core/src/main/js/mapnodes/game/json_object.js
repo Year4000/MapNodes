@@ -47,14 +47,14 @@ export default class JsonObject {
     is_object(not_null(json, 'Json must exist'), 'Must be a JSON object')
     not_null(schema, 'Each object must have a schema associated with it')
     // todo verify that the json matches the given schema more verbose checking
-    for (let key of _.keys(json)) {
-      let value = json[key]
-      let { type } = schema[key]
-      if (type !== undefined && typeof value !== type) {
-        return false
-      }
-    }
-    return true
+    return _.keys(json).reduce((and, key) => {
+      const value = json[key]
+      const { type } = schema[key]
+      const types = Array.isArray(type) ? type : [ type ]
+      return and && types.reduce((or, type) => {
+        return or || (type === 'array' ? Array.isArray(value) : (type !== undefined && typeof value === type))
+      }, false)
+    }, true)
   }
 
   /** The JSON object of this object */
