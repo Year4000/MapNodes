@@ -1,12 +1,18 @@
 import fs from 'fs'
 import path from 'path'
 import assert from 'assert'
+import _ from 'lodash'
 
 import Map from './game/map.js'
 import World from './game/world.js'
+import Team from './game/team.js'
+import Region from './game/region.js'
+import Kit from './game/kit.js'
 
 /*
   This unit test will load the map config files into the system and verify that they load properly.
+  This unit test only tests if the objects will match the schema built in the system. This test does not
+  cover nested object right now.
  */
 
 // Read each map and pass the map object to the callback
@@ -30,6 +36,18 @@ describe('map loader', () => {
       it(`map component ${map_component.valueOf()}`, () => assert.ok(map_component.verify()))
       // World Component
       it('world component', () => assert.ok(new World(map.world || {}).verify()))
+      // Teams Component
+      _.forEach(map.teams, (json, id) => {
+        it(`team component ${id}`, () => assert.ok(new Team(id, json).verify()))
+      })
+      // Regions Component
+      _.forEach(map.regions, (json, id) => {
+        it(`region component ${id}`, () => assert.ok(new Region(id, json).verify()))
+      })
+      // Kits Component
+      _.forEach(map.kits, (json, id) => {
+        it(`kit component ${id}`, () => assert.ok(new Kit(id, json).verify()))
+      })
     })
   })
 })
