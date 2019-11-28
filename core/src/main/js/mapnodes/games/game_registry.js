@@ -16,7 +16,6 @@ export default class GameRegistry {
   register(id, game_mode) {
     not_null(id, 'id must not be null')
     not_null(game_mode, 'game_mode id must not be null')
-    is_object(game_mode, 'game_mode must be an object')
     this.game_modes[id] = game_mode
   }
 
@@ -60,7 +59,22 @@ export default class GameRegistry {
 export const game_registry = new GameRegistry()
 
 /** The game mode decorator that will register the class into the system */
-export const game_mode = id => handler => {
-  // todo get the type of the class and not just the descriptor
-  game_registry.register(id, handler)
-}
+export const game_mode = id => handler => ({
+  ...handler,
+  elements: [ ...handler.elements, {
+    kind: 'field',
+    placement: 'static',
+    key: '$id',
+    descriptor: { writable: false },
+    initializer: () => id // inject the id that was used when registering
+  }, {
+    kind: 'field',
+    placement: 'static',
+    key: '$game_registry',
+    descriptor: {},
+    initializer: function() {
+      // Use this to get the type
+      return game_registry.register(id, this)
+    }
+  }]
+})

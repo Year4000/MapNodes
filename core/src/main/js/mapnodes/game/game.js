@@ -26,7 +26,7 @@ export default class Game extends JsonObject {
   _regions = Map()
   _clazzes = Map()
   _events = Map()
-  _games = Map()
+  _games = {}
   _state = 'WAITING'
   _players = []
 
@@ -85,12 +85,16 @@ export default class Game extends JsonObject {
   load() {
     Logger.info(`The game(${this._id}) is loading...`)
     this.event_manager.trigger('game_load', [this])
+    Logger.info(`Loading the game mode`)
+    _.forEach(this._games, game => game._load())
   }
 
   /** Start the game and unload the previous game */
   start() {
     this._state = 'RUNNING'
     this._start_time = _.now()
+    Logger.info(`Enabling the game modes`)
+    _.forEach(this._games, game => game._enable())
     Logger.info(`The game(${this._id}) has started as ${moment(this._start_time).format('l LTS')}...`)
     this.event_manager.trigger('game_start', [this])
     for (let team of this._teams.values()) {
@@ -108,6 +112,8 @@ export default class Game extends JsonObject {
       this.event_manager.trigger('stop_game_player', [player, this])
       player.stop()
     }
+    Logger.info(`Disabling the game modes`)
+    _.forEach(this._games, game => game._disable())
     this.unload() // unload things in the game
   }
 
@@ -127,6 +133,8 @@ export default class Game extends JsonObject {
     Logger.info(`The game(${this._id}) has been unloaded...`)
     this.event_manager.trigger('game_unload', [this])
     _.forEach(this.map.events, (json, id) => this._unregister_event(id, json))
+    Logger.info(`Unloading the game modes`)
+    _.forEach(this._games, game => game._unload())
   }
 
   /** Get the proxy object for the map_nodes object in the map, function are called and return the value */
@@ -294,12 +302,14 @@ export default class Game extends JsonObject {
   _register_game(game_id, json) {
     not_null(game_id, 'game_id')
     not_null(json, 'event_function')
-    Logger.info(`Registering game type ${game_id}`)
-    // todo depending on the type of json register the game differently
-    if (typeof json === 'object') {
-      // todo properly create the instances of the games
-      this._games = this._games.set(game_id, {})
-      //this._games = this._games.set(game_id, this.game_registry.create(game_id, json))
+    if (this.game_registry.is_registered(game_id)) {
+      Logger.info(`Registering game type ${game_id}`)
+      this._games[game_id] = this.game_registry.create(game_id, json)
+    } else if (typeof json === 'function') {
+      Logger.info(`Creating custom game type ${game_id}`)
+      // todo register the custom game mode type
+    } else {
+      Logger.warn(`Game mode ${game_id} is not a registered game mode nor is a class`)
     }
   }
 

@@ -6,4 +6,12 @@ import AbstractGameMode from '../abstract_game_mode.js'
  */
 @game_mode('skywars')
 export default class SkyWars extends AbstractGameMode {
+  /** The config schema for the game mode */
+  static get schema() {
+    return {
+      players_team: { type: 'string' },
+      // Min players in the
+      start_size: { type: 'number', value: 2 },
+    }
+  }
 }
