@@ -4,12 +4,12 @@
 import _ from 'lodash'
 import Logger from 'js-logger'
 import { REVISION } from 'three'
-import { inject } from './injection.js'
+import CommandManager from './command/cmd_manager.js'
+import Messages from './messages.js'
 import { not_null } from './conditions.js'
 import { event_manager, listener } from './events/event_manager.js'
 import { game_registry } from './games/games.js'
-import CommandManager from './command/cmd_manager.js'
-import Messages from './messages.js'
+import { inject } from './injection.js'
 
 /** The service to handle pretty much everything with the JS side of MapNodes */
 @inject({
@@ -62,7 +62,7 @@ class MapNodes {
 
   /** Let us know that a player joined the team */
   @listener('join_team')
-  static on_join_team({username}, {name, size}, game) {
+  static on_join_team({ username }, { name, size }, game) {
     Logger.info(`The player ${username} joined the team ${name} size ${size}`)
   }
 
@@ -79,8 +79,8 @@ class MapNodes {
     // todo set kit
     // todo set scoreboard
     if (player.is_playing()) { // Message when the game starts for players
-      let {name, version, description, authors} = player.game.map.map
-      let author_names = _.map(authors, author => _.truncate(author, {length: 3}));
+      let { name, version, description, authors } = player.game.map.map
+      let author_names = _.map(authors, author => _.truncate(author, { length: 3 }))
       player.send_message()
       player.send_message('&7&m' + _.pad(`&a ${name} &7${version.replace(/\./, '&8.&7')} &7&m`, 55, '*'))
       player.send_message(Messages.MAP_CREATED.get(player) + author_names)

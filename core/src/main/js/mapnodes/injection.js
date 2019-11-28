@@ -49,13 +49,13 @@ export default class Injector {
 /** Create the class injector decorator */
 const class_inject = modules => handle => ({
   ...handle,
-  elements: [ ...handle.elements, {
+  elements: [...handle.elements, {
     kind: 'field',
     placement: 'static',
     key: '$injector',
     descriptor: {},
-    initializer: () => new Injector(modules)
-  }]
+    initializer: () => new Injector(modules),
+  }],
 })
 
 /** Create the property injector decorator */
@@ -71,9 +71,9 @@ const property_inject = key => handle => ({
           Logger.error('Error at function name ' + name + ' ' + receiver)
           throw e
         }
-      }
+      },
     })
-  }
+  },
 })
 
 /**

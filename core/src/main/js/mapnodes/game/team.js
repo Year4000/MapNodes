@@ -2,10 +2,10 @@
  * Copyright 2019 Year4000. All Rights Reserved.
  */
 import _ from 'lodash'
-import JsonObject from './json_object.js'
-import { not_null } from '../conditions.js'
 import Colors from '../colors.js'
 import Regions from '../regions/regions.js'
+import JsonObject from './json_object.js'
+import { not_null } from '../conditions.js'
 import { listener } from '../events/event_manager.js'
 import { inject } from '../injection.js'
 

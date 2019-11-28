@@ -2,15 +2,15 @@
  * Copyright 2017 Year4000. All Rights Reserved.
  */
 import Logger from 'js-logger'
+import CommandExecutor from './cmd_executor.js'
 import { not_null } from '../conditions.js'
 import { CommandError } from './cmd_errors.js'
-import CommandExecutor from './cmd_executor.js'
 
 /** The command manager that will handle processing commands and ect */
 export default class CommandManager {
 
   constructor() {
-    this._command_map = {};
+    this._command_map = {}
   }
 
   /** Register the command in to the system */
@@ -27,7 +27,7 @@ export default class CommandManager {
   /** Will execute the command and return a object for errors or null if it passed */
   execute_command(executor, command, args) {
     try {
-      let command_action = this._command_map[command];
+      let command_action = this._command_map[command]
       if (command_action) {
         command_action(executor || new CommandExecutor(), args)
       } else {

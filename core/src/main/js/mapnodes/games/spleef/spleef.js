@@ -1,5 +1,8 @@
-import { game_mode } from '../game_registry.js'
+/*
+ * Copyright 2019 Year4000. All Rights Reserved.
+ */
 import AbstractGameMode from '../abstract_game_mode.js'
+import { game_mode } from '../game_registry.js'
 
 /**
  * Spleef is a game mode where players have a wand that shoots snowballs that break blocks.

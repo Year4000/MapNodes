@@ -1,8 +1,8 @@
 /*
  * Copyright 2017 Year4000. All Rights Reserved.
  */
-import { Vector3 } from 'three';
 import _ from 'lodash'
+import { Vector3 } from 'three'
 import AbstractRegion from './abstract_region.js'
 import CuboidRegion from './cuboid_region.js'
 import { not_null } from '../conditions.js'

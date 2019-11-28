@@ -1,8 +1,8 @@
 /*
  * Copyright 2017 Year4000. All Rights Reserved.
  */
-import { Set } from 'immutable'
 import _ from 'lodash'
+import { Set } from 'immutable'
 
 /** The abstract region that handles the creation of points */
 export default class AbstractRegion {

@@ -1,19 +1,19 @@
 /*
  * Copyright 2018 Year4000. All Rights Reserved.
  */
-import _ from 'lodash'
 import Logger from 'js-logger'
+import _ from 'lodash'
 import moment from 'moment'
 import { Map } from 'immutable'
-import { inject } from '../injection.js'
-import JsonObject from './json_object.js'
-import { not_null } from '../conditions.js'
 import Facts from '../facts.js'
-import Player from './player.js'
-import Kit from './kit.js'
 import Clazz from './clazz.js'
+import JsonObject from './json_object.js'
+import Kit from './kit.js'
+import Player from './player.js'
 import Region from './region.js'
 import Team from './team.js'
+import { not_null } from '../conditions.js'
+import { inject } from '../injection.js'
 
 /** Represents a game from the json object */
 export default class Game extends JsonObject {
@@ -154,11 +154,11 @@ export default class Game extends JsonObject {
               return variable
             }
           }
-          return null;
+          return null
         }
-      });
+      })
     }
-    return this._settings;
+    return this._settings
   }
 
   /** Get the time the game has started, -1 if hasent started yet */
@@ -241,7 +241,7 @@ export default class Game extends JsonObject {
 
   /** Generate the Team object containing the least about of players */
   get _smallest_team() {
-    return this._teams.filterNot(team => team.id == Facts.SPECTATOR_ID).sortBy(team => team.size).first()
+    return this._teams.filterNot(team => team.id === Facts.SPECTATOR_ID).sortBy(team => team.size).first()
   }
 
   /** The abstraction to register the object */
@@ -349,5 +349,5 @@ export default class Game extends JsonObject {
   }
 
   /** The colors for each game state */
-  static _STATE_COLORS = {WAITING: '&e', RUNNING: '&a', ENDED: '&c'}
+  static _STATE_COLORS = { WAITING: '&e', RUNNING: '&a', ENDED: '&c' }
 }

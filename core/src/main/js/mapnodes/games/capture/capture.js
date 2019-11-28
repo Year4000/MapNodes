@@ -1,5 +1,8 @@
-import { game_mode } from '../game_registry.js'
+/*
+ * Copyright 2019 Year4000. All Rights Reserved.
+ */
 import AbstractGameMode from '../abstract_game_mode.js'
+import { game_mode } from '../game_registry.js'
 
 /**
  * Capture is a game mode that teams must capture the opponents banner or wool.

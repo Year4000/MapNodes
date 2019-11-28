@@ -1,5 +1,8 @@
+/*
+ * Copyright 2019 Year4000. All Rights Reserved.
+ */
 import Logger from 'js-logger'
-import { not_null, is_object } from '../conditions.js'
+import { not_null } from '../conditions.js'
 import { inject } from '../injection.js'
 
 /** The registry of the game modes */
@@ -61,12 +64,12 @@ export const game_registry = new GameRegistry()
 /** The game mode decorator that will register the class into the system */
 export const game_mode = id => handler => ({
   ...handler,
-  elements: [ ...handler.elements, {
+  elements: [...handler.elements, {
     kind: 'field',
     placement: 'static',
     key: '$id',
     descriptor: { writable: false },
-    initializer: () => id // inject the id that was used when registering
+    initializer: () => id, // inject the id that was used when registering
   }, {
     kind: 'field',
     placement: 'static',
@@ -75,6 +78,6 @@ export const game_mode = id => handler => ({
     initializer: function() {
       // Use this to get the type
       return game_registry.register(id, this)
-    }
-  }]
+    },
+  }],
 })

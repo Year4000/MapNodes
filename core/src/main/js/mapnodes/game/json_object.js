@@ -2,7 +2,7 @@
  * Copyright 2016 Year4000. All Rights Reserved.
  */
 import _ from 'lodash'
-import { not_null, is_object } from '../conditions.js'
+import { is_object, not_null } from '../conditions.js'
 
 /** Represents a team from the json object */
 export default class JsonObject {

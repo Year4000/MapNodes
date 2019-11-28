@@ -1,8 +1,8 @@
 /*
  * Copyright 2017 Year4000. All Rights Reserved.
  */
-import { Vector3 } from 'three'
 import { Set } from 'immutable'
+import { Vector3 } from 'three'
 import AbstractRegion from './abstract_region.js'
 
 /** A region that contains a single point, must wrap with THREE.Vector3 */
@@ -30,8 +30,8 @@ export default class PointRegion extends AbstractRegion {
 
   /** Get the z cord */
   get z() {
-     return this._point.z
-   }
+    return this._point.z
+  }
 
   /** Create a copy of the point for vector3 */
   clone() {

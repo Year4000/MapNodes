@@ -11,9 +11,9 @@ const Messages = new Proxy({}, {
       },
       get: (player, args) => {
         return $.bindings.get_locale_message(player.uuid, name, args || [])
-      }
+      },
     }
-  }
+  },
 })
 
 export default Messages

@@ -1,3 +1,6 @@
+/*
+ * Copyright 2019 Year4000. All Rights Reserved.
+ */
 import Logger from 'js-logger'
 import JsonObject from '../game/json_object.js'
 

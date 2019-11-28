@@ -3,7 +3,7 @@
  */
 
 /** Create a point object with simpler syntax */
-export const point = (x, y, z, yaw, pitch) => ({"point": {x, y, z, yaw, pitch}})
+export const point = (x, y, z, yaw, pitch) => ({ 'point': { x, y, z, yaw, pitch } })
 
 /** Generate the point object and use math to generate pitch and yaw */
 export const point_and_look = (x, y, z, point_to) => {

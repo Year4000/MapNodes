@@ -64,7 +64,7 @@ import EventEmitter from 'wolfy87-eventemitter'
 export const event_manager = new EventEmitter()
 
 /** Prototype functionally, must be static functions right now */
-export const listener = id => ({ descriptor: { value }}) => {
+export const listener = id => ({ descriptor: { value } }) => {
   // must include space since we are returning void
   event_manager.on(id, value)
 }

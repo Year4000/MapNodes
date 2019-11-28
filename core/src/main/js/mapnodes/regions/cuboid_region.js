@@ -1,9 +1,9 @@
 /*
  * Copyright 2017 Year4000. All Rights Reserved.
  */
+import _ from 'lodash'
 import { Set } from 'immutable'
 import { Vector3 } from 'three'
-import _ from 'lodash'
 import AbstractRegion from './abstract_region.js'
 import { not_null } from '../conditions.js'
 
@@ -32,27 +32,27 @@ export default class CuboidRegion extends AbstractRegion {
 
   /** Generate all the points in this cuboid */
   _points() {
-    let points = Set.of();
+    let points = Set.of()
     let min = this._point_one
     let max = this._point_two
     for (let y = min.y; y < max.y; y++) {
       for (let x = min.x; x < max.x; x++) {
         for (let z = min.z; z < max.z; z++) {
-          points = points.add(new Vector3(x, y, z));
+          points = points.add(new Vector3(x, y, z))
         }
       }
     }
-    return points;
+    return points
   }
 
   /** Get all the points this cuboid has */
   get points() {
     // todo cache the results in some type of weak var
-    return this.__points || (this.__points = this._points());
+    return this.__points || (this.__points = this._points())
   }
 
   /** Checks if the two cuboids are equal */
   equals(other) {
-    return other && _.isEqual(this._point_one, other._point_one) && _.isEqual(this._point_two, other._point_two);
+    return other && _.isEqual(this._point_one, other._point_one) && _.isEqual(this._point_two, other._point_two)
   }
 }

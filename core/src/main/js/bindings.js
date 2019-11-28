@@ -1,14 +1,14 @@
 /*
  * Copyright 2019 Year4000. All Rights Reserved.
  */
-import { map_nodes } from './mapnodes/mapnodes.js'
-import { not_null } from './mapnodes/conditions.js'
 import Logger from 'js-logger'
+import { not_null } from './mapnodes/conditions.js'
+import { map_nodes } from './mapnodes/mapnodes.js'
+import CommandExecutor from './mapnodes/command/cmd_executor.js'
 import Game from './mapnodes/game/game.js'
 import Player from './mapnodes/game/player.js'
-import CommandExecutor from './mapnodes/command/cmd_executor.js'
-
 import './mapnodes/command/commands.js'
+
 
 /**
   Bindings is the bridge between the multiple languages. The bindings allows
