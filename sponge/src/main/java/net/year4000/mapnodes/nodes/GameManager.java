@@ -3,6 +3,8 @@
  */
 package net.year4000.mapnodes.nodes;
 
+import com.eclipsesource.v8.V8Array;
+import com.flowpowered.math.vector.Vector3d;
 import com.google.inject.Inject;
 import net.year4000.mapnodes.SpongeBindings;
 import net.year4000.mapnodes.events.DeleteWorldEvent;
@@ -11,6 +13,7 @@ import net.year4000.mapnodes.events.MapNodesEvent;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.data.key.Keys;
+import org.spongepowered.api.entity.Transform;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.living.player.gamemode.GameModes;
 import org.spongepowered.api.event.*;
@@ -18,8 +21,10 @@ import org.spongepowered.api.event.Event;
 import org.spongepowered.api.event.block.ChangeBlockEvent;
 import org.spongepowered.api.event.entity.MoveEntityEvent;
 import org.spongepowered.api.event.filter.Getter;
+import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.event.filter.type.Include;
 import org.spongepowered.api.event.item.inventory.InteractInventoryEvent;
+import org.spongepowered.api.event.message.MessageChannelEvent;
 import org.spongepowered.api.event.network.ClientConnectionEvent;
 import org.spongepowered.api.event.server.ClientPingServerEvent;
 import org.spongepowered.api.network.status.Favicon;
@@ -78,6 +83,11 @@ public class GameManager {
     return predictGameState;
   }
 
+  /** Release the handler */
+  public void releaseHandler() {
+    $.releaseHandler();
+  }
+
   /** Tell the v8 instance that we want to start the game */
   public void start() {
     if (gameState() == GameState.WAITING) {
@@ -93,6 +103,16 @@ public class GameManager {
       $.js.stop();
     } else {
       logger.warn("Can not stop a game that has been stopped");
+    }
+  }
+
+  /** Get the spawn point to spawn the player */
+  public Vector3d spawnPoint() {
+    V8Array array = $.js.spawnPoint();
+    try {
+      return new Vector3d(array.getDouble(0), array.getDouble(1), array.getDouble(2));
+    } finally {
+      array.release();
     }
   }
 
@@ -126,7 +146,7 @@ public class GameManager {
   public void join(ClientConnectionEvent.Join event, @Getter("getTargetEntity") Player player) {
     player.offer(Keys.CAN_FLY, true);
     player.offer(Keys.IS_FLYING, true);
-    player.offer(Keys.GAME_MODE, GameModes.SPECTATOR);
+    player.offer(Keys.GAME_MODE, GameModes.CREATIVE);
     $.js.onEvent(event);
     $.js.joinGame(player);
     // scoreboard things
@@ -140,6 +160,18 @@ public class GameManager {
     $.js.leaveGame(player);
     // scoreboard things
     scoreboard.getTeam("spectator").get().removeMember(Text.of(player.getName()));
+  }
+
+  @Listener
+  public void onChat(MessageChannelEvent event, @First Player player) {
+    // todo this is only hacky to allow for testing
+    String out = event.getMessage().toPlain();
+    if (out.contains("!")) {
+      String message = out.substring(out.indexOf("!") + 1);
+      String cmd = out.substring(out.indexOf(">") + 2, out.indexOf("!"));
+      $.js.onPlayerCommand(player.getUniqueId().toString(), player.getName(), cmd, message);
+      event.setMessageCancelled(true);
+    }
   }
 
   /** Listen to events to pass into the game */

@@ -7,6 +7,8 @@ import Game from './mapnodes/game/game.js'
 import Player from './mapnodes/game/player.js'
 import CommandExecutor from './mapnodes/command/cmd_executor.js'
 
+import './mapnodes/command/commands.js'
+
 /**
   Bindings is the bridge between the multiple languages. The bindings allows
   for object programing, but still allow the speed that is needed. Since only
@@ -170,8 +172,8 @@ global.var_dump = variable => console.log(JSON.stringify(variable))
 /** Map some console properties for logging */
 global.console = global.console || {
   log: (...args) => $._bindings.print(args + '\n'),
-  info: console.log,
-  warn: console.log,
-  error: console.log,
-  debug: console.log,
+  info: (...args) => console.log(args),
+  warn: (...args) => console.log(args),
+  error: (...args) => console.log(args),
+  debug: (...args) => console.log(args),
 }

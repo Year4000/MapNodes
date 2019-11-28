@@ -3,16 +3,13 @@
  */
 package net.year4000.mapnodes.nodes;
 
-import com.eclipsesource.v8.V8Array;
 import com.eclipsesource.v8.utils.MemoryManager;
-import com.flowpowered.math.vector.Vector3d;
 import com.google.common.io.Files;
 import com.google.inject.Inject;
 import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
 import net.year4000.mapnodes.MapNodes;
 import net.year4000.mapnodes.MapNodesPlugin;
-import net.year4000.mapnodes.SpongeBindings;
 import net.year4000.utilities.value.Value;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
@@ -36,7 +33,6 @@ public class SpongeNode extends Node {
   @Inject private Logger logger;
   @Inject private Game game;
   @Inject private EventManager eventManager;
-  @Inject private SpongeBindings $;
 
   @Inject
   public SpongeNode(SpongeNodeFactory factory, MapPackage map) throws Exception {
@@ -99,19 +95,14 @@ public class SpongeNode extends Node {
   @Override
   public void unload() throws Exception {
     logger.info("Unregister listeners and releasing v8 bindings");
-    $.releaseHandler();
+    gameManager.releaseHandler();
     eventManager.unregisterListeners(gameManager);
     super.unload(); //  Handle the V8
   }
 
   /** Create the world transformer to spawn the player into the map */
   public Transform<World> worldTransformer() {
-    V8Array array = $.js.spawnPoint();
-    try {
-      return new Transform<>(world, new Vector3d(array.getDouble(0), array.getDouble(1), array.getDouble(2)));
-    } finally {
-      array.release();
-    }
+    return new Transform<>(this.world, this.gameManager.spawnPoint());
   }
 
   /** Get the world of this node */
