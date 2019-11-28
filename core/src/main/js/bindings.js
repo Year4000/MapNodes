@@ -16,8 +16,6 @@ import './mapnodes/command/commands.js'
   the low level forms the data types are transmitted between.
 */
 
-console.log(exports)
-
 // noinspection ES6ConvertVarToLetConst
 /** This constant is created by the runtime no need for it */
 var PLATFORM = global.PLATFORM || 'none'
