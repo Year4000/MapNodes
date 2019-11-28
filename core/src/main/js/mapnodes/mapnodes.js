@@ -7,13 +7,15 @@ import { REVISION } from 'three'
 import { inject } from './injection.js'
 import { not_null } from './conditions.js'
 import { event_manager, listener } from './events/event_manager.js'
+import { game_registry } from './games/games.js'
 import CommandManager from './command/cmd_manager.js'
 import Messages from './messages.js'
 
 /** The service to handle pretty much everything with the JS side of MapNodes */
 @inject({
   command_manager: new CommandManager(),
-  event_manager
+  event_manager,
+  game_registry,
 })
 class MapNodes {
   // Create the injector and inject our self with the injector
@@ -55,6 +57,7 @@ class MapNodes {
     Logger.info(`Lodash Version: ${_.VERSION}`)
     Logger.info(`Three Version: ${REVISION}`)
     Logger.info(`Logger Version: ${Logger.VERSION}`)
+    Logger.info(`Registered game modes: ${game_registry.registered_ids}`)
   }
 
   /** Let us know that a player joined the team */

@@ -19,6 +19,16 @@ import Team from './team.js'
 export default class Game extends JsonObject {
   @inject() event_manager
   @inject() injector
+  @inject() game_registry
+
+  _teams = Map()
+  _kits = Map()
+  _regions = Map()
+  _clazzes = Map()
+  _events = Map()
+  _games = Map()
+  _state = 'WAITING'
+  _players = []
 
   /** This follows the documented scheme here https://resources.year4000.net/mapnodes/map_component */
   static get schema() {
@@ -31,14 +41,7 @@ export default class Game extends JsonObject {
   }
 
   constructor(id, map) {
-    super(id, _.merge(JSON.parse(JSON.stringify(Game.DEFAULT_MAP)), map))
-    this._teams = Map()
-    this._kits = Map()
-    this._regions = Map()
-    this._clazzes = Map()
-    this._events = Map()
-    this._state = 'WAITING'
-    this._players = []
+    super(id, { ...Game.DEFAULT_MAP, ...map })
     Logger.info(`Constructing the game ${id} for ${this._json.map.name}`)
   }
 
@@ -64,6 +67,7 @@ export default class Game extends JsonObject {
     _.forEach(this.map.regions, (json, id) => this._register_region(id, json))
     _.forEach(this.map.classes, (json, id) => this._register_class(id, json))
     _.forEach(this.map.events, (json, id) => this._register_event(id, json))
+    _.forEach(this.map.games, (json, id) => this._register_game(id, json))
     Logger.info('Finish registering map components')
     // start the game auto
     if (this.settings.start_game_on_load) {
@@ -284,6 +288,19 @@ export default class Game extends JsonObject {
     }.bind(this.map)
     this._events = this._events.set(event_id, wrapper)
     this.event_manager.on(event_id, wrapper)
+  }
+
+  /** Register the game into the system */
+  _register_game(game_id, json) {
+    not_null(game_id, 'game_id')
+    not_null(json, 'event_function')
+    Logger.info(`Registering game type ${game_id}`)
+    // todo depending on the type of json register the game differently
+    if (typeof json === 'object') {
+      // todo properly create the instances of the games
+      this._games = this._games.set(game_id, {})
+      //this._games = this._games.set(game_id, this.game_registry.create(game_id, json))
+    }
   }
 
   /** Unregister the event into the system */

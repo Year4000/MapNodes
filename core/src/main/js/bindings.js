@@ -200,7 +200,7 @@ global.var_dump = variable => console.log(JSON.stringify(variable))
 if (!('console' in global)) {
   /** Map some console properties for logging */
   global.console = {
-    log: (...args) => $._bindings.print(args + '\n'),
+    log: (...args) => _bindings.print(args + '\n'),
     info: (...args) => console.log(args),
     warn: (...args) => console.log(args),
     error: (...args) => console.log(args),
