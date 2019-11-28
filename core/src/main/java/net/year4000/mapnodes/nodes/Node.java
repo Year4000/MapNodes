@@ -84,10 +84,10 @@ public abstract class Node {
 
   /** Unloads the node */
   public void unload() throws Exception {
+    v8Object.release(); // release the object that the map.js is stored in
     if (memoryManager != null) {
       logger.info("Releasing {} references lost in the world", memoryManager.getObjectReferenceCount());
       memoryManager.release(); // release any object's created during the existence of this node
     }
-    v8Object.release(); // release the object that the map.js is stored in
   }
 }

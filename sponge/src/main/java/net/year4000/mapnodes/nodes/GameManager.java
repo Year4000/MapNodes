@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Year4000. All Rights Reserved.
+ * Copyright 2019 Year4000. All Rights Reserved.
  */
 package net.year4000.mapnodes.nodes;
 
@@ -13,7 +13,6 @@ import net.year4000.mapnodes.events.MapNodesEvent;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.data.key.Keys;
-import org.spongepowered.api.entity.Transform;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.living.player.gamemode.GameModes;
 import org.spongepowered.api.event.*;
@@ -81,11 +80,6 @@ public class GameManager {
   public GameState gameState() {
     predictGameState = GameState.valueOf($.js.gameState());
     return predictGameState;
-  }
-
-  /** Release the handler */
-  public void releaseHandler() {
-    $.releaseHandler();
   }
 
   /** Tell the v8 instance that we want to start the game */

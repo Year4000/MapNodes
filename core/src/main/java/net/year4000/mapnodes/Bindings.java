@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Year4000. All Rights Reserved.
+ * Copyright 2019 Year4000. All Rights Reserved.
  */
 package net.year4000.mapnodes;
 
@@ -66,16 +66,10 @@ public abstract class Bindings implements Releasable {
     return engine;
   }
 
-  /** Release the object that the handler is using */
-  public void releaseHandler() {
-    handler.release();
-  }
-
   /** Release the bindings */
   @Override
   public void release() {
     object.release(); // release the object that holds the bindings
-    releaseHandler();
     logger.info("Releasing {} references lost in the void", memoryManager.getObjectReferenceCount());
     memoryManager.release();
   }

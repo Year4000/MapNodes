@@ -14,3 +14,4 @@ import './mapnodes/game/player.test.js'
 import './mapnodes/mapnodes_loader.test.js'
 import './mapnodes/events/event_manager.test.js'
 import './mapnodes/injection.test.js'
+//import './bindings.test.js' todo enable when we can export PLATFORM variables

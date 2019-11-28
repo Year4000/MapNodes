@@ -1,8 +1,9 @@
 /*
  * Copyright 2019 Year4000. All Rights Reserved.
  */
-import Logger from 'js-logger'
 import { map_nodes } from './mapnodes/mapnodes.js'
+import { not_null } from './mapnodes/conditions.js'
+import Logger from 'js-logger'
 import Game from './mapnodes/game/game.js'
 import Player from './mapnodes/game/player.js'
 import CommandExecutor from './mapnodes/command/cmd_executor.js'
@@ -15,6 +16,8 @@ import './mapnodes/command/commands.js'
   the low level forms the data types are transmitted between.
 */
 
+console.log(exports)
+
 // noinspection ES6ConvertVarToLetConst
 /** This constant is created by the runtime no need for it */
 var PLATFORM = global.PLATFORM || 'none'
@@ -25,38 +28,64 @@ var JAVA = global.JAVA || {}
 
 /** The constants that are known when the JS runtime is created */
 const PLATFORMS = {
-  "PC": "java", // Sponge
-  "PE": "java" // Nukkit
+  PC: "java", // Sponge
+  PE: "java", // Nukkit
+  TEST: 'javascript', // Unit Testing
 }
 
-/** Will register the method in the bindings map */
-function bind() {
-  // todo register the command in the bindings with out using a proxy
-  return () => {}
+/** The reference to the the java methods bindings */
+const _bindings = (() => {
+  if (PLATFORM === PLATFORMS.PE) {
+    return JAVA
+  } else if (PLATFORM === PLATFORMS.PC) {
+    return JAVA
+  } else if (PLATFORM === PLATFORMS.TEST) {
+    return {}
+  } else {
+    throw "PLATFORM is not defined!"
+  }
+})()
+
+/** This map stores the function bindings that are in javascript */
+const _js = {}
+
+/** Will register the method in the bindings map for $.js */
+function bind(alias) {
+  const toLowerCamel = string => {
+    not_null(string, 'A string value must exist')
+    let out = ''
+    let upper = false
+    for (let c of string) {
+      if (upper) { // uppercase the letter and rest it flag
+        out += c.toUpperCase()
+        upper = false
+      } else if (c === '_') { // dont add _ and trigger next letter must be upper
+        upper = true
+      } else { // append the char
+        out += c
+      }
+    }
+    return out
+  }
+  return handler => {
+    // Map the functions to the java names
+    if (!(alias in _js)) {
+      _js[alias || toLowerCamel(handler.key)] = handler.descriptor.value.bind(_js)
+    }
+  }
 }
 
 /** Used to interact the Javascript with MapNodes base game */
-global.$ = class $ {
-  /** Get the instance of this javascript object */
+global.$ = class {
+  /** Get the instance of this javascript bindings */
   static get js() {
-    return $._js || ($._js = new $())
-  }
-
-  /** Map a specific object to this bindings var */
-  static get _bindings() {
-    if (PLATFORM === PLATFORMS.PE) {
-      return JAVA
-    } else if (PLATFORM === PLATFORMS.PC) {
-      return JAVA
-    } else {
-      throw "PLATFORM is not defined!"
-    }
+    return _js
   }
 
   /** Wrap the internal bindings in a proxy to catch unimplemented variables */
   static get bindings() {
     if ($._proxy == null) { // Lazy load the proxy
-      $._proxy = new Proxy($._bindings, {
+      $._proxy = new Proxy(_bindings, {
         get: (target, name, receiver) => {
           if (target[name]) {
             return function() { // Must be a function to capture ...arguments
@@ -169,11 +198,14 @@ global.$ = class $ {
 /** Dump the var to the screen */
 global.var_dump = variable => console.log(JSON.stringify(variable))
 
-/** Map some console properties for logging */
-global.console = global.console || {
-  log: (...args) => $._bindings.print(args + '\n'),
-  info: (...args) => console.log(args),
-  warn: (...args) => console.log(args),
-  error: (...args) => console.log(args),
-  debug: (...args) => console.log(args),
+// Only create console object if it does not exists
+if (!('console' in global)) {
+  /** Map some console properties for logging */
+  global.console = {
+    log: (...args) => $._bindings.print(args + '\n'),
+    info: (...args) => console.log(args),
+    warn: (...args) => console.log(args),
+    error: (...args) => console.log(args),
+    debug: (...args) => console.log(args),
+  }
 }
