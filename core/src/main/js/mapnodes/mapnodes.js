@@ -47,7 +47,8 @@ class MapNodes {
   /** Called when the system has been loaded  */
   @listener('load')
   static on_load() {
-    Logger.setHandler((messages, context) => println(`[${context.level.name}] ${messages[0]}`))
+    // todo set different handles on the console.log, example info, ect
+    Logger.setHandler((messages, context) => console.log(`[${context.level.name}] ${messages[0]}`))
     Logger.setLevel($.bindings.debug() ? Logger.DEBUG : Logger.INFO)
     Logger.info('Loading environment from the Javascript side')
     Logger.info(`V8 Engine Version: ${$.bindings.v8_version()}`)

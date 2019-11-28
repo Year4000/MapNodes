@@ -164,14 +164,14 @@ global.$ = class $ {
   }
 }
 
-/** Include the resource into the V8 runtime */
-global.include = $._bindings._include
-
-/** Print the message to the console */
-global.print = $._bindings.print
-
-/** Print a line to the console */
-global.println = message => print(message + '\n')
-
 /** Dump the var to the screen */
-global.var_dump = variable => println(JSON.stringify(variable))
+global.var_dump = variable => console.log(JSON.stringify(variable))
+
+/** Map some console properties for logging */
+global.console = global.console || {
+  log: (...args) => $._bindings.print(args + '\n'),
+  info: console.log,
+  warn: console.log,
+  error: console.log,
+  debug: console.log,
+}
