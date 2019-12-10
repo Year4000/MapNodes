@@ -17,56 +17,6 @@ dependencies {
   compile 'org.slf4j:slf4j-api:1.7.21'
 }
 
-sourceSets.main.resources {
-  srcDir "${projectDir}/src/generated/js/"
-  srcDir "${projectDir}/build/libs/mapnodes/shared/"
-}
-
-sourceSets.test.resources {
-  srcDir "${projectDir}/src/test/js/"
-}
-
-idea.module {
-  sourceDirs += file("${projectDir}/src/main/js/")
-}
-
-test.testLogging.showStandardStreams = true
-
-// Copy all files to known path
-task copyTestJs(type: Copy) {
-  from "${projectDir}/src/test/js/"
-  from "${projectDir}/src/test/resources/"
-  from "${projectDir}/src/main/js/"
-  from "${projectDir}/src/main/resources"
-  into "${projectDir}/build/test/js/"
-}
-
-// Actually Test Node
-task testNodeJs(type: NpmTask) {
-  args = ['test']
-}
-
-// Test the javascript files
-task testJs {
-  dependsOn 'npmInstall'
-  dependsOn 'copyTestJs'
-  dependsOn 'testNodeJs'
-}
-
-// Run WebPack build to generate resources into the generated resources
-task webpackBuild(type: NpmTask) {
-  args = ['run', 'build']
-}
-
-// Build the javascript bundles
-task buildJs {
-  dependsOn 'npmInstall'
-  dependsOn 'webpackBuild'
-}
-
-test.dependsOn testJs
-processResources.dependsOn buildJs
-
 node {
   // The version of node gradle will use, reflect this in `webpack.config.js` aswell
   // According to https://nodejs.org/en/download/releases/
@@ -77,9 +27,6 @@ node {
 
 // todo install v8 within .gradle and compile it
 // todo look at this https://github.com/v8/v8/wiki/Getting-Started-with-Embedding
-
-// This ensures the library is generated before packaging the resources to be added to the jar
-processResources.dependsOn 'mapnodesSharedLibrary'
 
 // Compile the C++ JNI files for the project
 model {
@@ -147,3 +94,62 @@ model {
       }
     }
   }
+}
+
+sourceSets.main.resources {
+  srcDir "${projectDir}/src/generated/js/"
+  srcDir "${projectDir}/build/libs/mapnodes/shared/"
+}
+
+sourceSets.test.resources {
+  srcDir "${projectDir}/src/test/js/"
+}
+
+idea.module {
+  sourceDirs += file("${projectDir}/src/main/js/")
+}
+
+test.testLogging.showStandardStreams = true
+
+// Copy all files to known path
+task copyTestJs(type: Copy) {
+  from "${projectDir}/src/test/js/"
+  from "${projectDir}/src/test/resources/"
+  from "${projectDir}/src/main/js/"
+  from "${projectDir}/src/main/resources"
+  into "${projectDir}/build/test/js/"
+}
+
+// Actually Test Node
+task testNodeJs(type: NpmTask) {
+  args = ['test']
+}
+
+// Test the javascript files
+task testJs {
+  dependsOn 'npmInstall'
+  dependsOn 'copyTestJs'
+  dependsOn 'testNodeJs'
+}
+
+// Run WebPack build to generate resources into the generated resources
+task webpackBuild(type: NpmTask) {
+  args = ['run', 'build']
+}
+
+// Build the javascript bundles
+task buildJs {
+  dependsOn 'npmInstall'
+  dependsOn 'webpackBuild'
+}
+
+// Process the Javascript Bundle and V8 engine
+task processBundling {
+  // Builds the JavaScript bundle
+  dependsOn 'buildJs'
+  // This ensures the library is generated before packaging the resources to be added to the jar
+  dependsOn 'mapnodesSharedLibrary'
+}
+
+test.dependsOn testJs
+processResources.dependsOn processBundling
