@@ -1,7 +1,36 @@
 {
-  "name": "mapnodes_test",
-  "description": "Test the Javascript side of MapNodes",
+  "name": "mapnodes",
+  "description": "This is the javascript side of MapNodes",
+  "private": true,
+  "dependencies": {
+    "immutable": "^4.0.0-rc.12",
+    "js-logger": "^1.6.0",
+    "lodash": "^4.17.15",
+    "moment": "^2.24.0",
+    "three": "^0.110.0",
+    "wolfy87-eventemitter": "^5.2.8"
+  },
   "devDependencies": {
-    "mocha": "^3.2.0"
-  }
+    "@babel/core": "^7.7.4",
+    "@babel/plugin-proposal-class-properties": "^7.7.4",
+    "@babel/plugin-proposal-decorators": "^7.7.4",
+    "@babel/plugin-proposal-optional-chaining": "^7.7.4",
+    "@babel/preset-env": "^7.6.3",
+    "assert": "^2.0.0",
+    "babel-loader": "^8.0.6",
+    "babel-plugin-js-logger": "^1.0.17",
+    "babel-register": "^6.26.0",
+    "eslint": "^6.7.0",
+    "mocha": "^3.2.0",
+    "webpack": "^4.41.2",
+    "webpack-cli": "^3.3.10"
+  },
+  "scripts": {
+    "test": "webpack ./build/test/js/index.test.js -o ./build/test/js/index.test.bundle.js && mocha ./build/test/js/index.test.bundle.js",
+    "build": "webpack --mode production",
+    "dev": "webpack --watch --mode development"
+  },
+  "keywords": [],
+  "author": "Year4000",
+  "license": "No License"
 }

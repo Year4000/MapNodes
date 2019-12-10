@@ -1,4 +1,4 @@
-# MapNodes [![CircleCI](https://circleci.com/gh/Year4000/MapNodes.svg?style=svg&circle-token=4cc9f4f8f96660538137825d50f5c9249b4251fe)](https://circleci.com/gh/Year4000/MapNodes)
+# MapNodes [![Github Actions](https://github.com/ewized/MapNodes/workflows/Build/badge.svg)](https://github.com/ewized/MapNodes)
 
 This is the plugin that handles the games that `Year4000` runs.
 There is a submodule within this project so its recommended to clone the repo with the following command.
@@ -36,16 +36,10 @@ Though you do have to have the submodule *inited* and *updated* before you run t
 ### Docker
 
 We use Docker to test the MapNodes plugin.
-To run the image for development you must have Built the project already.
-See `Building/Gradle` and `Building/Docker` before running the command bellow.
-If you ran the command bellow with out reading you must *delete* the build folder.
+We have added a gradle task that will build the project and run the `docker-compose` image.
 
-> ./pytasks runDockerImage
-
-You can also use the following command to combine the compiling and running of the docker image.
-
-> ./pytasks devServer
+> ./gradlew runDocker
 
 ## License
 
-MapNodes is copyright &copy; 2017 [Year4000](https://www.year4000.net/)
+MapNodes is copyright &copy; 2019 [Year4000](https://www.year4000.net/)

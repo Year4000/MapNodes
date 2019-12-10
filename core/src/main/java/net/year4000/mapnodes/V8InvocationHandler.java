@@ -1,14 +1,10 @@
 /*
- * Copyright 2017 Year4000. All Rights Reserved.
+ * Copyright 2019 Year4000. All Rights Reserved.
  */
 package net.year4000.mapnodes;
 
 import com.eclipsesource.v8.V8;
 import com.eclipsesource.v8.V8Object;
-import com.google.common.base.CaseFormat;
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
 import net.year4000.utilities.Conditions;
 
 import java.lang.invoke.MethodHandles;
@@ -22,15 +18,6 @@ class V8InvocationHandler implements InvocationHandler {
   private final V8 engine;
   private final String lookup;
   private V8Object object;
-  /** The method name cache for the translation of java method names to the javascript function names */
-  private final LoadingCache<String, String> methodNameCache = CacheBuilder.<String, String>newBuilder()
-    .concurrencyLevel(1) // You can only access the v8 engine with only one thread
-    .build(new CacheLoader<String, String>() {
-      @Override
-      public String load(String key) throws Exception {
-        return CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, key);
-      }
-    });
 
   V8InvocationHandler(V8 engine, String lookup) {
     this.engine = Conditions.nonNull(engine, "engine");
@@ -47,16 +34,17 @@ class V8InvocationHandler implements InvocationHandler {
         .bindTo(proxy)
         .invokeWithArguments(args);
     }
-    if (object == null || object.isReleased()) { // Lazy load the object handling the functions
+    // Lazy load the object handling the functions
+    if (object == null || object.isReleased()) {
       object = engine.executeObjectScript(lookup);
     }
-    // Cache the conversion of the java method name to the js function name
-    // It is O(n) on first run, n being the length of the string then O(1) if the cache is present
-    return object.executeJSFunction(methodNameCache.get(method.getName()), args);
+    // Method names are automatically mapped to java convention of camel case
+    return object.executeJSFunction(method.getName(), args);
   }
 
   /** Release the v8 object */
-  public void release() {
+  @Override
+  protected void finalize() throws Throwable {
     if (object != null && !object.isReleased()) {
       object.release();
     }

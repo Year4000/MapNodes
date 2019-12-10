@@ -3,6 +3,11 @@ run/
 **/src/generated
 .tasks.py
 node_modules/
+out/
+package-lock.json
+npm-error.log
+
+# Java
 *.log
 
 # Gradle
@@ -16,9 +21,7 @@ node_modules/
 *.tmp
 .idea/
 *.iml
-*.gitignore
-!.gitignore
-*out/
+.project
 
 # Mac
 ._*

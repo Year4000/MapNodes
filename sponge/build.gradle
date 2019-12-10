@@ -11,6 +11,12 @@ plugins {
 
 //apply from: utilities.file('gradle/sponge.gradle')
 
+/** Run the docker insance after building the project */
+task runDocker(type: Exec, dependsOn: 'assemble') {
+  standardInput System.in
+  commandLine  'docker-compose', 'run', '-p', '25565:25565', '--rm', 'spongevanilla'
+}
+
 assemble.dependsOn shadowJar {
   baseName = mapnodes.name.toLowerCase()
   version = mapnodes.rawVersion
