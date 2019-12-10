@@ -22,6 +22,7 @@ npm-error.log
 .idea/
 *.iml
 .project
+.vscode/
 
 # Mac
 ._*
