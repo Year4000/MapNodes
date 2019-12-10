@@ -1,4 +1,4 @@
-# MapNodes [![CircleCI](https://circleci.com/gh/Year4000/MapNodes.svg?style=svg&circle-token=4cc9f4f8f96660538137825d50f5c9249b4251fe)](https://circleci.com/gh/Year4000/MapNodes)
+# MapNodes [![Github Actions](https://github.com/ewized/MapNodes/workflows/Build/badge.svg)](https://github.com/ewized/MapNodes)
 
 This is the plugin that handles the games that `Year4000` runs.
 There is a submodule within this project so its recommended to clone the repo with the following command.
