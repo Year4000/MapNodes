@@ -5,6 +5,7 @@
 plugins {
   id 'java'
   id 'idea'
+  id 'cpp'
   id 'com.moowork.node' version '1.3.1'
 }
 
@@ -30,6 +31,12 @@ node {
 
 // Compile the C++ JNI files for the project
 model {
+  platforms {
+    x64 {
+      architecture "x64"
+    }
+  }
+
   components {
     mapnodes(NativeLibrarySpec) {
       sources.cpp {
@@ -148,7 +155,8 @@ task processBundling {
   // Builds the JavaScript bundle
   dependsOn 'buildJs'
   // This ensures the library is generated before packaging the resources to be added to the jar
-  dependsOn 'mapnodesSharedLibrary'
+  // todo run this in a docker container that builds V8 and creates the shared lib
+  //dependsOn 'mapnodesSharedLibrary'
 }
 
 test.dependsOn testJs
