@@ -1,5 +1,9 @@
 # MapNodes [![Github Actions](https://github.com/ewized/MapNodes/workflows/Build/badge.svg)](https://github.com/ewized/MapNodes)
 
+- [Year4000](https://www.year4000.net)
+- [Docs](https://ewized.github.io/MapNodes/)
+- [Discord](https://discord.gg/ySj69qR): #year4000
+
 This is the plugin that handles the games that `Year4000` runs.
 There is a submodule within this project so its recommended to clone the repo with the following command.
 With this in mind you should also have SSH keys linked with your GitHub account.
