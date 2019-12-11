@@ -1,6 +1,7 @@
 # MapNodes [![Github Actions](https://github.com/ewized/MapNodes/workflows/Build/badge.svg)](https://github.com/ewized/MapNodes)
 
 - [Year4000](https://www.year4000.net)
+- [Resources](https://resources.year4000.net/)
 - [Docs](https://ewized.github.io/MapNodes/)
 - [Discord](https://discord.gg/ySj69qR): #year4000
 
