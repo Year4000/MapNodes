@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Year4000. All Rights Reserved.
+ * Copyright 2019 Year4000. All Rights Reserved.
  */
 
 plugins {
@@ -11,10 +11,22 @@ plugins {
 
 //apply from: utilities.file('gradle/sponge.gradle')
 
-/** Run the docker insance after building the project */
+// Build the Docker image
+task buildDocker(type: Exec) {
+  standardInput System.in
+  commandLine  'docker-compose', 'build', 'mapnodes'
+}
+
+// Run the docker insance after building the project
 task runDocker(type: Exec, dependsOn: 'assemble') {
   standardInput System.in
-  commandLine  'docker-compose', 'run', '-p', '25565:25565', '--rm', 'spongevanilla'
+  commandLine  'docker-compose', 'run', '-p', '25565:25565', '--rm', 'mapnodes'
+}
+
+// Build and Run the Docker image
+task buildRunDocker {
+  dependsOn 'buildDocker'
+  dependsOn 'runDocker'
 }
 
 assemble.dependsOn shadowJar {
@@ -25,7 +37,7 @@ assemble.dependsOn shadowJar {
     include dependency('com.eclipsesource.j2v8:.*')
     include dependency('net.lingala.zip4j:.*')
     include dependency(':core')
-    exclude dependency('net.year4000.utilities:.*')
+    include dependency('net.year4000.utilities:.*')
   }
 }
 
