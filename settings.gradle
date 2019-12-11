@@ -4,5 +4,6 @@
 rootProject.name = 'MapNodes'
 
 // MapNodes
+include 'bridge'
 include 'core'
 include 'sponge'

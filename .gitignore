@@ -9,6 +9,9 @@ npm-error.log
 
 # Java
 *.log
+.settings
+.classpath
+bin/
 
 # Gradle
 .gradle/
