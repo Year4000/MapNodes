@@ -1,7 +1,6 @@
 /*
- * Copyright 2017 Year4000. All Rights Reserved.
+ * Copyright 2019 Year4000. All Rights Reserved.
  */
-
 plugins {
   id 'java'
   id 'idea'
@@ -14,10 +13,11 @@ dependencies {
 }
 
 // Build the docker image
-task buildDockerBridgeImage(type: Exec) {
-  standardInput System.in
-  commandLine  'docker-compose', 'build', 'bridge'
-}
+// task buildDockerBridgeImage(type: Exec) {
+//   //standardInput System.in
+//   workingDir rootProject.projectDir
+//   commandLine 'docker', 'build', '--rm', '-t', 'year4000/mapnodes:bridge', '.'
+// }
 
 // Run the docker insance to build the jni files aka the bridge
 task runDockerBridgeImage(type: Exec) {

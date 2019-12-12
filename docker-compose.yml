@@ -5,7 +5,7 @@ version: '2'
 
 services:
   mapnodes:
-    build: sponge/
+    build: ./
     image: year4000/mapnodes:spongevanilla
     ports:
       - "25565:25565"
@@ -16,6 +16,3 @@ services:
   bridge:
     build: ./
     image: year4000/mapnodes:bridge
-    # volumes:
-    #   - ./run/bridge:/opt/mapnodes/bridge/.gradle/v8/out.gn/x64.release/
-    

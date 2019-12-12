@@ -105,7 +105,7 @@ model {
 
 sourceSets.main.resources {
   srcDir "${projectDir}/src/generated/js/"
-  srcDir "${projectDir}/build/libs/mapnodes/shared/"
+  srcDir "${projectDir}/src/generated/resources/"
 }
 
 sourceSets.test.resources {
