@@ -27,3 +27,21 @@ subprojects {
     maven { url "https://jitpack.io" }
   }
 }
+
+// Build the Docker image
+task buildDocker(type: Exec) {
+  standardInput System.in
+  commandLine 'docker-compose', 'build', '--rm', 'mapnodes'
+}
+
+// Run the docker insance
+task runDocker(type: Exec) {
+  standardInput System.in
+  commandLine  'docker-compose', 'run', '-p', '25565:25565', '--rm', 'mapnodes'
+}
+
+// Combine building and running
+task buildRunDocker {
+  dependsOn 'buildDocker'
+  dependsOn 'runDocker'
+}
