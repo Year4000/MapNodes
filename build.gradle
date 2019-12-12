@@ -28,10 +28,10 @@ subprojects {
   }
 }
 
-// Build the Docker image
+// Build the Docker image dont use docker-compose
 task buildDocker(type: Exec) {
   standardInput System.in
-  commandLine 'docker-compose', 'build', '--rm', 'mapnodes'
+  commandLine 'docker', 'build', '--rm', '-f', 'Dockerfile', '-t', 'year4000/mapnodes:spongevanilla', '.'
 }
 
 // Run the docker insance
