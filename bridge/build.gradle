@@ -13,6 +13,23 @@ dependencies {
   compile 'net.year4000.utilities:core:master-SNAPSHOT'
 }
 
+// Build the docker image
+task buildDockerBridgeImage(type: Exec) {
+  standardInput System.in
+  commandLine  'docker-compose', 'build', 'bridge'
+}
+
+// Run the docker insance to build the jni files aka the bridge
+task runDockerBridgeImage(type: Exec) {
+  standardInput System.in
+  commandLine  'docker-compose', 'run', '-p', '25565:25565', '--rm', 'bridge'
+}
+
+task buildBridge {
+  dependsOn 'buildDockerBridgeImage'
+  dependsOn 'runDockerBridgeImage'
+}
+
 // todo install v8 within .gradle and compile it
 // todo look at this https://github.com/v8/v8/wiki/Getting-Started-with-Embedding
 
@@ -76,14 +93,10 @@ model {
         }
         linker.withArguments { args ->
           args << "-shared"
-          args << "${projectDir}/.gradle/v8/out.gn/x64.release/obj/libv8_base.a"
-          args << "${projectDir}/.gradle/v8/out.gn/x64.release/obj/libv8_libbase.a"
-          args << "${projectDir}/.gradle/v8/out.gn/x64.release/obj/libv8_external_snapshot.a"
-          args << "${projectDir}/.gradle/v8/out.gn/x64.release/obj/libv8_libplatform.a"
-          args << "${projectDir}/.gradle/v8/out.gn/x64.release/obj/libv8_libsampler.a"
-          args << "${projectDir}/.gradle/v8/out.gn/x64.release/obj/third_party/icu/libicuuc.a"
-          args << "${projectDir}/.gradle/v8/out.gn/x64.release/obj/third_party/icu/libicui18n.a"
-          args << "${projectDir}/.gradle/v8/out.gn/x64.release/obj/src/inspector/libinspector.a"
+          args << "${projectDir}/.gradle/v8/out/x64.release/obj/libv8_libbase.a"
+          args << "${projectDir}/.gradle/v8/out/x64.release/obj/libv8_libplatform.a"
+          args << "${projectDir}/.gradle/v8/out/x64.release/obj/third_party/icu/libicuuc.a"
+          args << "${projectDir}/.gradle/v8/out/x64.release/obj/third_party/icu/libicui18n.a"
         }
       }
     }
@@ -102,10 +115,3 @@ model {
 }
 
 test.testLogging.showStandardStreams = true
-
-// Process the Javascript Bundle and V8 engine
-task processBundling {
-  // This ensures the library is generated before packaging the resources to be added to the jar
-  // todo run this in a docker container that builds V8 and creates the shared lib
-  //dependsOn 'mapnodesSharedLibrary'
-}
