@@ -37,7 +37,7 @@ assemble.dependsOn shadowJar {
     include dependency('com.eclipsesource.j2v8:.*')
     include dependency('net.lingala.zip4j:.*')
     include dependency(':core')
-    include dependency('net.year4000.utilities:.*')
+    exclude dependency('net.year4000.utilities:.*')
   }
 }
 
