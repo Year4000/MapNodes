@@ -6,6 +6,8 @@ on:
     branches:
     - 'master'
     - 'feature/v8'
+    paths:
+    - '**/src/**'
 
 jobs:
   # Deploy to the gh-pages branch
