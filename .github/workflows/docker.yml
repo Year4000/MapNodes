@@ -1,6 +1,11 @@
 name: Docker
 
-on: [push]
+# Only deploy changes to selected branch(es)
+on:
+  push:
+    branches:
+    - 'master'
+    - 'feature/v8'
 
 jobs:
   build:
