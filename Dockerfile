@@ -30,11 +30,10 @@ COPY . .
 RUN ./gradlew --no-daemon :bridge:mapnodesSharedLibrary
 
 # Image that runs the server
-FROM openjdk:8-alpine AS minecraft
+FROM openjdk:8-jre-alpine AS minecraft
 
 # Install python for the minecraft server wrapper
-RUN apk update && apk upgrade
-RUN apk add python3
+RUN apk add --update --no-cache python3
 
 # Download the Sponge and Minecraft jar
 WORKDIR /opt/year4000/minecraft
@@ -60,7 +59,7 @@ FROM openjdk:8 AS mapnodes
 WORKDIR /opt/year4000/mapnodes
 COPY . .
 COPY --from=v8 /opt/year4000/mapnodes/bridge/build/libs/mapnodes/shared/ core/src/generated/resources/
-RUN ./gradlew --no-daemon assemble
+RUN ./gradlew --no-daemon :sponge:assemble
 
 # Back to the minecraft server instance and copy the mods over
 FROM minecraft

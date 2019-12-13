@@ -31,13 +31,13 @@ subprojects {
 // Build the Docker image dont use docker-compose
 task buildDocker(type: Exec) {
   standardInput System.in
-  commandLine 'docker', 'build', '--rm', '-f', 'Dockerfile', '-t', 'year4000/mapnodes:spongevanilla', '.'
+  commandLine 'docker', 'build', '--rm', '--file', 'Dockerfile', '--tag', 'year4000/mapnodes:spongevanilla', '.'
 }
 
 // Run the docker insance
 task runDocker(type: Exec) {
   standardInput System.in
-  commandLine  'docker-compose', 'run', '-p', '25565:25565', '--rm', 'mapnodes'
+  commandLine  'docker-compose', 'run', '--publish', '25565:25565', '--rm', 'mapnodes'
 }
 
 // Combine building and running
