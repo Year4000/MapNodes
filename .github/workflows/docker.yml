@@ -32,7 +32,7 @@ jobs:
     - name: Publish to Registry
       uses: elgohr/Publish-Docker-Github-Action@master
       with:
-        name: ewized/mapnodes/spongevanilla
+        name: ewized/mapnodes/mapnodes:spongevanilla
         username: ewized
         password: ${{ secrets.GITHUB_TOKEN }}
         registry: docker.pkg.github.com
