@@ -1,33 +1,33 @@
-FROM openjdk:8 AS v8
+# FROM openjdk:8 AS v8
 
-# Update the system to include needed depends
-RUN apt -y update && apt -y upgrade
-RUN apt -y install \
-    bison \
-    cdbs \
-    flex \
-    curl \
-    g++ \
-    git \
-    python \
-    pkg-config -yqq
+# # Update the system to include needed depends
+# RUN apt -y update && apt -y upgrade
+# RUN apt -y install \
+#     bison \
+#     cdbs \
+#     flex \
+#     curl \
+#     g++ \
+#     git \
+#     python \
+#     pkg-config -yqq
 
-# Install depot_tools
-RUN git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git
-ENV PATH="/depot_tools:${PATH}"
+# # Install depot_tools
+# RUN git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git
+# ENV PATH="/depot_tools:${PATH}"
 
-# Build v8 https://v8.dev/docs/build
-WORKDIR /opt/year4000/mapnodes/bridge/.gradle
-RUN fetch v8 && \
-    cd v8 && \
-    ./tools/dev/gm.py x64.release
+# # Build v8 https://v8.dev/docs/build
+# WORKDIR /opt/year4000/mapnodes/bridge/.gradle
+# RUN fetch v8 && \
+#     cd v8 && \
+#     ./tools/dev/gm.py x64.release
 
-# Copy source files
-WORKDIR /opt/year4000/mapnodes
-COPY . .
+# # Copy source files
+# WORKDIR /opt/year4000/mapnodes
+# COPY . .
 
-# Build mapnodes bridge module with the included v8 install
-RUN ./gradlew --no-daemon :bridge:mapnodesSharedLibrary
+# # Build mapnodes bridge module with the included v8 install
+# RUN ./gradlew --no-daemon :bridge:mapnodesSharedLibrary
 
 # Image that runs the server
 FROM openjdk:8-jre-alpine AS minecraft
@@ -58,7 +58,7 @@ FROM openjdk:8 AS mapnodes
 # Build the mapnodes project
 WORKDIR /opt/year4000/mapnodes
 COPY . .
-COPY --from=v8 /opt/year4000/mapnodes/bridge/build/libs/mapnodes/shared/ core/src/generated/resources/
+#COPY --from=v8 /opt/year4000/mapnodes/bridge/build/libs/mapnodes/shared/ core/src/generated/resources/
 RUN ./gradlew --no-daemon :sponge:assemble
 
 # Back to the minecraft server instance and copy the mods over

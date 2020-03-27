@@ -4,6 +4,6 @@
 rootProject.name = 'MapNodes'
 
 // MapNodes
-include 'bridge'
+//include 'bridge' // Custom V8 lib (not used atm)
 include 'core'
 include 'sponge'
