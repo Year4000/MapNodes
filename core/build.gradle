@@ -19,10 +19,11 @@ dependencies {
 }
 
 node {
-  // The version of node gradle will use, reflect this in `webpack.config.js` aswell
+  // The version of node gradle will use
   // According to https://nodejs.org/en/download/releases/
-  // Node 7.4.0 uses V8 5.4.500.45
-  version = '7.4.0'
+  // Node 7.4.0 uses V8 5.4.500.45 (set tsconfig target to es2019)
+  // Node LTS 12.16.1
+  version = '12.16.1'
   download = true
 }
 

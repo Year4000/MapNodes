@@ -25,27 +25,8 @@ module.exports = {
       {
         test: /\.js$/,
         exclude: /(node_modules)/,
-        use: {
-          loader: 'babel-loader',
-          options: {
-            presets: [
-              [
-                '@babel/env',
-                {
-                  targets: {
-                    'node': '7.4.0'
-                  }
-                },
-              ],
-            ],
-            plugins: [
-              '@babel/plugin-proposal-optional-chaining',
-              [ '@babel/plugin-proposal-class-properties', { 'loose': true } ],
-              [ '@babel/plugin-proposal-decorators', { decoratorsBeforeExport: true } ],
-            ]
-          }
-        }
+        use: 'ts-loader',
       },
-    ]
-  }
+    ],
+  },
 }

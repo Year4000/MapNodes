@@ -11,17 +11,12 @@
     "wolfy87-eventemitter": "^5.2.8"
   },
   "devDependencies": {
-    "@babel/core": "^7.7.4",
-    "@babel/plugin-proposal-class-properties": "^7.7.4",
-    "@babel/plugin-proposal-decorators": "^7.7.4",
-    "@babel/plugin-proposal-optional-chaining": "^7.7.4",
-    "@babel/preset-env": "^7.6.3",
+    "@typescript-eslint/eslint-plugin": "^2.25.0",
     "assert": "^2.0.0",
-    "babel-loader": "^8.0.6",
-    "babel-plugin-js-logger": "^1.0.17",
-    "babel-register": "^6.26.0",
     "eslint": "^6.7.0",
     "mocha": "^3.2.0",
+    "ts-loader": "^6.2.2",
+    "typescript": "^3.8.3",
     "webpack": "^4.41.2",
     "webpack-cli": "^3.3.10"
   },
