@@ -13,7 +13,7 @@ module.exports = {
     chunkIds: 'named',
   },
   entry: {
-    mapnodes: './src/main/js/bindings.js',
+    mapnodes: './src/main/js/index.js',
   },
   output: {
     path: path.resolve(__dirname, 'src/generated/js'),
