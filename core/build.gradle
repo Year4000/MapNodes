@@ -21,7 +21,7 @@ dependencies {
 node {
   // The version of node gradle will use
   // According to https://nodejs.org/en/download/releases/
-  // Node 7.4.0 uses V8 5.4.500.45 (set tsconfig target to es2019)
+  // Node 7.4.0 uses V8 5.4.500.45 (set tsconfig target to es2017)
   // Node LTS 12.16.1
   version = '12.16.1'
   download = true

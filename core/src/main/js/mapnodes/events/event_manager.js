@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Year4000. All Rights Reserved.
+ * Copyright 2020 Year4000. All Rights Reserved.
  */
 import EventEmitter from 'wolfy87-eventemitter'
 
@@ -64,7 +64,7 @@ import EventEmitter from 'wolfy87-eventemitter'
 export const event_manager = new EventEmitter()
 
 /** Prototype functionally, must be static functions right now */
-export const listener = id => ({ descriptor: { value } }) => {
-  // must include space since we are returning void
-  event_manager.on(id, value)
+export const listener = (id) => (target, key) => {
+  event_manager.on(id, target[key])
+  return target
 }

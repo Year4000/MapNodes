@@ -20,5 +20,5 @@ module.exports = {
     }],
     'comma-dangle': ['error', 'always-multiline'],
     'no-mixed-spaces-and-tabs': 'error'
-  }
+  },
 }

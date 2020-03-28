@@ -62,22 +62,28 @@ export default class GameRegistry {
 export const game_registry = new GameRegistry()
 
 /** The game mode decorator that will register the class into the system */
-export const game_mode = id => handler => ({
-  ...handler,
-  elements: [...handler.elements, {
-    kind: 'field',
-    placement: 'static',
-    key: '$id',
-    descriptor: { writable: false },
-    initializer: () => id, // inject the id that was used when registering
-  }, {
-    kind: 'field',
-    placement: 'static',
-    key: '$game_registry',
-    descriptor: {},
-    initializer: function() {
-      // Use this to get the type
-      return game_registry.register(id, this)
-    },
-  }],
-})
+// export const game_mode = id => handler => ({
+//   ...handler,
+//   elements: [...handler.elements, {
+//     kind: 'field',
+//     placement: 'static',
+//     key: '$id',
+//     descriptor: { writable: false },
+//     initializer: () => id, // inject the id that was used when registering
+//   }, {
+//     kind: 'field',
+//     placement: 'static',
+//     key: '$game_registry',
+//     descriptor: {},
+//     initializer: function() {
+//       // Use this to get the type
+//       return game_registry.register(id, this)
+//     },
+//   }],
+// })
+export const game_mode = (id) => (target) => {
+  return Object.defineProperties(target, {
+    $id: { value: id },
+    $game_registry: { value: game_registry.register(id, target) },
+  })
+}
