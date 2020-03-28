@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Year4000. All Rights Reserved.
+ * Copyright 2020 Year4000. All Rights Reserved.
  */
 import Logger from 'js-logger'
 import { not_null } from '../conditions.js'
@@ -32,8 +32,8 @@ export default class GameRegistry {
   create(id, json = {}) {
     not_null(id, 'id must not be null')
     try {
-      let instance = new this.game_modes[id](json)
-      return this.injector.inject_instance(instance)
+      const instance = new this.game_modes[id](json)
+      this.injector.inject_instance(instance)
     } catch (e) {
       Logger.error(`There was a problem constructing the game mode with id: ${id}`)
       Logger.error(e)
@@ -81,9 +81,7 @@ export const game_registry = new GameRegistry()
 //     },
 //   }],
 // })
-export const game_mode = (id) => (target) => {
-  return Object.defineProperties(target, {
-    $id: { value: id },
-    $game_registry: { value: game_registry.register(id, target) },
-  })
-}
+export const game_mode = (id) => (target) => Object.defineProperties(target, {
+  $id: { value: id },
+  $game_registry: { value: game_registry.register(id, target) },
+})

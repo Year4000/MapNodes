@@ -7,13 +7,12 @@ import { not_null } from './conditions.js'
 
 /** The class to create an injector to inject other JavaScript objects */
 export default class Injector {
-
   /** Create the injector and inject the modules with the other modules */
   constructor(modules) {
     not_null(modules, 'modules')
     // also inject the injector
     this._modules = { ...modules, injector: this }
-    _.forEach(modules, module => this.inject_instance(module))
+    _.forEach(modules, (module) => this.inject_instance(module))
   }
 
   /** Inject the modules into the object prefixed with $ */
@@ -83,20 +82,19 @@ export default class Injector {
  * @return decorator for class or property
  */
 // todo replace with new decorator descriptor system
-//export const inject = type => (typeof type === 'object') ? class_inject(type) : property_inject(type)
+// export const inject = type => (typeof type === 'object') ? class_inject(type) : property_inject(type)
 export const inject = (type) => (target, key) => {
   if (typeof type === 'object') {
     return Object.defineProperty(target, '$injector', { value: new Injector(type) })
-  } else {
-    return Object.defineProperty(target, key, {
-      get() {
-        try {
-          return target.constructor.$injector.get_module(key)
-        } catch (e) {
-          Logger.error('Error at function name ' + name + ' ' + receiver)
-          throw e
-        }
-      },
-    })
   }
+  return Object.defineProperty(target, key, {
+    get() {
+      try {
+        return target.constructor.$injector.get_module(key)
+      } catch (e) {
+        Logger.error(`Error at function name ${key}`)
+        throw e
+      }
+    },
+  })
 }

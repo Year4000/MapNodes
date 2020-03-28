@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Year4000. All Rights Reserved.
+ * Copyright 2020 Year4000. All Rights Reserved.
  */
 import Facts from '../facts.js'
 import Messages from '../messages.js'
@@ -13,7 +13,7 @@ map_nodes.register_command('ping', (executor, args) => {
 /** Have the executor join the smallest team */
 map_nodes.register_command('team', (executor, args) => {
   if (executor.is_player()) {
-    let team = (args === '') ? map_nodes.current_game._smallest_team : map_nodes.current_game._teams.get(args)
+    const team = (args === '') ? map_nodes.current_game._smallest_team : map_nodes.current_game._teams.get(args)
     if (team) {
       Messages.TEAM_JOIN.send(executor.player, [team.color_name])
       executor.player.join_team(team)
@@ -26,7 +26,7 @@ map_nodes.register_command('team', (executor, args) => {
 /** Have the executor join the smallest team */
 map_nodes.register_command('spec', (executor, args) => {
   if (executor.is_player()) {
-    let team = map_nodes.current_game._teams.get(Facts.SPECTATOR_ID)
+    const team = map_nodes.current_game._teams.get(Facts.SPECTATOR_ID)
     Messages.TEAM_JOIN.send(executor.player, [team.color_name])
     executor.player.leave_team()
     executor.player.join_team(team)

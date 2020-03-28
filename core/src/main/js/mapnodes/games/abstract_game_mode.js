@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Year4000. All Rights Reserved.
+ * Copyright 2020 Year4000. All Rights Reserved.
  */
 import Logger from 'js-logger'
 import JsonObject from '../game/json_object.js'
@@ -8,7 +8,6 @@ import JsonObject from '../game/json_object.js'
  * This class abstracts a game mode to be used in the system
  */
 export default class AbstractGameMode extends JsonObject {
-
   constructor(json) {
     super('this.constructor.$id', json)
     this._id = this.constructor.$id
@@ -21,9 +20,9 @@ export default class AbstractGameMode extends JsonObject {
   _load() {
     Logger.info(`Verifying that the schema matches the game settings for ${this.id}`)
     if (!this.verify()) {
-      throw 'Game Mode has bad config options'
+      throw new Error('Game Mode has bad config options')
     }
-    this.load && this.load() // todo make theses events that the game mode will listen to
+    return this.load?.() // todo make theses events that the game mode will listen to
   }
 
   /**
@@ -32,7 +31,7 @@ export default class AbstractGameMode extends JsonObject {
    */
   _enable() {
     Logger.info(`Enabling ${this.id}`)
-    this.enable && this.enable() // todo make theses events that the game mode will listen to
+    return this.enable?.() // todo make theses events that the game mode will listen to
   }
 
   /**
@@ -41,7 +40,7 @@ export default class AbstractGameMode extends JsonObject {
    */
   _disable() {
     Logger.info(`Disabling ${this.id}`)
-    this.disable && this.disable() // todo make theses events that the game mode will listen to
+    return this.disable?.() // todo make theses events that the game mode will listen to
   }
 
   /**
@@ -50,6 +49,6 @@ export default class AbstractGameMode extends JsonObject {
    */
   _unload() {
     Logger.info(`Disabling ${this.id}`)
-    this.unload && this.unload() // todo make theses events that the game mode will listen to
+    return this.unload?.() // todo make theses events that the game mode will listen to
   }
 }

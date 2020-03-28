@@ -1,12 +1,11 @@
 /*
- * Copyright 2019 Year4000. All Rights Reserved.
+ * Copyright 2020 Year4000. All Rights Reserved.
  */
 import JsonObject from './json_object.js'
 import Player from './player.js'
 
 /** Represents the map settings from the json object */
 export default class Map extends JsonObject {
-
   constructor(map) {
     super(map.name, map)
   }
@@ -17,7 +16,7 @@ export default class Map extends JsonObject {
       name: { type: 'string' },
       version: { type: 'string' },
       description: { type: 'string' },
-      //author: { type: 'string' }, todo
+      // author: { type: 'string' }, todo
       authors: { type: 'array' },
     }
   }
@@ -32,18 +31,18 @@ export default class Map extends JsonObject {
     // todo handle offline players?
     // Get the single author of the map
     if (this._json.author) {
-      return [ Player.of(this._json.author) ]
+      return [Player.of(this._json.author)]
     }
     // Get all the authors of the map
     if (this._json.authors) {
-      return this._json.authors.map(author => Player.of(author))
+      return this._json.authors.map((author) => Player.of(author))
     }
     return []
   }
 
   valueOf() {
     // get the raw authors from the json not the Player object yet
-    let { name, version, authors } = this.map
-    return `${name} v${version} by${authors.map(author => ' ' + author)}`
+    const { name, version, authors } = this.map
+    return `${name} v${version} by${authors.map((author) => ` ${author}`)}`
   }
 }

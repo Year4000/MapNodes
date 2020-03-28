@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Year4000. All Rights Reserved.
+ * Copyright 2020 Year4000. All Rights Reserved.
  */
 import _ from 'lodash'
 import { Set } from 'immutable'
@@ -9,7 +9,6 @@ import { not_null } from '../conditions.js'
 
 /** Represents a cuboid region with two positions */
 export default class CuboidRegion extends AbstractRegion {
-
   /** point_one and point_two are both vector3 */
   constructor(point_one, point_two) {
     super()
@@ -22,22 +21,22 @@ export default class CuboidRegion extends AbstractRegion {
 
   /** Checks if the vector contains in this cuboid */
   contains(vector3) {
-    let min = this._point_one
-    let max = this._point_two
-    let x = vector3.x >= min.x && vector3.x <= max.x
-    let y = vector3.y >= min.y && vector3.y <= max.y
-    let z = vector3.z >= min.z && vector3.z <= max.z
+    const min = this._point_one
+    const max = this._point_two
+    const x = vector3.x >= min.x && vector3.x <= max.x
+    const y = vector3.y >= min.y && vector3.y <= max.y
+    const z = vector3.z >= min.z && vector3.z <= max.z
     return x && y && z
   }
 
   /** Generate all the points in this cuboid */
   _points() {
     let points = Set.of()
-    let min = this._point_one
-    let max = this._point_two
-    for (let y = min.y; y < max.y; y++) {
-      for (let x = min.x; x < max.x; x++) {
-        for (let z = min.z; z < max.z; z++) {
+    const min = this._point_one
+    const max = this._point_two
+    for (let { y } = min; y < max.y; y++) {
+      for (let { x } = min; x < max.x; x++) {
+        for (let { z } = min; z < max.z; z++) {
           points = points.add(new Vector3(x, y, z))
         }
       }
@@ -48,7 +47,10 @@ export default class CuboidRegion extends AbstractRegion {
   /** Get all the points this cuboid has */
   get points() {
     // todo cache the results in some type of weak var
-    return this.__points || (this.__points = this._points())
+    if (!this.__points) {
+      this.__points = this._points()
+    }
+    return this.__points
   }
 
   /** Checks if the two cuboids are equal */

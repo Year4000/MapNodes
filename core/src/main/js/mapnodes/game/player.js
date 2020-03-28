@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Year4000. All Rights Reserved.
+ * Copyright 2020 Year4000. All Rights Reserved.
  */
 import _ from 'lodash'
 import Facts from '../facts.js'
@@ -9,10 +9,10 @@ import { listener } from '../events/event_manager.js'
 import { inject } from '../injection.js'
 
 /** This will serialize the uuid to be used for the lookup table */
-const serializeUuid = uuid => uuid.replace(/-/g, '').toLowerCase()
+const serializeUuid = (uuid) => uuid.replace(/-/g, '').toLowerCase()
 
 /** Will take any assumed to be uuid and make sure the hyphens are in there */
-const hyphenedUuid = uuid => serializeUuid(uuid).replace(/(\w{8})(\w{4})(\w{4})(\w{4})(\w{12})/, '$1-$2-$3-$4-$5')
+const hyphenedUuid = (uuid) => serializeUuid(uuid).replace(/(\w{8})(\w{4})(\w{4})(\w{4})(\w{12})/, '$1-$2-$3-$4-$5')
 
 /** The instance of all the player that has ever joined this server's instance */
 const _player_instances = {}
@@ -36,16 +36,15 @@ export default class Player {
     not_null(player, 'player')
     is_true(typeof player === 'string')
     // here we will serialize the name since usernames can not have - in it
-    let serializePlayer = serializeUuid(player)
+    const serializePlayer = serializeUuid(player)
     if (serializePlayer in _player_instances) { // check the cache first
       return _player_instances[serializePlayer]
     }
     // Cache player does not exist get from the Minecraft server
     if (_.size(player) > Facts.MAX_USERNAME_SIZE) { // must be uuid
       return Player.of_uuid(hyphenedUuid(player))
-    } else { // Must be username
-      return Player.of_username(player)
-    }
+    } // Must be username
+    return Player.of_username(player)
   }
 
   /** Generate the player meta from the uuid */
@@ -116,24 +115,25 @@ export default class Player {
   // THIS IS A PROTOTYPE OF HOW THIS WOULD WORK, this does not run currently
   @listener('player_join_team')
   on_player_join_team({ team }) {
-    this._current_team = team;
+    this._current_team = team
   }
 
   /** Have the player join the specific team */
   join_team(team) {
     not_null(team, 'team')
     if (this.game.is_running() && this.is_playing()) {
-      return Messages.TEAM_MENU_NOT_NOW.send(this)
+      Messages.TEAM_MENU_NOT_NOW.send(this)
+      return
     }
     if (this.game.is_running() && this.is_spectating()) {
       this.leave_team()
       team.join(this)
-      this._current_team = team;
+      this._current_team = team
       this.start()
       return
     }
     team.join(this)
-    this._current_team = team;
+    this._current_team = team
   }
 
   /** Have the player leave the game they are on */

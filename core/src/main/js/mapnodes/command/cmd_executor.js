@@ -1,10 +1,9 @@
 /*
- * Copyright 2017 Year4000. All Rights Reserved.
+ * Copyright 2020 Year4000. All Rights Reserved.
  */
 
 /** The command executor is the one who is executating the commands */
 export default class CommandExecutor {
-
   constructor(executor) {
     this._executor = executor // the executor is an instance of a player
   }
@@ -14,7 +13,7 @@ export default class CommandExecutor {
     if (this._executor) {
       return this._executor.send_message(message)
     }
-    return println(message)
+    return console.log(message)
   }
 
   /** Does the executor has a permission */

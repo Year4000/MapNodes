@@ -1,12 +1,11 @@
 /*
- * Copyright 2016 Year4000. All Rights Reserved.
+ * Copyright 2020 Year4000. All Rights Reserved.
  */
 import _ from 'lodash'
 import { is_object, not_null } from '../conditions.js'
 
 /** Represents a team from the json object */
 export default class JsonObject {
-
   /** Make sure the JsonObject has the id and the object */
   constructor(id, json) {
     this._id = not_null(id, 'id')
@@ -50,10 +49,9 @@ export default class JsonObject {
     return _.keys(json).reduce((and, key) => {
       const value = json[key]
       const { type } = schema[key]
-      const types = Array.isArray(type) ? type : [ type ]
-      return and && types.reduce((or, type) => {
-        return or || (type === 'array' ? Array.isArray(value) : (type !== undefined && typeof value === type))
-      }, false)
+      const types = Array.isArray(type) ? type : [type]
+      // eslint-disable-next-line valid-typeof
+      return and && types.reduce((or, type) => or || (type === 'array' ? Array.isArray(value) : (type !== undefined && typeof value === type)), false)
     }, true)
   }
 

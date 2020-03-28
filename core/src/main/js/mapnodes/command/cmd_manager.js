@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Year4000. All Rights Reserved.
+ * Copyright 2020 Year4000. All Rights Reserved.
  */
 import Logger from 'js-logger'
 import CommandExecutor from './cmd_executor.js'
@@ -8,7 +8,6 @@ import { CommandError } from './cmd_errors.js'
 
 /** The command manager that will handle processing commands and ect */
 export default class CommandManager {
-
   constructor() {
     this._command_map = {}
   }
@@ -27,7 +26,7 @@ export default class CommandManager {
   /** Will execute the command and return a object for errors or null if it passed */
   execute_command(executor, command, args) {
     try {
-      let command_action = this._command_map[command]
+      const command_action = this._command_map[command]
       if (command_action) {
         command_action(executor || new CommandExecutor(), args)
       } else {
@@ -36,10 +35,10 @@ export default class CommandManager {
     } catch (error) {
       if (error instanceof CommandError) {
         return error
-      } else {
-        throw error
       }
+      throw error
     }
+    return undefined
   }
 
   /** Return true or false if the command is registered in mapnodes */

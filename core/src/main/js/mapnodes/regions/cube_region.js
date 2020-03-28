@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Year4000. All Rights Reserved.
+ * Copyright 2020 Year4000. All Rights Reserved.
  */
 import _ from 'lodash'
 import { Vector3 } from 'three'
@@ -9,15 +9,14 @@ import { not_null } from '../conditions.js'
 
 /** Represents a cube region that wraps a cuboid region */
 export default class CubeRegion extends AbstractRegion {
-
   /** Center is a vector3, when width is not there height becomes radius */
   constructor(center, height, width) {
     super()
     not_null(center, 'center')
     not_null(height, 'height')
     width = width || height
-    let point_one = new Vector3(center.x - width, center.y - height, center.z - width)
-    let point_two = new Vector3(center.x + width, center.y + height, center.z + width)
+    const point_one = new Vector3(center.x - width, center.y - height, center.z - width)
+    const point_two = new Vector3(center.x + width, center.y + height, center.z + width)
     this._cuboid = new CuboidRegion(point_one, point_two)
   }
 

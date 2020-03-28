@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Year4000. All Rights Reserved.
+ * Copyright 2020 Year4000. All Rights Reserved.
  */
 import _ from 'lodash'
 import Logger from 'js-logger'
@@ -21,35 +21,34 @@ const Regions = {
 
   /** Functions to reduce the JSON object into its proper region class */
   REGION_CONSTRUCT: {
-    global: obj => new GlobalRegion(),
-    point: obj => {
-      let cords = _.map(_.split(_.replace(obj.xyz, / /, ''), ',', 3), cord => _.toNumber(cord))
+    global: (obj) => new GlobalRegion(),
+    point: (obj) => {
+      const cords = _.map(_.split(_.replace(obj.xyz, / /, ''), ',', 3), (cord) => _.toNumber(cord))
       return new PointRegion(...cords)
     },
-    cube: obj => {
-      let center = Regions.REGION_CONSTRUCT.point(obj.center)
+    cube: (obj) => {
+      const center = Regions.REGION_CONSTRUCT.point(obj.center)
       return new CubeRegion(center, obj.radius, obj.height)
     },
-    cuboid: obj => {
-      let min = Regions.REGION_CONSTRUCT.point(obj.min)
-      let max = Regions.REGION_CONSTRUCT.point(obj.max)
+    cuboid: (obj) => {
+      const min = Regions.REGION_CONSTRUCT.point(obj.min)
+      const max = Regions.REGION_CONSTRUCT.point(obj.max)
       return new CuboidRegion(min, max)
     },
-    chunk: obj => new AbstractRegion(), // todo add chunk region
-    sphere: obj => new AbstractRegion(), // todo add sphere region
-    cylinder: obj => new AbstractRegion(), // todo add cylinder region
-    'void': obj => new AbstractRegion(), // todo add void region
+    chunk: (obj) => new AbstractRegion(), // todo add chunk region
+    sphere: (obj) => new AbstractRegion(), // todo add sphere region
+    cylinder: (obj) => new AbstractRegion(), // todo add cylinder region
+    void: (obj) => new AbstractRegion(), // todo add void region
   },
 
   /** Maps the object to the instance of the object */
-  map_region: obj => {
-    let key = _.first(_.keys(obj))
-    let value = obj[key]
+  map_region: (obj) => {
+    const key = _.first(_.keys(obj))
+    const value = obj[key]
     if (Regions.REGION_CONSTRUCT[key]) {
       return Regions.REGION_CONSTRUCT[key](value)
-    } else {
-      Logger.warn(`There was no REGION_CONSTRUCT for ${key}`)
     }
+    throw new Error(`There was no REGION_CONSTRUCT for ${key}`)
   },
 }
 

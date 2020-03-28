@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Year4000. All Rights Reserved.
+ * Copyright 2020 Year4000. All Rights Reserved.
  */
 import { Set } from 'immutable'
 import { Vector3 } from 'three'
@@ -7,7 +7,6 @@ import AbstractRegion from './abstract_region.js'
 
 /** A region that contains a single point, must wrap with THREE.Vector3 */
 export default class PointRegion extends AbstractRegion {
-
   constructor(x, y, z) {
     super()
     this._point = new Vector3(x, y, z)

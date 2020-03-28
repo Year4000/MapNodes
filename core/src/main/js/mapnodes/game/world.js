@@ -1,11 +1,10 @@
 /*
- * Copyright 2019 Year4000. All Rights Reserved.
+ * Copyright 2020 Year4000. All Rights Reserved.
  */
 import JsonObject from './json_object.js'
 
 /** Represents the world from the json object */
 export default class World extends JsonObject {
-
   constructor(world) {
     super('world', world)
   }

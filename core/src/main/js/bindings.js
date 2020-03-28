@@ -18,16 +18,16 @@ import './mapnodes/command/commands.js'
 
 // noinspection ES6ConvertVarToLetConst
 /** This constant is created by the runtime no need for it */
-var PLATFORM = global.PLATFORM || 'none'
+var PLATFORM = global.PLATFORM || 'none' // eslint-disable-line no-var
 
 // noinspection ES6ConvertVarToLetConst
 /** This constant is created by the runtime no need for it */
-var JAVA = global.JAVA || {}
+var JAVA = global.JAVA || {} // eslint-disable-line no-var
 
 /** The constants that are known when the JS runtime is created */
 const PLATFORMS = {
-  PC: "java", // Sponge
-  PE: "java", // Nukkit
+  PC: 'java', // Sponge
+  PE: 'java', // Nukkit
   TEST: 'javascript', // Unit Testing
 }
 
@@ -35,13 +35,12 @@ const PLATFORMS = {
 const _bindings = (() => {
   if (PLATFORM === PLATFORMS.PE) {
     return JAVA
-  } else if (PLATFORM === PLATFORMS.PC) {
+  } if (PLATFORM === PLATFORMS.PC) {
     return JAVA
-  } else if (PLATFORM === PLATFORMS.TEST) {
+  } if (PLATFORM === PLATFORMS.TEST) {
     return {}
-  } else {
-    throw "PLATFORM is not defined!"
   }
+  throw new Error('PLATFORM is not defined!')
 })()
 
 /** This map stores the function bindings that are in javascript */
@@ -49,7 +48,7 @@ const _js = {}
 
 /** Will register the method in the bindings map for $.js */
 const bind = (alias) => {
-  const toLowerCamel = string => {
+  const toLowerCamel = (string) => {
     not_null(string, 'A string value must exist')
     let out = ''
     let upper = false
@@ -87,20 +86,19 @@ class $ {
       $._proxy = new Proxy(_bindings, {
         get: (target, name, receiver) => {
           if (target[name]) {
-            return function() { // Must be a function to capture ...arguments
+            return (...args) => { // Must be a function to capture ...arguments
               try {
-                return target[name](...arguments)
+                return target[name](...args)
               } catch (any) {
                 Logger.error(`An error has been thrown from: ${PLATFORM}`)
                 Logger.error(any)
                 return () => {}
               }
             }
-          } else {
-            Logger.error(`${name} has not been defined in the bindings mappings`)
-            return () => {}
           }
-        }
+          Logger.error(`${name} has not been defined in the bindings mappings`)
+          return () => {}
+        },
       })
     }
     return $._proxy
@@ -169,7 +167,7 @@ class $ {
   /** Pass the command to the manager */
   @bind()
   on_player_command(uuid, username, command, args) {
-    let player = new CommandExecutor(Player.of(uuid))
+    const player = new CommandExecutor(Player.of(uuid))
     return map_nodes.command_manager.execute_command(player, command, args)
   }
 
@@ -185,7 +183,7 @@ class $ {
   /** Send the x,y,z cords of the spawn point */
   @bind()
   spawn_point() {
-    let point = map_nodes.current_game.spawn_point
+    const point = map_nodes.current_game.spawn_point
     if (point) {
       return [point.x, point.y, point.z]
     }
@@ -194,16 +192,16 @@ class $ {
   }
 }
 
-global.$ = new $(); // must create instance or decorators wont run
+global.$ = new $() // must create instance or decorators wont run
 
 /** Dump the var to the screen */
-global.var_dump = variable => console.log(JSON.stringify(variable))
+global.var_dump = (variable) => console.log(JSON.stringify(variable))
 
 // Only create console object if it does not exists
 if (!('console' in global)) {
   /** Map some console properties for logging */
   global.console = {
-    log: (...args) => _bindings.print(args + '\n'),
+    log: (...args) => _bindings.print(`${args}\n`),
     info: (...args) => console.log(args),
     warn: (...args) => console.log(args),
     error: (...args) => console.log(args),

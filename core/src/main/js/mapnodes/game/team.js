@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Year4000. All Rights Reserved.
+ * Copyright 2020 Year4000. All Rights Reserved.
  */
 import _ from 'lodash'
 import Colors from '../colors.js'
@@ -11,7 +11,6 @@ import { inject } from '../injection.js'
 
 /** Represents a team from the json object */
 export default class Team extends JsonObject {
-
   @inject() game
   @inject() event_manager
   _members = []
@@ -80,13 +79,13 @@ export default class Team extends JsonObject {
   /** Have the entire team start */
   start() {
     this.event_manager.trigger('start_team', [this, this.game])
-    _.forEach(this._members, member => this.start_player(member))
+    _.forEach(this._members, (member) => this.start_player(member))
   }
 
-  /** Have the player leave the team*/
+  /** Have the player leave the team */
   leave(player) {
     not_null(player, 'player')
-    _.remove(this._members, object => object.is_equal(player))
+    _.remove(this._members, (object) => object.is_equal(player))
     this.event_manager.trigger('leave_team', [player, this, this.game])
   }
 
@@ -97,7 +96,10 @@ export default class Team extends JsonObject {
 
   /** Lazy load all spawn regions */
   get spawns() {
-    return this._spawns || (this._spawns = _.map(this.team.spawns, zone => Regions.map_region(zone)))
+    if (!this._spawns) {
+      this._spawns = _.map(this.team.spawns, (zone) => Regions.map_region(zone))
+    }
+    return this._spawns
   }
 
   /** Get a random point from the list of spawns */

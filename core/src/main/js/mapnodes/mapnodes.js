@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Year4000. All Rights Reserved.
+ * Copyright 2020 Year4000. All Rights Reserved.
  */
 import _ from 'lodash'
 import Logger from 'js-logger'
@@ -79,13 +79,15 @@ class MapNodes {
     // todo set kit
     // todo set scoreboard
     if (player.is_playing()) { // Message when the game starts for players
-      let { name, version, description, authors } = player.game.map.map
-      let author_names = _.map(authors, author => _.truncate(author, { length: 3 }))
+      const {
+        name, version, description, authors,
+      } = player.game.map.map
+      const author_names = _.map(authors, (author) => _.truncate(author, { length: 3 }))
       player.send_message()
-      player.send_message('&7&m' + _.pad(`&a ${name} &7${version.replace(/\./, '&8.&7')} &7&m`, 55, '*'))
+      player.send_message(`&7&m${_.pad(`&a ${name} &7${version.replace(/\./, '&8.&7')} &7&m`, 55, '*')}`)
       player.send_message(Messages.MAP_CREATED.get(player) + author_names)
-      player.send_message('&a&o' + description) // todo multi line description
-      player.send_message('&7&m' + '*'.repeat(45))
+      player.send_message(`&a&o${description}`) // todo multi line description
+      player.send_message(`&7&m${'*'.repeat(45)}`)
       player.send_message()
       // send player to spawn
       player.teleport(...player.team.spawn_point.toArray())
