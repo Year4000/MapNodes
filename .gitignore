@@ -12,6 +12,7 @@ npm-error.log
 .settings
 .classpath
 bin/
+classes/
 
 # Gradle
 .gradle/
