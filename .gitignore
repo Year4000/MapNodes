@@ -9,6 +9,9 @@ npm-error.log
 
 # Java
 *.log
+.settings
+.classpath
+bin/
 
 # Gradle
 .gradle/
@@ -21,8 +24,8 @@ npm-error.log
 *.tmp
 .idea/
 *.iml
-*.gitignore
-!.gitignore
+.project
+.vscode/
 
 # Mac
 ._*

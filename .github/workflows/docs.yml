@@ -1,0 +1,31 @@
+name: Docs
+
+# Only deploy changes to master branch
+on:
+  push:
+    branches:
+    - 'master'
+    - 'feature/v8'
+    paths:
+    - '**/src/**'
+
+jobs:
+  # Deploy to the gh-pages branch
+  github-pages:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: Set up JDK 1.8
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.8
+      - name: Build Docs with Gradle
+        run: ./gradlew aggregateJavadocs
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@3.0.4
+        with:
+          ACCESS_TOKEN: ${{ secrets.BUILD_GH_PAGES }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BASE_BRANCH: master
+          BRANCH: gh-pages
+          FOLDER: build/docs/javadoc

@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Year4000. All Rights Reserved.
+ * Copyright 2020 Year4000. All Rights Reserved.
  */
 import Logger from 'js-logger'
 import { not_null } from './mapnodes/conditions.js'
@@ -48,12 +48,12 @@ const _bindings = (() => {
 const _js = {}
 
 /** Will register the method in the bindings map for $.js */
-function bind(alias) {
+const bind = (alias) => {
   const toLowerCamel = string => {
     not_null(string, 'A string value must exist')
     let out = ''
     let upper = false
-    for (let c of string) {
+    for (const c of string) {
       if (upper) { // uppercase the letter and rest it flag
         out += c.toUpperCase()
         upper = false
@@ -65,23 +65,24 @@ function bind(alias) {
     }
     return out
   }
-  return handler => {
+  return (handler, key) => {
     // Map the functions to the java names
     if (!(alias in _js)) {
-      _js[alias || toLowerCamel(handler.key)] = handler.descriptor.value.bind(_js)
+      _js[alias || toLowerCamel(key)] = handler[key].bind(_js)
     }
+    return handler
   }
 }
 
 /** Used to interact the Javascript with MapNodes base game */
-global.$ = class {
+class $ {
   /** Get the instance of this javascript bindings */
-  static get js() {
+  get js() {
     return _js
   }
 
   /** Wrap the internal bindings in a proxy to catch unimplemented variables */
-  static get bindings() {
+  get bindings() {
     if ($._proxy == null) { // Lazy load the proxy
       $._proxy = new Proxy(_bindings, {
         get: (target, name, receiver) => {
@@ -192,6 +193,8 @@ global.$ = class {
     return [0, 64, 0]
   }
 }
+
+global.$ = new $(); // must create instance or decorators wont run
 
 /** Dump the var to the screen */
 global.var_dump = variable => console.log(JSON.stringify(variable))

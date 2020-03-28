@@ -1,10 +1,11 @@
 /*
- * Copyright 2017 Year4000. All Rights Reserved.
+ * Copyright 2019 Year4000. All Rights Reserved.
  */
 
 plugins {
   id 'java'
   id 'idea'
+  id 'cpp'
   id 'com.moowork.node' version '1.3.1'
 }
 
@@ -17,12 +18,24 @@ dependencies {
   compile 'org.slf4j:slf4j-api:1.7.21'
 }
 
-sourceSets.main.resources {
-  srcDir "${projectDir}/src/generated/js/"
+node {
+  // The version of node gradle will use
+  // According to https://nodejs.org/en/download/releases/
+  // Node 7.4.0 uses V8 5.4.500.45 (set tsconfig target to es2017)
+  // Node LTS 12.16.1
+  version = '12.16.1'
+  download = true
 }
 
-sourceSets.test.resources {
-  srcDir "${projectDir}/src/test/js/"
+sourceSets {
+  // Process generated reources such as the JavaScript bundle
+  main.resources {
+    srcDir "${projectDir}/src/generated/js/"
+    srcDir "${projectDir}/src/generated/resources/"
+  }
+  test.resources {
+    srcDir "${projectDir}/src/test/js/"
+  }
 }
 
 idea.module {
@@ -65,11 +78,3 @@ task buildJs {
 
 test.dependsOn testJs
 processResources.dependsOn buildJs
-
-node {
-  // The version of node gradle will use, reflect this in `webpack.config.js` aswell
-  // According to https://nodejs.org/en/download/releases/
-  // Node 7.4.0 uses V8 5.4.500.45
-  version = '7.4.0'
-  download = true
-}

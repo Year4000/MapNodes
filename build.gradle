@@ -1,7 +1,15 @@
 /*
  * Copyright 2016 Year4000. All Rights Reserved.
  */
+buildscript {
+    repositories { jcenter() }
 
+    dependencies {
+        classpath 'com.netflix.nebula:gradle-aggregate-javadocs-plugin:2.2.+'
+    }
+}
+
+apply plugin: 'nebula-aggregate-javadocs'
 apply from: file('gradle/utils.gradle')
 
 ext.mapnodes = project
@@ -18,4 +26,22 @@ subprojects {
     mavenCentral()
     maven { url "https://jitpack.io" }
   }
+}
+
+// Build the Docker image dont use docker-compose
+task buildDocker(type: Exec) {
+  standardInput System.in
+  commandLine 'docker', 'build', '--rm', '--file', 'Dockerfile', '--tag', 'year4000/mapnodes:spongevanilla', '.'
+}
+
+// Run the docker insance
+task runDocker(type: Exec) {
+  standardInput System.in
+  commandLine  'docker-compose', 'run', '--publish', '25565:25565', '--rm', 'mapnodes'
+}
+
+// Combine building and running
+task buildRunDocker {
+  dependsOn 'buildDocker'
+  dependsOn 'runDocker'
 }

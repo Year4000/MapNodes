@@ -1,5 +1,4 @@
 module.exports = {
-  parser: "@typescript-eslint/parser",
   parserOptions: {
     ecmaVersion: 11,
     sourceType: 'module',
@@ -20,5 +19,5 @@ module.exports = {
     }],
     'comma-dangle': ['error', 'always-multiline'],
     'no-mixed-spaces-and-tabs': 'error'
-  },
+  }
 }

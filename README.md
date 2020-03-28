@@ -1,10 +1,33 @@
 # MapNodes [![Github Actions](https://github.com/ewized/MapNodes/workflows/Build/badge.svg)](https://github.com/ewized/MapNodes)
 
+- [Year4000](https://www.year4000.net)
+- [Resources](https://resources.year4000.net/)
+- [Docs](https://ewized.github.io/MapNodes/)
+- [Discord](https://discord.gg/ySj69qR): #year4000
+
 This is the plugin that handles the games that `Year4000` runs.
 There is a submodule within this project so its recommended to clone the repo with the following command.
 With this in mind you should also have SSH keys linked with your GitHub account.
 
 > git clone --recursive git@github.com:Year4000/MapNodes.git
+
+## Modules
+
+The application is broken into modules that are seperated into their own tasks; `bridge`, `core`, and `sponge`.
+
+### Bridge
+
+The bridge is the underlying bindings from the platform in this case `java` to the game engine `javascript`.
+We are using the V8 engine as the JavaScript engine.
+
+### Core
+
+The core is the main game engine, where most of of the game engine is in JavaScript.
+While the other languages are shared code for other modules.
+
+### Sponge
+
+This is the implementation of the game engine bindings for the Sponge platform.
 
 ## Building
 

@@ -1,0 +1,99 @@
+/*
+ * Copyright 2019 Year4000. All Rights Reserved.
+ */
+plugins {
+  id 'java'
+  id 'idea'
+  id 'cpp'
+}
+
+dependencies {
+  testCompile 'junit:junit:4.12'
+  compile 'net.year4000.utilities:core:master-SNAPSHOT'
+}
+
+// todo install v8 within .gradle and compile it
+// todo look at this https://github.com/v8/v8/wiki/Getting-Started-with-Embedding
+
+// Compile the C++ JNI files for the project
+model {
+  platforms {
+    x64 {
+      architecture "x64"
+    }
+  }
+
+  components {
+    // Dont build the libararies by default trigger manual build in docker container
+    all {
+      binaries.withType(StaticLibraryBinarySpec) {
+        buildable = false
+      }
+
+      binaries.withType(SharedLibraryBinarySpec) {
+        buildable = false
+      }
+    }
+
+    mapnodes(NativeLibrarySpec) {
+      sources.cpp {
+        source {
+          srcDir 'src/main/jni'
+          include "**/*.cpp"
+        }
+
+        // JNI and extra lib header files
+        exportedHeaders {
+          srcDir "${System.getProperty('java.home')}/../include"
+          srcDir "${System.getProperty('java.home')}/../include/darwin"
+          srcDir "${System.getProperty('java.home')}/../include/linux"
+          srcDir "${projectDir}/.gradle/v8/include"
+          srcDir "${projectDir}/.gradle/v8/include/libplatform"
+        }
+      }
+
+      buildTypes {
+        release
+      }
+    }
+  }
+
+  /*
+    Raw Command that gets ran at project root, if any problems just use this command.
+    Must have v8 cloned and compiled in the .gradle folder within the core sub module.
+
+    g++ -I ./core/.gradle/v8/include -I /Library/Java/JavaVirtualMachines/jdk1.8.0_131.jdk/Contents/Home/include -I /Library/Java/JavaVirtualMachines/jdk1.8.0_131.jdk/Contents/Home/include/darwin ./core/src/main/jni/net_year4000_mapnodes_v8_V8Engine.cpp -o ./core/build/libs/mapnodes/shared/libmapnodes.dylib -std=c++11 -fPIC -shared -Wl,./core/.gradle/v8/out.gn/x64.release/obj/libv8_lib{base,platform}.a
+
+    clang -I ./core/.gradle/v8/include -I /Library/Java/JavaVirtualMachines/jdk1.8.0_131.jdk/Contents/Home/include -I /Library/Java/JavaVirtualMachines/jdk1.8.0_131.jdk/Contents/Home/include/darwin ./core/src/main/jni/net_year4000_mapnodes_v8_V8Engine.cpp -o ./core/build/libs/mapnodes/shared/libmapnodes.dylib -std=c++11 -fPIC -Wl,-undefined -Wl,dynamic_lookup -Wl,./core/.gradle/v8/out.gn/x64.release/obj/libv8_lib{base,platform}.a
+   */
+  toolChains {
+    all {
+      eachPlatform {
+        cppCompiler.withArguments { args ->
+          args << "-std=c++17"
+          args << "-fPIC"
+        }
+        linker.withArguments { args ->
+          args << "-shared"
+          args << "${projectDir}/.gradle/v8/out/x64.release/obj/libv8_libbase.a"
+          args << "${projectDir}/.gradle/v8/out/x64.release/obj/libv8_libplatform.a"
+          args << "${projectDir}/.gradle/v8/out/x64.release/obj/third_party/icu/libicuuc.a"
+          args << "${projectDir}/.gradle/v8/out/x64.release/obj/third_party/icu/libicui18n.a"
+        }
+      }
+    }
+
+    gcc(Gcc) {}
+
+    clang(Clang) {
+      eachPlatform {
+        linker.withArguments { args ->
+          args << "-undefined"
+          args << "dynamic_lookup"
+        }
+      }
+    }
+  }
+}
+
+test.testLogging.showStandardStreams = true
