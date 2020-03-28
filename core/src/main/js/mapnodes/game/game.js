@@ -69,6 +69,8 @@ export default class Game extends JsonObject {
     _.forEach(this.map.events, (json, id) => this._register_event(id, json))
     _.forEach(this.map.games, (json, id) => this._register_game(id, json))
     Logger.info('Finish registering map components')
+    // load the game
+    this.load()
     // start the game auto
     if (this.settings.start_game_on_load) {
       Logger.info('Starting the game right now because the map overrides this')

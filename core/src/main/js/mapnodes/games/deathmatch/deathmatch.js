@@ -9,4 +9,7 @@ import { game_mode } from '../game_registry.js'
  */
 @game_mode('deathmatch')
 export default class Deathmatch extends AbstractGameMode {
+  static get schema() {
+    return {}
+  }
 }

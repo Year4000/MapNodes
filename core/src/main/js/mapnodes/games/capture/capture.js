@@ -10,4 +10,7 @@ import { game_mode } from '../game_registry.js'
  */
 @game_mode('capture')
 export default class Capture extends AbstractGameMode {
+  static get schema() {
+    return {}
+  }
 }

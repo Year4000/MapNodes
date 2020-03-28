@@ -9,4 +9,7 @@ import { game_mode } from '../game_registry.js'
  */
 @game_mode('destroy')
 export default class Destroy extends AbstractGameMode {
+  static get schema() {
+    return {}
+  }
 }

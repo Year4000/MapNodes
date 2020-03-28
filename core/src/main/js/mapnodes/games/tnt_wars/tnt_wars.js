@@ -10,4 +10,7 @@ import { game_mode } from '../game_registry.js'
  */
 @game_mode('tnt_wars')
 export default class TntWars extends AbstractGameMode {
+  static get schema() {
+    return {}
+  }
 }

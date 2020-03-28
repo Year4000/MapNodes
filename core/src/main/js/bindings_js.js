@@ -106,9 +106,9 @@ export const is_command = bind('isCommand')((command) => {
 
 /** Send the x,y,z cords of the spawn point */
 export const spawn_point = bind('spawnPoint')(() => {
-  const point = map_nodes.current_game.spawn_point
-  if (point) {
-    return [point.x, point.y, point.z]
+  const { spawn_point: { x, y, z } } = map_nodes.current_game
+  if (x || y || z) {
+    return [x, y, z]
   }
   Logger.warn('There was no spawn point found, using [0, 64, 0]')
   return [0, 64, 0]

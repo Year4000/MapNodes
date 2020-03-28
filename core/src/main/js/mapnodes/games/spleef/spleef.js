@@ -10,4 +10,7 @@ import { game_mode } from '../game_registry.js'
  */
 @game_mode('spleef')
 export default class Spleef extends AbstractGameMode {
+  static get schema() {
+    return {}
+  }
 }
