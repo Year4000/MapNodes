@@ -1,6 +1,7 @@
 /*
  * Copyright 2020 Year4000. All Rights Reserved.
  */
+import Logger from 'js-logger'
 import { not_null } from './mapnodes/conditions.js'
 import { map_nodes } from './mapnodes/mapnodes.js'
 import CommandExecutor from './mapnodes/command/cmd_executor.js'
@@ -8,7 +9,7 @@ import Game from './mapnodes/game/game.js'
 import Player from './mapnodes/game/player.js'
 
 
- /** This map stores the function bindings that are in javascript */
+/** This map stores the function bindings that are in javascript */
 const JS = {}
 
 /** Will register the method in the bindings map for $.js */
@@ -45,7 +46,7 @@ const bind = (alias) => {
 */
 
 /** Is the game currently running */
-export const is_game_running = bind('isGameRunning')(() => {
+export const is_game_running = bind('isGameRunning')(() => { // eslint-disable-line arrow-body-style
   return map_nodes.current_game.is_running()
 })
 
@@ -75,7 +76,7 @@ export const stop = bind('stop')(() => {
 })
 
 /** Get the current state of the game */
-export const game_state = bind('gameState')(() => {
+export const game_state = bind('gameState')(() => { // eslint-disable-line arrow-body-style
   return map_nodes.current_game._state
 })
 

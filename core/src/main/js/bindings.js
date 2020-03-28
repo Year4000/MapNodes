@@ -16,7 +16,7 @@ const bindings = new Proxy(global.PLATFORM, {
         try {
           return target[name](...args)
         } catch (any) {
-          Logger.error(`An error has been thrown`)
+          Logger.error('An error has been thrown')
           Logger.error(any)
           return useless_function
         }
