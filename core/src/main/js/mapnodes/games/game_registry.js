@@ -33,10 +33,11 @@ export default class GameRegistry {
     not_null(id, 'id must not be null')
     try {
       const instance = new this.game_modes[id](json)
-      this.injector.inject_instance(instance)
+      return this.injector.inject_instance(instance)
     } catch (e) {
       Logger.error(`There was a problem constructing the game mode with id: ${id}`)
       Logger.error(e)
+      return null
     }
   }
 

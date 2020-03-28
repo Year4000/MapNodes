@@ -47,8 +47,9 @@ ADD https://gistcdn.githack.com/ewized/8599d0d846830af079d7/raw/4dbafb0e395e6dc1
 
 # Set up the command that will run the server
 EXPOSE 25565/tcp
+EXPOSE 5005
 ENTRYPOINT [ "python3", "/opt/year4000/minecraft/wrapper.py", "--no-restart" ]
-CMD ["java", "-jar", "spongevanilla.jar"]
+CMD ["java", "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005", "-jar", "spongevanilla.jar"]
 
 # Get the image as an import to copy the mod over
 FROM year4000/utilities:spongevanilla as utilities

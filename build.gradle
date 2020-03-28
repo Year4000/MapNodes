@@ -37,7 +37,7 @@ task buildDocker(type: Exec) {
 // Run the docker insance
 task runDocker(type: Exec) {
   standardInput System.in
-  commandLine  'docker-compose', 'run', '--publish', '25565:25565', '--rm', 'mapnodes'
+  commandLine  'docker-compose', 'run', '--publish', '25565:25565', '--publish', '5005:5005', '--rm', 'mapnodes'
 }
 
 // Combine building and running
