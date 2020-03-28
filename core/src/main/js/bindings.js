@@ -18,11 +18,11 @@ import './mapnodes/command/commands.js'
 
 // noinspection ES6ConvertVarToLetConst
 /** This constant is created by the runtime no need for it */
-var PLATFORM = global.PLATFORM || 'none' // eslint-disable-line no-var
+var PLATFORM = global.PLATFORM ?? 'none' // eslint-disable-line no-var
 
 // noinspection ES6ConvertVarToLetConst
 /** This constant is created by the runtime no need for it */
-var JAVA = global.JAVA || {} // eslint-disable-line no-var
+var JAVA = global.JAVA ?? {} // eslint-disable-line no-var
 
 /** The constants that are known when the JS runtime is created */
 const PLATFORMS = {
@@ -67,7 +67,7 @@ const bind = (alias) => {
   return (handler, key) => {
     // Map the functions to the java names
     if (!(alias in _js)) {
-      _js[alias || toLowerCamel(key)] = handler[key].bind(_js)
+      _js[alias ?? toLowerCamel(key)] = handler[key].bind(_js)
     }
     return handler
   }

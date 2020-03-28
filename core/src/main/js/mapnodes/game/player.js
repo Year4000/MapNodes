@@ -69,7 +69,7 @@ export default class Player {
 
   /** Send a message to this player */
   send_message(message) {
-    $.bindings.send_message(this.uuid, String(message || ''))
+    $.bindings.send_message(this.uuid, String(message ?? ''))
   }
 
   /** Check if the player has the permission */
@@ -88,7 +88,7 @@ export default class Player {
   }
 
   teleport(x, y, z, yaw, pitch) {
-    $.bindings.teleport(this.uuid, x, y, z, yaw || 0, pitch || 0)
+    $.bindings.teleport(this.uuid, x, y, z, yaw ?? 0, pitch ?? 0)
   }
 
   /** Start the game for the player */

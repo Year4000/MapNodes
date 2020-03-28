@@ -50,7 +50,7 @@ export default class Team extends JsonObject {
 
   /** Get the color code for the team */
   get color_code() {
-    return Colors[this.color] || '&f&k'
+    return Colors[this.color] ?? '&f&k'
   }
 
   // THIS IS A PROTOTYPE OF HOW THIS WOULD WORK, this does not run currently

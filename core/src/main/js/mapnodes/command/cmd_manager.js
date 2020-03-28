@@ -28,7 +28,7 @@ export default class CommandManager {
     try {
       const command_action = this._command_map[command]
       if (command_action) {
-        command_action(executor || new CommandExecutor(), args)
+        command_action(executor ?? new CommandExecutor(), args)
       } else {
         return new CommandError() // todo replace with command not found error
       }

@@ -6,10 +6,9 @@
 const Messages = new Proxy({}, {
   get: (target, name, receiver) => ({
     send: (player, args) => {
-      // eslint
-      $.bindings.send_locale_message(player.uuid, name, args || [])
+      $.bindings.send_locale_message(player.uuid, name, args ?? [])
     },
-    get: (player, args) => $.bindings.get_locale_message(player.uuid, name, args || []),
+    get: (player, args) => $.bindings.get_locale_message(player.uuid, name, args ?? []),
   }),
 })
 

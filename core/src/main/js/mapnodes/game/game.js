@@ -163,12 +163,12 @@ export default class Game extends JsonObject {
 
   /** Get the time the game has started, -1 if hasent started yet */
   get start_time() {
-    return this._start_time || -1
+    return this._start_time ?? -1
   }
 
   /** Get the time the game has stopped, -1 if hasent stoped yet */
   get stop_time() {
-    return this._stop_time || -1
+    return this._stop_time ?? -1
   }
 
   /** Get the delta time the game has been running for */
@@ -193,12 +193,12 @@ export default class Game extends JsonObject {
 
   /** Get the color of the current game state */
   get state_color() {
-    return Game._STATE_COLORS[this._state] || '&4'
+    return Game._STATE_COLORS[this._state] ?? '&4'
   }
 
   /** Get the tablist header use map override if needed */
   get tablist_header() {
-    return this.settings.tab_list_header || `${this.state_color}${this.title_color}`
+    return this.settings.tab_list_header ?? `${this.state_color}${this.title_color}`
   }
 
   /** Join the player to the game, player should be a uuid but can be a username */

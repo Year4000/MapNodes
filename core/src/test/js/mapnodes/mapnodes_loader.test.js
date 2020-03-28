@@ -32,10 +32,10 @@ describe('map loader', () => {
   readMaps(({map, file}) => {
     describe(`testing ${file}`, () => {
       // Map Component
-      const map_component = new Map(map.map || {})
+      const map_component = new Map(map.map ?? {})
       it(`map component ${map_component.valueOf()}`, () => assert.ok(map_component.verify()))
       // World Component
-      it('world component', () => assert.ok(new World(map.world || {}).verify()))
+      it('world component', () => assert.ok(new World(map.world ?? {}).verify()))
       // Teams Component
       _.forEach(map.teams, (json, id) => {
         it(`team component ${id}`, () => assert.ok(new Team(id, json).verify()))
