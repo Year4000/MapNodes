@@ -7,7 +7,7 @@
 if (!('console' in global)) {
   /** Map some console properties for logging */
   global.console = {
-    log: (...args) => JAVA.print(`${args}\n`),
+    log: (...args) => global.PLATFORM.print(`${args}\n`),
     info: (...args) => console.log(...args),
     warn: (...args) => console.log(...args),
     error: (...args) => console.log(...args),

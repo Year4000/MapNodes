@@ -9,7 +9,7 @@ const useless_function = () => {}
 
 
 /** The proxy object that will forwards the bindings to the underlying system */
-const bindings = new Proxy(global.JAVA, {
+const bindings = new Proxy(global.PLATFORM, {
   get(target, name) {
     if (target[name]) {
       return (...args) => {

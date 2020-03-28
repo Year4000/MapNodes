@@ -56,8 +56,7 @@ public abstract class Bindings implements Releasable {
         object.registerJavaMethod(this, method.getName(), lower, method.getParameterTypes());
       }
     }
-    engine.add("PLATFORM", "java");
-    engine.add("JAVA", object);
+    engine.add("PLATFORM", object);
     engine.getLocker().acquire(); // acquire the lock because idk
   }
 
@@ -130,9 +129,6 @@ public abstract class Bindings implements Releasable {
 
   /** Run function from the JavaScript side */
   public interface V8Bindings {
-    /** $.js.platform_name */
-    String platformName();
-
     /** $.js.is_game_running */
     boolean isGameRunning();
 

@@ -44,11 +44,6 @@ const bind = (alias) => {
   the low level forms the data types are transmitted between.
 */
 
-/** This function just makes sure the bindings were properly established */
-export const platform_name = bind('platformName')(() => {
-  return global.PLATFORM
-})
-
 /** Is the game currently running */
 export const is_game_running = bind('isGameRunning')(() => {
   return map_nodes.current_game.is_running()
