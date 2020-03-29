@@ -8,7 +8,8 @@
     "moduleResolution": "node",
     "strict": true,
     "esModuleInterop": true,
-    "allowJs": true
+    "allowJs": true,
+    "outDir": "src/generated"
   },
   "include": ["src/main/js", "src/test/js"]
 }
