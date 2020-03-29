@@ -1,10 +1,12 @@
-import Injector, { inject } from './injection.js'
 import assert from 'assert'
+
+import Injector, { inject } from './injection.js'
+
 
 describe('injectors', () => {
   it('injects', () => {
     @inject({
-      test: { foo: 'bar' }
+      test: { foo: 'bar' },
     })
     class Test {
       @inject('test') test

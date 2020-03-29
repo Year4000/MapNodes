@@ -34,16 +34,17 @@ module.exports = {
     'no-console': 'off',
     'max-classes-per-file': 'off',
     'no-restricted-syntax': 'warn',
+    'no-eval': 'warn',
     'no-shadow': 'warn',
     'lines-between-class-members': ['error', 'always', {
       exceptAfterSingleLine: true,
     }],
     'func-names': ['warn', 'never'],
-    'import/no-nodejs-modules': 'error',
+    'import/no-nodejs-modules': 'warn',
     'import/extensions': ['error', 'ignorePackages'],
     'import/newline-after-import': ['error', { count: 2 }],
     'import/order': ['error', {
-      groups: ['external', ['sibling', 'parent'], 'internal'],
+      groups: ['builtin', 'internal', 'external', ['sibling', 'parent']],
       'newlines-between': 'always',
       alphabetize: {
         order: 'ignore', /* sort in ascending order. Options: ['ignore', 'asc', 'desc'] */
@@ -54,5 +55,7 @@ module.exports = {
   globals: {
     $: 'readonly',
     var_dump: 'readonly',
+    describe: 'readonly',
+    it: 'readonly',
   }
 }

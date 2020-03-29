@@ -1,5 +1,9 @@
 import assert from 'assert'
-import Player, { ALEX, ALEX_UUID, STEVE, STEVE_UUID } from './player.js'
+
+import Player, {
+  ALEX, ALEX_UUID, STEVE, STEVE_UUID,
+} from './player.js'
+
 
 describe('player', () => {
   it('same player', () => assert.equal(ALEX, ALEX))

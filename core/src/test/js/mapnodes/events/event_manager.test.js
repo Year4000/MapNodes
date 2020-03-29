@@ -1,5 +1,6 @@
 import { event_manager, listener } from './event_manager.js'
 
+
 describe('event manager', () => {
   it('register event', () => {
     // Create a dummy class where its listeners are registered in the event manager
