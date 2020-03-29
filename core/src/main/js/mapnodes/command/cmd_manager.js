@@ -2,9 +2,11 @@
  * Copyright 2020 Year4000. All Rights Reserved.
  */
 import Logger from 'js-logger'
+
 import CommandExecutor from './cmd_executor.js'
 import { not_null } from '../conditions.js'
 import { CommandError } from './cmd_errors.js'
+
 
 /** The command manager that will handle processing commands and ect */
 export default class CommandManager {

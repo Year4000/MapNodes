@@ -2,7 +2,9 @@
  * Copyright 2020 Year4000. All Rights Reserved.
  */
 import Logger from 'js-logger'
+
 import JsonObject from '../game/json_object.js'
+
 
 /**
  * This class abstracts a game mode to be used in the system

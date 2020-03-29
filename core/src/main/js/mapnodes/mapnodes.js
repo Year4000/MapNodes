@@ -4,12 +4,14 @@
 import _ from 'lodash'
 import Logger from 'js-logger'
 import { REVISION } from 'three'
+
 import CommandManager from './command/cmd_manager.js'
 import Messages from './messages.js'
 import { not_null } from './conditions.js'
 import { event_manager, listener } from './events/event_manager.js'
 import { game_registry } from './games/games.js'
 import { inject } from './injection.js'
+
 
 /** The service to handle pretty much everything with the JS side of MapNodes */
 @inject({

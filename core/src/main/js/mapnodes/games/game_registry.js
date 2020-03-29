@@ -2,8 +2,10 @@
  * Copyright 2020 Year4000. All Rights Reserved.
  */
 import Logger from 'js-logger'
+
 import { not_null } from '../conditions.js'
 import { inject } from '../injection.js'
+
 
 /** The registry of the game modes */
 export default class GameRegistry {

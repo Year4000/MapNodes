@@ -3,9 +3,10 @@
  */
 import AbstractRegion from './abstract_region.js'
 
+
 /** A region that contains everything */
 export default class GlobalRegion extends AbstractRegion {
-  contains(vector3) {
+  contains() {
     return true
   }
 }

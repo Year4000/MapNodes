@@ -3,6 +3,7 @@
  */
 import JsonObject from './json_object.js'
 
+
 /** Represents a kit from the json object */
 export default class Kit extends JsonObject {
   /** This follows the documented scheme here https://resources.year4000.net/mapnodes/kits_component */

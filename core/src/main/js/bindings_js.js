@@ -2,6 +2,7 @@
  * Copyright 2020 Year4000. All Rights Reserved.
  */
 import Logger from 'js-logger'
+
 import { not_null } from './mapnodes/conditions.js'
 import { map_nodes } from './mapnodes/mapnodes.js'
 import CommandExecutor from './mapnodes/command/cmd_executor.js'
@@ -18,6 +19,7 @@ const bind = (alias) => {
     not_null(string, 'A string value must exist')
     let out = ''
     let upper = false
+    // eslint-disable-next-line no-restricted-syntax
     for (const c of string) {
       if (upper) { // uppercase the letter and rest it flag
         out += c.toUpperCase()

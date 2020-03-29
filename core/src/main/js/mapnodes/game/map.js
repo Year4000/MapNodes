@@ -4,6 +4,7 @@
 import JsonObject from './json_object.js'
 import Player from './player.js'
 
+
 /** Represents the map settings from the json object */
 export default class Map extends JsonObject {
   constructor(map) {

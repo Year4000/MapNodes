@@ -4,8 +4,10 @@
 import _ from 'lodash'
 import { Set } from 'immutable'
 import { Vector3 } from 'three'
+
 import AbstractRegion from './abstract_region.js'
 import { not_null } from '../conditions.js'
+
 
 /** Represents a cuboid region with two positions */
 export default class CuboidRegion extends AbstractRegion {

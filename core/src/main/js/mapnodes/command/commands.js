@@ -5,6 +5,7 @@ import Facts from '../facts.js'
 import Messages from '../messages.js'
 import { map_nodes } from '../mapnodes.js'
 
+
 /** Simple ping / pong command to test command system */
 map_nodes.register_command('ping', (executor, args) => {
   executor.send_message('&6pong!')

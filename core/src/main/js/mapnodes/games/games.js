@@ -9,6 +9,7 @@ import Spleef from './spleef/spleef.js'
 import TntWars from './tnt_wars/tnt_wars.js'
 import { game_registry } from './game_registry.js'
 
+
 /** Export all enabled game modes, as the import of the game modes will registered them into the registry */
 export {
   game_registry,

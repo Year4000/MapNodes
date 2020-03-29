@@ -4,6 +4,7 @@
 import AbstractGameMode from '../abstract_game_mode.js'
 import { game_mode } from '../game_registry.js'
 
+
 /**
  * Destroy is a game mode where teams must try and destroy the opponents monument.
  */

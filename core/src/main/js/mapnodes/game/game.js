@@ -1,10 +1,11 @@
 /*
  * Copyright 2020 Year4000. All Rights Reserved.
  */
-import Logger from 'js-logger'
 import _ from 'lodash'
+import Logger from 'js-logger'
 import moment from 'moment'
 import { Map } from 'immutable'
+
 import Facts from '../facts.js'
 import Clazz from './clazz.js'
 import JsonObject from './json_object.js'
@@ -14,6 +15,7 @@ import Region from './region.js'
 import Team from './team.js'
 import { not_null } from '../conditions.js'
 import { inject } from '../injection.js'
+
 
 /** Represents a game from the json object */
 export default class Game extends JsonObject {

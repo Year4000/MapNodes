@@ -3,6 +3,7 @@
  */
 import EventEmitter from 'wolfy87-eventemitter'
 
+
 /*
  * This event system is directly tied to the object models in a given class,
  * Each class type is registered with the EventManager and when that type of event if emitted

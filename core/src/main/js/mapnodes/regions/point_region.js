@@ -3,7 +3,9 @@
  */
 import { Set } from 'immutable'
 import { Vector3 } from 'three'
+
 import AbstractRegion from './abstract_region.js'
+
 
 /** A region that contains a single point, must wrap with THREE.Vector3 */
 export default class PointRegion extends AbstractRegion {

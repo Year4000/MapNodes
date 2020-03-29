@@ -2,11 +2,13 @@
  * Copyright 2020 Year4000. All Rights Reserved.
  */
 import _ from 'lodash'
+
 import Facts from '../facts.js'
 import Messages from '../messages.js'
 import { is_true, not_null } from '../conditions.js'
 import { listener } from '../events/event_manager.js'
 import { inject } from '../injection.js'
+
 
 /** This will serialize the uuid to be used for the lookup table */
 const serializeUuid = (uuid) => uuid.replace(/-/g, '').toLowerCase()

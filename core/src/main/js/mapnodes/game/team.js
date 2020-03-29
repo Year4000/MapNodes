@@ -2,12 +2,14 @@
  * Copyright 2020 Year4000. All Rights Reserved.
  */
 import _ from 'lodash'
+
 import Colors from '../colors.js'
 import Regions from '../regions/regions.js'
 import JsonObject from './json_object.js'
 import { not_null } from '../conditions.js'
 import { listener } from '../events/event_manager.js'
 import { inject } from '../injection.js'
+
 
 /** Represents a team from the json object */
 export default class Team extends JsonObject {

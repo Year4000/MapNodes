@@ -4,6 +4,7 @@
 import _ from 'lodash'
 import { Set } from 'immutable'
 
+
 /** The abstract region that handles the creation of points */
 export default class AbstractRegion {
   /** Get a immutable set of points the region contains, or if its not possible return empty */

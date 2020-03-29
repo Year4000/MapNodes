@@ -3,6 +3,7 @@
  */
 import JsonObject from './json_object.js'
 
+
 /** Represents the world from the json object */
 export default class World extends JsonObject {
   constructor(world) {

@@ -3,7 +3,9 @@
  */
 import _ from 'lodash'
 import Logger from 'js-logger'
+
 import { not_null } from './conditions.js'
+
 
 /** The class to create an injector to inject other JavaScript objects */
 export default class Injector {

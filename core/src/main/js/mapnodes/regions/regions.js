@@ -2,12 +2,13 @@
  * Copyright 2020 Year4000. All Rights Reserved.
  */
 import _ from 'lodash'
-import Logger from 'js-logger'
+
 import AbstractRegion from './abstract_region.js'
 import CubeRegion from './cube_region.js'
 import CuboidRegion from './cuboid_region.js'
 import GlobalRegion from './global_region.js'
 import PointRegion from './point_region.js'
+
 
 /** The known regions the system knows how to handle */
 const Regions = {
@@ -21,7 +22,7 @@ const Regions = {
 
   /** Functions to reduce the JSON object into its proper region class */
   REGION_CONSTRUCT: {
-    global: (obj) => new GlobalRegion(),
+    global: () => new GlobalRegion(),
     point: (obj) => {
       const cords = _.map(_.split(_.replace(obj.xyz, / /, ''), ',', 3), (cord) => _.toNumber(cord))
       return new PointRegion(...cords)
