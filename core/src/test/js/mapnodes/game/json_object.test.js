@@ -25,10 +25,10 @@ describe('json object', () => {
   it('should or schema validate', () => assert.ok(test_schema({
     options: 'foobar',
   })))
-  // it('should schema not ok', () => assert.ok(!test_schema({
-  //   foo: 42,
-  // })))
-  // it('should or schema not ok', () => assert.ok(!test_schema({
-  //   options: false,
-  // })))
+  it('should schema not ok', () => assert.ok(!test_schema({
+    foo: 42,
+  })))
+  it('should or schema not ok', () => assert.ok(!test_schema({
+    options: false,
+  })))
 })
