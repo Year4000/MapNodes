@@ -2,7 +2,7 @@ import assert from 'assert'
 
 import Player, {
   ALEX, ALEX_UUID, STEVE, STEVE_UUID,
-} from './player.js'
+} from './player.js' // eslint-disable-line import/no-unresolved
 
 
 describe('player', () => {
