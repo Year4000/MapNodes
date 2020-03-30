@@ -5,6 +5,7 @@
 /** @typedef {import('./game/player')} Player */
 
 /** Translate the messages from the locale system */
+/** @type {{ [key: string]: { get(Player, ...any), send(Player, ...any) } }} */
 const Messages = new Proxy({}, {
   get: (target, name) => ({
     /**
