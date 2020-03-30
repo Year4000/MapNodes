@@ -8,18 +8,31 @@ import { is_object, not_null } from '../conditions.js'
 
 /** Represents a team from the json object */
 export default class JsonObject {
-  /** Make sure the JsonObject has the id and the object */
+  /**
+   * Make sure the JsonObject has the id and the object
+   *
+   * @param {string} id
+   * @param {object} json
+   */
   constructor(id, json) {
     this._id = not_null(id, 'id')
     this._json = not_null(json, 'json')
   }
 
-  /** Get the id of this JsonObject, also makes the id lowercase */
+  /**
+   * Get the id of this JsonObject, also makes the id lowercase
+   *
+   * @return {string}
+   */
   get id() {
     return _.lowerCase(this._id)
   }
 
-  /** Get the name for the object defaults to id */
+  /**
+   * Get the name for the object defaults to id
+   *
+   * @return {boolean}
+   */
   get name() {
     return this._id
   }
@@ -40,9 +53,9 @@ export default class JsonObject {
    *   }
    * }
    *
-   * @param json the json to validate the schema on, defaults to the internal json
-   * @param schema defaults to the static schema property
-   * @return boolean
+   * @param {object} json object the json to validate the schema on, defaults to the internal json
+   * @param {object} schema defaults to the static schema property
+   * @return {boolean}
    */
   verify(json = this._json, schema = this.constructor.schema) {
     is_object(not_null(json, 'Json must exist'), 'Must be a JSON object')
@@ -57,7 +70,11 @@ export default class JsonObject {
     }, true)
   }
 
-  /** The JSON object of this object */
+  /**
+   * The JSON object of this object
+   *
+   * @return {object}
+   */
   toJSON() {
     return this._json
   }

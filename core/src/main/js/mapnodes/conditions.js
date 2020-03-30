@@ -2,7 +2,14 @@
  * Copyright 2019 Year4000. All Rights Reserved.
  */
 
-/** Make sure the value is not null */
+/**
+ * Make sure the value is not null
+ *
+ * @template T
+ * @param {T} value
+ * @param {string} message
+ * @return {T}
+ */
 export const not_null = (value, message) => {
   if (value == null) {
     throw new Error(message ?? 'The value was null')
@@ -10,14 +17,29 @@ export const not_null = (value, message) => {
   return value
 }
 
-/** Make sure the value is true */
+/**
+ * Make sure the value is true
+ *
+ * @template T
+ * @param {T} value
+ * @param {string} message
+ * @return {T}
+ */
 export const is_true = (value, message) => {
   if (!value) {
     throw new Error(message ?? 'The value was not true')
   }
+  return value
 }
 
-/** Make sure the value is an object */
+/**
+ * Make sure the value is an object
+ *
+ * @template T
+ * @param {T} value
+ * @param {string} message
+ * @return {T}
+ */
 export const is_object = (value, message) => {
   if (typeof value !== 'object') {
     throw new Error(`${message ?? 'The value was not an object'} it was '${typeof value}' and its value is: ${value}`)
