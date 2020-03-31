@@ -62,6 +62,10 @@ export default class JsonObject {
     not_null(schema, 'Each object must have a schema associated with it')
     // todo verify that the json matches the given schema more verbose checking
     return _.keys(json).reduce((and, key) => {
+      // ignore extra object keys if not in schema
+      if (!(schema && key in schema)) {
+        return and
+      }
       const value = json[key]
       const { type } = schema[key]
       const types = Array.isArray(type) ? type : [type]

@@ -114,7 +114,7 @@ export default class Game extends JsonObject {
     Logger.info(`The game(${this._id}) has started as ${moment(this._start_time).format('l LTS')}...`)
     this.event_manager.trigger('game_start', [this])
     // spectators and players should be handle differently
-    this._teams.values().forEach((team) => team.start())
+    this._teams.forEach((team) => team.start())
   }
 
   /** Stop the game and get ready to load the next game */

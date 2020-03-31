@@ -109,7 +109,7 @@ export default class Player {
   }
 
   /** Send a message to this player */
-  send_message(message) {
+  send_message(message = '') {
     $.bindings.send_message(this.uuid, `${message}`)
   }
 
@@ -124,12 +124,12 @@ export default class Player {
   }
 
   /** Set the header for the tablist */
-  set tablist_header(header) {
+  set tablist_header(header = '') {
     $.bindings.tablist_header(this.uuid, `${header}`)
   }
 
   /** Set the header for the tablist */
-  set tablist_footer(footer) {
+  set tablist_footer(footer = '') {
     $.bindings.tablist_footer(this.uuid, `${footer}`)
   }
 
