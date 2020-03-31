@@ -65,8 +65,10 @@ export default class JsonObject {
       const value = json[key]
       const { type } = schema[key]
       const types = Array.isArray(type) ? type : [type]
-      // eslint-disable-next-line valid-typeof
-      return and && types.reduce((or, type) => or || (type === 'array' ? Array.isArray(value) : (type !== undefined && typeof value === type)), false)
+      return and && types.reduce((or, schemaType) => (
+        // eslint-disable-next-line valid-typeof
+        or || (schemaType === 'array' ? Array.isArray(value) : (schemaType !== undefined && typeof value === schemaType))
+      ), false)
     }, true)
   }
 

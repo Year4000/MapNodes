@@ -113,9 +113,8 @@ export default class Game extends JsonObject {
     _.forEach(this._games, (game) => game._enable())
     Logger.info(`The game(${this._id}) has started as ${moment(this._start_time).format('l LTS')}...`)
     this.event_manager.trigger('game_start', [this])
-    for (const team of this._teams.values()) {
-      team.start() // spectators and players should be handle differently
-    }
+    // spectators and players should be handle differently
+    this._teams.values().forEach((team) => team.start())
   }
 
   /** Stop the game and get ready to load the next game */
@@ -124,10 +123,10 @@ export default class Game extends JsonObject {
     this._stop_time = _.now()
     Logger.info(`The game(${this._id}) has stopped as ${moment(this._stop_time).format('l LTS')}...`)
     this.event_manager.trigger('game_stop', [this])
-    for (const player of this._players) {
+    this._players.forEach((player) => {
       this.event_manager.trigger('stop_game_player', [player, this])
       player.stop()
-    }
+    })
     Logger.info('Disabling the game modes')
     _.forEach(this._games, (game) => game._disable())
     this.unload() // unload things in the game
@@ -309,15 +308,15 @@ export default class Game extends JsonObject {
    *
    * @param {string} obj_id
    * @param {object} obj_json
-   * @param {function} Clazz
+   * @param {function} ClazzType
    * @param {string} collection_name
    * @param {string} event_id
    */
-  _register(obj_id, obj_json, Clazz, collection_name, event_id) {
+  _register(obj_id, obj_json, ClazzType, collection_name, event_id) {
     not_null(obj_id, 'obj_id')
     not_null(obj_json, 'obj_json')
     Logger.info(`Registering ${collection_name} with id ${obj_id}`)
-    const obj = new Clazz(obj_id, obj_json)
+    const obj = new ClazzType(obj_id, obj_json)
     this.injector.inject_instance(obj)
     this[collection_name] = this[collection_name].set(obj_id, obj)
     this.event_manager.trigger(event_id, [obj, this])
@@ -326,7 +325,7 @@ export default class Game extends JsonObject {
   /**
    * Register the team into the system
    *
-   * @param {stirng} team_id
+   * @param {string} team_id
    * @param {object} team_json
    */
   _register_team(team_id, team_json) {

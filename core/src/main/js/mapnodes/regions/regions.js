@@ -36,10 +36,10 @@ const Regions = {
       const max = Regions.REGION_CONSTRUCT.point(obj.max)
       return new CuboidRegion(min, max)
     },
-    chunk: (obj) => new AbstractRegion(), // todo add chunk region
-    sphere: (obj) => new AbstractRegion(), // todo add sphere region
-    cylinder: (obj) => new AbstractRegion(), // todo add cylinder region
-    void: (obj) => new AbstractRegion(), // todo add void region
+    chunk: () => new AbstractRegion(), // todo add chunk region
+    sphere: () => new AbstractRegion(), // todo add sphere region
+    cylinder: () => new AbstractRegion(), // todo add cylinder region
+    void: () => new AbstractRegion(), // todo add void region
   },
 
   /**

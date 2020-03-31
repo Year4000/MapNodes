@@ -7,7 +7,7 @@ import { map_nodes } from '../mapnodes.js'
 
 
 /** Simple ping / pong command to test command system */
-map_nodes.register_command('ping', (executor, args) => {
+map_nodes.register_command('ping', (executor) => {
   executor.send_message('&6pong!')
 })
 
@@ -25,7 +25,7 @@ map_nodes.register_command('team', (executor, args) => {
 })
 
 /** Have the executor join the smallest team */
-map_nodes.register_command('spec', (executor, args) => {
+map_nodes.register_command('spec', (executor) => {
   if (executor.is_player()) {
     const team = map_nodes.current_game._teams.get(Facts.SPECTATOR_ID)
     Messages.TEAM_JOIN.send(executor.player, [team.color_name])
@@ -36,7 +36,7 @@ map_nodes.register_command('spec', (executor, args) => {
 })
 
 /** Just check the locale of the current user */
-map_nodes.register_command('locale', (executor, args) => {
+map_nodes.register_command('locale', (executor) => {
   Messages.CMD_MAPNODES_LOCALE_NAME.send(executor.player, [Messages.LOCALE_NAME.get(executor.player)])
   Messages.CMD_MAPNODES_LOCALE_CODE.send(executor.player, [Messages.LOCALE_CODE.get(executor.player)])
 })
