@@ -2,7 +2,7 @@
  * Copyright 2020 Year4000. All Rights Reserved.
  */
 
-/** @typedef {import('./game/player')} Player */
+/** @typedef {import('./game/player').default} Player */
 
 /** Translate the messages from the locale system */
 /** @type {{ [key: string]: { get(Player, ...any), send(Player, ...any) } }} */

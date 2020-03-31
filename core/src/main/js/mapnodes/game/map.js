@@ -27,7 +27,11 @@ export default class Map extends JsonObject {
     return this._json
   }
 
-  /** Get all the authors of this map */
+  /**
+   * Get all the authors of this map
+   *
+   * @return {Player[]}
+   */
   get authors() {
     // todo handle offline players?
     // Get the single author of the map

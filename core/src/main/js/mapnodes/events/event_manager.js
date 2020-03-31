@@ -64,7 +64,12 @@ import EventEmitter from 'wolfy87-eventemitter'
 /** Use the event emitter as the underlying event manager */
 export const event_manager = new EventEmitter()
 
-/** Prototype functionally, must be static functions right now */
+/**
+ * Prototype functionally, must be static functions right now
+ *
+ * @param {string} id
+ * @return {MethodDecorator}
+ */
 export const listener = (id) => (target, key) => {
   event_manager.on(id, target[key])
   return target

@@ -11,7 +11,13 @@ import { not_null } from '../conditions.js'
 
 /** Represents a cube region that wraps a cuboid region */
 export default class CubeRegion extends AbstractRegion {
-  /** Center is a vector3, when width is not there height becomes radius */
+  /**
+   * Center is a vector3, when width is not there height becomes radius
+   *
+   * @param {Vector3} center
+   * @param {number} height
+   * @param {number} width
+   */
   constructor(center, height, width) {
     super()
     not_null(center, 'center')
@@ -27,12 +33,22 @@ export default class CubeRegion extends AbstractRegion {
     return this._cuboid.points
   }
 
-  /** Checks if the vector is within this cube */
+  /**
+   * Checks if the vector is within this cube
+   *
+   * @param {Vector3} vector3
+   * @return {boolean}
+   */
   contains(vector3) {
     return this._cuboid.contains(vector3)
   }
 
-  /** Checks if the cubes are equal */
+  /**
+   * Checks if the cubes are equal
+   *
+   * @param {CubeRegion} other
+   * @return {boolean}
+   */
   equals(other) {
     return other && _.isEqual(this._cuboid, other._cuboid)
   }

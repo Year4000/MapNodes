@@ -13,29 +13,49 @@ import { game_registry } from './games/games.js'
 import { inject } from './injection.js'
 
 
+/** @typedef {import('wolfy87-eventemitter').default} EventEmitter */
+/** @typedef {import('./injection.js').default} Injector */
+/** @typedef {import('./game/game.js').default} Game */
+
 /** The service to handle pretty much everything with the JS side of MapNodes */
 @inject({
   command_manager: new CommandManager(),
   event_manager,
   game_registry,
 })
-class MapNodes {
+export class MapNodes {
   // Create the injector and inject our self with the injector
+  /** @type {Injector} */
   @inject() injector
+  /** @type {CommandManager} */
   @inject() command_manager
+  /** @type {EventEmitter} */
   @inject() event_manager
 
-  /** Get the command manager for mapnodes */
+  /**
+   * Get the command manager for mapnodes
+   *
+   * @param {string} command
+   * @param {import('./command/cmd_manager.js').CommandAction} action
+   */
   register_command(command, action) {
-    return this.command_manager.register_command(command, action)
+    this.command_manager.register_command(command, action)
   }
 
-  /** Get the current game */
+  /**
+   * Get the current game
+   *
+   * @return {Game}
+   */
   get current_game() {
     return not_null(this._current_game, '_current_game')
   }
 
-  /** Set the current game and set the current game to the last game */
+  /**
+   * Set the current game and set the current game to the last game
+   *
+   * @param {Game} game
+   */
   set current_game(game) {
     not_null(game, 'game')
     this._last_game = this._current_game
@@ -65,7 +85,7 @@ class MapNodes {
   /** Let us know that a player joined the team */
   @listener('join_team')
   static on_join_team({ username }, { name, size }, game) {
-    Logger.info(`The player ${username} joined the team ${name} size ${size}`)
+    Logger.info(`The player ${username} joined the team ${name} size ${size} game ${game}`)
   }
 
   @listener('join_game')

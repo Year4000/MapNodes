@@ -8,13 +8,21 @@ import { not_null } from '../conditions.js'
 import { CommandError } from './cmd_errors.js'
 
 
+/** @typedef {(CommandExecutor, any) => any} CommandAction */
+
 /** The command manager that will handle processing commands and ect */
 export default class CommandManager {
   constructor() {
+    /** @type {{ [key: string]: CommandAction }} */
     this._command_map = {}
   }
 
-  /** Register the command in to the system */
+  /**
+   * Register the command in to the system
+   *
+   * @param {string} command
+   * @param {CommandAction} action
+   */
   register_command(command, action) {
     not_null(command, 'command')
     not_null(action, 'action')
@@ -25,7 +33,14 @@ export default class CommandManager {
     }
   }
 
-  /** Will execute the command and return a object for errors or null if it passed */
+  /**
+   * Will execute the command and return a object for errors or null if it passed
+   *
+   * @param {CommandExecutor} executor
+   * @param {string} command
+   * @param args
+   * @return {CommandError | undefined}
+   */
   execute_command(executor, command, args) {
     try {
       const command_action = this._command_map[command]
@@ -43,7 +58,12 @@ export default class CommandManager {
     return undefined
   }
 
-  /** Return true or false if the command is registered in mapnodes */
+  /**
+   * Return true or false if the command is registered in mapnodes
+   *
+   * @param {string} command
+   * @return {boolean}
+   */
   is_command(command) {
     return this._command_map[command] != null
   }

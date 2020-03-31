@@ -8,7 +8,11 @@ import Logger from 'js-logger'
 const useless_function = () => {}
 
 
-/** The proxy object that will forwards the bindings to the underlying system */
+/**
+ * The proxy object that will forwards the bindings to the underlying system
+ *
+ * @type {{ [key: string]: (...any) => any }}
+ */
 const bindings = new Proxy(global.PLATFORM, {
   get(target, name) {
     if (target[name]) {

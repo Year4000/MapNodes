@@ -10,20 +10,44 @@ import { listener } from '../events/event_manager.js'
 import { inject } from '../injection.js'
 
 
-/** This will serialize the uuid to be used for the lookup table */
+/** @typedef {import('wolfy87-eventemitter')} EventEmitter */
+/** @typedef {import('./game.js').default} Game */
+/** @typedef {import('./team.js').default} Team */
+
+/**
+ * This will serialize the uuid to be used for the lookup table
+ *
+ * @param {string} uuid
+ * @return {string}
+ */
 const serializeUuid = (uuid) => uuid.replace(/-/g, '').toLowerCase()
 
-/** Will take any assumed to be uuid and make sure the hyphens are in there */
+/**
+ * Will take any assumed to be uuid and make sure the hyphens are in there
+ *
+ * @param {string} uuid
+ * @return {string}
+ */
 const hyphenedUuid = (uuid) => serializeUuid(uuid).replace(/(\w{8})(\w{4})(\w{4})(\w{4})(\w{12})/, '$1-$2-$3-$4-$5')
 
-/** The instance of all the player that has ever joined this server's instance */
+/**
+ * The instance of all the player that has ever joined this server's instance
+ *
+ * @type {{ [key: string]: Player }}
+ */
 const _player_instances = {}
 
 /** Generates the player object */
 export default class Player {
+  /** @type {EventEmitter} */
   @inject() event_manager
+  /** @type {Game} */
   @inject() game
 
+  /**
+   * @param {string} username
+   * @param {string} uuid
+   */
   constructor(username, uuid) {
     not_null(username, 'username')
     not_null(uuid, 'uuid')
@@ -33,7 +57,12 @@ export default class Player {
     _player_instances[username.toLowerCase()] = this // todo there may be a name clash, should add some checks later
   }
 
-  /** Create the instance of this player */
+  /**
+   * Create the instance of this player
+   *
+   * @param {string} player
+   * @return {Player}
+   */
   static of(player) {
     not_null(player, 'player')
     is_true(typeof player === 'string')
@@ -49,13 +78,23 @@ export default class Player {
     return Player.of_username(player)
   }
 
-  /** Generate the player meta from the uuid */
+  /**
+   * Generate the player meta from the uuid
+   *
+   * @param {string} uuid
+   * @return {Player}
+   */
   static of_uuid(uuid) {
     not_null(uuid, 'uuid')
     return new Player(...$.bindings.player_meta_uuid(String(uuid)).split(':'))
   }
 
-  /** Generate the player meta from a username */
+  /**
+   * Generate the player meta from a username
+   *
+   * @param {string} username
+   * @return {Player}
+   */
   static of_username(username) {
     not_null(username, 'username')
     return new Player(...$.bindings.player_meta_username(String(username)).split(':'))
@@ -71,22 +110,27 @@ export default class Player {
 
   /** Send a message to this player */
   send_message(message) {
-    $.bindings.send_message(this.uuid, String(message ?? ''))
+    $.bindings.send_message(this.uuid, `${message}`)
   }
 
-  /** Check if the player has the permission */
+  /**
+   * Check if the player has the permission
+   *
+   * @param {string} permission
+   * @return {boolean}
+   */
   has_permission(permission) {
-    return $.bindings.has_permission(this.uuid, String(permission))
+    return $.bindings.has_permission(this.uuid, `${permission}`)
   }
 
   /** Set the header for the tablist */
   set tablist_header(header) {
-    $.bindings.tablist_header(this.uuid, String(header))
+    $.bindings.tablist_header(this.uuid, `${header}`)
   }
 
   /** Set the header for the tablist */
   set tablist_footer(footer) {
-    $.bindings.tablist_footer(this.uuid, String(footer))
+    $.bindings.tablist_footer(this.uuid, `${footer}`)
   }
 
   teleport(x, y, z, yaw, pitch) {
@@ -120,7 +164,11 @@ export default class Player {
     this._current_team = team
   }
 
-  /** Have the player join the specific team */
+  /**
+   * Have the player join the specific team
+   *
+   * @param {Team} team
+   */
   join_team(team) {
     not_null(team, 'team')
     if (this.game.is_running() && this.is_playing()) {
@@ -146,14 +194,20 @@ export default class Player {
     }
   }
 
-  /** Get the current team for the player, this should always return something */
+  /**
+   * Get the current team for the player, this should always return something
+   *
+   * @return {Team}
+   */
   get team() {
     return this._current_team
   }
 
   /** Checks if the two player objects are equal */
   is_equal(player) {
-    return typeof player === 'object' && this.valueOf() === player.valueOf() // only use == since the strings are not exactly the same string
+    // only use == since the strings are not exactly the same string
+    // eslint-disable-next-line eqeqeq
+    return typeof player === 'object' && this.valueOf() == player.valueOf()
   }
 
   /** Get the value of this player */

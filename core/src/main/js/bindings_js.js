@@ -3,42 +3,32 @@
  */
 import Logger from 'js-logger'
 
-import { not_null } from './mapnodes/conditions.js'
+import { to_lower_camel } from './mapnodes/utils.js'
 import { map_nodes } from './mapnodes/mapnodes.js'
 import CommandExecutor from './mapnodes/command/cmd_executor.js'
 import Game from './mapnodes/game/game.js'
 import Player from './mapnodes/game/player.js'
 
 
-/** This map stores the function bindings that are in javascript */
+/**
+ * This map stores the function bindings that are in javascript
+ *
+ * @type {{ [key: string]: (...any) => any }}
+ */
 const JS = {}
 
-/** Will register the method in the bindings map for $.js */
-const bind = (alias) => {
-  const to_lower_camel = (string) => {
-    not_null(string, 'A string value must exist')
-    let out = ''
-    let upper = false
-    // eslint-disable-next-line no-restricted-syntax
-    for (const c of string) {
-      if (upper) { // uppercase the letter and rest it flag
-        out += c.toUpperCase()
-        upper = false
-      } else if (c === '_') { // dont add _ and trigger next letter must be upper
-        upper = true
-      } else { // append the char
-        out += c
-      }
-    }
-    return out
+/**
+ * Will register the method in the bindings map for $.js
+ *
+ * @param {string} alias
+ * @return {MethodDecorator}
+ */
+const bind = (alias) => (handler, key) => {
+  // Map the functions to the java names
+  if (!(alias in JS)) {
+    JS[alias ?? to_lower_camel(key)] = handler
   }
-  return (handler, key) => {
-    // Map the functions to the java names
-    if (!(alias in JS)) {
-      JS[alias ?? to_lower_camel(key)] = handler
-    }
-    return handler
-  }
+  return handler
 }
 
 /**

@@ -7,6 +7,8 @@ import Regions from '../regions/regions.js'
 import JsonObject from './json_object.js'
 
 
+/** @typedef {import('../regions/abstract_region.js').default} AbstractRegion */
+
 /** Represents a region from the json object */
 export default class Region extends JsonObject {
   /** This follows the documented scheme here https://resources.year4000.net/mapnodes/regions_component */
@@ -22,7 +24,11 @@ export default class Region extends JsonObject {
     return this._json
   }
 
-  /** Lazy load all zone regions */
+  /**
+   * Lazy load all zone regions
+   *
+   * @return {AbstractRegion[]}
+   */
   get zones() {
     if (!this._zones) {
       this._zones = _.map(this.region.zones, (zone) => Regions.map_region(zone))

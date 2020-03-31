@@ -9,7 +9,11 @@ import { not_null } from './conditions.js'
 
 /** The class to create an injector to inject other JavaScript objects */
 export default class Injector {
-  /** Create the injector and inject the modules with the other modules */
+  /**
+   * Create the injector and inject the modules with the other modules
+   *
+   * @param {{ [key: string]: object }} modules
+   */
   constructor(modules) {
     not_null(modules, 'modules')
     // also inject the injector
@@ -17,7 +21,13 @@ export default class Injector {
     _.forEach(modules, (module) => this.inject_instance(module))
   }
 
-  /** Inject the modules into the object prefixed with $ */
+  /**
+   * Inject the modules into the object prefixed with $
+   *
+   * @template {object} T
+   * @param {T} instance
+   * @return {T}
+   */
   inject_instance(instance) {
     not_null(instance, 'instance')
     if (typeof instance === 'object') {
@@ -29,14 +39,19 @@ export default class Injector {
   /**
    * Create a child injector from this injector
    *
-   * @param modules that will be merged with the parent injector
-   * @return Injector The child injector injector
+   * @param {{ [key: string]: object }} modules that will be merged with the parent injector
+   * @return {Injector} The child injector injector
    */
   child_injector(modules) {
     return new Injector({ ...this._modules, ...modules })
   }
 
-  /** Get the module */
+  /**
+   * Get the module
+   *
+   * @param {string} key
+   * @return {object}
+   */
   get_module(key) {
     return this._modules[key]
   }
@@ -80,8 +95,8 @@ export default class Injector {
 /**
  * This will inject the variable from the type, it will.
  *
- * @param type The string key for the module or the object if a class inject
- * @return decorator for class or property
+ * @param {string} type The string key for the module or the object if a class inject
+ * @return {ClassDecorator | PropertyDecorator} decorator for class or property
  */
 // todo replace with new decorator descriptor system
 // export const inject = type => (typeof type === 'object') ? class_inject(type) : property_inject(type)

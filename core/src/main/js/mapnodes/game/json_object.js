@@ -31,7 +31,7 @@ export default class JsonObject {
   /**
    * Get the name for the object defaults to id
    *
-   * @return {boolean}
+   * @return {string}
    */
   get name() {
     return this._id

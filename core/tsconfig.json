@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "declaration": true,
     "sourceMap": true,
     "module": "esnext",
     "target": "es2017",
@@ -9,7 +10,7 @@
     "strict": true,
     "esModuleInterop": true,
     "allowJs": true,
-    "outDir": "src/generated"
+    "outDir": "src/generated/js"
   },
   "include": ["src/main/js", "src/test/js"]
 }

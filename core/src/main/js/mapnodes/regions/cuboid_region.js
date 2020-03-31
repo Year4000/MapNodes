@@ -11,7 +11,12 @@ import { not_null } from '../conditions.js'
 
 /** Represents a cuboid region with two positions */
 export default class CuboidRegion extends AbstractRegion {
-  /** point_one and point_two are both vector3 */
+  /**
+   * point_one and point_two are both vector3
+   *
+   * @param {Vector3} point_one
+   * @param {Vector3} point_two
+   */
   constructor(point_one, point_two) {
     super()
     this._point_one = not_null(point_one, 'point_one')
@@ -21,7 +26,12 @@ export default class CuboidRegion extends AbstractRegion {
     this._point_two = this._point_one.clone().max(this._point_two)
   }
 
-  /** Checks if the vector contains in this cuboid */
+  /**
+   * Checks if the vector contains in this cuboid
+   *
+   * @param {Vector3} vector3
+   * @return {boolean}
+   */
   contains(vector3) {
     const min = this._point_one
     const max = this._point_two
@@ -31,7 +41,11 @@ export default class CuboidRegion extends AbstractRegion {
     return x && y && z
   }
 
-  /** Generate all the points in this cuboid */
+  /**
+   * Generate all the points in this cuboid
+   *
+   * @return {Set<Vector3>}
+   */
   _points() {
     let points = Set.of()
     const min = this._point_one
@@ -55,7 +69,12 @@ export default class CuboidRegion extends AbstractRegion {
     return this.__points
   }
 
-  /** Checks if the two cuboids are equal */
+  /**
+   * Checks if the two cuboids are equal
+   *
+   * @param {CuboidRegion} other
+   * @return {boolean}
+   */
   equals(other) {
     return other && _.isEqual(this._point_one, other._point_one) && _.isEqual(this._point_two, other._point_two)
   }

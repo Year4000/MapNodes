@@ -17,10 +17,17 @@ import { not_null } from '../conditions.js'
 import { inject } from '../injection.js'
 
 
+/** @typedef {import('wolfy87-eventemitter')} EventEmitter */
+/** @typedef {import('../injection.js').default} Injector */
+/** @typedef {import('../games/game_registry.js').default} GameRegistry */
+
 /** Represents a game from the json object */
 export default class Game extends JsonObject {
+  /** @type {EventEmitter} */
   @inject() event_manager
+  /** @type {Injector} */
   @inject() injector
+  /** @type {GameRegistry} */
   @inject() game_registry
 
   _teams = Map()
@@ -30,6 +37,7 @@ export default class Game extends JsonObject {
   _events = Map()
   _games = {}
   _state = 'WAITING'
+  /** @type {Player[]} */
   _players = []
 
   /** This follows the documented scheme here https://resources.year4000.net/mapnodes/map_component */
@@ -42,6 +50,10 @@ export default class Game extends JsonObject {
     }
   }
 
+  /**
+   * @param {string | number} id
+   * @param {object} map
+   */
   constructor(id, map) {
     super(id, { ...Game.DEFAULT_MAP, ...map })
     Logger.info(`Constructing the game ${id} for ${this._json.map.name}`)
@@ -121,7 +133,11 @@ export default class Game extends JsonObject {
     this.unload() // unload things in the game
   }
 
-  /** Cycle to the next game */
+  /**
+   * Cycle to the next game
+   *
+   * @param {Game} next_game
+   */
   cycle(next_game) {
     not_null(next_game, 'next_game')
     // Have all the players leave the game
@@ -141,7 +157,11 @@ export default class Game extends JsonObject {
     _.forEach(this._games, (game) => game._unload())
   }
 
-  /** Get the proxy object for the map_nodes object in the map, function are called and return the value */
+  /**
+   * Get the proxy object for the map_nodes object in the map, function are called and return the value
+   *
+   * @return {{ [key: string]: any }}
+  */
   get settings() {
     if (!this._settings) {
       this._settings = new Proxy(this.map.map_nodes, {
@@ -165,17 +185,29 @@ export default class Game extends JsonObject {
     return this._settings
   }
 
-  /** Get the time the game has started, -1 if hasent started yet */
+  /**
+   * Get the time the game has started, -1 if hasent started yet
+   *
+   * @return {number}
+   */
   get start_time() {
     return this._start_time ?? -1
   }
 
-  /** Get the time the game has stopped, -1 if hasent stoped yet */
+  /**
+   * Get the time the game has stopped, -1 if hasent stoped yet
+   *
+   * @return {number}
+   */
   get stop_time() {
     return this._stop_time ?? -1
   }
 
-  /** Get the delta time the game has been running for */
+  /**
+   * Get the delta time the game has been running for
+   *
+   * @return {number}
+   */
   get game_time() {
     return _.now() - this.start_time
   }
@@ -195,7 +227,11 @@ export default class Game extends JsonObject {
     return `${this.map.map.name} &7${this.map.map.version.replace(/([.])/, '&8$1&7')}`
   }
 
-  /** Get the color of the current game state */
+  /**
+   * Get the color of the current game state
+   *
+   * @return {string}
+   */
   get state_color() {
     return Game._STATE_COLORS[this._state] ?? '&4'
   }
@@ -205,13 +241,21 @@ export default class Game extends JsonObject {
     return this.settings.tab_list_header ?? `${this.state_color}${this.title_color}`
   }
 
-  /** Join the player to the game, player should be a uuid but can be a username */
+  /**
+   * Join the player to the game, player should be a uuid but can be a username
+   *
+   * @param {string} player
+   */
   join_game(player) {
     not_null(player, 'player')
     this._join_game(Player.of(player))
   }
 
-  /** Actually have the player join the game */
+  /**
+   * Actually have the player join the game
+   *
+   * @param {Player} player
+   */
   _join_game(player) {
     not_null(player, 'player')
     this.injector.inject_instance(player)
@@ -229,26 +273,46 @@ export default class Game extends JsonObject {
     }
   }
 
-  /** Clean up the player, player should be a uuid but can be a username */
+  /**
+   * Clean up the player, player should be a uuid but can be a username
+   *
+   * @param {string} player
+   */
   leave_game(player) {
     not_null(player, 'player')
     const player_object = Player.of(player)
     this._leave_game(_.find(this._players, (object) => object.is_equal(player_object)))
   }
 
-  /** Actually have the player leave the game */
+  /**
+   * Actually have the player leave the game
+   *
+   * @param {Player} player
+   */
   _leave_game(player) {
     player.leave_team()
     _.remove(this._players, player)
     this.event_manager.trigger('leave_game', [player, this])
   }
 
-  /** Generate the Team object containing the least about of players */
+  /**
+   * Generate the Team object containing the least about of players
+   *
+   * @return {Team | null}
+   */
   get _smallest_team() {
     return this._teams.filterNot((team) => team.id === Facts.SPECTATOR_ID).sortBy((team) => team.size).first()
   }
 
-  /** The abstraction to register the object */
+  /**
+   * The abstraction to register the object
+   *
+   * @param {string} obj_id
+   * @param {object} obj_json
+   * @param {function} Clazz
+   * @param {string} collection_name
+   * @param {string} event_id
+   */
   _register(obj_id, obj_json, Clazz, collection_name, event_id) {
     not_null(obj_id, 'obj_id')
     not_null(obj_json, 'obj_json')
@@ -259,27 +323,52 @@ export default class Game extends JsonObject {
     this.event_manager.trigger(event_id, [obj, this])
   }
 
-  /** Register the team into the system */
+  /**
+   * Register the team into the system
+   *
+   * @param {stirng} team_id
+   * @param {object} team_json
+   */
   _register_team(team_id, team_json) {
     this._register(team_id, team_json, Team, '_teams', 'register_team')
   }
 
-  /** Register the class into the system */
+  /**
+   * Register the class into the system
+   *
+   * @param {string} class_id
+   * @param {object} clazz_json
+   */
   _register_class(class_id, clazz_json) {
     this._register(class_id, clazz_json, Clazz, '_clazzes', 'register_class')
   }
 
-  /** Register the kit into the system */
+  /**
+   * Register the kit into the system
+   *
+   * @param {string} kit_id
+   * @param {object} kit_json
+   */
   _register_kit(kit_id, kit_json) {
     this._register(kit_id, kit_json, Kit, '_kits', 'register_kit')
   }
 
-  /** Register the region into the system */
+  /**
+   * Register the region into the system
+   *
+   * @param {string} region_id
+   * @param {object} region_json
+   */
   _register_region(region_id, region_json) {
     this._register(region_id, region_json, Region, '_regions', 'register_region')
   }
 
-  /** Register the event into the system */
+  /**
+   * Register the event into the system
+   *
+   * @param {string} event_id
+   * @param {(...any) => any} event_function
+   */
   _register_event(event_id, event_function) {
     not_null(event_id, 'event_id')
     not_null(event_function, 'event_function')
@@ -302,7 +391,12 @@ export default class Game extends JsonObject {
     this.event_manager.on(event_id, wrapper)
   }
 
-  /** Register the game into the system */
+  /**
+   * Register the game into the system
+   *
+   * @param {string} game_id
+   * @param {object} json
+   */
   _register_game(game_id, json) {
     not_null(game_id, 'game_id')
     not_null(json, 'event_function')
@@ -317,7 +411,12 @@ export default class Game extends JsonObject {
     }
   }
 
-  /** Unregister the event into the system */
+  /**
+   * Unregister the event into the system
+   *
+   * @param {string} event_id
+   * @param {(...any) => any} event_function
+   */
   _unregister_event(event_id, event_function) {
     not_null(event_id, 'event_id')
     not_null(event_function, 'event_function')

@@ -42,7 +42,12 @@ const Regions = {
     void: (obj) => new AbstractRegion(), // todo add void region
   },
 
-  /** Maps the object to the instance of the object */
+  /**
+   * Maps the object to the instance of the object
+   *
+   * @param {string} obj
+   * @return {AbstractRegion}
+   */
   map_region: (obj) => {
     const key = _.first(_.keys(obj))
     const value = obj[key]

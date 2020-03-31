@@ -9,6 +9,12 @@ import AbstractRegion from './abstract_region.js'
 
 /** A region that contains a single point, must wrap with THREE.Vector3 */
 export default class PointRegion extends AbstractRegion {
+  /**
+   *
+   * @param {number} x
+   * @param {number} y
+   * @param {number} z
+   */
   constructor(x, y, z) {
     super()
     this._point = new Vector3(x, y, z)

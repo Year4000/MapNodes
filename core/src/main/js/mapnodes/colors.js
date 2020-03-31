@@ -2,7 +2,11 @@
  * Copyright 2017 Year4000. All Rights Reserved.
  */
 
-/** Convert the Minecraft color names to the color codes */
+/**
+ * Convert the Minecraft color names to the color codes
+ *
+ * @enum {string}
+ */
 export default {
   white: '&f',
   yellow: '&e',
