@@ -1,4 +1,4 @@
-import { event_manager, listener } from './event_manager.js' // eslint-disable-line import/no-unresolved
+import { event_manager, listener } from './event_manager.js'
 
 
 describe('event manager', () => {

@@ -4,11 +4,11 @@ import assert from 'assert'
 
 import _ from 'lodash'
 
-import Map from './game/map.js' // eslint-disable-line import/no-unresolved
-import World from './game/world.js' // eslint-disable-line import/no-unresolved
-import Team from './game/team.js' // eslint-disable-line import/no-unresolved
-import Region from './game/region.js' // eslint-disable-line import/no-unresolved
-import Kit from './game/kit.js' // eslint-disable-line import/no-unresolved
+import Map from './game/map.js'
+import World from './game/world.js'
+import Team from './game/team.js'
+import Region from './game/region.js'
+import Kit from './game/kit.js'
 
 
 /*

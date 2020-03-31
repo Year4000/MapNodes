@@ -47,15 +47,24 @@ module.exports = {
       groups: ['builtin', 'internal', 'external', ['sibling', 'parent']],
       'newlines-between': 'always',
       alphabetize: {
-        order: 'ignore', /* sort in ascending order. Options: ['ignore', 'asc', 'desc'] */
-        caseInsensitive: true /* ignore case. Options: [true, false] */
+        order: 'ignore',
+        caseInsensitive: true,
       }
-    }]
+    }],
   },
+  overrides: [
+    {
+      files: ['*.test.js', 'webpack.config.js'],
+      rules: {
+        'import/no-nodejs-modules': 'off',
+        'import/no-unresolved': 'off',
+      },
+    },
+  ],
   globals: {
     $: 'readonly',
     var_dump: 'readonly',
     describe: 'readonly',
     it: 'readonly',
-  }
+  },
 }

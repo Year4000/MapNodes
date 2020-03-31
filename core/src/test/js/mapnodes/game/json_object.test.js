@@ -1,6 +1,6 @@
 import assert from 'assert'
 
-import JsonObject from './json_object.js' // eslint-disable-line import/no-unresolved
+import JsonObject from './json_object.js'
 
 
 class SchemaTest extends JsonObject {

@@ -1,10 +1,10 @@
 import assert from 'assert'
 
-import { game_registry } from './game_registry.js' // eslint-disable-line import/no-unresolved
+import { game_registry } from './game_registry.js'
 
 // This triggers the dynamic registration of the game mode
-import './skywars/skywars.js' // eslint-disable-line import/no-unresolved
-import './destroy/destroy.js' // eslint-disable-line import/no-unresolved
+import './skywars/skywars.js'
+import './destroy/destroy.js'
 
 
 describe('Game Registry', () => {

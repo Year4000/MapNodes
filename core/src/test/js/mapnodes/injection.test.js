@@ -1,6 +1,6 @@
 import assert from 'assert'
 
-import Injector, { inject } from './injection.js' // eslint-disable-line import/no-unresolved
+import Injector, { inject } from './injection.js'
 
 
 describe('injectors', () => {
