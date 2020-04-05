@@ -101,9 +101,7 @@ export class MapNodes {
     // todo set kit
     // todo set scoreboard
     if (player.is_playing()) { // Message when the game starts for players
-      const {
-        name, version, description, authors,
-      } = player.game.map.map
+      const { name, version, description, authors } = player.game.map.map
       const author_names = _.map(authors, (author) => _.truncate(author, { length: 3 }))
       player.send_message()
       player.send_message(`&7&m${_.pad(`&a ${name} &7${version.replace(/\./, '&8.&7')} &7&m`, 55, '*')}`)

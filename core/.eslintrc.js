@@ -13,19 +13,31 @@ module.exports = {
   rules: {
     semi: ['error', 'never'],
     quotes: ['error', 'single'],
-    'object-curly-spacing': ['error', 'always'],
+    'object-curly-newline': ['error', {
+      ObjectExpression: { multiline: true, consistent: true },
+      ObjectPattern: { multiline: true, consistent: true },
+      ImportDeclaration: { multiline: true, consistent: true, minProperties: 4 },
+      ExportDeclaration: { multiline: true, consistent: true, minProperties: 4 },
+    }],
+    'no-unused-expressions': 'off', // todo reenable when optional chainging is fixed: ['warn', { 'allowShortCircuit': true, 'allowTernary': true }],
     'no-trailing-spaces': 'error',
     'space-before-function-paren': ['error', {
       anonymous: 'never',
       named: 'never',
       asyncArrow: 'always',
     }],
-    'comma-dangle': ['error', 'always-multiline'],
+    'comma-dangle': ['error', {
+      arrays: 'always-multiline',
+      objects: 'always-multiline',
+      imports: 'always-multiline',
+      exports: 'always-multiline',
+      functions: 'never',
+    }],
     'no-mixed-spaces-and-tabs': 'error',
     'no-underscore-dangle': 'off',
     'no-plusplus': 'off',
     'no-mixed-operators': 'off',
-    'camelcase': 'off', // todo
+    camelcase: 'off', // todo
     'max-len': 'off',
     'no-unused-vars': 'warn',
     'class-methods-use-this': 'off',
@@ -49,7 +61,7 @@ module.exports = {
       alphabetize: {
         order: 'ignore',
         caseInsensitive: true,
-      }
+      },
     }],
   },
   overrides: [

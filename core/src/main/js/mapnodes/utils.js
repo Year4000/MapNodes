@@ -13,11 +13,7 @@ import { not_null } from './conditions.js'
  * @param {number} [yaw]
  * @param {number} [pitch]
  */
-export const point = (x, y, z, yaw, pitch) => ({
-  point: {
-    x, y, z, yaw, pitch,
-  },
-})
+export const point = (x, y, z, yaw, pitch) => ({ point: { x, y, z, yaw, pitch } })
 
 /**
  * Generate the point object and use math to generate pitch and yaw
